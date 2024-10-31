@@ -1,0 +1,26 @@
+# keywords https://github.com/koekeishiya/skhd/issues/1
+# macOS keycodes https://gist.github.com/eegrok/949034#file-mac-keycodes
+
+# qwfpbjluy
+rcmd - w : open "/Applications/Microsoft Word.app"
+rcmd - b : open "/System/Applications/Books.app"
+rcmd - p : open "/Applications/Proton Pass.app"
+
+# arstgmneio
+rcmd - a : open "/Applications/ManGo.app"
+rcmd - r : open "/System/Applications/Reminders.app"
+rcmd - m : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Thunderbird.app"
+rcmd - n : open "/Applications/NewsBlur.app"
+rcmd - s : open "${HOME}/Applications/Soulver 3.app"
+rcmd - t : osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to not dark mode'
+rcmd - e : open "${HOME}/Applications/Zed.app"
+rcmd - i : open "/System/Applications/iPhone Mirroring.app"
+rcmd - o : open "${HOME}/Applications/Obsidian.app"
+rcmd - return : open "/System/Applications/Utilities/Terminal.app"
+rcmd + alt - return : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Zen Browser.app"
+rcmd + shift - return : open "/Applications/Safari.app"
+
+#  xcdvzkh,
+rcmd - c : open "/System/Applications/Messages.app"
+rcmd - d : open "/System/Applications/Dictionary.app"
+rcmd - z : open "${HOME}/Applications/Zotero.app"
