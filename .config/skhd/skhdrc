@@ -1,6 +1,10 @@
 # keywords https://github.com/koekeishiya/skhd/issues/1
 # macOS keycodes https://gist.github.com/eegrok/949034#file-mac-keycodes
 
+
+# no more minimizing
+lcmd - m :
+
 # qwfpbjluy
 rcmd - w : open "/Applications/Microsoft Word.app"
 rcmd - b : open "/System/Applications/Books.app"
