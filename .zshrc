@@ -1,9 +1,12 @@
 # zsh fuzzy caps autocomplete
-autoload -Uz compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 # zsh Plugins
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# brew completion definitions
+autoload -Uz compinit
+compinit
+
 # environment variables
 ## brew
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications  no-quarantine"
