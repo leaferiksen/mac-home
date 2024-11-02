@@ -35,7 +35,7 @@ alias chat='ollama run myllama --nowordwrap'
 # alias l='echo -e "\e[31m$(pwd)\e[0m" && eza --all --group-directories-first'
 function l() {
     echo -e "\e[31m$(pwd)\e[0m"
-    eza --all --color=always --long --grid --group-directories-first --no-time --no-permissions --no-user "$@"
+    eza --all --long --grid --group-directories-first --no-time --no-permissions --no-user "$@"
 }
 function d() {cd "$@" && l}
 # function dl() {cd "$@" && ll}
