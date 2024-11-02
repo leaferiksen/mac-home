@@ -27,9 +27,6 @@ alias fix='xattr -dr com.apple.quarantine'
 alias nano='nano --modernbindings --softwrap --tabsize=4 --tabstospaces'
 alias chat='ollama run myllama --nowordwrap'
 alias lg='lazygit'
-alias gcp='git commit -a && git push'
-alias ga='git add -f'
-alias gp='git push'
 
 # functions
 ## ls: A=show hidden files h=unit suffixes o=long format without groups
