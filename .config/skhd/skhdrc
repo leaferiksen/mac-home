@@ -8,6 +8,7 @@ lcmd + alt - h : skhd -k
 
 # qwfpbjluy
 rcmd - w : open "/Applications/Microsoft Word.app"
+rcmd - f : open "/System/Library/CoreServices/Finder.app"
 rcmd - b : open "/System/Applications/Books.app"
 rcmd - p : open "/Applications/Proton Pass.app"
 
@@ -25,20 +26,19 @@ rcmd - return : open "/System/Applications/Utilities/Terminal.app"
 rcmd + alt - return : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Zen Browser.app"
 rcmd + shift - return : open "/Applications/Safari.app"
 
-#  xcdvzkh,
+# xcdvzkh
 rcmd - c : open "/System/Applications/Messages.app"
 rcmd - d : open "/System/Applications/Dictionary.app"
 rcmd - z : open "${HOME}/Applications/Zotero.app"
 
-# yabai
-# move window to space and switch to space (works with both SIP enabled and disabled)
-# rcmd - 1 : yabai -m window --space 1 --focus
-# rcmd - 2 : yabai -m window --space 2 --focus
-# rcmd - 3 : yabai -m window --space 3 --focus
-# rcmd - 4 : yabai -m window --space 4 --focus
-# rcmd - 5 : yabai -m window --space 5 --focus
-# rcmd - 6 : yabai -m window --space 6 --focus
-# rcmd - 7 : yabai -m window --space 7 --focus
-# rcmd - 8 : yabai -m window --space 8 --focus
-# rcmd - 9 : yabai -m window --space 9 --focus
-# rcmd - 0 : yabai -m window --space 10 --focus
+# use yabai to move window to space and switch to space
+# rcmd - 1 : yabai -m window --space 1
+# rcmd - 2 : yabai -m window --space 2
+# rcmd - 3 : yabai -m window --space 3
+# rcmd - 4 : yabai -m window --space 4
+# rcmd - 5 : yabai -m window --space 5
+# rcmd - 6 : yabai -m window --space 6
+# rcmd - 7 : yabai -m window --space 7
+# rcmd - 8 : yabai -m window --space 8
+# rcmd - 9 : yabai -m window --space 9
+# rcmd - 0 : yabai -m window --space 10

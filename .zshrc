@@ -22,7 +22,7 @@ export sd="/Volumes/Leafs Media"
 export sf="${HOME}/Documents/Fall 24"
 # aliases
 alias q='qlmanage -p'
-alias up='brew update && brew upgrade'
+alias up='brew update && brew upgrade --no-quarantine'
 alias fix='xattr -dr com.apple.quarantine'
 alias nano='nano --modernbindings --softwrap --tabsize=4 --tabstospaces'
 alias chat='ollama run myllama --nowordwrap'
