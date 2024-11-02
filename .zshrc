@@ -20,45 +20,32 @@ export EDITOR="$VISUAL"
 export ic="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
 export sd="/Volumes/Leafs Media"
 export sf="${HOME}/Documents/Fall 24"
+
 # aliases
 alias q='qlmanage -p'
+alias lg='lazygit'
 alias up='brew update && brew upgrade --no-quarantine'
 alias fix='xattr -dr com.apple.quarantine'
 alias nano='nano --modernbindings --softwrap --tabsize=4 --tabstospaces'
 alias chat='ollama run myllama --nowordwrap'
-alias lg='lazygit'
 
-# functions
+# navigation
+#  | less --quit-if-one-screen --RAW-CONTROL-CHARS
 ## ls: A=show hidden files h=unit suffixes o=long format without groups
+# alias l='echo -e "\e[31m$(pwd)\e[0m" && eza --all --group-directories-first'
 function l() {
-    clear -x
     echo -e "\e[31m$(pwd)\e[0m"
-    ls -ho --color "$@" | less --quit-if-one-screen --RAW-CONTROL-CHARS
+    eza --all --color=always --long --grid --group-directories-first --no-time --no-permissions --no-user "$@"
 }
-function lh() {
-    clear -x
-    echo -e "\e[31m$(pwd)\e[0m"
-    ls -Aho --color "$@" | less --quit-if-one-screen --RAW-CONTROL-CHARS
-}
-function d() {
-    cd "$@"
-    clear -x
-    echo -e "\e[31m$(pwd)\e[0m"
-    ls -ho --color | less --quit-if-one-screen --RAW-CONTROL-CHARS
-}
-function dh() {
-    cd "$"
-    clear -x
-    echo -e "\e[31m$(pwd)\e[0m"
-    ls -Aho --color | less --quit-if-one-screen --RAW-CONTROL-CHARS
-}
+function d() {cd "$@" && l}
+# function dl() {cd "$@" && ll}
 function md() {
     mkdir -p "$(pwd)/$@"
     la
 }
 function mf() {
     touch "$(pwd)/$@"
-    la  
+    la
 }
 # Terminal startup
 l
