@@ -10,9 +10,9 @@ compinit
 # environment variables
 ## brew
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications  no-quarantine"
+export HOMEBREW_NO_AUTO_UPDATE=1
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
-export HOMEBREW_NO_INSTALL_CLEANUP=TRUE
 ## fuck vim
 export VISUAL='nano --modernbindings'
 export EDITOR="$VISUAL"
