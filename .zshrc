@@ -24,7 +24,7 @@ export sf="${HOME}/Documents/Fall 24"
 # aliases
 alias q='qlmanage -p'
 alias lg='lazygit'
-alias up='brew update && brew upgrade --no-quarantine'
+alias up='brew update; brew upgrade --formulae --no-quarantine $(brew list --formulae); brew upgrade --cask --no-quarantine --greedy $(brew list --cask | grep --invert-match --regexp=thunderbird --regexp=font-red-hat-mono)'
 alias fix='xattr -dr com.apple.quarantine'
 alias nano='nano --modernbindings --softwrap --tabsize=4 --tabstospaces'
 alias chat='ollama run myllama --nowordwrap'
