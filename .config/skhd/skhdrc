@@ -29,6 +29,7 @@ rcmd + shift - return : open "/Applications/Safari.app"
 # xcdvzkh
 rcmd - c : open "/System/Applications/Messages.app"
 rcmd - d : open "/System/Applications/Dictionary.app"
+rcmd - v : open "${HOME}/Applications/IINA.app"
 rcmd - z : open "${HOME}/Applications/Zotero.app"
 
 # use yabai to move window to space and switch to space
