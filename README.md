@@ -21,6 +21,7 @@ then open a new Terminal window
 ```bash
 ./.config/setup/1 Preferences.sh && \
 ./.config/setup/2 Brew Apps.sh && \
-./.config/setup/3 App Store.sh
+./.config/setup/3 App Store.sh && \
+ollama create myllama -f .config/setup/myllama.modelfile
 ```
 then download [LuLu](https://objective-see.org/products/lulu.html) and [Wacom](https://www.wacom.com/en-us/support/product-support/drivers) separately.
