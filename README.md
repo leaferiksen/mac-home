@@ -23,3 +23,4 @@ then open a new Terminal window
 ./.config/setup/2 Brew Apps.sh && \
 ./.config/setup/3 App Store.sh
 ```
+then download [LuLu](https://objective-see.org/products/lulu.html) and [Wacom](https://www.wacom.com/en-us/support/product-support/drivers) separately.
