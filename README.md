@@ -15,8 +15,8 @@ su admin
 sudo chown -R leaf /opt/homebrew/ && \
 sudo cp -R /Users/leaf/Documents/Archive/Colemak-DH/Colemak\ DH.bundle /Library/Keyboard\ Layouts/Colemak\ DH.bundle
 ```
-to enable proxy icons Terminal needs full disk access
-System Preferences → Security & Privacy → Full Disk Access
+to be able to enable enable proxy icons, go to `System Settings → Privacy & Security → Full Disk Access` and add Terminal 
+
 then open a Terminal new window
 ```bash
 ./.config/setup/1 Preferences.sh && \
