@@ -1,0 +1,11 @@
+*|*:root {
+    --list-item-min-height: 18px !important;
+}
+#folderTree [title="Starred"],
+[title="Spam"],
+[title="Junk"],
+[title="Archive"],
+[title="All Mail"],
+[title="Important"] {
+    display: none !important;
+}
