@@ -15,9 +15,9 @@ su admin
 sudo chown -R leaf /opt/homebrew/ && \
 sudo cp -R /Users/leaf/Documents/Archive/Colemak-DH/Colemak\ DH.bundle /Library/Keyboard\ Layouts/Colemak\ DH.bundle
 ```
-to be able to enable enable proxy icons, go to `System Settings → Privacy & Security → Full Disk Access` and add Terminal 
+to be able to enable proxy icons, go to `System Settings → Privacy & Security → Full Disk Access` and add Terminal 
 
-then open a Terminal new window
+then open a new Terminal window
 ```bash
 ./.config/setup/1 Preferences.sh && \
 ./.config/setup/2 Brew Apps.sh && \
