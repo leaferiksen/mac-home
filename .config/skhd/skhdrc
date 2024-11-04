@@ -2,7 +2,6 @@
 # macOS keycodes https://gist.github.com/eegrok/949034#file-mac-keycodes
 
 # no more minimizing or hiding
-lcmd - m : skhd -k
 lcmd - h : skhd -k
 lcmd + alt - h : skhd -k
 
