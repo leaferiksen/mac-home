@@ -5,6 +5,9 @@
 lcmd - h : skhd -k
 lcmd + alt - h : skhd -k
 
+# open "/System/Applications/iPhone Mirroring.app"
+rcmd - play : osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to not dark mode'
+
 # qwfpbjluy
 rcmd - w : open "/Applications/Microsoft Word.app"
 rcmd - f : open "/System/Library/CoreServices/Finder.app"
@@ -14,20 +17,19 @@ rcmd - p : open "/Applications/Proton Pass.app"
 # arstgmneio
 rcmd - a : open "/Applications/ManGo.app"
 rcmd - r : open "/System/Applications/Reminders.app"
-rcmd - m : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Thunderbird.app"
+rcmd - m : open "/System/Applications/Messages.app"
 rcmd - n : open "/Applications/NewsBlur.app"
 rcmd - s : open "${HOME}/Applications/Soulver 3.app"
-rcmd - t : osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to not dark mode'
-rcmd - e : open "${HOME}/Applications/Zed.app"
-rcmd - i : open "/System/Applications/iPhone Mirroring.app"
+rcmd - t : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Thunderbird.app"
+rcmd - e : open "${HOME}/Applications/Element.app"
 rcmd - o : open "${HOME}/Applications/Obsidian.app"
+rcmd - i : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Zen Browser.app"
+rcmd + shift - i : open "/Applications/Safari.app"
 rcmd - return : open "/System/Applications/Utilities/Terminal.app"
-rcmd + alt - return : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Zen Browser.app"
-rcmd + shift - return : open "/Applications/Safari.app"
 
 # xcdvzkh
-rcmd - c : open "/System/Applications/Messages.app"
 rcmd - d : open "/System/Applications/Dictionary.app"
+rcmd - c : open "${HOME}/Applications/Zed.app"
 rcmd - v : open "${HOME}/Applications/IINA.app"
 rcmd - z : open "${HOME}/Applications/Zotero.app"
 

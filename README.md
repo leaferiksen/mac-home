@@ -1,4 +1,6 @@
-open Terminal
+Download [LuLu](https://objective-see.org/products/lulu.html), [Wacom](https://www.wacom.com/en-us/support/product-support/drivers) and [Fluid](https://getfluid.app/) from their websites.
+
+Then open Terminal.app
 ```bash
 xcode-select --install && \
 cd ~ && \
@@ -15,13 +17,9 @@ su admin
 sudo chown -R leaf /opt/homebrew/ && \
 sudo cp -R /Users/leaf/Documents/Archive/Colemak-DH/Colemak\ DH.bundle /Library/Keyboard\ Layouts/Colemak\ DH.bundle
 ```
-to be able to enable proxy icons, go to `System Settings → Privacy & Security → Full Disk Access` and add Terminal 
-
-then open a new Terminal window
+To be able to enable proxy icons, go to `System Settings → Privacy & Security → Full Disk Access` and add Terminal.app, then restart Terminal.app.
 ```bash
 ./.config/setup/1 Preferences.sh && \
 ./.config/setup/2 Brew Apps.sh && \
 ./.config/setup/3 App Store.sh && \
-ollama create myllama -f .config/setup/myllama.modelfile
 ```
-then download [LuLu](https://objective-see.org/products/lulu.html) and [Wacom](https://www.wacom.com/en-us/support/product-support/drivers) separately.

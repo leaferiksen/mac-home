@@ -20,13 +20,6 @@
   "features": {
     "inline_completion_provider": "none"
   },
-  "assistant": {
-    "default_model": {
-      "provider": "ollama",
-      "model": "llama3.1:8b"
-    },
-    "version": "2"
-  },
   "theme": {
     "mode": "system",
     "light": "macOS Classic Light",

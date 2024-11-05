@@ -7,7 +7,7 @@ defaults write -g "com.apple.swipescrolldirection" -bool "false"
 # show scroll bars
 defaults write -g "AppleShowScrollBars" -string "Always"
 # Keep windows when quitting an app
-defaults write -g NSQuitAlwaysKeepsWindows -bool "true"
+defaults write -g "NSQuitAlwaysKeepsWindows" -bool "true"
 # disable zoom button popup
 defaults write -g "NSZoomButtonShowMenu" -bool "false"
 # accent colors
@@ -17,13 +17,13 @@ defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 # title icons, reduce transparency and keyboard Viewer
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
 defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
+defaults write com.apple.universalaccess "virtualKeyboardOnOff" -bool "true"
 defaults write com.apple.universalaccess "virtualKeyboardCornerActionType" '{
     0 = 1;
     1 = 0;
     2 = 0;
     3 = 0;
 }'
-defaults write com.apple.universalaccess virtualKeyboardOnOff -bool "true"
 
 # Save screenshots to the Pictures/Screenshots
 defaults write com.apple.screencapture location -string "${HOME}/Pictures/Screenshots"
@@ -73,7 +73,7 @@ defaults write com.apple.WindowManager "HideDesktop" -bool "false"
 defaults write com.apple.WindowManager "AutoHideDelay" -int "0"
 
 # reduce motion
-defaults write com.apple.Accessibility ReduceMotionEnabled -int 1
+defaults write com.apple.Accessibility "ReduceMotionEnabled" -int "1"
 
 # no iphone widgets
 defaults write com.apple.chronod "remoteWidgetsEnabled" -bool "false"
@@ -181,10 +181,9 @@ osascript -e 'tell application "System Events" to make login item at end with pr
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/LuLu.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Pure Paste.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Music Decoy.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Ollama.app", hidden:false}'
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Fluid.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Hyperkey.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Loop.app", hidden:false}'
-
 osascript -e 'tell application "System Events" to get the name of every login item'
 
 
