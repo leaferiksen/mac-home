@@ -1,4 +1,4 @@
-Download [LuLu](https://objective-see.org/products/lulu.html), [Wacom](https://www.wacom.com/en-us/support/product-support/drivers) and [Fluid](https://getfluid.app/) from their websites.
+Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html), [Wacom](https://www.wacom.com/en-us/support/product-support/drivers) and [Fluid](https://getfluid.app/) from their websites.
 
 Then open Terminal.app
 ```bash
@@ -14,8 +14,7 @@ su admin
 ```
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
-sudo chown -R leaf /opt/homebrew/ && \
-sudo cp -R /Users/leaf/Documents/Archive/Colemak-DH/Colemak\ DH.bundle /Library/Keyboard\ Layouts/Colemak\ DH.bundle
+sudo chown -R leaf /opt/homebrew/
 ```
 To be able to enable proxy icons, go to `System Settings → Privacy & Security → Full Disk Access` and add Terminal.app, then restart Terminal.app.
 ```bash

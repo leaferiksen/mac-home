@@ -17,7 +17,7 @@ defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 # title icons, reduce transparency and keyboard Viewer
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
 defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
-defaults write com.apple.universalaccess "virtualKeyboardOnOff" -bool "true"
+# defaults write com.apple.universalaccess "virtualKeyboardOnOff" -bool "true"
 defaults write com.apple.universalaccess "virtualKeyboardCornerActionType" '{
     0 = 1;
     1 = 0;
@@ -37,7 +37,7 @@ defaults write -g "NSWindowShouldDragOnGestureFeedback" -bool "false"
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadThreeFingerDrag" -bool "true"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadThreeFingerDrag" -bool "true"
 
-# keyboard disable quote/ dash conversion and globe key
+# keyboard: UI control, disable quote/ dash conversion and globe key
 defaults write -g "AppleKeyboardUIMode" -int "2"
 defaults write -g "NSAutomaticQuoteSubstitutionEnabled" -int "false"
 defaults write -g "NSAutomaticDashSubstitutionEnabled" -bool "false"
@@ -45,10 +45,9 @@ defaults write com.apple.HIToolbox "AppleFnUsageType" -int "0"
 
 # Hyperkey semi-auto window tiling and sidebar
 defaults write -g "NSUserKeyEquivalents" '{
-    "System Settings\U2026" = "@~^,";
-    "Show Sidebar" = "@~^`";
-    "Hide Sidebar" = "@~^`";
-    "Remove Window from Set" = "@~^r";
+    "Show Sidebar" = "@~^$`";
+    "Hide Sidebar" = "@~^$`";
+    "Remove Window from Set" = "@~^$r";
 }'
 
 # disable dock, screensaver hot corner and quick notes
@@ -159,11 +158,13 @@ defaults write com.colliderli.iina "SUEnableAutomaticChecks" -bool "false"
 defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
 /usr/libexec/PlistBuddy -c  "delete :trigger:0" \
 /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-/usr/libexec/PlistBuddy -c "add :trigger:0 integer '58'" \
+/usr/libexec/PlistBuddy -c "add :trigger: integer '55'" \
 /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-/usr/libexec/PlistBuddy -c "add :trigger:1 integer '59'" \
+/usr/libexec/PlistBuddy -c "add :trigger: integer '58'" \
 /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-/usr/libexec/PlistBuddy -c "add :trigger:2 integer '55'" \
+/usr/libexec/PlistBuddy -c "add :trigger: integer '59'" \
+/Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+/usr/libexec/PlistBuddy -c "add :trigger: integer '56'" \
 /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 
 # our lord and savior, Jesus enterprise policies Christ
