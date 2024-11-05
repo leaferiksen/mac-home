@@ -84,8 +84,10 @@ defaults write com.apple.widgets "widgetAppearance" -int "0"
 # defaults write com.apple.spaces.plist spans-displays -bool true
 
 # Finder
+# Show the ~/Library folder
+chflags nohidden ~/Library
 # defaults write com.apple.finder "CreateDesktop" -bool "false"
-defaults write com.apple.finder "QuitMenuItem" -bool "true"
+# defaults write com.apple.finder "QuitMenuItem" -bool "true"
 defaults write com.apple.finder "FXPreferredViewStyle" -string "clmv"
 defaults write com.apple.finder "ShowPathbar" -bool "true"
 defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true"
@@ -142,8 +144,8 @@ defaults write com.apple.finder "NewWindowTarget" "PfHm"
 	/Users/leaf/Library/Preferences/com.apple.finder.plist
 
 # Terminal
+# open "${HOME}/.config/setup/Basic Large.terminal"
 defaults write com.apple.Terminal ShowLineMarks -int 0
-open "${HOME}/.config/setup/Basic Large.terminal"
 
 # IINA
 defaults write com.colliderli.iina "actionAfterLaunch" -int "1"

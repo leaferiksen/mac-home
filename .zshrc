@@ -28,10 +28,10 @@ alias lg='lazygit'
 alias up='brew update; brew upgrade --formulae --no-quarantine $(brew list --formulae); brew upgrade --cask --no-quarantine --greedy $(brew list --cask | grep --invert-match --regexp=thunderbird --regexp=font-red-hat-mono)'
 alias fix='xattr -dr com.apple.quarantine'
 alias nano='nano --modernbindings --softwrap --tabsize=4 --tabstospaces'
-alias l='echo -e "\e[31m$(pwd)\e[0m"; eza --all --long --grid --group-directories-first --no-time --no-permissions --no-user'
-function ll() {eza --color=always --all --long --header --group-directories-first "$@" | less --header 1 --quit-if-one-screen --RAW-CONTROL-CHARS --SILENT --no-vbell}
-function d() {cd "$@"; l}
-function dl() {cd "$@"; ll}
+alias l='echo -e "\e[31m$(pwd)\e[0m"; eza --long --grid --group-directories-first --no-time --no-permissions --no-user'
+function la() {{echo -e "\e[31m$(pwd)\e[0m"; eza --color=always --all --long --header --group-directories-first "$@"} | less --header 2 --quit-if-one-screen --RAW-CONTROL-CHARS --SILENT --no-vbell}
+function c() {cd "$@"; l}
+function ca() {cd "$@"; la}
 function md() {mkdir -p "$(pwd)/$@"; l}
 function mf() {touch "$(pwd)/$@"; l}
 # ls: A=show hidden files h=unit suffixes o=long format without groups
