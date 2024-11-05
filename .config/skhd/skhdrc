@@ -5,8 +5,9 @@
 lcmd - h : skhd -k
 lcmd + alt - h : skhd -k
 
-# open "/System/Applications/iPhone Mirroring.app"
-rcmd - play : osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to not dark mode'
+# media keys
+rcmd - f6 : osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to not dark mode'
+rcmd - play :  open "/System/Applications/iPhone Mirroring.app"
 
 # qwfpbjluy
 rcmd - w : open "/Applications/Microsoft Word.app"

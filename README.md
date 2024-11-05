@@ -10,7 +10,7 @@ git fetch && \
 git checkout -f main
 ```
 ```bash
-su admin
+su - admin
 ```
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \

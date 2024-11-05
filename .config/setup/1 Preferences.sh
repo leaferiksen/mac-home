@@ -17,6 +17,8 @@ defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 # title icons, reduce transparency and keyboard Viewer
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
 defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
+# Use scroll gesture with the Ctrl (^) modifier key to zoom
+defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
 # defaults write com.apple.universalaccess "virtualKeyboardOnOff" -bool "true"
 defaults write com.apple.universalaccess "virtualKeyboardCornerActionType" '{
     0 = 1;
@@ -176,6 +178,9 @@ defaults write org.mozilla.librewolf "EnterprisePoliciesEnabled" -bool "true"
 defaults write org.mozilla.librewolf "DisableAppUpdate" -bool "true"
 defaults write org.mozilla.com.zen.browser "EnterprisePoliciesEnabled" -bool "true"
 defaults write org.mozilla.com.zen.browser "DisableAppUpdate" -bool "true"
+
+# Maccy
+defaults write ${HOME}/Library/Containers/org.p0deje.Maccy/Data/Library/Preferences/org.p0deje.Maccy.plist "KeyboardShortcuts_popup" -string "{\"carbonKeyCode\":9,\"carbonModifiers\":6912}"
 
 # login items
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Maccy.app", hidden:false}'
