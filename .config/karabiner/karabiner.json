@@ -4,7 +4,25 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Colemak Mod-DH Wide (Change right command to spacebar if pressed alone)",
+                        "manipulators": [
+                            {
+                                "description": "Change caps_lock to command+control+option+shift.",
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": ["left_command", "left_control", "left_option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Change rcmd to spacebar if pressed alone and reset 67890-=",
                         "manipulators": [
                             {
                                 "from": {
@@ -14,12 +32,7 @@
                                 "to": [{ "key_code": "right_command" }],
                                 "to_if_alone": [{ "key_code": "spacebar" }],
                                 "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Colemak Mod-DH Wide (Standard Number Keys)",
-                        "manipulators": [
+                            },
                             {
                                 "from": {
                                     "key_code": "6",
@@ -296,24 +309,6 @@
                                     {
                                         "key_code": "equal_sign",
                                         "modifiers": ["right_shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "manipulators": [
-                            {
-                                "description": "Change caps_lock to command+control+option+shift.",
-                                "from": {
-                                    "key_code": "caps_lock",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_shift",
-                                        "modifiers": ["left_command", "left_control", "left_option"]
                                     }
                                 ],
                                 "type": "basic"
@@ -2167,10 +2162,13 @@
                     }
                 ]
             },
-            "name": "Default profile",
+            "name": "Default",
             "selected": true,
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         },
-        { "name": "Gaming profile" }
+        {
+            "name": "Gaming",
+            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
+        }
     ]
 }
