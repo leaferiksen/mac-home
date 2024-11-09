@@ -28,11 +28,12 @@ defaults write com.apple.universalaccess "virtualKeyboardCornerActionType" '{
 }'
 
 # Save screenshots to the Pictures/Screenshots
-defaults write com.apple.screencapture location -string "${HOME}/Pictures/Screenshots"
+# defaults write com.apple.screencapture location -string "${HOME}/Pictures/Screenshots"
 
 # fuck .DS_Store files
 defaults write com.apple.desktopservices "DSDontWriteUSBStores" -bool "true"
 defaults write com.apple.desktopservices "DSDontWriteNetworkStores" -bool "true"
+
 # trackpad cmd+ctrl+three-finger drag
 defaults write -g "NSWindowShouldDragOnGesture" -bool "true"
 defaults write -g "NSWindowShouldDragOnGestureFeedback" -bool "false"
@@ -47,8 +48,8 @@ defaults write com.apple.HIToolbox "AppleFnUsageType" -int "0"
 
 # Hyperkey semi-auto window tiling and sidebar
 defaults write -g "NSUserKeyEquivalents" '{
-    "Show Sidebar" = "@~^$`";
-    "Hide Sidebar" = "@~^$`";
+    "Show Sidebar" = "@~^$s";
+    "Hide Sidebar" = "@~^$s";
     "Remove Window from Set" = "@~^$r";
 }'
 
@@ -109,7 +110,7 @@ defaults write com.apple.finder "FXDefaultSearchScope" "SCcf"
 # Column View : `clmv`
 # Cover Flow  : `Flwv`
 defaults write com.apple.finder "FXPreferredViewStyle" "clmv"
-rm ~/.DS_Store
+# find . -name ".DS_Store" -type f -delete
 # Set default path for new windows.
 # Computer     : `PfCm`
 # Volume       : `PfVo`
@@ -157,6 +158,8 @@ defaults write com.colliderli.iina "ytdlSearchPath" -string "/opt/homebrew/opt/"
 defaults write com.colliderli.iina "SUEnableAutomaticChecks" -bool "false"
 
 # Loop
+defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
+defaults write com.MrKai77.Loop "respectStageManager" -bool "false"
 defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
 /usr/libexec/PlistBuddy -c  "delete :trigger:0" \
 /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
@@ -179,8 +182,21 @@ defaults write org.mozilla.librewolf "DisableAppUpdate" -bool "true"
 defaults write org.mozilla.com.zen.browser "EnterprisePoliciesEnabled" -bool "true"
 defaults write org.mozilla.com.zen.browser "DisableAppUpdate" -bool "true"
 
+# Lunar
+defaults write fyi.lunar.Lunar "hideMenuBarIcon" -bool "true"
+
+
+# Hazel
+defaults write com.noodlesoft.Hazel "ShowStatusInMenuBar" -bool "false"
+defaults write com.noodlesoft.Hazel "SUEnableAutomaticChecks" -bool "false"
+
+# Pure Paste
+defaults write com.sindresorhus.Pure-Paste "NSStatusItem Visible Item-0" -bool "false"
+
 # Maccy
-defaults write ${HOME}/Library/Containers/org.p0deje.Maccy/Data/Library/Preferences/org.p0deje.Maccy.plist "KeyboardShortcuts_popup" -string "{\"carbonKeyCode\":9,\"carbonModifiers\":6912}"
+defaults write read org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonKeyCode\":9,\"carbonModifiers\":6912}"
+defaults write org.p0deje.Maccy "showInStatusBar" -bool "false"
+defaults write org.p0deje.Maccy "popupPosition" -string "center"
 
 # login items
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Maccy.app", hidden:false}'

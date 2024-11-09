@@ -1,7 +1,7 @@
 # keywords https://github.com/koekeishiya/skhd/issues/1
 # macOS keycodes https://gist.github.com/eegrok/949034#file-mac-keycodes
 
-# no more minimizing or hiding
+# no more minimizing or hiding
 lcmd - h : skhd -k
 lcmd + alt - h : skhd -k
 
@@ -9,30 +9,32 @@ lcmd + alt - h : skhd -k
 rcmd - f6 : osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to not dark mode'
 rcmd - play :  open "/System/Applications/iPhone Mirroring.app"
 
+# chat apps sorted by privacy
+rcmd - 1 : open "/System/Applications/Messages.app"
+rcmd - 2 : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Thunderbird.app"
+rcmd - 3 : open "${HOME}/Applications/Element.app"
+rcmd - 4 : open "${HOME}/Applications/Discord.app"
+
 # qwfpbjluy
 rcmd - w : open "/Applications/Microsoft Word.app"
 rcmd - f : open "/System/Library/CoreServices/Finder.app"
-rcmd - b : open "/System/Applications/Books.app"
 rcmd - p : open "/Applications/Proton Pass.app"
 
 # arstgmneio
 rcmd - a : open "/Applications/ManGo.app"
-rcmd - r : open "/System/Applications/Reminders.app"
-rcmd - m : open "/System/Applications/Messages.app"
+rcmd - r : open "${HOME}/Applications/Zotero.app"
+rcmd - s : open "/Applications/Safari.app"
+rcmd - g : open "/System/Applications/Utilities/Terminal.app"
 rcmd - n : open "/Applications/NewsBlur.app"
-rcmd - s : open "${HOME}/Applications/Soulver 3.app"
-rcmd - t : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Thunderbird.app"
-rcmd - e : open "${HOME}/Applications/Element.app"
+rcmd - e : open "${HOME}/Applications/Zed.app"
 rcmd - o : open "${HOME}/Applications/Obsidian.app"
-rcmd - i : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Zen Browser.app"
-rcmd + shift - i : open "/Applications/Safari.app"
-rcmd - return : open "/System/Applications/Utilities/Terminal.app"
 
 # xcdvzkh
 rcmd - d : open "/System/Applications/Dictionary.app"
-rcmd - c : open "${HOME}/Applications/Zed.app"
+rcmd - c : open "${HOME}/Applications/Soulver 3.app"
 rcmd - v : open "${HOME}/Applications/IINA.app"
-rcmd - z : open "${HOME}/Applications/Zotero.app"
+rcmd - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Zen Browser.app"
+rcmd - k : open "/System/Applications/Reminders.app"
 
 # use yabai to move window to space and switch to space
 # rcmd - 1 : yabai -m window --space 1

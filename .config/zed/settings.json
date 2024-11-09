@@ -8,10 +8,10 @@
 // command palette
 {
   "buffer_font_family": "Red Hat Mono",
-  "buffer_font_size": 16,
+  "buffer_font_size": 14,
   "autosave": "on_window_change",
   "soft_wrap": "editor_width",
-  "preferred_line_length": 9999,
+  "preferred_line_length": 120,
   "unstable.ui_density": "compact",
   "toolbar": {
     "breadcrumbs": false,
