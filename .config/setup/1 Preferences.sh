@@ -188,6 +188,7 @@ defaults write fyi.lunar.Lunar "hideMenuBarIcon" -bool "true"
 
 # Hazel
 defaults write com.noodlesoft.Hazel "ShowStatusInMenuBar" -bool "false"
+defaults write com.noodlesoft.Hazel "TrashUninstallApps" -bool "true"
 defaults write com.noodlesoft.Hazel "SUEnableAutomaticChecks" -bool "false"
 
 # Pure Paste
