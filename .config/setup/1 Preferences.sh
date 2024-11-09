@@ -184,7 +184,6 @@ defaults write org.mozilla.com.zen.browser "DisableAppUpdate" -bool "true"
 # Lunar
 defaults write fyi.lunar.Lunar "hideMenuBarIcon" -bool "true"
 
-
 # Hazel
 defaults write com.noodlesoft.Hazel "ShowStatusInMenuBar" -bool "false"
 defaults write com.noodlesoft.Hazel "TrashUninstallApps" -bool "true"
@@ -197,6 +196,9 @@ defaults write com.sindresorhus.Pure-Paste "NSStatusItem Visible Item-0" -bool "
 defaults write read org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonKeyCode\":9,\"carbonModifiers\":6912}"
 defaults write org.p0deje.Maccy "showInStatusBar" -bool "false"
 defaults write org.p0deje.Maccy "popupPosition" -string "center"
+
+# TopNotch
+defaults write pl.maketheweb.TopNotch "hideMenubarIcon" -bool "false"
 
 # login items
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Maccy.app", hidden:false}'
