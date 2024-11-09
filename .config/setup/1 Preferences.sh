@@ -14,9 +14,8 @@ defaults write -g "NSZoomButtonShowMenu" -bool "false"
 defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 
-# title icons, reduce transparency and keyboard Viewer
+# defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
-defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
 # Use scroll gesture with the Ctrl (^) modifier key to zoom
 defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
 # defaults write com.apple.universalaccess "virtualKeyboardOnOff" -bool "true"
