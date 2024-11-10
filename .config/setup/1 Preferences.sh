@@ -150,6 +150,7 @@ defaults write com.apple.finder "NewWindowTarget" "PfHm"
 defaults write com.apple.Terminal ShowLineMarks -int 0
 
 # IINA
+defaults write com.colliderli.iina "currentInputConfigName" -string "VLC Default"
 defaults write com.colliderli.iina "actionAfterLaunch" -int "1"
 defaults write com.colliderli.iina "oscPosition" -int "2"
 defaults write com.colliderli.iina "themeMaterial" -int "4"
