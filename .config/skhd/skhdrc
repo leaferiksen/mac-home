@@ -2,12 +2,8 @@
 # macOS keycodes https://gist.github.com/eegrok/949034#file-mac-keycodes
 
 # no more minimizing or hiding
-lcmd - h : skhd -k
-lcmd + alt - h : skhd -k
-
-# media keys
-rcmd - f6 : osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to not dark mode'
-rcmd - play :  open "/System/Applications/iPhone Mirroring.app"
+cmd - h : skhd -k
+cmd + alt - h : skhd -k
 
 # chat apps sorted by privacy
 rcmd - 1 : open "/System/Applications/Messages.app"
@@ -25,6 +21,7 @@ rcmd - a : open "/Applications/ManGo.app"
 rcmd - r : open "${HOME}/Applications/Zotero.app"
 rcmd - s : open "/Applications/Safari.app"
 rcmd - g : open "/System/Applications/Utilities/Terminal.app"
+rcmd - m :  open "/System/Applications/iPhone Mirroring.app"
 rcmd - n : open "/Applications/NewsBlur.app"
 rcmd - e : open "${HOME}/Applications/Zed.app"
 rcmd - o : open "${HOME}/Applications/Obsidian.app"

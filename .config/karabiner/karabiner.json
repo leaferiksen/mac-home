@@ -5,6 +5,30 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Change DnD to theme toggle",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "f6",
+                                    "modifiers": {
+                                        "mandatory": ["fn"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "key_code": "f6" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "f6",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "shell_command": "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "manipulators": [
                             {
                                 "description": "Change caps_lock to hyper.",

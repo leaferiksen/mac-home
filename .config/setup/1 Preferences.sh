@@ -39,11 +39,12 @@ defaults write -g "NSWindowShouldDragOnGestureFeedback" -bool "false"
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadThreeFingerDrag" -bool "true"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadThreeFingerDrag" -bool "true"
 
-# keyboard: UI control, disable quote/ dash conversion and globe key
+# defaults write -g "com.apple.keyboard.fnState" -bool "true" # let karabiner handle media keys
+# keyboard: UI control, disable disable globe key, quote/ dash conversion and
+defaults write com.apple.HIToolbox "AppleFnUsageType" -int "0"
 defaults write -g "AppleKeyboardUIMode" -int "2"
 defaults write -g "NSAutomaticQuoteSubstitutionEnabled" -int "false"
 defaults write -g "NSAutomaticDashSubstitutionEnabled" -bool "false"
-defaults write com.apple.HIToolbox "AppleFnUsageType" -int "0"
 
 # Hyperkey semi-auto window tiling and sidebar
 defaults write -g "NSUserKeyEquivalents" '{
