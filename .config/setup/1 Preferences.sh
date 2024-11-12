@@ -146,8 +146,10 @@ defaults write com.apple.finder "NewWindowTarget" "PfHm"
 	/Users/leaf/Library/Preferences/com.apple.finder.plist
 
 # Terminal
-# open "${HOME}/.config/setup/Basic Large.terminal"
+open "${HOME}/.config/setup/Basic Large.terminal"
 defaults write com.apple.Terminal ShowLineMarks -int 0
+defaults write com.apple.Terminal "Default Window Settings" -string "Basic Large"
+defaults write com.apple.Terminal "Startup Window Settings" -string "Basic Large"
 
 # IINA
 defaults write com.colliderli.iina "currentInputConfigName" -string "VLC Default"
@@ -202,6 +204,9 @@ defaults write org.p0deje.Maccy "popupPosition" -string "center"
 # Lickable Menu Bar
 defaults write com.ibluebox.aqua-menu-bar "lows" -bool "false"
 defaults write com.ibluebox.aqua-menu-bar "style" -int "3"
+
+# SaneSideButtons
+defaults write com.janhuelsmann.SaneSideButtons "NSStatusItem Visible Item-0" -bool "false"
 
 # TopNotch
 # defaults write pl.maketheweb.TopNotch "hideMenubarIcon" -bool "false"

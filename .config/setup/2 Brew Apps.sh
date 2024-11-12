@@ -8,4 +8,4 @@ brew install --formula lazygit less mas eza nano zsh-autosuggestions zsh-syntax-
 # brew tap FelixKratz/formulae && brew install borders && brew services start borders
 brew install koekeishiya/formulae/skhd && skhd --start-service
 
-brew install --cask --no-quarantine font-atkinson-hyperlegible font-open-dyslexic font-red-hat-mono topnotch aldente maccy lunar music-decoy iina vlc handbrake proton-pass zen-browser librewolf thunderbird chromium obsidian zotero itch affinity-designer calibre soulver anki porting-kit heroic modrinth zed utm whisky diffusionbee
+brew install --cask --no-quarantine font-atkinson-hyperlegible font-open-dyslexic font-red-hat-mono sanesidebuttons topnotch aldente maccy lunar music-decoy iina vlc handbrake proton-pass zen-browser librewolf thunderbird chromium obsidian zotero itch affinity-designer calibre soulver anki porting-kit heroic modrinth zed utm whisky diffusionbee

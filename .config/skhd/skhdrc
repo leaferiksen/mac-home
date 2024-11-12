@@ -5,32 +5,30 @@
 cmd - h : skhd -k
 cmd + alt - h : skhd -k
 
-# chat apps sorted by privacy
-rcmd - 1 : open "/System/Applications/Messages.app"
-rcmd - 2 : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Thunderbird.app"
-rcmd - 3 : open "${HOME}/Applications/Element.app"
-rcmd - 4 : open "${HOME}/Applications/Discord.app"
-
 # qwfpbjluy
 rcmd - w : open "/Applications/Microsoft Word.app"
 rcmd - f : open "/System/Library/CoreServices/Finder.app"
 rcmd - p : open "/Applications/Proton Pass.app"
+rcmd - l   : open "/System/Applications/Dictionary.app"
 
 # arstgmneio
 rcmd - a : open "/Applications/ManGo.app"
 rcmd - r : open "${HOME}/Applications/Zotero.app"
 rcmd - s : open "/Applications/Safari.app"
+rcmd - t : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Thunderbird.app"
 rcmd - g : open "/System/Applications/Utilities/Terminal.app"
-rcmd - m :  open "/System/Applications/iPhone Mirroring.app"
+rcmd - m : open "/System/Applications/Messages.app"
 rcmd - n : open "/Applications/NewsBlur.app"
-rcmd - e : open "${HOME}/Applications/Zed.app"
+rcmd - e : open "${HOME}/Applications/Element.app"
+rcmd - i :  open "/System/Applications/iPhone Mirroring.app"
 rcmd - o : open "${HOME}/Applications/Obsidian.app"
 
 # xcdvzkh
-rcmd - d : open "/System/Applications/Dictionary.app"
+rcmd - d : open "${HOME}/Applications/Discord.app"
 rcmd - c : open "${HOME}/Applications/Soulver 3.app"
 rcmd - v : open "${HOME}/Applications/IINA.app"
-rcmd - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Zen Browser.app"
+rcmd - z : open "${HOME}/Applications/Zed.app"
+# rcmd - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Zen Browser.app"
 rcmd - k : open "/System/Applications/Reminders.app"
 
 # use yabai to move window to space and switch to space
