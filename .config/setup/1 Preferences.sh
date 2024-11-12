@@ -199,8 +199,12 @@ defaults write read org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbo
 defaults write org.p0deje.Maccy "showInStatusBar" -bool "false"
 defaults write org.p0deje.Maccy "popupPosition" -string "center"
 
+# Lickable Menu Bar
+defaults write com.ibluebox.aqua-menu-bar "lows" -bool "false"
+defaults write com.ibluebox.aqua-menu-bar "style" -int "3"
+
 # TopNotch
-defaults write pl.maketheweb.TopNotch "hideMenubarIcon" -bool "false"
+# defaults write pl.maketheweb.TopNotch "hideMenubarIcon" -bool "false"
 
 # login items
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Maccy.app", hidden:false}'
@@ -212,6 +216,7 @@ osascript -e 'tell application "System Events" to make login item at end with pr
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Fluid.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Hyperkey.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Loop.app", hidden:false}'
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Lickable Menu Bar.app", hidden:false}'
 osascript -e 'tell application "System Events" to get the name of every login item'
 
 
