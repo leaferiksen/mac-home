@@ -145,6 +145,18 @@ defaults write com.apple.finder "NewWindowTarget" "PfHm"
 	"add 'PreviewPaneSettings':public.text:showQuickActions bool false" \
 	/Users/leaf/Library/Preferences/com.apple.finder.plist
 
+# Safari
+# Privacy: don’t send search queries to Apple
+defaults write com.apple.Safari UniversalSearchEnabled -bool false
+defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+# Enable “Do Not Track”
+defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
+# Update extensions automatically
+defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
+# Disable AutoFill
+defaults write com.apple.Safari AutoFillPasswords -bool false
+
+
 # Terminal
 open "${HOME}/.config/setup/Basic Large.terminal"
 defaults write com.apple.Terminal ShowLineMarks -int 0
