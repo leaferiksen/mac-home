@@ -112,7 +112,7 @@
 		<key>short_name</key>
 		<string>Instagram</string>
 		<key>start_url</key>
-		<string>https://www.instagram.com/?utm_source=pwa_homescreen&amp;__pwa=1</string>
+		<string>https://www.instagram.com/direct/inbox/</string>
 		<key>theme_color</key>
 		<string>#ffffff</string>
 	</dict>
