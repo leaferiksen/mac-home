@@ -27,7 +27,7 @@ defaults write com.apple.universalaccess "virtualKeyboardCornerActionType" '{
 }'
 
 # Save screenshots to the Pictures/Screenshots
-# defaults write com.apple.screencapture location -string "${HOME}/Pictures/Screenshots"
+# defaults write com.apple.screencapture location -string "/Users/leaf/Pictures/Screenshots"
 
 # fuck .DS_Store files
 defaults write com.apple.desktopservices "DSDontWriteUSBStores" -bool "true"
@@ -63,10 +63,26 @@ defaults write com.apple.dock "tilesize" -int "48"
 defaults write com.apple.dock "showhidden" -bool "true"
 defaults write com.apple.dock "show-recents" -bool "false"
 defaults write com.apple.dock "enable-spring-load-actions-on-all-items" -bool "true"
-defaults delete com.apple.dock wvous-br-corner
-defaults delete com.apple.dock wvous-br-modifier
 # don't automatically rearrange Spaces based on most recent use
 defaults write com.apple.dock "mru-spaces" -bool "false"
+# 0: No Option
+# 2: Mission Control
+# 3: Show application windows
+# 4: Desktop
+# 5: Start screen saver
+# 6: Disable screen saver
+# 7: Dashboard
+# 10: Put display to sleep
+# 11: Launchpad
+# 13: Lock Screen
+# 12: Notification Center
+defaults delete com.apple.dock wvous-br-corner
+# 0: No Modifier
+# 131072: Shift Key
+# 262144: Control Key
+# 524288: Option Key
+# 1048576: Command Key
+defaults delete com.apple.dock wvous-br-modifier
 
 # Stage Manager
 defaults write com.apple.WindowManager "GloballyEnabled" -bool "true"
@@ -78,7 +94,7 @@ defaults write com.apple.WindowManager "AutoHideDelay" -int "0"
 defaults write com.apple.Accessibility "ReduceMotionEnabled" -int "1"
 
 # no iphone widgets
-defaults write com.apple.chronod "remoteWidgetsEnabled" -bool "false"
+# defaults write com.apple.chronod "remoteWidgetsEnabled" -bool "false"
 # monocrome widgets
 defaults write com.apple.widgets "widgetAppearance" -int "0"
 
@@ -146,19 +162,27 @@ defaults write com.apple.finder "NewWindowTarget" "PfHm"
 	/Users/leaf/Library/Preferences/com.apple.finder.plist
 
 # Safari
-# Privacy: don’t send search queries to Apple
-defaults write com.apple.Safari UniversalSearchEnabled -bool false
-defaults write com.apple.Safari SuppressSearchSuggestions -bool true
-# Enable “Do Not Track”
-defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
-# Update extensions automatically
-defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
 # Disable AutoFill
-defaults write com.apple.Safari AutoFillPasswords -bool false
+defaults write com.apple.Safari "AutoFillPasswords" -bool "false"
+# Show full URL
+defaults write com.apple.Safari "ShowFullURLInSmartSearchField" -bool "true"
+# develop menu and the web inspector
+defaults write com.apple.Safari "IncludeDevelopMenu" -bool "true"
+defaults write com.apple.Safari "WebKitDeveloperExtrasEnabledPreferenceKey" -bool "true"
+defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool "true"
+# context menu for web inspector
+defaults write NSGlobalDomain "WebKitDeveloperExtras" -bool "true"
+# Set up UserScripts
+cp '/Users/leaf/Documents/Archive/browser stuff/Fix Google Search.js' '/Users/leaf/Library/Containers/com.userscripts.macos.Userscripts-Extension/Data/Documents/scripts/Fix Google Search.js'
 
+# Mail
+defaults write com.apple.mail "SendFormat" -string "Plain"
+defaults write com.apple.mail "NSUserKeyEquivalents" '{
+    Send = "@\\U21a9";
+}'
 
 # Terminal
-open "${HOME}/.config/setup/Basic Large.terminal"
+open "/Users/leaf/.config/setup/Basic Large.terminal"
 defaults write com.apple.Terminal ShowLineMarks -int 0
 defaults write com.apple.Terminal "Default Window Settings" -string "Basic Large"
 defaults write com.apple.Terminal "Startup Window Settings" -string "Basic Large"
@@ -230,7 +254,7 @@ osascript -e 'tell application "System Events" to make login item at end with pr
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/LuLu.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Pure Paste.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Music Decoy.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Fluid.app", hidden:false}'
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/SaneSideButtons.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Hyperkey.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Loop.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Lickable Menu Bar.app", hidden:false}'

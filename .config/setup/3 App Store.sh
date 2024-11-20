@@ -1,7 +1,7 @@
 mas install 6449873635  #Sink It for Reddit
 mas install 1592917505  #Noir
 mas install 425424353   #The Unarchiver
-mas install 1591303229  #Vinegar
+# mas install 1591303229  #Vinegar
 mas install 1611378436  #Pure Paste
 mas install 6444217677  #Lickable Menu Bar
 mas install 6720708363  #Obsidian Web Clipper

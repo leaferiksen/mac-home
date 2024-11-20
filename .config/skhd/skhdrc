@@ -1,46 +1,52 @@
 # keywords https://github.com/koekeishiya/skhd/issues/1
 # macOS keycodes https://gist.github.com/eegrok/949034#file-mac-keycodes
-# export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Zen Browser.app"
+# export MOZ_DISABLE_SAFE_MODE_KEY=1; open "/Users/leaf/Applications/Zen Browser.app"
 
 # no more minimizing or hiding
 cmd - h : skhd -k
 cmd + alt - h : skhd -k
 
 # qwfpbjluy
-rcmd - w : open "/Applications/Microsoft Word.app"
-rcmd - f : open "/System/Library/CoreServices/Finder.app"
-rcmd - p : open "/Applications/Proton Pass.app"
-rcmd - b : open "/Applications/Safari.app"
-rcmd - l : open "/System/Applications/Dictionary.app"
+ralt - w : open "/Applications/Microsoft Word.app"
+ralt - f : open "/System/Library/CoreServices/Finder.app"
+ralt - p : open "/Users/leaf/Applications/Proton Pass.app"
+ralt - b : open "/Applications/Safari.app"
+ralt - l : open "/System/Applications/Dictionary.app"
+ralt - u : open "/Users/leaf/Applications/UTM.app"
+ralt - y : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "/Users/leaf/Applications/Zen Browser.app"
 
 # arstgmneio
-rcmd - a : open "/Applications/ManGo.app"
-rcmd - r : open "${HOME}/Applications/Zotero.app"
-rcmd - s : open "${HOME}/Applications/Soulver 3.app"
-rcmd - t : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "${HOME}/Applications/Thunderbird.app"
-rcmd - g : open "/System/Applications/Utilities/Terminal.app"
-rcmd - m : open "${HOME}/Applications/Phanpy.app"
-rcmd - n : open "/Applications/NewsBlur.app"
-rcmd + alt - n : open "${HOME}/Applications/Netflix.app"
-rcmd - e : open "${HOME}/Applications/Element.app"
-rcmd - i : open "/System/Applications/iPhone Mirroring.app"
-rcmd - o : open "${HOME}/Applications/Obsidian.app"
+ralt - a : open "/Users/leaf/Applications/Anki.app"
+ralt - r : open "/Users/leaf/Applications/Zotero.app"
+ralt - s : open "/Users/leaf/Applications/Soulver 3.app"
+ralt - t : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "/Users/leaf/Applications/Thunderbird.app"
+ralt - g : open "/Users/leaf/Applications/Steam.app"
+ralt + alt - g : open "/Users/leaf/Applications/CrossOver/Steam/Steam.app"
+ralt + shift - g : open "/Users/leaf/Applications/Heroic.app"
+ralt - m : open "/Users/leaf/Applications/Phanpy.app"
+ralt + alt - m : open "/Applications/ManGo.app"
+ralt - n : open "/Applications/NewsBlur.app"
+ralt + alt - n : open "/Users/leaf/Applications/Netflix.app"
+ralt - e : open "/Users/leaf/Applications/Element.app"
+ralt - i : open "/System/Applications/iPhone Mirroring.app"
+ralt - o : open "/Users/leaf/Applications/Obsidian.app"
+ralt - return : open "/System/Applications/Utilities/Terminal.app"
 
 # xcdvzkh
-rcmd - d : open "${HOME}/Applications/Discord.app"
-rcmd - c : open "/System/Applications/Messages.app"
-rcmd - v : open "${HOME}/Applications/IINA.app"
-rcmd - z : open "${HOME}/Applications/Zed.app"
-rcmd - k : open "/System/Applications/Reminders.app"
+ralt - d : open "/Users/leaf/Applications/Discord.app"
+ralt - c : open "/System/Applications/Messages.app"
+ralt - v : open "/Users/leaf/Applications/IINA.app"
+ralt - z : open "/Users/leaf/Applications/Zed.app"
+ralt - k : open "/System/Applications/Reminders.app"
 
 # use yabai to move window to space and switch to space
-# rcmd - 1 : yabai -m window --space 1
-# rcmd - 2 : yabai -m window --space 2
-# rcmd - 3 : yabai -m window --space 3
-# rcmd - 4 : yabai -m window --space 4
-# rcmd - 5 : yabai -m window --space 5
-# rcmd - 6 : yabai -m window --space 6
-# rcmd - 7 : yabai -m window --space 7
-# rcmd - 8 : yabai -m window --space 8
-# rcmd - 9 : yabai -m window --space 9
-# rcmd - 0 : yabai -m window --space 10
+# ralt - 1 : yabai -m window --space 1
+# ralt - 2 : yabai -m window --space 2
+# ralt - 3 : yabai -m window --space 3
+# ralt - 4 : yabai -m window --space 4
+# ralt - 5 : yabai -m window --space 5
+# ralt - 6 : yabai -m window --space 6
+# ralt - 7 : yabai -m window --space 7
+# ralt - 8 : yabai -m window --space 8
+# ralt - 9 : yabai -m window --space 9
+# ralt - 0 : yabai -m window --space 10
