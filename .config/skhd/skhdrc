@@ -6,38 +6,42 @@
 cmd - h : skhd -k
 cmd + alt - h : skhd -k
 
+# Social/chat apps, sorted by how much of a waste of time they are
+# how much is this app just used for doomscrolling through info I don't need and won't engage with?
+ralt - 1 : open "/System/Applications/Messages.app"
+ralt - 2 : open "/Users/leaf/Applications/Discord.app"
+ralt - 3 : open "/Users/leaf/Applications/Element.app"
+ralt - 4 : open "/Users/leaf/Applications/Phanpy.app"
+
 # qwfpbjluy
 ralt - w : open "/Applications/Microsoft Word.app"
 ralt - f : open "/System/Library/CoreServices/Finder.app"
 ralt - p : open "/Users/leaf/Applications/Proton Pass.app"
 ralt - b : open "/Applications/Safari.app"
-ralt - l : open "/System/Applications/Dictionary.app"
+ralt - l : shortcuts run "My Library"
 ralt - u : open "/Users/leaf/Applications/UTM.app"
 ralt - y : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "/Users/leaf/Applications/Zen Browser.app"
 
 # arstgmneio
 ralt - a : open "/Users/leaf/Applications/Anki.app"
-ralt - r : open "/Users/leaf/Applications/Zotero.app"
-ralt - s : open "/Users/leaf/Applications/Soulver 3.app"
+ralt - s : open "/Users/leaf/Applications/Steam.app"
+ralt + shift - s : open "/Users/leaf/Applications/CrossOver/Steam/Steam.app"
 ralt - t : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "/Users/leaf/Applications/Thunderbird.app"
-ralt - g : open "/Users/leaf/Applications/Steam.app"
-ralt + alt - g : open "/Users/leaf/Applications/CrossOver/Steam/Steam.app"
-ralt + shift - g : open "/Users/leaf/Applications/Heroic.app"
-ralt - m : open "/Users/leaf/Applications/Phanpy.app"
-ralt + alt - m : open "/Applications/ManGo.app"
+ralt - m : open "/Applications/ManGo.app"
 ralt - n : open "/Applications/NewsBlur.app"
-ralt + alt - n : open "/Users/leaf/Applications/Netflix.app"
-ralt - e : open "/Users/leaf/Applications/Element.app"
+ralt + shift - n : open "/Users/leaf/Applications/Netflix.app"
 ralt - i : open "/System/Applications/iPhone Mirroring.app"
 ralt - o : open "/Users/leaf/Applications/Obsidian.app"
 ralt - return : open "/System/Applications/Utilities/Terminal.app"
 
 # xcdvzkh
-ralt - d : open "/Users/leaf/Applications/Discord.app"
-ralt - c : open "/System/Applications/Messages.app"
 ralt - v : open "/Users/leaf/Applications/IINA.app"
-ralt - z : open "/Users/leaf/Applications/Zed.app"
+ralt - x : open "/Applications/Xcode.app"
+ralt - c : open "/Users/leaf/Applications/Soulver 3.app"
+ralt - d : open "/System/Applications/Dictionary.app"
+ralt - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "/Users/leaf/Applications/Zotero.app"
 ralt - k : open "/System/Applications/Reminders.app"
+ralt - h : open "/Users/leaf/Applications/Heroic.app"
 
 # use yabai to move window to space and switch to space
 # ralt - 1 : yabai -m window --space 1

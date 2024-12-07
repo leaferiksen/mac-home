@@ -31,6 +31,7 @@ alias q='qlmanage -p'
 alias lg='lazygit'
 alias fix='xattr -dr com.apple.quarantine'
 alias nano='nano --modernbindings --softwrap --tabsize=4 --tabstospaces'
+alias diff='diff --color=always'
 alias l='echo -e "\e[31m$(pwd)\e[0m"; eza --long --grid --group-directories-first --no-time --no-permissions --no-user'
 function la() {{echo -e "\e[31m$(pwd)\e[0m"; eza --color=always --all --long --header --group-directories-first "$@"} | less --header 2 --quit-if-one-screen --RAW-CONTROL-CHARS --SILENT --no-vbell}
 function c() {cd "$@"; l}

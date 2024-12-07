@@ -18,6 +18,7 @@ defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
 # Use scroll gesture with the Ctrl (^) modifier key to zoom
 defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
+
 # defaults write com.apple.universalaccess "virtualKeyboardOnOff" -bool "true"
 defaults write com.apple.universalaccess "virtualKeyboardCornerActionType" '{
     0 = 1;
@@ -38,6 +39,8 @@ defaults write -g "NSWindowShouldDragOnGesture" -bool "true"
 defaults write -g "NSWindowShouldDragOnGestureFeedback" -bool "false"
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadThreeFingerDrag" -bool "true"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadThreeFingerDrag" -bool "true"
+defaults write com.apple.AppleMultitouchTrackpad "TrackpadTwoFingerFromRightEdgeSwipeGesture" -int "0"
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadTwoFingerFromRightEdgeSwipeGesture" -int "0"
 
 # defaults write -g "com.apple.keyboard.fnState" -bool "true" # let karabiner handle media keys
 # keyboard: UI control, disable disable globe key, quote/ dash conversion and
@@ -92,6 +95,9 @@ defaults write com.apple.WindowManager "AutoHideDelay" -int "0"
 
 # reduce motion
 defaults write com.apple.Accessibility "ReduceMotionEnabled" -int "1"
+
+# Disable in-app rating requests from apps downloaded from the App Store.
+defaults write com.apple.appstore InAppReviewEnabled -int 0
 
 # no iphone widgets
 # defaults write com.apple.chronod "remoteWidgetsEnabled" -bool "false"
@@ -191,6 +197,7 @@ defaults write com.apple.Terminal "Startup Window Settings" -string "Basic Large
 defaults write com.colliderli.iina "currentInputConfigName" -string "VLC Default"
 defaults write com.colliderli.iina "actionAfterLaunch" -int "1"
 defaults write com.colliderli.iina "oscPosition" -int "2"
+defaults write com.colliderli.iina "arrowBtnAction" -int "1"
 defaults write com.colliderli.iina "themeMaterial" -int "4"
 defaults write com.colliderli.iina "windowBehaviorWhenPip" -int "1"
 defaults write com.colliderli.iina "ytdlSearchPath" -string "/opt/homebrew/opt/"
@@ -212,14 +219,10 @@ defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "tru
 /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 
 # our lord and savior, Jesus enterprise policies Christ
-defaults write org.mozilla.com.firefox "EnterprisePoliciesEnabled" -bool "true"
-defaults write org.mozilla.com.firefox "DisableAppUpdate" -bool "true"
-defaults write org.mozilla.thunderbird "EnterprisePoliciesEnabled" -bool "true"
-defaults write org.mozilla.thunderbird "DisableAppUpdate" -bool "true"
 defaults write org.mozilla.librewolf "EnterprisePoliciesEnabled" -bool "true"
 defaults write org.mozilla.librewolf "DisableAppUpdate" -bool "true"
-defaults write org.mozilla.com.zen.browser "EnterprisePoliciesEnabled" -bool "true"
-defaults write org.mozilla.com.zen.browser "DisableAppUpdate" -bool "true"
+defaults write org.mozilla.thunderbird "EnterprisePoliciesEnabled" -bool "true"
+defaults write org.mozilla.thunderbird "DisableAppUpdate" -bool "true"
 
 # Lunar
 defaults write fyi.lunar.Lunar "hideMenuBarIcon" -bool "true"
