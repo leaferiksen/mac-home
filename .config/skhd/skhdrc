@@ -1,47 +1,47 @@
 # keywords https://github.com/koekeishiya/skhd/issues/1
 # macOS keycodes https://gist.github.com/eegrok/949034#file-mac-keycodes
-# export MOZ_DISABLE_SAFE_MODE_KEY=1; open "/Users/leaf/Applications/Zen Browser.app"
+# export MOZ_DISABLE_SAFE_MODE_KEY=1; open /Users/leaf/Applications/Zen Browser.app
 
-# no more minimizing or hiding
-cmd - h : skhd -k
-cmd + alt - h : skhd -k
+# no more minimizing
+cmd - m : skhd -k
+cmd + alt - m : skhd -k
 
 # Social/chat apps, sorted by how much of a waste of time they are
 # how much is this app just used for doomscrolling through info I don't need and won't engage with?
-ralt - 1 : open "/System/Applications/Messages.app"
-ralt - 2 : open "/Users/leaf/Applications/Discord.app"
-ralt - 3 : open "/Users/leaf/Applications/Element.app"
-ralt - 4 : open "/Users/leaf/Applications/Phanpy.app"
+ralt - 1 : open /System/Applications/Messages.app
+ralt - 2 : open /Users/leaf/Applications/Discord.app
+ralt - 3 : open /Users/leaf/Applications/Element.app
+ralt - 4 : open /Users/leaf/Applications/Phanpy.app
 
 # qwfpbjluy
-ralt - w : open "/Applications/Microsoft Word.app"
-ralt - f : open "/System/Library/CoreServices/Finder.app"
-ralt - p : open "/Users/leaf/Applications/Proton Pass.app"
-ralt - b : open "/Applications/Safari.app"
-ralt - l : shortcuts run "My Library"
-ralt - u : open "/Users/leaf/Applications/UTM.app"
-ralt - y : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "/Users/leaf/Applications/Zen Browser.app"
+ralt - w : open /Applications/Microsoft Word.app
+ralt - f : open /System/Library/CoreServices/Finder.app
+ralt - p : open /Users/leaf/Applications/Proton Pass.app
+ralt - b : shortcuts run "Books Library"
+ralt - l : open /Users/leaf/Applications/LibreOffice.app
+ralt - u : open /Users/leaf/Applications/UTM.app
+ralt - y : export MOZ_DISABLE_SAFE_MODE_KEY=1; open /Users/leaf/Applications/Zen Browser.app
 
 # arstgmneio
-ralt - a : open "/Users/leaf/Applications/Anki.app"
-ralt - s : open "/Users/leaf/Applications/Steam.app"
-ralt + shift - s : open "/Users/leaf/Applications/CrossOver/Steam/Steam.app"
-ralt - t : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "/Users/leaf/Applications/Thunderbird.app"
-ralt - m : open "/Applications/ManGo.app"
-ralt - n : open "/Applications/NewsBlur.app"
-ralt + shift - n : open "/Users/leaf/Applications/Netflix.app"
-ralt - i : open "/System/Applications/iPhone Mirroring.app"
-ralt - o : open "/Users/leaf/Applications/Obsidian.app"
-ralt - return : open "/System/Applications/Utilities/Terminal.app"
+ralt - a : open /Users/leaf/Applications/Anki.app
+ralt - s : open /Applications/Safari.app
+ralt + shift - s : open /Users/leaf/Applications/Steam.app
+ralt - t : export MOZ_DISABLE_SAFE_MODE_KEY=1; open /Users/leaf/Applications/Thunderbird.app
+ralt - m : open /Applications/ManGo.app
+ralt - n : open /Applications/NewsBlur.app
+ralt + shift - n : open /Users/leaf/Applications/Netflix.app
+ralt - i : open /System/Applications/iPhone Mirroring.app
+ralt - o : open /Users/leaf/Applications/Obsidian.app
+ralt - return : open /System/Applications/Utilities/Terminal.app
 
 # xcdvzkh
-ralt - v : open "/Users/leaf/Applications/IINA.app"
-ralt - x : open "/Applications/Xcode.app"
-ralt - c : open "/Users/leaf/Applications/Soulver 3.app"
-ralt - d : open "/System/Applications/Dictionary.app"
-ralt - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "/Users/leaf/Applications/Zotero.app"
-ralt - k : open "/System/Applications/Reminders.app"
-ralt - h : open "/Users/leaf/Applications/Heroic.app"
+ralt - v : open /Users/leaf/Applications/IINA.app
+ralt - x : open /Applications/Xcode.app
+ralt - c : open /Users/leaf/Applications/Soulver 3.app
+ralt - d : open /System/Applications/Dictionary.app
+ralt - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open /Users/leaf/Applications/Zotero.app
+ralt - k : open /System/Applications/Reminders.app
+ralt - h : open /Users/leaf/Applications/Heroic.app
 
 # use yabai to move window to space and switch to space
 # ralt - 1 : yabai -m window --space 1
