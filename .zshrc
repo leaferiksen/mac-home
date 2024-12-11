@@ -36,8 +36,8 @@ alias l='echo -e "\e[31m$(pwd)\e[0m"; eza --long --grid --group-directories-firs
 function la() {{echo -e "\e[31m$(pwd)\e[0m"; eza --color=always --all --long --header --group-directories-first "$@"} | less --header 2 --quit-if-one-screen --RAW-CONTROL-CHARS --SILENT --no-vbell}
 function c() {cd "$@"; l}
 function ca() {cd "$@"; la}
-function md() {mkdir -p "$(pwd)/$@"; l}
-function mf() {touch "$(pwd)/$@"; l}
+function dl() {mkdir -p "$(pwd)/$@"; l}
+function tl() {touch "$(pwd)/$@"; l}
 # ls: A=show hidden files h=unit suffixes o=long format without groups
 # Terminal startup
 l

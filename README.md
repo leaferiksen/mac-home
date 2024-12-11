@@ -21,6 +21,4 @@ To enable proxy icons, go to `System Settings → Privacy & Security → Full Di
 ./.config/setup/2\ Brew\ Apps.sh && \
 ./.config/setup/3\ App\ Store.sh
 ```
-Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html), [Wacom](https://www.wacom.com/en-us/support/product-support/drivers) and [Fluid](https://getfluid.app/) from their websites.
-
-Add Weather to menu bar and remove Siri
+Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html), [Wacom](https://www.wacom.com/en-us/support/product-support/drivers) and [Fluid](https://getfluid.app/) from their websites add Weather to menu bar

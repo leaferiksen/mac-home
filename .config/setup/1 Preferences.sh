@@ -6,13 +6,16 @@ osascript -e 'tell application "System Preferences" to quit'
 defaults write -g "com.apple.swipescrolldirection" -bool "false"
 # show scroll bars
 defaults write -g "AppleShowScrollBars" -string "Always"
-# Keep windows when quitting an app
-defaults write -g "NSQuitAlwaysKeepsWindows" -bool "true"
 # disable zoom button popup
 defaults write -g "NSZoomButtonShowMenu" -bool "false"
 # accent colors
 defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
+
+# Keep windows when quitting an app
+# defaults write -g "NSQuitAlwaysKeepsWindows" -bool "true"
+# Save screenshots to the Pictures/Screenshots
+# defaults write com.apple.screencapture location -string "/Users/leaf/Pictures/Screenshots"
 
 # defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
@@ -26,9 +29,6 @@ defaults write com.apple.universalaccess "virtualKeyboardCornerActionType" '{
     2 = 0;
     3 = 0;
 }'
-
-# Save screenshots to the Pictures/Screenshots
-# defaults write com.apple.screencapture location -string "/Users/leaf/Pictures/Screenshots"
 
 # fuck .DS_Store files
 defaults write com.apple.desktopservices "DSDontWriteUSBStores" -bool "true"
@@ -55,6 +55,8 @@ defaults write -g "NSUserKeyEquivalents" '{
     "Hide Sidebar" = "@~^$s";
     "Remove Window from Set" = "@~^$r";
 }'
+
+###############################################################################
 
 # disable dock, screensaver hot corner and quick notes
 defaults write com.apple.dock "autohide-delay" -float "1000"
@@ -87,28 +89,39 @@ defaults delete com.apple.dock wvous-br-corner
 # 1048576: Command Key
 defaults delete com.apple.dock wvous-br-modifier
 
+###############################################################################
+
 # Stage Manager
-defaults write com.apple.WindowManager "GloballyEnabled" -bool "true"
-defaults write com.apple.WindowManager "AutoHide" -bool "true"
+# defaults write com.apple.WindowManager "GloballyEnabled" -bool "true"
 defaults write com.apple.WindowManager "HideDesktop" -bool "false"
+defaults write com.apple.WindowManager "AutoHide" -bool "true"
 defaults write com.apple.WindowManager "AutoHideDelay" -int "0"
+
+###############################################################################
 
 # reduce motion
 defaults write com.apple.Accessibility "ReduceMotionEnabled" -int "1"
 
+###############################################################################
+
 # Disable in-app rating requests from apps downloaded from the App Store.
 defaults write com.apple.appstore InAppReviewEnabled -int 0
+
+###############################################################################
 
 # no iphone widgets
 # defaults write com.apple.chronod "remoteWidgetsEnabled" -bool "false"
 # monocrome widgets
 defaults write com.apple.widgets "widgetAppearance" -int "0"
 
+###############################################################################
+
 # displays don't have separate Spaces (breaks shit)
 # defaults write com.apple.spaces.plist spans-displays -bool true
 
+###############################################################################
+
 # Finder
-# Show the ~/Library folder
 chflags nohidden ~/Library
 # defaults write com.apple.finder "CreateDesktop" -bool "false"
 # defaults write com.apple.finder "QuitMenuItem" -bool "true"
@@ -167,19 +180,33 @@ defaults write com.apple.finder "NewWindowTarget" "PfHm"
 	"add 'PreviewPaneSettings':public.text:showQuickActions bool false" \
 	/Users/leaf/Library/Preferences/com.apple.finder.plist
 
+###############################################################################
+
 # Safari
 # Disable AutoFill
 defaults write com.apple.Safari "AutoFillPasswords" -bool "false"
 # Show full URL
 defaults write com.apple.Safari "ShowFullURLInSmartSearchField" -bool "true"
+# Enhanced Privacy
+defaults write com.apple.safari "EnableEnhancedPrivacyInRegularBrowsing" -bool "true"
+defaults write com.apple.safari "EnableEnhancedPrivacyInPrivateBrowsing" -bool "true"
+# Privacy: don’t send search queries to Apple
+defaults write com.apple.Safari UniversalSearchEnabled -bool false
+defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+# disable tracking backdoor
+defaults write com.apple.safari "WebKitPreferences.privateClickMeasurementEnabled" -bool "false"
+# ask where to download
+defaults write com.apple.Safari.SandboxBroker "AlwaysPromptForDownloadFolder" -bool "true"
 # develop menu and the web inspector
 defaults write com.apple.Safari "IncludeDevelopMenu" -bool "true"
+defaults write com.apple.Safari "DeveloperMenuVisibility" -bool "true"
 defaults write com.apple.Safari "WebKitDeveloperExtrasEnabledPreferenceKey" -bool "true"
-defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool "true"
-# context menu for web inspector
-defaults write NSGlobalDomain "WebKitDeveloperExtras" -bool "true"
+defaults write com.apple.Safari "WebKitPreferences.developerExtrasEnabled" -bool "true"
+defaults write com.apple.Safari.SandboxBroker "ShowDevelopMenu" -bool "true"
 # Set up UserScripts
 cp '/Users/leaf/Documents/Archive/browser stuff/Fix Google Search.js' '/Users/leaf/Library/Containers/com.userscripts.macos.Userscripts-Extension/Data/Documents/scripts/Fix Google Search.js'
+
+###############################################################################
 
 # Mail
 defaults write com.apple.mail "SendFormat" -string "Plain"
@@ -187,11 +214,15 @@ defaults write com.apple.mail "NSUserKeyEquivalents" '{
     Send = "@\\U21a9";
 }'
 
+###############################################################################
+
 # Terminal
 open "/Users/leaf/.config/setup/Basic Large.terminal"
 defaults write com.apple.Terminal ShowLineMarks -int 0
 defaults write com.apple.Terminal "Default Window Settings" -string "Basic Large"
 defaults write com.apple.Terminal "Startup Window Settings" -string "Basic Large"
+
+###############################################################################
 
 # IINA
 defaults write com.colliderli.iina "currentInputConfigName" -string "VLC Default"
@@ -203,9 +234,10 @@ defaults write com.colliderli.iina "windowBehaviorWhenPip" -int "1"
 defaults write com.colliderli.iina "ytdlSearchPath" -string "/opt/homebrew/opt/"
 defaults write com.colliderli.iina "SUEnableAutomaticChecks" -bool "false"
 
+###############################################################################
+
 # Loop
 defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
-defaults write com.MrKai77.Loop "respectStageManager" -bool "false"
 defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
 /usr/libexec/PlistBuddy -c  "delete :trigger:0" \
 /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
@@ -218,37 +250,55 @@ defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "tru
 /usr/libexec/PlistBuddy -c "add :trigger: integer '56'" \
 /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 
+###############################################################################
+
 # our lord and savior, Jesus enterprise policies Christ
 defaults write org.mozilla.librewolf "EnterprisePoliciesEnabled" -bool "true"
 defaults write org.mozilla.librewolf "DisableAppUpdate" -bool "true"
 defaults write org.mozilla.thunderbird "EnterprisePoliciesEnabled" -bool "true"
 defaults write org.mozilla.thunderbird "DisableAppUpdate" -bool "true"
 
+###############################################################################
+
 # Lunar
 defaults write fyi.lunar.Lunar "hideMenuBarIcon" -bool "true"
+
+###############################################################################
 
 # Hazel
 defaults write com.noodlesoft.Hazel "ShowStatusInMenuBar" -bool "false"
 defaults write com.noodlesoft.Hazel "TrashUninstallApps" -bool "true"
 defaults write com.noodlesoft.Hazel "SUEnableAutomaticChecks" -bool "false"
 
+###############################################################################
+
 # Pure Paste
 defaults write com.sindresorhus.Pure-Paste "NSStatusItem Visible Item-0" -bool "false"
+
+###############################################################################
 
 # Maccy
 defaults write read org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonKeyCode\":9,\"carbonModifiers\":6912}"
 defaults write org.p0deje.Maccy "showInStatusBar" -bool "false"
 defaults write org.p0deje.Maccy "popupPosition" -string "center"
 
+###############################################################################
+
 # Lickable Menu Bar
 defaults write com.ibluebox.aqua-menu-bar "lows" -bool "false"
 defaults write com.ibluebox.aqua-menu-bar "style" -int "3"
 
+###############################################################################
+
 # SaneSideButtons
 defaults write com.janhuelsmann.SaneSideButtons "NSStatusItem Visible Item-0" -bool "false"
 
+###############################################################################
+
 # TopNotch
 # defaults write pl.maketheweb.TopNotch "hideMenubarIcon" -bool "false"
+
+###############################################################################
 
 # login items
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Maccy.app", hidden:false}'
@@ -263,6 +313,7 @@ osascript -e 'tell application "System Events" to make login item at end with pr
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Lickable Menu Bar.app", hidden:false}'
 osascript -e 'tell application "System Events" to get the name of every login item'
 
+###############################################################################
 
 # soft restart
 killall Finder Dock TextEdit
