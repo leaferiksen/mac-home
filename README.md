@@ -1,6 +1,8 @@
 To sync home with this repo, open Terminal as user `leaf` and run
 ```bash
-xcode-select --install && \
+xcode-select --install
+```
+```bash
 git init && \
 git remote add origin git@github.com:leaferiksen/macfiles.git && \
 git fetch && \
