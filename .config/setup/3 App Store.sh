@@ -10,11 +10,12 @@ mas install 6720708363  #Obsidian Web Clipper
 mas install 1601151613  #Baking Soda
 mas install 6502835663  #Proton Pass for Safari
 mas install 1463298887  #Userscripts-Mac-App
-# mas install 462054704   #Microsoft Word
+mas install 462054704   #Microsoft Word
 mas install 463981119   #NewsBlur
 mas install 1547912640  #uBlacklist for Safari
-# mas install 462062816   #Microsoft PowerPoint
+mas install 462062816   #Microsoft PowerPoint
 mas install 1475387142  #Tailscale
 mas install 1662217862  #Wipr
+mas install 462058435   #Microsoft Excel
 # mas install 1604385869  #ManGo
 # open https://apps.apple.com/us/app/mango-anime-manga-tracker/id1604385869
