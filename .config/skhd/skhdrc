@@ -12,6 +12,7 @@ ralt - 1 : open /System/Applications/Messages.app
 ralt - 2 : open /Users/leaf/Applications/Discord.app
 ralt - 3 : open /Users/leaf/Applications/Element.app
 ralt - 4 : open /Users/leaf/Applications/Phanpy.app
+ralt - 0 : open "/Users/leaf/Applications/Soulver 3.app"
 
 # qwfpbjluy
 ralt - w : open /Applications/Safari.app
@@ -20,7 +21,6 @@ ralt - p : open "/Users/leaf/Applications/Proton Pass.app"
 ralt - b : shortcuts run "Books Library"
 ralt - l : open /Users/leaf/Applications/LibreOffice.app
 ralt - u : open /Users/leaf/Applications/UTM.app
-ralt - y : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "/Users/leaf/Applications/Zen Browser.app"
 
 # arstgmneio
 ralt - a : open /Users/leaf/Applications/Anki.app
@@ -37,7 +37,7 @@ ralt - return : open /System/Applications/Utilities/Terminal.app
 # xcdvzkh
 ralt - v : open /Users/leaf/Applications/IINA.app
 ralt - x : open /Applications/Xcode.app
-ralt - c : open /Users/leaf/Applications/Soulver 3.app
+ralt - c : open /Users/leaf/Applications/Chromium.app
 ralt - d : open /System/Applications/Dictionary.app
 ralt - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open /Users/leaf/Applications/Zotero.app
 ralt - k : open /System/Applications/Reminders.app
