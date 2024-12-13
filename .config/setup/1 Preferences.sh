@@ -253,8 +253,6 @@ defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "tru
 ###############################################################################
 
 # our lord and savior, Jesus enterprise policies Christ
-defaults write org.mozilla.librewolf "EnterprisePoliciesEnabled" -bool "true"
-defaults write org.mozilla.librewolf "DisableAppUpdate" -bool "true"
 defaults write org.mozilla.thunderbird "EnterprisePoliciesEnabled" -bool "true"
 defaults write org.mozilla.thunderbird "DisableAppUpdate" -bool "true"
 
@@ -285,8 +283,8 @@ defaults write org.p0deje.Maccy "popupPosition" -string "center"
 ###############################################################################
 
 # Lickable Menu Bar
+# defaults write com.ibluebox.aqua-menu-bar "style" -int "3"
 defaults write com.ibluebox.aqua-menu-bar "lows" -bool "false"
-defaults write com.ibluebox.aqua-menu-bar "style" -int "3"
 
 ###############################################################################
 
@@ -306,7 +304,7 @@ osascript -e 'tell application "System Events" to make login item at end with pr
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/AlDente.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/LuLu.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Pure Paste.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Music Decoy.app", hidden:false}'
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/noTunes.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/SaneSideButtons.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Hyperkey.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Loop.app", hidden:false}'
@@ -316,4 +314,4 @@ osascript -e 'tell application "System Events" to get the name of every login it
 ###############################################################################
 
 # soft restart
-killall Finder Dock TextEdit
+killall Finder Dock

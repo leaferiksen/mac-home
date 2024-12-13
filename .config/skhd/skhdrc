@@ -14,18 +14,17 @@ ralt - 3 : open /Users/leaf/Applications/Element.app
 ralt - 4 : open /Users/leaf/Applications/Phanpy.app
 
 # qwfpbjluy
-ralt - w : open /Applications/Microsoft Word.app
+ralt - w : open /Applications/Safari.app
 ralt - f : open /System/Library/CoreServices/Finder.app
-ralt - p : open /Users/leaf/Applications/Proton Pass.app
+ralt - p : open "/Users/leaf/Applications/Proton Pass.app"
 ralt - b : shortcuts run "Books Library"
 ralt - l : open /Users/leaf/Applications/LibreOffice.app
 ralt - u : open /Users/leaf/Applications/UTM.app
-ralt - y : export MOZ_DISABLE_SAFE_MODE_KEY=1; open /Users/leaf/Applications/Zen Browser.app
+ralt - y : export MOZ_DISABLE_SAFE_MODE_KEY=1; open "/Users/leaf/Applications/Zen Browser.app"
 
 # arstgmneio
 ralt - a : open /Users/leaf/Applications/Anki.app
-ralt - s : open /Applications/Safari.app
-ralt + shift - s : open /Users/leaf/Applications/Steam.app
+ralt - s : open /Users/leaf/Applications/Steam.app
 ralt - t : export MOZ_DISABLE_SAFE_MODE_KEY=1; open /Users/leaf/Applications/Thunderbird.app
 ralt - m : open /Applications/ManGo.app
 ralt - n : open /Applications/NewsBlur.app
