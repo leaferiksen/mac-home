@@ -27,6 +27,7 @@ ralt - a : open /Users/leaf/Applications/Anki.app
 ralt - s : open /Users/leaf/Applications/Steam.app
 ralt - t : export MOZ_DISABLE_SAFE_MODE_KEY=1; open /Users/leaf/Applications/Thunderbird.app
 ralt - m : open /Applications/ManGo.app
+ralt + shift - m : open /Users/leaf/Applications/Max.app
 ralt - n : open /Applications/NewsBlur.app
 ralt + shift - n : open /Users/leaf/Applications/Netflix.app
 ralt - i : open /System/Applications/iPhone Mirroring.app
