@@ -281,7 +281,7 @@ defaults write com.sindresorhus.Pure-Paste "NSStatusItem Visible Item-0" -bool "
 ###############################################################################
 
 # Maccy
-defaults write read org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonKeyCode\":9,\"carbonModifiers\":6912}"
+defaults write read org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonKeyCode\\":9,\"carbonModifiers\":6912}"
 defaults write org.p0deje.Maccy "showInStatusBar" -bool "false"
 defaults write org.p0deje.Maccy "popupPosition" -string "center"
 
@@ -300,21 +300,6 @@ defaults write com.janhuelsmann.SaneSideButtons "NSStatusItem Visible Item-0" -b
 
 # TopNotch
 # defaults write pl.maketheweb.TopNotch "hideMenubarIcon" -bool "false"
-
-###############################################################################
-
-# login items
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Maccy.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Lunar.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/AlDente.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/LuLu.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Pure Paste.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/noTunes.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/SaneSideButtons.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Hyperkey.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Loop.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Lickable Menu Bar.app", hidden:false}'
-osascript -e 'tell application "System Events" to get the name of every login item'
 
 ###############################################################################
 
