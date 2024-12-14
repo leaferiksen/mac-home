@@ -29,10 +29,8 @@ ralt - s : open /Users/leaf/Applications/Steam.app
 ralt + shift - s : open /Users/leaf/Applications/Whisky.app
 ralt - t : export MOZ_DISABLE_SAFE_MODE_KEY=1; open /Users/leaf/Applications/Thunderbird.app
 ralt - m : open /Applications/ManGo.app
-ralt + shift - m : open /Users/leaf/Applications/Max.app
 ralt - n : open /Applications/NewsBlur.app
 ralt + e : open '/Applications/Microsoft Word.app'
-ralt + shift - n : open /Users/leaf/Applications/Netflix.app
 ralt - i : open /System/Applications/iPhone Mirroring.app
 ralt + shift - i : open /Users/leaf/Applications/itch.app
 ralt - o : open /Users/leaf/Applications/Obsidian.app

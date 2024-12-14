@@ -1,4 +1,4 @@
- #!/bin/sh
+#!/bin/sh
 
 softwareupdate --install-rosetta --agree-to-license
 
