@@ -5,6 +5,20 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "App Launcher",
+                        "enabled": false,
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "t",
+                                    "modifiers": { "mandatory": ["right_option"] }
+                                },
+                                "to": [{ "shell_command": "open -a Terminal" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "command-f1 and f2 to adjust keyboard brightness",
                         "manipulators": [
                             {
