@@ -239,7 +239,7 @@ defaults write com.colliderli.iina "SUEnableAutomaticChecks" -bool "false"
 # Loop
 defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
 defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
-/usr/libexec/PlistBuddy -c  "delete :trigger:0" \
+/usr/libexec/PlistBuddy -c  "delete :trigger: integer '0'" \
 /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 /usr/libexec/PlistBuddy -c "add :trigger: integer '55'" \
 /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
