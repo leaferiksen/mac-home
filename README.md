@@ -18,10 +18,12 @@ sudo chown -R leaf /opt/homebrew/
 ```
 To enable proxy icons, go to `System Settings → Privacy & Security → Full Disk Access` and add Terminal, then restart it and run
 ```bash
+softwareupdate --install-rosetta --agree-to-license && \
 chmod -R +w /opt/homebrew && \
 ./.config/setup/brew.sh && \
+skhd --start-service && \
 ./.config/setup/mas.sh && \
 ./.config/setup/preferences.sh && \
 ./.config/setup/login.sh
 ```
-Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html), [Wacom](https://www.wacom.com/en-us/support/product-support/drivers) and [Fluid](https://getfluid.app/) from their websites add Weather to menu bar
+Download [Karabiner Elements](https://karabiner-elements.pqrs.org/) and [LuLu](https://objective-see.org/products/lulu.html) from their websites add Weather to menu bar

@@ -25,7 +25,7 @@ ralt - g : open -a Terminal
 ralt - m : open -a Messages
 ralt - n : open -a NewsBlur
 ralt - e : open -a Mail
-ralt - i : open -a iPhone Mirroring
+ralt - i : open -a iPhone\ Mirroring
 ralt - o : open -a Obsidian
 
 # xcdvz/kh
