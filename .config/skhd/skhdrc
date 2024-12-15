@@ -20,15 +20,12 @@ ralt - u : open -a UTM
 ralt - a : open -a ManGo
 ralt - r : open -a Reminders
 ralt - s : open -a Steam
-ralt + shift - s : open -a Whisky
-ralt - t : open -a
+ralt - t : open -a itch
 ralt - g : open -a Terminal
 ralt - m : open -a Messages
-ralt + shift - m : open -a Mail
 ralt - n : open -a NewsBlur
-ralt - e : open -a TextEdit
+ralt - e : open -a Mail
 ralt - i : open -a iPhone Mirroring
-ralt + shift - i : open -a itch
 ralt - o : open -a Obsidian
 
 # xcdvz/kh
@@ -37,4 +34,3 @@ ralt - c : open -a Calendar
 ralt - d : open -a Dictionary
 ralt - v : open -a IINA
 ralt - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
-ralt - h : open -a Heroic
