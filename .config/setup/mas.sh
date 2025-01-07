@@ -17,5 +17,8 @@ mas install 462062816   #Microsoft PowerPoint
 mas install 1475387142  #Tailscale
 mas install 1662217862  #Wipr
 mas install 462058435   #Microsoft Excel
+mas install 1616822987  #Affinity Photo 2
+mas install 1616831348  #Affinity Designer 2
+mas install 1606941598  #Affinity Publisher 2
 # mas install 1604385869  #ManGo
 # open https://apps.apple.com/us/app/mango-anime-manga-tracker/id1604385869

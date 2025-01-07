@@ -10,7 +10,7 @@ ralt - 2 : open -a Chromium
 ralt - 0 : open -a Soulver\ 3
 
 # qwfpb[jluy
-ralt - w : open -a Microsoft\ Word ~/Documents/Template.dotx
+ralt - w : open -a Microsoft\ Word ~/Documents/College/Template.dotx
 ralt - f : open -a Finder
 ralt - p : open -a Proton\ Pass
 ralt - b : shortcuts run 'Books Library'
@@ -21,7 +21,7 @@ ralt - a : open -a ManGo
 ralt - r : open -a Reminders
 ralt - s : open -a Steam
 ralt - t : open -a itch
-ralt - g : open -a Terminal
+ralt - g : open -a Ghostty
 ralt - m : open -a Messages
 ralt - n : open -a NewsBlur
 ralt - e : open -a Mail

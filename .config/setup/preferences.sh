@@ -230,6 +230,7 @@ defaults write com.colliderli.iina "actionAfterLaunch" -int "1"
 defaults write com.colliderli.iina "oscPosition" -int "2"
 defaults write com.colliderli.iina "arrowBtnAction" -int "1"
 defaults write com.colliderli.iina "themeMaterial" -int "4"
+defaults write com.colliderli.iina "playlistAutoPlayNext" -bool "false"
 defaults write com.colliderli.iina "windowBehaviorWhenPip" -int "1"
 defaults write com.colliderli.iina "ytdlSearchPath" -string "/opt/homebrew/opt/"
 defaults write com.colliderli.iina "SUEnableAutomaticChecks" -bool "false"
@@ -277,6 +278,7 @@ defaults write com.noodlesoft.Hazel "SUEnableAutomaticChecks" -bool "false"
 
 # Pure Paste
 defaults write com.sindresorhus.Pure-Paste "NSStatusItem Visible Item-0" -bool "false"
+defaults write com.sindresorhus.Pure-Paste "hideMenuBarIcon" -bool "true"
 
 ###############################################################################
 
