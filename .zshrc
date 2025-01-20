@@ -22,22 +22,31 @@ export sd="/Volumes/Leafs Media"
 export sf="${HOME}/Documents/Fall 24"
 
 # aliases and functions
+
+## Mac
+alias q='qlmanage -p'
+alias fix='xattr -dr com.apple.quarantine'
 alias up='brew update; brew upgrade --no-quarantine'
-# 'brew update; brew upgrade --formulae --no-quarantine $(brew list --formulae); brew upgrade --cask --no-quarantine --greedy $(brew list --cask | grep --invert-match --regexp=thunderbird --regexp=font-red-hat-mono)'
+### 'brew update; brew upgrade --formulae --no-quarantine $(brew list --formulae); brew upgrade --cask --no-quarantine --greedy $(brew list --cask | grep --invert-match --regexp=thunderbird --regexp=font-red-hat-mono)'
+
+## Dev
+alias lg='lazygit'
+alias tw='~/tailwindcss -i app.css -o dist.css'
+alias tww='~/tailwindcss -i app.css -o dist.css --watch'
 alias ctar=tar -czvf
 alias xtar=tar -xzvf
 alias ttar=tar -tzvf
-alias q='qlmanage -p'
-alias lg='lazygit'
-alias fix='xattr -dr com.apple.quarantine'
+
+## General
 alias nano='nano --modernbindings --softwrap --tabsize=4 --tabstospaces'
 alias diff='diff --color=always'
 alias l='echo -e "\e[31m$(pwd)\e[0m"; eza --long --grid --group-directories-first --no-time --no-permissions --no-user'
 function la() {{echo -e "\e[31m$(pwd)\e[0m"; eza --color=always --all --long --header --group-directories-first "$@"} | less --header 2 --quit-if-one-screen --RAW-CONTROL-CHARS --SILENT --no-vbell}
 function c() {cd "$@"; l}
 function ca() {cd "$@"; la}
-function dl() {mkdir -p "$(pwd)/$@"; l}
+function ml() {mkdir -p "$(pwd)/$@"; l}
 function tl() {touch "$(pwd)/$@"; l}
-# ls: A=show hidden files h=unit suffixes o=long format without groups
+### ls: A=show hidden files h=unit suffixes o=long format without groups
+
 # Terminal startup
 l

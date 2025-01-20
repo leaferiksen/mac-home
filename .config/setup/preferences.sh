@@ -123,8 +123,8 @@ defaults write com.apple.widgets "widgetAppearance" -int "0"
 
 # Finder
 chflags nohidden ~/Library
-# defaults write com.apple.finder "CreateDesktop" -bool "false"
-# defaults write com.apple.finder "QuitMenuItem" -bool "true"
+defaults write com.apple.finder "CreateDesktop" -bool "false"
+defaults write com.apple.finder "QuitMenuItem" -bool "true"
 defaults write com.apple.finder "FXPreferredViewStyle" -string "clmv"
 defaults write com.apple.finder "ShowPathbar" -bool "true"
 defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true"
@@ -182,9 +182,20 @@ defaults write com.apple.finder "NewWindowTarget" "PfHm"
 
 ###############################################################################
 
+# Spotlight Privacy
+defaults write com.apple.assistant.support "Search Queries Data Sharing Status" -int "2"
+
+###############################################################################
+
 # Safari
+# Disable preloading top hit in the background
+defaults write com.apple.Safari PreloadTopHit -bool false
+# Disable Quick Website Search
+defaults write com.apple.Safari WebsiteSpecificSearchEnabled -bool false
 # Disable AutoFill
-defaults write com.apple.Safari "AutoFillPasswords" -bool "false"
+defaults write com.apple.Safari AutoFillPasswords -bool false
+defaults write com.apple.Safari AutoFillCreditCardData -bool false
+defaults write com.apple.Safari AutoFillMiscellaneousForms -bool false
 # Show full URL
 defaults write com.apple.Safari "ShowFullURLInSmartSearchField" -bool "true"
 # Enhanced Privacy
@@ -205,6 +216,7 @@ defaults write com.apple.Safari "WebKitPreferences.developerExtrasEnabled" -bool
 defaults write com.apple.Safari.SandboxBroker "ShowDevelopMenu" -bool "true"
 # Set up UserScripts
 cp '/Users/leaf/Documents/Archive/browser stuff/Fix Google Search.js' '/Users/leaf/Library/Containers/com.userscripts.macos.Userscripts-Extension/Data/Documents/scripts/Fix Google Search.js'
+cp '/Users/leaf/Documents/Archive/browser stuff/YouTube Subscription Redirect.js' '/Users/leaf/Library/Containers/com.userscripts.macos.Userscripts-Extension/Data/Documents/scripts/YouTube Subscription Redirect.js'
 
 ###############################################################################
 
@@ -224,8 +236,13 @@ defaults write com.apple.Terminal ShowLineMarks -int 0
 
 ###############################################################################
 
+# Ghostty
+defaults write com.mitchellh.ghostty NSUserKeyEquivalents -dict-add "Quit Ghostty" nil
+
+###############################################################################
+
 # IINA
-defaults write com.colliderli.iina "currentInputConfigName" -string "VLC Default"
+defaults write com.colliderli.iina "currentInputConfigName" -string "Movist Default"
 defaults write com.colliderli.iina "actionAfterLaunch" -int "1"
 defaults write com.colliderli.iina "oscPosition" -int "2"
 defaults write com.colliderli.iina "arrowBtnAction" -int "1"
@@ -283,7 +300,7 @@ defaults write com.sindresorhus.Pure-Paste "hideMenuBarIcon" -bool "true"
 ###############################################################################
 
 # Maccy
-defaults write read org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonKeyCode\\":9,\"carbonModifiers\":6912}"
+defaults write read org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonKeyCode\":9,\"carbonModifiers\":6912}"
 defaults write org.p0deje.Maccy "showInStatusBar" -bool "false"
 defaults write org.p0deje.Maccy "popupPosition" -string "center"
 
