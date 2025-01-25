@@ -193,6 +193,7 @@ defaults write com.apple.Safari PreloadTopHit -bool false
 # Disable Quick Website Search
 defaults write com.apple.Safari WebsiteSpecificSearchEnabled -bool false
 # Disable AutoFill
+defaults write com.apple.Safari AutoFillFromAddressBook -bool false
 defaults write com.apple.Safari AutoFillPasswords -bool false
 defaults write com.apple.Safari AutoFillCreditCardData -bool false
 defaults write com.apple.Safari AutoFillMiscellaneousForms -bool false

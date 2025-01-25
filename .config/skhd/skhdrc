@@ -6,7 +6,8 @@ cmd + alt - m : skhd -k
 
 # 123456\7890
 ralt - 1 : open -a Safari
-ralt - 2 : open -a Chromium
+ralt - 2 : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
+# full command: /usr/bin/env GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no" /usr/bin/open -a chromium
 ralt - 0 : open -a Soulver\ 3
 
 # qwfpb[jluy
@@ -18,7 +19,7 @@ ralt - b : shortcuts run 'Books Library'
 ralt - u : open -a UTM
 
 # arstg]mneio
-ralt - a : open -a ManGo
+ralt - a : open -a Anki
 ralt - r : open -a Reminders
 ralt - s : open -a Steam
 ralt - t : open -a itch

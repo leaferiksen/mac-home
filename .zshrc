@@ -19,7 +19,7 @@ export EDITOR="$VISUAL"
 ## named directories
 export ic="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
 export sd="/Volumes/Leafs Media"
-export sf="${HOME}/Documents/Fall 24"
+export sf="${HOME}/Documents/College/Spring 25"
 
 # aliases and functions
 
