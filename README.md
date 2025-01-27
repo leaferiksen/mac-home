@@ -16,7 +16,7 @@ su - admin
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
 sudo chown -R leaf /opt/homebrew/
 ```
-To enable proxy icons, go to `System Settings → Privacy & Security → Full Disk Access` and add Terminal, then restart it and run
+Spotlight → Full Disk Access → Terminal, then restart Terminal and run
 ```bash
 softwareupdate --install-rosetta --agree-to-license && \
 chmod -R +w /opt/homebrew && \
@@ -26,4 +26,10 @@ skhd --start-service && \
 ./.config/setup/preferences.sh && \
 ./.config/setup/login.sh
 ```
-Download [Karabiner Elements](https://karabiner-elements.pqrs.org/) and [LuLu](https://objective-see.org/products/lulu.html) from their websites add Weather to menu bar
+Download [Karabiner Elements](https://karabiner-elements.pqrs.org/) and [LuLu](https://objective-see.org/products/lulu.html) from their websites
+
+Spotlight → Night Shift options → Schedule → set Sunrise to Sunset
+
+Spotlight → Control Center → Weather → set Show in Menu Bar
+
+Spotlight → Language input methods → add Japanese - Romaji

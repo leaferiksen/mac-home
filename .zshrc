@@ -31,8 +31,7 @@ alias up='brew update; brew upgrade --no-quarantine'
 
 ## Dev
 alias lg='lazygit'
-alias tw='~/tailwindcss -i app.css -o dist.css'
-alias tww='~/tailwindcss -i app.css -o dist.css --watch'
+alias tw='tailwindcss -i app.css -o dist.css'
 alias ctar=tar -czvf
 alias xtar=tar -xzvf
 alias ttar=tar -tzvf

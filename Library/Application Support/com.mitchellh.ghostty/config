@@ -5,3 +5,4 @@ background-opacity = .8
 background-blur-radius = 20
 keybind = global:opt+g=toggle_quick_terminal
 quick-terminal-screen = macos-menu-bar
+macos-titlebar-style = tabs
