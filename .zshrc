@@ -49,3 +49,6 @@ function tl() {touch "$(pwd)/$@"; l}
 
 # Terminal startup
 l
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/leaf/.lmstudio/bin"

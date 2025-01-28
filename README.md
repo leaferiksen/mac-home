@@ -26,10 +26,10 @@ skhd --start-service && \
 ./.config/setup/preferences.sh && \
 ./.config/setup/login.sh
 ```
-Download [Karabiner Elements](https://karabiner-elements.pqrs.org/) and [LuLu](https://objective-see.org/products/lulu.html) from their websites
+Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html) and [LM Studio](https://lmstudio.ai) from their websites
 
 Spotlight → Night Shift options → Schedule → set Sunrise to Sunset
 
 Spotlight → Control Center → Weather → set Show in Menu Bar
 
-Spotlight → Language input methods → add Japanese - Romaji
+[Keyboard](x-apple.systempreferences:com.apple.Keyboard-Settings.extension) → Language input methods → add Japanese - Romaji
