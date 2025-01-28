@@ -32,4 +32,4 @@ Spotlight → Night Shift options → Schedule → set Sunrise to Sunset
 
 Spotlight → Control Center → Weather → set Show in Menu Bar
 
-[Keyboard](x-apple.systempreferences:com.apple.Keyboard-Settings.extension) → Language input methods → add Japanese - Romaji
+[Keyboard](prefs:x-apple.systempreferences:com.apple.Keyboard-Settings.extension) → Language input methods → add Japanese - Romaji
