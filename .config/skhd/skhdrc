@@ -14,7 +14,7 @@ ralt - 0 : open -a Soulver\ 3
 ralt - w : open -a Microsoft\ Word
 ralt + shift - w : open -a Microsoft\ Word ~/Documents/College/Template.dotx
 ralt - f : open -a Finder
-ralt - p : open -a Proton\ Pass
+ralt - p : open -a Preview
 ralt - b : shortcuts run 'Books Library'
 ralt - l : open -a "LM Studio"
 ralt - u : open -a UTM

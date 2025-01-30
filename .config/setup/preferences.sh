@@ -91,7 +91,8 @@ defaults delete com.apple.dock wvous-br-modifier
 
 ###############################################################################
 
-# Stage Manager
+# Window Manager
+defaults write com.apple.WindowManager EnableTiledWindowMargins -bool false
 # defaults write com.apple.WindowManager "GloballyEnabled" -bool "true"
 defaults write com.apple.WindowManager "HideDesktop" -bool "false"
 defaults write com.apple.WindowManager "AutoHide" -bool "true"
