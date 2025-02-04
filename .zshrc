@@ -26,6 +26,7 @@ export sf="${HOME}/Documents/College/Spring 25"
 ## Mac
 alias q='qlmanage -p'
 alias fix='xattr -dr com.apple.quarantine'
+copy() {osascript -e "set the clipboard to (POSIX file \"$PWD/$1\")"}
 alias up='brew update; brew upgrade --no-quarantine'
 ### 'brew update; brew upgrade --formulae --no-quarantine $(brew list --formulae); brew upgrade --cask --no-quarantine --greedy $(brew list --cask | grep --invert-match --regexp=thunderbird --regexp=font-red-hat-mono)'
 
