@@ -1,3 +1,4 @@
+mas install 997079563   #Kiwix
 mas install 6449873635  #Sink It for Reddit
 mas install 1592917505  #Noir
 mas install 425424353   #The Unarchiver
