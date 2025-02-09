@@ -1,9 +1,9 @@
 auto-update = off
 font-family = "Red Hat Mono"
 font-size = 14
-theme = light:flexoki-light,dark:flexoki-dark
 background-opacity = .8
-background-blur-radius = 20
-keybind = global:opt+g=toggle_quick_terminal
-quick-terminal-screen = macos-menu-bar
+background-blur= true
+keybind = global:opt+grave_accent=toggle_quick_terminal
+theme = flexoki-dark
 macos-titlebar-style = tabs
+macos-option-as-alt = true

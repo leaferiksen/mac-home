@@ -239,7 +239,7 @@ defaults write com.apple.Terminal ShowLineMarks -int 0
 ###############################################################################
 
 # Ghostty
-defaults write com.mitchellh.ghostty NSUserKeyEquivalents -dict-add "Quit Ghostty" nil
+# defaults write com.mitchellh.ghostty NSUserKeyEquivalents -dict-add "Quit Ghostty" nil
 
 ###############################################################################
 
