@@ -49,7 +49,6 @@ function tl() {touch "$(pwd)/$@"; l}
 ### ls: A=show hidden files h=unit suffixes o=long format without groups
 
 # Terminal startup
-l
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/leaf/.lmstudio/bin"
