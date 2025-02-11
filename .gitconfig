@@ -1,0 +1,10 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Leaf Eriksen
+	email = leaferiksen@gmail.com
+[pull]
+	ff = only
+[merge]
+	conflictStyle = zdiff3
+[rerere]
+	enabled = true
