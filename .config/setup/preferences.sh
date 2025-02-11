@@ -42,7 +42,9 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadThree
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadTwoFingerFromRightEdgeSwipeGesture" -int "0"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadTwoFingerFromRightEdgeSwipeGesture" -int "0"
 
-# defaults write -g "com.apple.keyboard.fnState" -bool "true" # let karabiner handle media keys
+# let karabiner handle media keys
+defaults write -g "com.apple.keyboard.fnState" -bool "true" 
+
 # keyboard: UI control, disable disable globe key, quote/ dash conversion and
 defaults write com.apple.HIToolbox "AppleFnUsageType" -int "0"
 defaults write -g "AppleKeyboardUIMode" -int "2"
@@ -92,8 +94,8 @@ defaults delete com.apple.dock wvous-br-modifier
 ###############################################################################
 
 # Window Manager
+# defaults write com.apple.WindowManager "GloballyEnabled" -bool "true" # Stage Manager
 defaults write com.apple.WindowManager EnableTiledWindowMargins -bool false
-# defaults write com.apple.WindowManager "GloballyEnabled" -bool "true"
 defaults write com.apple.WindowManager "HideDesktop" -bool "false"
 defaults write com.apple.WindowManager "AutoHide" -bool "true"
 defaults write com.apple.WindowManager "AutoHideDelay" -int "0"
@@ -114,11 +116,6 @@ defaults write com.apple.appstore InAppReviewEnabled -int 0
 # defaults write com.apple.chronod "remoteWidgetsEnabled" -bool "false"
 # monocrome widgets
 defaults write com.apple.widgets "widgetAppearance" -int "0"
-
-###############################################################################
-
-# displays don't have separate Spaces (breaks shit)
-# defaults write com.apple.spaces.plist spans-displays -bool true
 
 ###############################################################################
 
@@ -216,9 +213,6 @@ defaults write com.apple.Safari "DeveloperMenuVisibility" -bool "true"
 defaults write com.apple.Safari "WebKitDeveloperExtrasEnabledPreferenceKey" -bool "true"
 defaults write com.apple.Safari "WebKitPreferences.developerExtrasEnabled" -bool "true"
 defaults write com.apple.Safari.SandboxBroker "ShowDevelopMenu" -bool "true"
-# Set up UserScripts
-cp '/Users/leaf/Documents/Archive/browser stuff/Fix Google Search.js' '/Users/leaf/Library/Containers/com.userscripts.macos.Userscripts-Extension/Data/Documents/scripts/Fix Google Search.js'
-cp '/Users/leaf/Documents/Archive/browser stuff/YouTube Subscription Redirect.js' '/Users/leaf/Library/Containers/com.userscripts.macos.Userscripts-Extension/Data/Documents/scripts/YouTube Subscription Redirect.js'
 
 ###############################################################################
 
@@ -230,22 +224,10 @@ defaults write com.apple.mail "NSUserKeyEquivalents" '{
 
 ###############################################################################
 
-# Terminal
-# open "/Users/leaf/.config/setup/Basic Large.terminal"
-# defaults write com.apple.Terminal "Default Window Settings" -string "Basic Large"
-# defaults write com.apple.Terminal "Startup Window Settings" -string "Basic Large"
-defaults write com.apple.Terminal ShowLineMarks -int 0
-
-###############################################################################
-
-# Ghostty
-# defaults write com.mitchellh.ghostty NSUserKeyEquivalents -dict-add "Quit Ghostty" nil
-
-###############################################################################
-
 # IINA
 defaults write com.colliderli.iina "currentInputConfigName" -string "Movist Default"
 defaults write com.colliderli.iina "actionAfterLaunch" -int "1"
+defaults write com.colliderli.iina "useLegacyFullScreen" -bool "true"
 defaults write com.colliderli.iina "oscPosition" -int "2"
 defaults write com.colliderli.iina "arrowBtnAction" -int "1"
 defaults write com.colliderli.iina "themeMaterial" -int "4"
@@ -273,18 +255,13 @@ defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "tru
 ###############################################################################
 
 # our lord and savior, Jesus enterprise policies Christ
-defaults write org.mozilla.thunderbird "EnterprisePoliciesEnabled" -bool "true"
-defaults write org.mozilla.thunderbird "DisableAppUpdate" -bool "true"
+defaults write app.zen-browser.zen "EnterprisePoliciesEnabled" -bool "true"
+defaults write app.zen-browser.zen "DisableAppUpdate" -bool "true"
 
 ###############################################################################
 
 # AlDente
 defaults write com.apphousekitchen.aldente-pro "showDockIcon" -bool "false"
-
-###############################################################################
-
-# Lunar
-defaults write fyi.lunar.Lunar "hideMenuBarIcon" -bool "true"
 
 ###############################################################################
 
@@ -321,6 +298,11 @@ defaults write com.janhuelsmann.SaneSideButtons "NSStatusItem Visible Item-0" -b
 
 # TopNotch
 # defaults write pl.maketheweb.TopNotch "hideMenubarIcon" -bool "false"
+
+###############################################################################
+
+# Lunar
+# defaults write fyi.lunar.Lunar "hideMenuBarIcon" -bool "true"
 
 ###############################################################################
 
