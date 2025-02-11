@@ -27,6 +27,7 @@ ralt - r : open -a Reminders
 ralt - s : open -a Steam
 ralt - t : open -a TextEdit
 ralt - g : open -a Ghostty
+ralt + shift - g : open -na Ghostty --args --command=mc
 ralt - m : open -a Messages
 ralt - n : open -a NewsBlur
 ralt - e : open -a Mail
