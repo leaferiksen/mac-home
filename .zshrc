@@ -15,8 +15,8 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
 ## fuck vim
-export VISUAL='nano --modernbindings'
-export EDITOR="$VISUAL"
+export EDITOR="code"
+export VISUAL="code"
 ## named directories
 export ic="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
 export sd="/Volumes/Leafs Media"

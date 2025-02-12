@@ -8,3 +8,5 @@
 	conflictStyle = zdiff3
 [rerere]
 	enabled = true
+[core]
+	editor = code -n --wait
