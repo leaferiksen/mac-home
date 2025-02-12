@@ -31,13 +31,13 @@ ralt + shift - g : open -na Ghostty --args --command=mc
 ralt - m : open -a Messages
 ralt - n : open -a NewsBlur
 ralt - e : open -a Mail
-ralt - i : open -a iPhone\ Mirroring
+ralt - i : open -a IINA
 ralt - o : open -a Obsidian
 
 # xcdvz/kh
 ralt - x : open -a Xcode
 ralt - c : open -a Calendar
 ralt - d : open -a Dictionary
-ralt - v : open -a IINA
+ralt - v : open -a "Visual Studio Code"
 ralt - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
 ralt - k : open -a Kiwix
