@@ -9,6 +9,8 @@ macos-non-native-fullscreen = visible-menu
 macos-titlebar-style = hidden
 fullscreen = true
 
-font-family = "Red Hat Mono"
+font-family = "SF Mono"
 font-size = 14
 theme = flexoki-dark
+background-opacity = .9
+background-blur = true

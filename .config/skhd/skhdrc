@@ -4,12 +4,7 @@
 cmd - m : skhd -k
 cmd + alt - m : skhd -k
 
-# 123456\7890
-ralt - 1 : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a "Zen Browser"
-ralt - 2 : open -a Safari
-ralt - 3 : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
 # full command: /usr/bin/env GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no" /usr/bin/open -a chromium
-ralt - 0 : open -a Soulver\ 3
 
 # qwfpb[jluy
 ralt - q : open -a qBittorrent 
@@ -22,17 +17,20 @@ ralt - l : open -a LLM
 ralt - u : open -a UTM
 
 # arstg]mneio
-ralt - a : open -a Activity\ Monitor
+ralt - a : open -a Affinity\ Photo\ 2
 ralt - r : open -a Reminders
-ralt - s : open -a Steam
-ralt - t : open -a TextEdit
-ralt - g : open -a Ghostty
-ralt + shift - g : open -na Ghostty --args --command=mc
+ralt - s : open -a Soulver\ 3
+ralt - t : open -a Ghostty
+ralt + shift - t : open -na Ghostty --args --command=mc
+ralt - g : open -a Steam
+ralt + shift - g : open -a Itch
 ralt - m : open -a Messages
 ralt - n : open -a NewsBlur
 ralt - e : open -a Mail
 ralt - i : open -a IINA
 ralt - o : open -a Obsidian
+ralt - return : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a "Zen Browser"
+ralt + shift - return : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
 
 # xcdvz/kh
 ralt - x : open -a Xcode
