@@ -1,4 +1,3 @@
-mas install 997079563   #Kiwix
 mas install 425424353   #The Unarchiver
 mas install 497799835   #Xcode
 mas install 1611378436  #Pure Paste
@@ -13,10 +12,12 @@ mas install 1616822987  #Affinity Photo 2
 mas install 1616831348  #Affinity Designer 2
 mas install 1606941598  #Affinity Publisher 2
 mas install 6454431289  #CrystalFetch ISO Downloader
+mas install 6475957299  #Upsies
 
-# mas install 1604385869  #ManGo
-# open https://apps.apple.com/us/app/mango-anime-manga-tracker/id1604385869
+#mas install 1604385869  #ManGo
+#mas install 997079563   #Kiwix
 
+# Safari Extensions
 #mas install 1591303229  #Vinegar
 #mas install 1601151613  #Baking Soda
 #mas install 6502835663  #Proton Pass for Safari
