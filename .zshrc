@@ -8,6 +8,7 @@ autoload -Uz compinit
 compinit
 
 # environment variables
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 ## brew
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications  no-quarantine"
 export HOMEBREW_NO_AUTO_UPDATE=1
