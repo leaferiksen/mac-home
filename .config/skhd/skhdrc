@@ -4,38 +4,36 @@
 cmd - m : skhd -k
 cmd + alt - m : skhd -k
 
-# full command: /usr/bin/env GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no" /usr/bin/open -a chromium
-
 # qwfpb[jluy
-ralt - q : open -a qBittorrent 
-ralt - w : open -a Microsoft\ Word
-ralt + shift - w : open -a Microsoft\ Word ~/Documents/College/Template.dotx
-ralt - f : open -a FaceTime
-ralt - p : open -a Preview
-ralt - b : shortcuts run 'Books Library'
-ralt - l : open -a LLM
-ralt - u : open -a UTM
+hyper - q : open -a qBittorrent 
+hyper - w : open -a Microsoft\ Word
+hyper + shift - w : open -a Microsoft\ Word ~/Documents/College/Template.dotx
+hyper - f : open -a FaceTime
+hyper - p : open -a Preview
+hyper - b : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a "Zen Browser"
+hyper - j : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
+hyper - l : shortcuts run 'Books Library'
+hyper - u : open -a UTM
 
 # arstg]mneio
-ralt - a : open -a Affinity\ Photo\ 2
-ralt - r : open -a Reminders
-ralt - s : open -a Soulver\ 3
-ralt - t : open -a Ghostty
-ralt + shift - t : open -na Ghostty --args --command=mc
-ralt - g : open -a Steam
-ralt + shift - g : open -a Itch
-ralt - m : open -a Messages
-ralt - n : open -a NewsBlur
-ralt - e : open -a Mail
-ralt - i : open -a IINA
-ralt - o : open -a Obsidian
-ralt - return : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a "Zen Browser"
-ralt + shift - return : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
+hyper - a : open -a Affinity\ Photo\ 2
+hyper - r : open -a Reminders
+hyper - s : open -a Soulver\ 3
+hyper - t : open -a Ghostty
+hyper + shift - t : open -na Ghostty --args --command=mc
+hyper - g : open -a Steam
+hyper + shift - g : open -a Itch
+hyper - m : open -a Messages
+hyper - n : open -a NewsBlur
+hyper - e : open -a Mail
+hyper - i : open -a IINA
+hyper - o : open -a Obsidian
 
 # xcdvz/kh
-ralt - x : open -a Xcode
-ralt - c : open -a Calendar
-ralt - d : open -a Dictionary
-ralt - v : open -a "Visual Studio Code"
-ralt - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
-ralt - k : open -a Kiwix
+hyper - x : open -a iPhone\ Mirroring
+hyper - c : open -a Calendar
+hyper - d : open -a Dictionary
+hyper - v : open -a "Visual Studio Code"
+hyper - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
+hyper - k : open -a Karabiner-Elements
+hyper - h : open -a Hazel
