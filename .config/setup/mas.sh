@@ -4,7 +4,6 @@ mas install 1611378436  #Pure Paste
 mas install 6444217677  #Lickable Menu Bar
 mas install 899247664   #TestFlight
 mas install 462054704   #Microsoft Word
-mas install 463981119   #NewsBlur
 mas install 462062816   #Microsoft PowerPoint
 mas install 1475387142  #Tailscale
 mas install 462058435   #Microsoft Excel

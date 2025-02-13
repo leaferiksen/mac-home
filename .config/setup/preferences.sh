@@ -217,10 +217,15 @@ defaults write com.apple.Safari.SandboxBroker "ShowDevelopMenu" -bool "true"
 ###############################################################################
 
 # Mail
+# https://useplaintext.email/
 defaults write com.apple.mail "SendFormat" -string "Plain"
-defaults write com.apple.mail "NSUserKeyEquivalents" '{
-    Send = "@\\U21a9";
-}'
+defaults write com.apple.mail "AutoReplyFormat" -bool "true"
+defaults write com.apple.mail "NumberOfSnippetLines" -int "0"
+# Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
+defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
+# Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
+defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
+
 
 ###############################################################################
 

@@ -29,8 +29,12 @@ skhd --start-service && \
 ```
 Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html) and [LM Studio](https://lmstudio.ai) from their websites
 
-Spotlight → Night Shift options → Schedule → set Sunrise to Sunset
+Settings → Search → 
 
-Spotlight → Control Center → Weather → set Show in Menu Bar
+- Night Shift options → Schedule → set Sunrise to Sunset
 
-Spotlight → Language input methods → add Japanese - Romaji
+- Control Center → Weather → set Show in Menu Bar
+
+- Language input methods → add Japanese - Romaji
+
+- Keyboard Shortcuts → Input Sources - disable both
