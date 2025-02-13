@@ -34,3 +34,4 @@ Settings → Search:
 - Night Shift options → Schedule → set Sunrise to Sunset
 - Control Center → Weather → set Show in Menu Bar
 - Language input methods → add Japanese - Romaji
+- Keyboard Shortcuts → Input Sources - disable both (log out to apply)
