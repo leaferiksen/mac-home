@@ -26,6 +26,11 @@
  '(menu-bar-mode nil)
  '(package-selected-packages '(flexoki-themes))
  '(xterm-mouse-mode t))
+
+(global-set-key [mouse-4] 'scroll-down-line)
+(global-set-key [mouse-5] 'scroll-up-line)
+(global-display-line-numbers-mode)
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

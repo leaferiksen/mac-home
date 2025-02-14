@@ -18,7 +18,7 @@ hyper - u : open -a UTM
 # arstg]mneio
 hyper - a : open -a Affinity\ Photo\ 2
 hyper - r : open -a Reminders
-hyper - s : open -a Soulver\ 3
+# hyper - s : open -a Soulver\ 3
 hyper - t : open -a Ghostty
 hyper + shift - t : open -na Ghostty --args --command=mc
 hyper - g : open -a Steam
