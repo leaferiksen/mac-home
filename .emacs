@@ -16,6 +16,9 @@
   (flexoki-themes-use-bold-builtins t)
   (flexoki-themes-use-italic-comments t))
 
+(global-set-key [mouse-4] 'scroll-down-line)
+(global-set-key [mouse-5] 'scroll-up-line)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -29,11 +32,6 @@
  '(package-selected-packages '(format-all flexoki-themes))
  '(read-process-output-max (* 1024 1024) t)
  '(xterm-mouse-mode t))
-
-(global-set-key [mouse-4] 'scroll-down-line)
-(global-set-key [mouse-5] 'scroll-up-line)
-(global-display-line-numbers-mode)
-
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
