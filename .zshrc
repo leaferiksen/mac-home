@@ -27,6 +27,8 @@ export sf="${HOME}/Documents/College/Spring 25"
 alias q='qlmanage -p'
 alias fix='xattr -dr com.apple.quarantine'
 alias up='brew update; brew upgrade --no-quarantine'
+# https://eclecticlight.co/2023/10/11/launchservices-problems-in-sonoma-14-0/
+alias resetLaunchServices='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -r -v -apps u'
 ## copy() {osascript -e "set the clipboard to (POSIX file \"$PWD/$1\")"}
 ## 'brew update; brew upgrade --formulae --no-quarantine $(brew list --formulae); brew upgrade --cask --no-quarantine --greedy $(brew list --cask | grep --invert-match --regexp=thunderbird --regexp=font-red-hat-mono)'
 
