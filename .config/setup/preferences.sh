@@ -43,7 +43,7 @@ defaults write com.apple.AppleMultitouchTrackpad "TrackpadTwoFingerFromRightEdge
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadTwoFingerFromRightEdgeSwipeGesture" -int "0"
 
 # let karabiner handle media keys
-defaults write -g "com.apple.keyboard.fnState" -bool "true" 
+# defaults write -g "com.apple.keyboard.fnState" -bool "true" 
 
 # keyboard: UI control, disable disable globe key, quote/ dash conversion and
 defaults write com.apple.HIToolbox "AppleFnUsageType" -int "0"
@@ -284,9 +284,10 @@ defaults write com.sindresorhus.Pure-Paste "hideMenuBarIcon" -bool "true"
 ###############################################################################
 
 # Maccy
-defaults write read org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonKeyCode\":9,\"carbonModifiers\":6912}"
+defaults write org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonModifiers\":768,\"carbonKeyCode\":9}"
 defaults write org.p0deje.Maccy "showInStatusBar" -bool "false"
 defaults write org.p0deje.Maccy "popupPosition" -string "center"
+defaults write org.p0deje.Maccy "historySize" -int "10"
 
 ###############################################################################
 

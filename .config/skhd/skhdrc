@@ -12,7 +12,7 @@ hyper - f : open -a FaceTime
 hyper - p : open -a Preview
 hyper - b : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a "Zen Browser"
 hyper - j : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
-hyper - l : shortcuts run 'Books Library'
+hyper - l : open -a LuLu
 hyper - u : open -a UTM
 
 # arstg]mneio

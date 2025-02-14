@@ -3,14 +3,14 @@ shell-integration = zsh
 auto-update = off
 macos-option-as-alt = true
 mouse-hide-while-typing = true
-keybind = global:opt+grave_accent=toggle_quick_terminal
+# keybind = global:opt+grave_accent=toggle_quick_terminal
 focus-follows-mouse = true
 macos-non-native-fullscreen = visible-menu
 macos-titlebar-style = hidden
 fullscreen = true
 
 font-family = "SF Mono"
-font-size = 14
+font-size = 16
 theme = flexoki-dark
-background-opacity = .9
-background-blur = true
+# background-opacity = .9
+# background-blur = true
