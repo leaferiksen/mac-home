@@ -22,6 +22,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auto-save-default nil)
+ '(create-lockfiles nil)
+ '(gc-cons-threshold 100000000)
+ '(read-process-output-max (* 1024 1024)) ;; 1mb
  '(make-backup-files nil)
  '(menu-bar-mode nil)
  '(package-selected-packages '(flexoki-themes))

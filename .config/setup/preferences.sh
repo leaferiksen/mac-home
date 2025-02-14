@@ -121,8 +121,8 @@ defaults write com.apple.widgets "widgetAppearance" -int "0"
 
 # Finder
 chflags nohidden ~/Library
-defaults write com.apple.finder "CreateDesktop" -bool "false"
-defaults write com.apple.finder "QuitMenuItem" -bool "true"
+# defaults write com.apple.finder "CreateDesktop" -bool "false"
+# defaults write com.apple.finder "QuitMenuItem" -bool "true"
 defaults write com.apple.finder "FXPreferredViewStyle" -string "clmv"
 defaults write com.apple.finder "ShowPathbar" -bool "true"
 defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true"
