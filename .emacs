@@ -17,6 +17,9 @@
   (flexoki-themes-use-italic-comments t))
 (use-package magit
   :ensure t)
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
 
 (global-set-key [mouse-4] 'scroll-down-line)
 (global-set-key [mouse-5] 'scroll-up-line)
