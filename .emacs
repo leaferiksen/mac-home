@@ -15,6 +15,8 @@
   (flexoki-themes-use-bold-keywords t)
   (flexoki-themes-use-bold-builtins t)
   (flexoki-themes-use-italic-comments t))
+(use-package magit
+  :ensure t)
 
 (global-set-key [mouse-4] 'scroll-down-line)
 (global-set-key [mouse-5] 'scroll-up-line)
