@@ -24,10 +24,10 @@
  '(auto-save-default nil)
  '(create-lockfiles nil)
  '(gc-cons-threshold 100000000)
- '(read-process-output-max (* 1024 1024)) ;; 1mb
  '(make-backup-files nil)
  '(menu-bar-mode nil)
- '(package-selected-packages '(flexoki-themes))
+ '(package-selected-packages '(format-all flexoki-themes))
+ '(read-process-output-max (* 1024 1024) t)
  '(xterm-mouse-mode t))
 
 (global-set-key [mouse-4] 'scroll-down-line)

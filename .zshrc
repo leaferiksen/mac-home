@@ -1,45 +1,43 @@
-# zsh fuzzy caps autocomplete
+# zsh fuzzy caps autocomplete and Plugins
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-# zsh Plugins
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 # brew completion definitions
 autoload -Uz compinit
 compinit
 
-# environment variables
-# ssh-add --apple-use-keychain ~/.ssh/id_ed25519 &> /dev/null
-## brew
+# brew
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications  no-quarantine"
 export HOMEBREW_NO_AUTO_UPDATE=1
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
-## fuck vim
-export EDITOR="code"
-export VISUAL="code"
-## named directories
+
+# fuck vim
+export EDITOR="emacs"
+export VISUAL="emacs"
+
+# named directories
 export ic="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
 export sd="/Volumes/Leafs Media"
 export sf="${HOME}/Documents/College/Spring 25"
+## ssh-add --apple-use-keychain ~/.ssh/id_ed25519 &> /dev/null
 
-# aliases and functions
-
-## Mac
+# Mac utils
 alias q='qlmanage -p'
 alias fix='xattr -dr com.apple.quarantine'
-copy() {osascript -e "set the clipboard to (POSIX file \"$PWD/$1\")"}
 alias up='brew update; brew upgrade --no-quarantine'
-### 'brew update; brew upgrade --formulae --no-quarantine $(brew list --formulae); brew upgrade --cask --no-quarantine --greedy $(brew list --cask | grep --invert-match --regexp=thunderbird --regexp=font-red-hat-mono)'
+## copy() {osascript -e "set the clipboard to (POSIX file \"$PWD/$1\")"}
+## 'brew update; brew upgrade --formulae --no-quarantine $(brew list --formulae); brew upgrade --cask --no-quarantine --greedy $(brew list --cask | grep --invert-match --regexp=thunderbird --regexp=font-red-hat-mono)'
 
-## Dev
+# Dev shortcuts
 alias lg='lazygit'
 alias tw='tailwindcss -i app.css -o dist.css'
 alias ctar=tar -czvf
 alias xtar=tar -xzvf
 alias ttar=tar -tzvf
 
-## General
-alias nano='nano --modernbindings --softwrap --tabsize=4 --tabstospaces'
+# Better BSD utils
 alias diff='diff --color=always'
 alias l='echo -e "\e[31m$(pwd)\e[0m"; eza --long --grid --group-directories-first --no-time --no-permissions --no-user'
 function la() {{echo -e "\e[31m$(pwd)\e[0m"; eza --color=always --all --long --header --group-directories-first "$@"} | less --header 2 --quit-if-one-screen --RAW-CONTROL-CHARS --SILENT --no-vbell}
@@ -47,4 +45,5 @@ function cl() {cd "$@"; l}
 function cla() {cd "$@"; la}
 function ml() {mkdir -p "$(pwd)/$@"; l}
 function tl() {touch "$(pwd)/$@"; l}
-### ls: A=show hidden files h=unit suffixes o=long format without groups
+## ls: A=show hidden files h=unit suffixes o=long format without groups
+## alias nano='nano --modernbindings --softwrap --tabsize=4 --tabstospaces'
