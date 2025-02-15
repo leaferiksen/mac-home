@@ -5,35 +5,35 @@ cmd - m : skhd -k
 cmd + alt - m : skhd -k
 
 # qwfpb[jluy
-hyper - q : open -a qBittorrent 
-hyper - w : open -a Microsoft\ Word
-hyper + shift - w : open -a Microsoft\ Word ~/Documents/College/Template.dotx
-hyper - f : open -a FaceTime
-hyper - p : open -a Preview
-hyper - b : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a "Zen Browser"
-hyper - j : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
-hyper - l : open -a LuLu
-hyper - u : open -a UTM
+meh - q : open -a qBittorrent 
+meh - w : open -a Microsoft\ Word
+meh + shift - w : open -a Microsoft\ Word ~/Documents/College/Template.dotx
+meh - f : open -a FaceTime
+meh - p : open -a Preview
+meh - b : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a "Zen Browser"
+meh - j : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
+meh - l : open -a LuLu
+meh - u : open -a UTM
 
 # arstg]mneio
-hyper - a : open -a Affinity\ Photo\ 2
-hyper - r : open -a Reminders
-# hyper - s : open -a Soulver\ 3
-hyper - t : open -a Ghostty
-hyper + shift - t : open -na Ghostty --args --command=mc
-hyper - g : open -a Steam
-hyper + shift - g : open -a Itch
-hyper - m : open -a Messages
-hyper - n : open -a NewsBlur
-hyper - e : open -a Mail
-hyper - i : open -a IINA
-hyper - o : open -a Obsidian
+meh - a : open -a Affinity\ Photo\ 2
+meh - r : open -a Reminders
+meh - s : open -a Soulver\ 3
+meh - t : open -a Ghostty
+meh + shift - t : open -na Ghostty --args --command=mc
+meh - g : open -a Steam
+meh + shift - g : open -a Itch
+meh - m : open -a Messages
+meh - n : open -a NewsBlur
+meh - e : open -a Mail
+meh - i : open -a IINA
+meh - o : open -a Obsidian
 
 # xcdvz/kh
-hyper - x : open -a iPhone\ Mirroring
-hyper - c : open -a Calendar
-hyper - d : open -a Dictionary
-hyper - v : open -a "Visual Studio Code"
-hyper - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
-hyper - k : open -a Karabiner-Elements
-hyper - h : open -a Hazel
+meh - x : open -a iPhone\ Mirroring
+meh - c : open -a Calendar
+meh - d : open -a Dictionary
+meh - v : open -a "Visual Studio Code"
+meh - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
+meh - k : open -a Karabiner-Elements
+meh - h : open -a Hazel

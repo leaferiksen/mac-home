@@ -55,7 +55,6 @@ defaults write -g "NSAutomaticDashSubstitutionEnabled" -bool "false"
 defaults write -g "NSUserKeyEquivalents" '{
     "Show Sidebar" = "@~^$s";
     "Hide Sidebar" = "@~^$s";
-    "Remove Window from Set" = "@~^$r";
 }'
 
 ###############################################################################
