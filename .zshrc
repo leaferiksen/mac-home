@@ -23,24 +23,21 @@ export sd="/Volumes/Leafs Media"
 export sf="${HOME}/Documents/College/Spring 25"
 ## ssh-add --apple-use-keychain ~/.ssh/id_ed25519 &> /dev/null
 
-# Mac utils
+# My fun tools
 alias q='qlmanage -p'
 alias fix='xattr -dr com.apple.quarantine'
 alias up='brew update; brew upgrade --no-quarantine'
+alias tw='tailwindcss -i app.css -o dist.css'
 ## https://eclecticlight.co/2023/10/11/launchservices-problems-in-sonoma-14-0/
 ## https://lapcatsoftware.com/articles/2023/10/4.html
 alias resetLaunchServices='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -r -v -apps u'
 ## copy() {osascript -e "set the clipboard to (POSIX file \"$PWD/$1\")"}
 ## 'brew update; brew upgrade --formulae --no-quarantine $(brew list --formulae); brew upgrade --cask --no-quarantine --greedy $(brew list --cask | grep --invert-match --regexp=thunderbird --regexp=font-red-hat-mono)'
 
-# Dev shortcuts
-alias lg='lazygit'
-alias tw='tailwindcss -i app.css -o dist.css'
+# My BSD utils
 alias ctar=tar -czvf
 alias xtar=tar -xzvf
 alias ttar=tar -tzvf
-
-# Better BSD utils
 alias diff='diff --color=always'
 alias l='echo -e "\e[31m$(pwd)\e[0m"; eza --long --grid --group-directories-first --no-time --no-permissions --no-user'
 function la() {{echo -e "\e[31m$(pwd)\e[0m"; eza --color=always --all --long --header --group-directories-first "$@"} | less --header 2 --quit-if-one-screen --RAW-CONTROL-CHARS --SILENT --no-vbell}

@@ -15,11 +15,10 @@
   (flexoki-themes-use-bold-keywords t)
   (flexoki-themes-use-bold-builtins t)
   (flexoki-themes-use-italic-comments t))
-(use-package magit
-  :ensure t)
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode))
+(use-package magit :ensure t)
+(use-package xclip :ensure t)
+
+;(use-package web-mode :ensure t :mode ("\\.html?\\'" . web-mode))
 
 (global-set-key [mouse-4] 'scroll-down-line)
 (global-set-key [mouse-5] 'scroll-up-line)
@@ -32,10 +31,12 @@
  '(auto-save-default nil)
  '(create-lockfiles nil)
  '(gc-cons-threshold 100000000)
+ '(global-display-line-numbers-mode t)
  '(make-backup-files nil)
  '(menu-bar-mode nil)
  '(package-selected-packages '(format-all flexoki-themes))
  '(read-process-output-max (* 1024 1024) t)
+ '(xclip-mode t)
  '(xterm-mouse-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
