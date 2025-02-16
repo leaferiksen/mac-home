@@ -47,3 +47,5 @@ function ml() {mkdir -p "$(pwd)/$@"; l}
 function tl() {touch "$(pwd)/$@"; l}
 ## ls: A=show hidden files h=unit suffixes o=long format without groups
 ## alias nano='nano --modernbindings --softwrap --tabsize=4 --tabstospaces'
+
+emacs

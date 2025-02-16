@@ -53,8 +53,8 @@ defaults write -g "NSAutomaticDashSubstitutionEnabled" -bool "false"
 
 # Hyperkey semi-auto window tiling and sidebar
 defaults write -g "NSUserKeyEquivalents" '{
-    "Show Sidebar" = "@~^$s";
-    "Hide Sidebar" = "@~^$s";
+    "Hide Sidebar" = "~^$`";
+    "Show Sidebar" = "~^$`";
 }'
 
 ###############################################################################
@@ -264,11 +264,6 @@ defaults write app.zen-browser.zen "DisableAppUpdate" -bool "true"
 
 ###############################################################################
 
-# AlDente
-defaults write com.apphousekitchen.aldente-pro "showDockIcon" -bool "false"
-
-###############################################################################
-
 # Hazel
 defaults write com.noodlesoft.Hazel "ShowStatusInMenuBar" -bool "false"
 defaults write com.noodlesoft.Hazel "TrashUninstallApps" -bool "true"
@@ -298,6 +293,11 @@ defaults write com.ibluebox.aqua-menu-bar "lows" -bool "false"
 
 # SaneSideButtons
 defaults write com.janhuelsmann.SaneSideButtons "NSStatusItem Visible Item-0" -bool "false"
+
+###############################################################################
+
+# AlDente
+# defaults write com.apphousekitchen.aldente-pro "showDockIcon" -bool "false"
 
 ###############################################################################
 

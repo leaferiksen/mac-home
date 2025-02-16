@@ -20,20 +20,18 @@ meh - a : open -a Affinity\ Photo\ 2
 meh - r : open -a Reminders
 meh - s : open -a Soulver\ 3
 meh - t : open -a Ghostty
-meh + shift - t : open -na Ghostty --args --command=mc
 meh - g : open -a Steam
-meh + shift - g : open -a Itch
+meh + cmd - g : open -a Itch
 meh - m : open -a Messages
 meh - n : open -a NewsBlur
 meh - e : open -a Mail
-meh - i : open -a IINA
+meh - i : open -a iPhone\ Mirroring
 meh - o : open -a Obsidian
 
 # xcdvz/kh
-meh - x : open -a iPhone\ Mirroring
 meh - c : open -a Calendar
 meh - d : open -a Dictionary
-meh - v : open -a "Visual Studio Code"
+meh - v : open -a IINA
 meh - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
 meh - k : open -a Karabiner-Elements
 meh - h : open -a Hazel
