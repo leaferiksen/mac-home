@@ -10,6 +10,6 @@ macos-titlebar-style = hidden
 fullscreen = true
 
 font-size = 14
-theme = flexoki-dark
+theme = light:flexoki-light, dark:flexoki-dark
 # background-opacity = .9
 # background-blur = true
