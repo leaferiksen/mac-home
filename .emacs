@@ -42,8 +42,11 @@
  ;; If there is more than one, they won't work right.
  '(auto-save-default nil)
  '(create-lockfiles nil)
+ '(dired-listing-switches "-aoh")
  '(flexoki-themes-use-bold-builtins t)
  '(flexoki-themes-use-bold-keywords t)
+ '(global-auto-revert-mode t)
+ '(global-auto-revert-non-file-buffers t)
  '(global-display-line-numbers-mode t)
  '(make-backup-files nil)
  '(menu-bar-mode nil)
