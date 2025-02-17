@@ -8,17 +8,38 @@
 (package-initialize)
 (use-package magit :ensure t)
 (use-package xclip :ensure t)
-(use-package auto-dark :ensure t)
 (use-package flexoki-themes :ensure t)
 (global-set-key [mouse-4] 'scroll-down-line)
 (global-set-key [mouse-5] 'scroll-up-line)
+
+(setq last-dark-mode-state 'unknown)
+
+(defun check-and-set-dark-mode ()
+  "Automatically set the theme to match if macOS is in dark mode."
+  (let ((dark-mode-enabled (system-dark-mode-enabled-p)))
+    (if (not (eq dark-mode-enabled last-dark-mode-state))
+	(progn
+	  (setq last-dark-mode-state dark-mode-enabled)
+	  (if dark-mode-enabled
+	    (load-theme 'flexoki-themes-dark  t)
+	    (load-theme 'flexoki-themes-light t))))))
+
+(defun system-dark-mode-enabled-p ()
+  "Check if dark mode is currently enabled on macOS."
+  (if (string= system-type "darwin")
+      (string=
+       (shell-command-to-string "printf %s \"$( osascript -e \'tell application \"System Events\" to tell appearance preferences to return dark mode\' )\"")
+       "true")
+      nil))
+
+(run-with-timer 0 2 'check-and-set-dark-mode)
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(auto-dark-allow-osascript t)
- '(auto-dark-themes '((flexoki-themes-dark) (flexoki-themes-light)))
  '(auto-save-default nil)
  '(create-lockfiles nil)
  '(flexoki-themes-use-bold-builtins t)
@@ -26,7 +47,7 @@
  '(global-display-line-numbers-mode t)
  '(make-backup-files nil)
  '(menu-bar-mode nil)
- '(package-selected-packages '(xclip magit flexoki-themes auto-dark))
+ '(package-selected-packages '(xclip magit flexoki-themes))
  '(xclip-mode t)
  '(xterm-mouse-mode t))
 (custom-set-faces

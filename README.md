@@ -24,7 +24,6 @@ chmod -R +w /opt/homebrew && \
 skhd --start-service && \
 ./.config/setup/mas.sh && \
 ./.config/setup/preferences.sh && \
-./.config/setup/duti.sh
 ./.config/setup/login.sh
 ```
 Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html) and [LM Studio](https://lmstudio.ai) from their websites

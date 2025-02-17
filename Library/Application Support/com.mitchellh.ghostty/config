@@ -1,6 +1,6 @@
 shell-integration = zsh
 auto-update = off
-macos-icon = paper
+macos-icon = chalkboard
 macos-option-as-alt = true
 mouse-hide-while-typing = true
 # keybind = global:opt+grave_accent=toggle_quick_terminal
