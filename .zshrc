@@ -39,13 +39,15 @@ alias ctar=tar -czvf
 alias xtar=tar -xzvf
 alias ttar=tar -tzvf
 alias diff='diff --color=always'
-alias l='echo -e "\e[31m$(pwd)\e[0m"; eza --long --grid --group-directories-first --no-time --no-permissions --no-user'
-function la() {{echo -e "\e[31m$(pwd)\e[0m"; eza --color=always --all --long --header --group-directories-first "$@"} | less --header 2 --quit-if-one-screen --RAW-CONTROL-CHARS --SILENT --no-vbell}
+alias l='eza --long --grid --group-directories-first --no-time --no-permissions --no-user'
+alias la='eza --color=always --all --long --header --group-directories-first'
 function cl() {cd "$@"; l}
 function cla() {cd "$@"; la}
 function ml() {mkdir -p "$(pwd)/$@"; l}
 function tl() {touch "$(pwd)/$@"; l}
+## echo -e "\e[31m$(pwd)\e[0m";
 ## ls: A=show hidden files h=unit suffixes o=long format without groups
+## less --header 2 --quit-if-one-screen --RAW-CONTROL-CHARS --SILENT --no-vbell
 ## alias nano='nano --modernbindings --softwrap --tabsize=4 --tabstospaces'
 
 emacs
