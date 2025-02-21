@@ -186,32 +186,32 @@ defaults write com.apple.assistant.support "Search Queries Data Sharing Status" 
 
 # Safari
 # Disable preloading top hit in the background
-defaults write com.apple.Safari PreloadTopHit -bool false
+# defaults write com.apple.Safari PreloadTopHit -bool false
 # Disable Quick Website Search
-defaults write com.apple.Safari WebsiteSpecificSearchEnabled -bool false
+# defaults write com.apple.Safari WebsiteSpecificSearchEnabled -bool false
 # Disable AutoFill
-defaults write com.apple.Safari AutoFillFromAddressBook -bool false
-defaults write com.apple.Safari AutoFillPasswords -bool false
-defaults write com.apple.Safari AutoFillCreditCardData -bool false
-defaults write com.apple.Safari AutoFillMiscellaneousForms -bool false
+# defaults write com.apple.Safari AutoFillFromAddressBook -bool false
+# defaults write com.apple.Safari AutoFillPasswords -bool false
+# defaults write com.apple.Safari AutoFillCreditCardData -bool false
+# defaults write com.apple.Safari AutoFillMiscellaneousForms -bool false
 # Show full URL
-defaults write com.apple.Safari "ShowFullURLInSmartSearchField" -bool "true"
+# defaults write com.apple.Safari "ShowFullURLInSmartSearchField" -bool "true"
 # Enhanced Privacy
-defaults write com.apple.safari "EnableEnhancedPrivacyInRegularBrowsing" -bool "true"
-defaults write com.apple.safari "EnableEnhancedPrivacyInPrivateBrowsing" -bool "true"
+# defaults write com.apple.safari "EnableEnhancedPrivacyInRegularBrowsing" -bool "true"
+# defaults write com.apple.safari "EnableEnhancedPrivacyInPrivateBrowsing" -bool "true"
 # Privacy: don’t send search queries to Apple
-defaults write com.apple.Safari UniversalSearchEnabled -bool false
-defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+# defaults write com.apple.Safari UniversalSearchEnabled -bool false
+# defaults write com.apple.Safari SuppressSearchSuggestions -bool true
 # disable tracking backdoor
-defaults write com.apple.safari "WebKitPreferences.privateClickMeasurementEnabled" -bool "false"
+# defaults write com.apple.safari "WebKitPreferences.privateClickMeasurementEnabled" -bool "false"
 # ask where to download
-defaults write com.apple.Safari.SandboxBroker "AlwaysPromptForDownloadFolder" -bool "true"
+# defaults write com.apple.Safari.SandboxBroker "AlwaysPromptForDownloadFolder" -bool "true"
 # develop menu and the web inspector
-defaults write com.apple.Safari "IncludeDevelopMenu" -bool "true"
-defaults write com.apple.Safari "DeveloperMenuVisibility" -bool "true"
-defaults write com.apple.Safari "WebKitDeveloperExtrasEnabledPreferenceKey" -bool "true"
-defaults write com.apple.Safari "WebKitPreferences.developerExtrasEnabled" -bool "true"
-defaults write com.apple.Safari.SandboxBroker "ShowDevelopMenu" -bool "true"
+# defaults write com.apple.Safari "IncludeDevelopMenu" -bool "true"
+# defaults write com.apple.Safari "DeveloperMenuVisibility" -bool "true"
+# defaults write com.apple.Safari "WebKitDeveloperExtrasEnabledPreferenceKey" -bool "true"
+# defaults write com.apple.Safari "WebKitPreferences.developerExtrasEnabled" -bool "true"
+# defaults write com.apple.Safari.SandboxBroker "ShowDevelopMenu" -bool "true"
 
 ###############################################################################
 

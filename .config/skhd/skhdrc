@@ -7,7 +7,7 @@ cmd + alt - m : skhd -k
 # qwfpb[jluy
 meh - q : open -a qBittorrent 
 meh - w : open -a Microsoft\ Word
-meh + shift - w : open -a Microsoft\ Word ~/Documents/College/Template.dotx
+meh + cmd - w : open -a Microsoft\ Word ~/Documents/College/Template.dotx
 meh - f : open -a FaceTime
 meh - p : open -a Preview
 meh - b : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a "Zen Browser"
@@ -23,8 +23,9 @@ meh - t : open -a Ghostty
 meh - g : open -a Steam
 meh + cmd - g : open -a Itch
 meh - m : open -a Messages
+meh + cmd - e : open -a Mail
 meh - n : open -a NewsBlur
-meh - e : open -a Mail
+meh - e : open -a Emacs
 meh - i : open -a iPhone\ Mirroring
 meh - o : open -a Obsidian
 

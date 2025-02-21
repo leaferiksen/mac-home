@@ -13,10 +13,6 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
 
-# fuck vim
-export EDITOR="emacs"
-export VISUAL="emacs"
-
 # named directories
 export ic="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
 export sd="/Volumes/Leafs Media"
@@ -49,5 +45,3 @@ function tl() {touch "$(pwd)/$@"; l}
 ## ls: A=show hidden files h=unit suffixes o=long format without groups
 ## less --header 2 --quit-if-one-screen --RAW-CONTROL-CHARS --SILENT --no-vbell
 ## alias nano='nano --modernbindings --softwrap --tabsize=4 --tabstospaces'
-
-emacs
