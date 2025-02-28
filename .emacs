@@ -4,7 +4,9 @@
 (use-package magit :ensure t)
 (use-package xclip :ensure t)
 (use-package flexoki-themes :ensure t)
-;; (use-package web-mode :ensure t)
+
+(require 'project)
+
 (global-set-key [mouse-4] 'scroll-down-line)
 (global-set-key [mouse-5] 'scroll-up-line)
 
@@ -23,7 +25,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default-frame-alist '((undecorated . t) (fullscreen . maximized)))
- '(dired-listing-switches "-aoh --color=always --group-directories-first")
+ '(dired-listing-switches "-agho --color=always --group-directories-first")
  '(flexoki-themes-use-bold-builtins t)
  '(flexoki-themes-use-bold-keywords t)
  '(global-auto-revert-mode t)
@@ -31,7 +33,8 @@
  '(global-display-line-numbers-mode t)
  '(inhibit-startup-screen t)
  '(make-backup-files nil)
- '(package-selected-packages '(xclip magit flexoki-themes))
+ '(package-selected-packages nil)
+ '(which-key-mode t)
  '(xclip-mode t)
  '(xterm-mouse-mode t))
 (custom-set-faces
@@ -40,3 +43,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 140 :width normal)))))
+(put 'dired-find-alternate-file 'disabled nil)

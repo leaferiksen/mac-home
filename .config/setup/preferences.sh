@@ -35,6 +35,7 @@ defaults write com.apple.desktopservices "DSDontWriteUSBStores" -bool "true"
 defaults write com.apple.desktopservices "DSDontWriteNetworkStores" -bool "true"
 
 # trackpad cmd+ctrl+three-finger drag
+# defaults write -g NSScrollViewRubberbanding -int 0
 defaults write -g "NSWindowShouldDragOnGesture" -bool "true"
 defaults write -g "NSWindowShouldDragOnGestureFeedback" -bool "false"
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadThreeFingerDrag" -bool "true"
@@ -120,17 +121,18 @@ defaults write com.apple.widgets "widgetAppearance" -int "0"
 
 # Finder
 chflags nohidden ~/Library
+# defaults write -g "com.apple.springing.delay" -float "0.35"
+# defaults write -g "NSDocumentSaveNewDocumentsToCloud" -bool "false"
+# defaults write -g "NSNavPanelExpandedStateForSaveMode" -bool "true"
+# defaults write -g "NSNavPanelExpandedStateForSaveMode2" -bool "true"
 # defaults write com.apple.finder "CreateDesktop" -bool "false"
 # defaults write com.apple.finder "QuitMenuItem" -bool "true"
 defaults write com.apple.finder "FXPreferredViewStyle" -string "clmv"
 defaults write com.apple.finder "ShowPathbar" -bool "true"
 defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true"
-defaults write -g "AppleShowAllExtensions" -bool "true"
+defaults write com.apple.finder "SidebarTagsSctionDisclosedState" -bool "false"
 defaults write com.apple.finder "FXEnableExtensionsChangeWarning" -bool "false"
-defaults write -g "com.apple.springing.delay" -float "0.35"
-defaults write -g "NSDocumentSaveNewDocumentsToCloud" -bool "false"
-defaults write -g "NSNavPanelExpandedStateForSaveMode" -bool "true"
-defaults write -g "NSNavPanelExpandedStateForSaveMode2" -bool "true"
+defaults write -g "AppleShowAllExtensions" -bool "true"
 # Set search scope.
 # This Mac       : `SCev`
 # Current Folder : `SCcf`

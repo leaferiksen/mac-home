@@ -37,7 +37,7 @@ alias ttar=tar -tzvf
 alias diff='diff --color=always'
 alias l='eza --group-directories-first --icons'
 alias la='eza --all --group-directories-first --icons'
-alias ll='eza --all --long --header --group-directories-first --git --icons'
+alias ll='eza --all --long --header --group-directories-first --git --icons --no-user --no-permissions'
 function ml() {mkdir -p "$(pwd)/$@"; l}
 function tl() {touch "$(pwd)/$@"; l}
 ## echo -e "\e[31m$(pwd)\e[0m";
