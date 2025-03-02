@@ -21,6 +21,11 @@
 (use-package magit :ensure t)
 (use-package xclip :ensure t)
 (use-package auto-package-update :defer nil :ensure t :config (auto-package-update-maybe))
+(use-package copilot
+  :vc (:url "https://github.com/copilot-emacs/copilot.el"
+            :rev :newest
+            :branch "main")
+  :hook (prog-mode . copilot-mode))
 
 ;; Transform yes-or-no questions into y-or-n
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -45,6 +50,9 @@
  '(inhibit-startup-screen t)
  '(make-backup-files nil)
  '(package-selected-packages nil)
+ '(package-vc-selected-packages
+   '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch
+	      "main")))
  '(pixel-scroll-precision-mode t)
  '(ring-bell-function 'ignore)
  '(which-key-mode t)

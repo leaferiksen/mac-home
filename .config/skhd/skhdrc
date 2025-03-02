@@ -11,7 +11,8 @@ hyper - w : open -a Microsoft\ Word ~/Documents/College/Template.dotx
 meh - f : open -a Finder
 meh - p : open -a Preview
 meh - b : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zen
-meh - j : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
+hyper - b : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
+# hyper - b : open -a Google\ Chrome
 meh - l : open -a LuLu
 meh - u : open -a UTM
 
