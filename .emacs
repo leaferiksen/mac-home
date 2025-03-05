@@ -1,6 +1,7 @@
 ;; Enable core features
 (use-package completion-preview :ensure nil :hook (prog-mode . completion-preview-mode) :bind ( :map completion-preview-active-mode-map ("M-n" . completion-preview-next-candidate) ("M-p" . completion-preview-prev-candidate))) 
 (require 'project)
+;; opens too many tabs (use-package html-autoview-mode :ensure nil :hook (mhtml-mode . html-autoview-mode))
 
 ;; Enable melpa
 (require 'package)
@@ -25,10 +26,21 @@
   :vc (:url "https://github.com/copilot-emacs/copilot.el"
             :rev :newest
             :branch "main")
-  :hook (prog-mode . copilot-mode))
+  :hook (prog-mode . copilot-mode)
+  :config
+  (add-to-list 'copilot-indentation-alist '(prog-mode 2))
+  (add-to-list 'copilot-indentation-alist '(org-mode 2))
+  (add-to-list 'copilot-indentation-alist '(text-mode 2))
+  (add-to-list 'copilot-indentation-alist '(closure-mode 2))
+  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2)))
 
 ;; Transform yes-or-no questions into y-or-n
 (defalias 'yes-or-no-p 'y-or-n-p)
+
+(add-hook 'after-save-hook (lambda ()
+                              (when (eq major-mode 'mhtml-mode)
+                                (shell-command "rustywind --write .")
+                                (revert-buffer :ignore-auto :noconfirm))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
