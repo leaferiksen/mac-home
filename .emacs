@@ -39,8 +39,21 @@
 
 (add-hook 'after-save-hook (lambda ()
                               (when (eq major-mode 'mhtml-mode)
-                                (shell-command "rustywind --write .")
+                                (shell-command "rustywind --write . > /dev/null 2>&1")
                                 (revert-buffer :ignore-auto :noconfirm))))
+
+(global-set-key (kbd "C-c t")
+                (lambda ()
+                  "Open the folder containing the current file or the current `dired` directory in Ghostty."
+                  (interactive)
+                  (let ((path (if (derived-mode-p 'dired-mode)
+                                  (dired-get-file-for-visit)
+                                (buffer-file-name))))
+                    (when path
+                      (let ((directory (if (file-directory-p path)
+                                           path
+                                         (file-name-directory path))))
+                        (shell-command (concat "open -a Ghostty --args --working-directory=" (shell-quote-argument directory))))))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
