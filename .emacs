@@ -7,10 +7,7 @@
     ('light (load-theme 'flexoki-themes-light t))
     ('dark (load-theme 'flexoki-themes-dark t))))
 (add-hook 'ns-system-appearance-change-functions #'my/apply-theme)
-(add-hook 'after-save-hook (lambda ()
-                              (when (eq major-mode 'mhtml-mode)
-                                (shell-command "rustywind --write . > /dev/null 2>&1")
-                                (revert-buffer :ignore-auto :noconfirm))))
+(global-set-key (kbd "s-Z") 'undo-redo)
 (global-set-key (kbd "C-c t")
                 (lambda ()
                   "Open the folder containing the current file or the current `dired` directory in Ghostty."
@@ -21,10 +18,16 @@
                     (when path
                       (shell-command (concat "open -a Ghostty --args --working-directory="
                                              (shell-quote-argument (file-name-directory path))))))))
-
+(add-hook 'after-save-hook (lambda ()
+                              (when (eq major-mode 'mhtml-mode)
+                                (shell-command "rustywind --write . > /dev/null 2>&1")
+                                (revert-buffer :ignore-auto :noconfirm))))
 ;; Enabled optional core features
 (require 'project)
-(use-package completion-preview :ensure nil :hook (prog-mode . completion-preview-mode) :bind ( :map completion-preview-active-mode-map ("M-n" . completion-preview-next-candidate) ("M-p" . completion-preview-prev-candidate)))
+(use-package completion-preview
+  :ensure nil
+  :hook (prog-mode . completion-preview-mode)
+  :bind ( :map completion-preview-active-mode-map ("M-n" . completion-preview-next-candidate) ("M-p" . completion-preview-prev-candidate)))
 ;; DLC
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -43,7 +46,8 @@
   (add-to-list 'copilot-indentation-alist '(text-mode 2))
   (add-to-list 'copilot-indentation-alist '(closure-mode 2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
-  (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion))
+  (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+  (define-key copilot-completion-map (kbd "<S-tab>") 'copilot-accept-completion-by-word))
 ;; Settings... ⌘ + ,
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
