@@ -178,6 +178,9 @@ defaults write com.apple.finder "NewWindowTarget" "PfHm"
 /usr/libexec/PlistBuddy -c \
 	"add 'PreviewPaneSettings':public.text:showQuickActions bool false" \
 	/Users/leaf/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c \
+	"add 'PreviewPaneSettings':public.html:showQuickActions bool false" \
+	/Users/leaf/Library/Preferences/com.apple.finder.plist
 
 ###############################################################################
 
