@@ -7,6 +7,9 @@
     ('light (load-theme 'flexoki-themes-light t))
     ('dark (load-theme 'flexoki-themes-dark t))))
 (add-hook 'ns-system-appearance-change-functions #'my/apply-theme)
+(global-set-key (kbd "<pinch>") 'ignore)
+(global-set-key (kbd "<C-wheel-up>") 'ignore)
+(global-set-key (kbd "<C-wheel-down>") 'ignore)
 (global-set-key (kbd "s-Z") 'undo-redo)
 (global-set-key (kbd "C-c t")
                 (lambda ()
@@ -74,6 +77,7 @@
 	      "main")))
  '(pixel-scroll-precision-mode t)
  '(ring-bell-function 'ignore)
+ '(scroll-bar-mode nil)
  '(which-key-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
