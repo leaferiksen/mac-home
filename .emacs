@@ -22,7 +22,7 @@
                       (shell-command (concat "open -a Ghostty --args --working-directory="
                                              (shell-quote-argument (file-name-directory path))))))))
 (add-hook 'after-save-hook (lambda ()
-                              (when (eq major-mode 'mhtml-mode)
+                              (when (eq major-mode 'web-mode)
                                 (shell-command "rustywind --write . > /dev/null 2>&1")
                                 (revert-buffer :ignore-auto :noconfirm))))
 ;; Enabled optional core features
@@ -38,16 +38,15 @@
 (use-package flexoki-themes :ensure t)
 (use-package magit :ensure t)
 (use-package auto-package-update :defer nil :ensure t :config (auto-package-update-maybe))
+(use-package web-mode
+  :ensure t
+  :mode ("\\.html\\'" . web-mode))
 (use-package copilot
   :vc (:url "https://github.com/copilot-emacs/copilot.el"
             :rev :newest
             :branch "main")
-  :hook (prog-mode . copilot-mode)
   :config
   (add-to-list 'copilot-indentation-alist '(prog-mode 2))
-  (add-to-list 'copilot-indentation-alist '(org-mode 2))
-  (add-to-list 'copilot-indentation-alist '(text-mode 2))
-  (add-to-list 'copilot-indentation-alist '(closure-mode 2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
   (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
   (define-key copilot-completion-map (kbd "<S-tab>") 'copilot-accept-completion-by-word))
