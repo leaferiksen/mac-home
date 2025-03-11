@@ -76,7 +76,7 @@
  '(global-auto-revert-non-file-buffers t)
  '(global-display-line-numbers-mode t)
  '(global-prettify-symbols-mode t)
- '(initial-buffer-choice "~/")
+ '(initial-buffer-choice "~/Documents")
  '(make-backup-files nil)
  '(package-selected-packages nil)
  '(package-vc-selected-packages
