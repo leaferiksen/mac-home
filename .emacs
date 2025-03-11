@@ -25,6 +25,13 @@
                               (when (eq major-mode 'web-mode)
                                 (shell-command "rustywind --write . > /dev/null 2>&1")
                                 (revert-buffer :ignore-auto :noconfirm))))
+(with-eval-after-load 'dired
+  (define-key dired-mode-map [mouse-2]
+    (lambda (event)
+      "In Dired, visit the file or directory name you click on."
+      (interactive "e")
+      (mouse-set-point event)
+      (dired-find-file))))
 ;; Enabled optional core features
 (require 'project)
 (use-package completion-preview
@@ -69,7 +76,7 @@
  '(global-auto-revert-non-file-buffers t)
  '(global-display-line-numbers-mode t)
  '(global-prettify-symbols-mode t)
- '(inhibit-startup-screen t)
+ '(initial-buffer-choice "~/")
  '(make-backup-files nil)
  '(package-selected-packages nil)
  '(package-vc-selected-packages
