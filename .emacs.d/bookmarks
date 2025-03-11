@@ -2,12 +2,18 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("vc"
- (filename . "~/vc/")
- (front-context-string . "Obsidian Backups")
+(("Home"
+ (filename . "~/")
+ (front-context-string)
+ (rear-context-string . "10 22:09 before\n")
+ (position . 1542)
+ (last-modified 26575 59102 419723 0))
+("Spring 25"
+ (filename . "~/Documents/College/Spring 25/")
+ (front-context-string . "ART 102\n  drwx--")
  (rear-context-string . "24 Mar 10 22:11 ")
- (position . 52)
- (last-modified 26575 56606 621821 0))
+ (position . 151)
+ (last-modified 26575 58934 275824 0))
 ("Leafs Media"
  (filename . "/Volumes/Leafs Media/")
  (front-context-string . ".Spotlight-V100\n")

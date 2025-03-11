@@ -25,6 +25,7 @@
                               (when (eq major-mode 'web-mode)
                                 (shell-command "rustywind --write . > /dev/null 2>&1")
                                 (revert-buffer :ignore-auto :noconfirm))))
+(add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
 (with-eval-after-load 'dired
   (define-key dired-mode-map [mouse-2]
     (lambda (event)
@@ -32,12 +33,20 @@
       (interactive "e")
       (mouse-set-point event)
       (dired-find-file))))
+(eval-after-load "dired"
+  '(progn
+     (define-key dired-mode-map (kbd "z")
+       (lambda () (interactive)
+         (let ((fn (dired-get-file-for-visit)))
+           (start-process "default-app" nil "open" fn))))))
+
 ;; Enabled optional core features
 (require 'project)
 (use-package completion-preview
   :ensure nil
   :hook (prog-mode . completion-preview-mode)
   :bind ( :map completion-preview-active-mode-map ("M-n" . completion-preview-next-candidate) ("M-p" . completion-preview-prev-candidate)))
+
 ;; DLC
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -57,6 +66,7 @@
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
   (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
   (define-key copilot-completion-map (kbd "<S-tab>") 'copilot-accept-completion-by-word))
+
 ;; Settings... ⌘ + ,
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -69,6 +79,7 @@
  '(delete-by-moving-to-trash t)
  '(dired-kill-when-opening-new-dired-buffer t)
  '(dired-listing-switches "-agho --color=always --group-directories-first")
+ '(dired-omit-files "\\`[.]?#\\|\\.DS_Store\\|\\`\\._")
  '(electric-pair-mode t)
  '(flexoki-themes-use-bold-builtins t)
  '(flexoki-themes-use-bold-keywords t)
@@ -76,7 +87,7 @@
  '(global-auto-revert-non-file-buffers t)
  '(global-display-line-numbers-mode t)
  '(global-prettify-symbols-mode t)
- '(initial-buffer-choice "~/Documents")
+ '(initial-buffer-choice "~/")
  '(make-backup-files nil)
  '(package-selected-packages nil)
  '(package-vc-selected-packages
