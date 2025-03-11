@@ -59,6 +59,7 @@
  '(auto-package-update-delete-old-versions t)
  '(cursor-type 'bar)
  '(default-frame-alist '((undecorated . t) (fullscreen . maximized)))
+ '(delete-by-moving-to-trash t)
  '(dired-kill-when-opening-new-dired-buffer t)
  '(dired-listing-switches "-agho --color=always --group-directories-first")
  '(electric-pair-mode t)
@@ -77,6 +78,7 @@
  '(pixel-scroll-precision-mode t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
+ '(trash-directory "~/.Trash")
  '(which-key-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

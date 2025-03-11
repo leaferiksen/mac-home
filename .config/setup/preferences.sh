@@ -145,7 +145,7 @@ defaults write com.apple.finder "FXDefaultSearchScope" "SCcf"
 # List View   : `Nlsv`
 # Column View : `clmv`
 # Cover Flow  : `Flwv`
-defaults write com.apple.finder "FXPreferredViewStyle" "clmv"
+defaults write com.apple.finder "FXPreferredViewStyle" "Nlsv"
 # find . -name ".DS_Store" -type f -delete
 # Set default path for new windows.
 # Computer     : `PfCm`
@@ -156,6 +156,7 @@ defaults write com.apple.finder "FXPreferredViewStyle" "clmv"
 # All My Files : `PfAF`
 # Other…       : `PfLo`
 defaults write com.apple.finder "NewWindowTarget" "PfHm"
+defaults write com.apple.finder "ShowPreviewPane" -bool "true"
 /usr/libexec/PlistBuddy -c \
 	"add 'PreviewPaneSettings':com.adobe.pdf:showQuickActions bool false" \
 	/Users/leaf/Library/Preferences/com.apple.finder.plist
