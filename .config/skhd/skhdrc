@@ -17,7 +17,8 @@ meh - l : open -a LuLu
 meh - u : open -a UTM
 
 # arstg]mneio
-meh - a : open -a Affinity\ Photo\ 2
+meh - a : open -a Activity\ Monitor
+# Affinity\ Photo\ 2
 meh - r : open -a Reminders
 meh - s : open -a Soulver\ 3
 meh - t : open -a Ghostty

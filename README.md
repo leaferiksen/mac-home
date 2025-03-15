@@ -13,10 +13,11 @@ To install Homebrew elevate session to `admin` and run
 su - admin
 ```
 ```bash
+launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist && \
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
 sudo chown -R leaf /opt/homebrew/
 ```
-Spotlight → Full Disk Access → Terminal, then restart Terminal and run
+Spotlight → Full Disk Access → /System/Applications/Utilities/Terminal.app, then restart Terminal and run
 ```bash
 softwareupdate --install-rosetta --agree-to-license && \
 chmod -R +w /opt/homebrew && \
@@ -27,6 +28,8 @@ skhd --start-service && \
 ./.config/setup/duti.sh && \
 ./.config/setup/login.sh
 ```
+Spotlight → Full Disk Access → remove Terminal
+
 Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html) and [LM Studio](https://lmstudio.ai) from their websites
 
 Settings → Search:

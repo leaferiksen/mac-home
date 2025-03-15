@@ -1,5 +1,8 @@
-;; Dotconfig
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Behavior
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defalias 'yes-or-no-p 'y-or-n-p)
+;; Auto theme
 (defun my/apply-theme (appearance)
   "Load theme, taking current system APPEARANCE into consideration."
   (mapc #'disable-theme custom-enabled-themes)
@@ -7,9 +10,14 @@
     ('light (load-theme 'flexoki-themes-light t))
     ('dark (load-theme 'flexoki-themes-dark t))))
 (add-hook 'ns-system-appearance-change-functions #'my/apply-theme)
+;; Fix  the trackpad
 (global-set-key (kbd "<pinch>") 'ignore)
 (global-set-key (kbd "<C-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Keybinds
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (global-set-key (kbd "s-Z") 'undo-redo)
 (global-set-key (kbd "C-c t")
                 (lambda ()
@@ -21,11 +29,16 @@
                     (when path
                       (shell-command (concat "open -a Ghostty --args --working-directory="
                                              (shell-quote-argument (file-name-directory path))))))))
+;; Web mode
+(add-hook 'web-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-c b") 'browse-url-of-file)))
 (add-hook 'after-save-hook (lambda ()
                               (when (eq major-mode 'web-mode)
                                 (shell-command "rustywind --write . > /dev/null 2>&1")
                                 (revert-buffer :ignore-auto :noconfirm))))
 (add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
+;; Dired Mode
 (with-eval-after-load 'dired
   (define-key dired-mode-map [mouse-2]
     (lambda (event)
@@ -40,7 +53,9 @@
          (let ((fn (dired-get-file-for-visit)))
            (start-process "default-app" nil "open" fn))))))
 
-;; Enabled optional core features
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; External Packages
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'project)
 (use-package completion-preview
   :ensure nil
@@ -48,7 +63,6 @@
   :bind ( :map completion-preview-active-mode-map ("M-n" . completion-preview-next-candidate) ("M-p" . completion-preview-prev-candidate)))
 
 ;; DLC
-(require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 (use-package flexoki-themes :ensure t)
@@ -67,7 +81,9 @@
   (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
   (define-key copilot-completion-map (kbd "<S-tab>") 'copilot-accept-completion-by-word))
 
-;; Settings... ⌘ + ,
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; GUI Settings ⌘,
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -105,5 +121,7 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 140 :width normal)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Archived config ideas 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; opens too many tabs (use-package html-autoview-mode :ensure nil :hook (mhtml-mode . html-autoview-mode))

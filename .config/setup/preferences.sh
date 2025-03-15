@@ -299,7 +299,7 @@ defaults write com.ibluebox.aqua-menu-bar "lows" -bool "false"
 ###############################################################################
 
 # SaneSideButtons
-defaults write com.janhuelsmann.SaneSideButtons "NSStatusItem Visible Item-0" -bool "false"
+# defaults write com.janhuelsmann.SaneSideButtons "NSStatusItem Visible Item-0" -bool "false"
 
 ###############################################################################
 
