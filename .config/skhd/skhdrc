@@ -34,7 +34,7 @@ meh - o : open -a Obsidian
 # xcdvz/kh
 meh - c : open -a Calendar
 meh - d : open -a Dictionary
-meh - v : open -a Voice\ Memos
+meh - v : open -a VoiceMemos
 meh - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
 meh - k : open -a Karabiner-Elements
 meh - h : open -a Hazel
