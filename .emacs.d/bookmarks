@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Notes"
+(("setup"
+ (filename . "~/.config/setup/")
+ (front-context-string . "brew.sh\n  -rwxr-")
+ (rear-context-string . "05 Mar 14 17:34 ")
+ (position . 137)
+ (last-modified 26582 18631 43659 0))
+("Notes"
  (filename . "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/")
  (front-context-string . "Assets\n  drwxr-x")
  (rear-context-string . "92 Mar 12 20:56 ")

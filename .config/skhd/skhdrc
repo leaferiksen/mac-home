@@ -12,7 +12,6 @@ meh - f : open -a Finder
 meh - p : open -a Preview
 meh - b : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zen
 hyper - b : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
-# hyper - b : open -a Google\ Chrome
 meh - l : open -a LuLu
 meh - u : open -a UTM
 
@@ -28,13 +27,14 @@ meh - m : open -a Messages
 hyper - m : open -a Mail
 meh - n : open -a NewsBlur
 meh - e : open -a Emacs
-meh - i : open -a iPhone\ Mirroring
+meh - i : open -a IINA
+hyper - i : open -a iPhone\ Mirroring
 meh - o : open -a Obsidian
 
 # xcdvz/kh
 meh - c : open -a Calendar
 meh - d : open -a Dictionary
-meh - v : open -a IINA
+meh - v : open -a Voice\ Memos
 meh - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
 meh - k : open -a Karabiner-Elements
 meh - h : open -a Hazel

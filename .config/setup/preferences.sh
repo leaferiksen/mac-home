@@ -192,6 +192,11 @@ defaults write com.apple.assistant.support "Search Queries Data Sharing Status" 
 
 ###############################################################################
 
+# Passwords
+defaults write com.apple.Passwords "showMenuBarExtra" -bool "true"
+
+###############################################################################
+
 # Safari
 # Disable preloading top hit in the background
 # defaults write com.apple.Safari PreloadTopHit -bool false
@@ -232,7 +237,6 @@ defaults write com.apple.mail "NumberOfSnippetLines" -int "0"
 defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
 # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
 defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
-
 
 ###############################################################################
 
