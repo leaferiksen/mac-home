@@ -34,9 +34,12 @@ Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](http
 
 Settings → Search:
 
-- Night Shift options → Schedule → set Sunrise to Sunset
-- Control Center → Weather → set Show in Menu Bar
+- Night Shift options → Schedule → Sunrise to Sunset ☑
+- Control Center → Weather → Show in Menu Bar ☑
 - Language input methods → add Japanese - Romaji
+- Spoken Content → 
+  - System Voice → ⓘ → Voice → Matilda (Premium) 💾
+  - System Voice → Matilda (Premium) ☑
 - Keyboard Shortcuts →
-  - disable Mission Control & Application windows
-  - disable both Input Sources
+  - Mission Control & Application windows ☒
+  - both Input Sources ☒
