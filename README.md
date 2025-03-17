@@ -1,9 +1,9 @@
 Initial user setup
 - Accessibility → Vision →
-  - **☑ Zoom**
-  - Appearance: **☑ Auto**
+  - Zoom: **☑ Turn on Zoom**
+  - Appearance: **↖ Auto**
 - Analytics: **☒ Share Mac Analytics with Apple**
-- Screen Time: **Set Up Later**
+- Screen Time: **↖ Set Up Later**
 - Siri: **☒ Enable Ask Siri**
 
 To sync home with this repo, open Terminal as user `leaf` and run
