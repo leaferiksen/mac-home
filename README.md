@@ -33,13 +33,12 @@ Spotlight → Full Disk Access → remove Terminal
 Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html) and [LM Studio](https://lmstudio.ai) from their websites
 
 Settings → Search:
-
-- Night Shift options → Schedule - **☑ Sunrise to Sunset**
-- Control Center → Weather - **☑ Show in Menu Bar**
+- Night Shift options → Schedule: **☑ Sunrise to Sunset**
+- Control Center → Weather: **☑ Show in Menu Bar**
 - Spoken Content → 
-  - System Voice → ⓘ → Voice - **💾 Matilda (Premium)**
-  - System Voice - **☑ Matilda (Premium)**
-- Language input methods - **➕ Japanese - Romaji**
+  - System Voice → ⓘ → Voice: **💾 Matilda (Premium)**
+  - System Voice: **☑ Matilda (Premium)**
+- Language input methods: **➕ Japanese - Romaji**
 - Keyboard Shortcuts →
-  - Mission Control - **☒ Mission Control & Application windows**
-  - Input Sources - **☒ Next & Previous**
+  - Mission Control: **☒ Mission Control & Application windows**
+  - Input Sources: **☒ Next & Previous**
