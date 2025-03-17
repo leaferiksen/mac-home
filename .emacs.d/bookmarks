@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("setup"
+(("skhdrc"
+ (filename . "~/.config/skhd/skhdrc")
+ (front-context-string . "# keywords https")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 26583 30818 490335 0))
+("setup"
  (filename . "~/.config/setup/")
  (front-context-string . "brew.sh\n  -rwxr-")
  (rear-context-string . "05 Mar 14 17:34 ")
