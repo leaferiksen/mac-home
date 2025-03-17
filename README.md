@@ -32,7 +32,7 @@ Spotlight → Full Disk Access → remove Terminal
 
 Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html) and [LM Studio](https://lmstudio.ai) from their websites
 
-Settings → Search:
+Settings → Search → 
 - Night Shift options → Schedule: **☑ Sunrise to Sunset**
 - Control Center → Weather: **☑ Show in Menu Bar**
 - Spoken Content → 
