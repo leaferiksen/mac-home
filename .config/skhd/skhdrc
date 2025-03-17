@@ -13,7 +13,8 @@ meh - p : open -a Preview
 meh - b : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zen
 hyper - b : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
 meh - l : open -a LuLu
-meh - u : open -a UTM
+meh - u : open -a VirtualBuddy
+hyper - u : open -a UTM
 
 # arstg]mneio
 meh - a : open -a Activity\ Monitor
