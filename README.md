@@ -49,5 +49,5 @@ Settings that I haven't (yet) bothered to automate →
   - System Voice: **▼ Matilda (Premium)**
 - Language input methods: **➕ Japanese - Romaji**
 - Keyboard Shortcuts →
-  - Mission Control: **☒ Mission Control & Application windows**
+  - Mission Control: **☒ Mission Control** & **☒ Application windows**
   - Input Sources: **☒ Next & Previous**

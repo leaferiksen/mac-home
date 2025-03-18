@@ -18,7 +18,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybinds
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(global-set-key (kbd "s-Z") 'undo-redo)
+(global-set-key (kbd "s-r") 'replace-string)
 (global-set-key (kbd "C-c t")
                 (lambda ()
                   "Open the folder containing the current file or the current `dired` directory in Ghostty."
@@ -62,20 +62,18 @@
   :hook (prog-mode . completion-preview-mode)
   :bind ( :map completion-preview-active-mode-map ("M-n" . completion-preview-next-candidate) ("M-p" . completion-preview-prev-candidate)))
 
-;; DLC
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
-(use-package flexoki-themes :ensure t)
-(use-package magit :ensure t)
-(use-package auto-package-update :defer nil :ensure t :config (auto-package-update-maybe))
-(use-package web-mode
-  :ensure t
-  :mode ("\\.html\\'" . web-mode))
-(use-package copilot
-  :vc (:url "https://github.com/copilot-emacs/copilot.el"
-            :rev :newest
-            :branch "main")
+(use-package flexoki-themes)
+(use-package undo-fu
   :config
+  (global-set-key (kbd "s-z") 'undo-fu-only-undo)
+  (global-set-key (kbd "s-Z") 'undo-fu-only-redo))
+(use-package magit)
+(use-package auto-package-update :defer nil :config
+  (auto-package-update-maybe))
+(use-package web-mode :mode ("\\.html\\'" . web-mode))
+(use-package copilot :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main") :config
   (add-to-list 'copilot-indentation-alist '(prog-mode 2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
   (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
@@ -90,6 +88,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auto-package-update-delete-old-versions t)
+ '(backward-delete-char-untabify-method nil)
  '(cursor-type 'bar)
  '(default-frame-alist '((undecorated . t) (fullscreen . maximized)))
  '(delete-by-moving-to-trash t)
@@ -113,6 +112,7 @@
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
  '(trash-directory "~/.Trash")
+ '(use-package-always-ensure t)
  '(which-key-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -125,3 +125,4 @@
 ;; Archived config ideas 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; opens too many tabs (use-package html-autoview-mode :ensure nil :hook (mhtml-mode . html-autoview-mode))
+;; (global-set-key (kbd "s-Z") 'undo-redo)
