@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("skhdrc"
+(("Music"
+ (filename . "~/Library/Mobile Documents/com~apple~CloudDocs/Music/")
+ (front-context-string . "AMVs\n  drwx-----")
+ (rear-context-string . "1K Mar 10 22:11 ")
+ (position . 177)
+ (last-modified 26586 10416 240978 0))
+("skhdrc"
  (filename . "~/.config/skhd/skhdrc")
  (front-context-string . "# keywords https")
  (rear-context-string)

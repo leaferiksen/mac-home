@@ -35,9 +35,9 @@
 (global-set-key (kbd "s-w") (kbd "C-x 0"))  ;; ...and Cmd-w to close current window
 ;; Other
 (global-set-key (kbd "s-r") 'replace-string)
-(global-set-key (kbd "s-b") (kbd "C-x b"))
-(global-set-key (kbd "s-d") 'bookmark-jump)
-(global-set-key (kbd "S-s-d") 'bookmark-set)
+(global-set-key (kbd "s-d") 'dired)
+(global-set-key (kbd "s-b") 'bookmark-jump)
+(global-set-key (kbd "M-s-b") 'bookmark-set)
 (global-set-key (kbd "s-g") (kbd "C-x g"))
 (global-set-key (kbd "s-t")
                 (lambda ()
@@ -97,7 +97,7 @@
   :mode ("\\.html\\'" . web-mode)
   :config
   (with-eval-after-load 'web-mode
-    (define-key web-mode-map (kbd "s-b") 'browse-url-of-file)))
+    (define-key web-mode-map (kbd "C-c b") 'browse-url-of-file)))
 (use-package copilot :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main") :config
   (add-to-list 'copilot-indentation-alist '(prog-mode 2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
