@@ -43,6 +43,7 @@ Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](http
 Settings that I haven't (yet) bothered to automate → 
 - Night Shift options → Schedule: **▼ Sunrise to Sunset**
 - Control Center → Weather: **▼ Show in Menu Bar**
+
 `Block search of private files`
 - **Bluetooth File Exchange.app**, **Image Playground.app**, **Stocks.app**, **Tips.app**
 - Spoken Content →
