@@ -10,7 +10,7 @@
     ('light (load-theme 'flexoki-themes-light t))
     ('dark (load-theme 'flexoki-themes-dark t))))
 (add-hook 'ns-system-appearance-change-functions #'my/apply-theme)
-;; Fix  the trackpad
+;; Fix the trackpad
 (global-set-key (kbd "<pinch>") 'ignore)
 (global-set-key (kbd "<C-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
@@ -76,26 +76,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; External Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'project)
-(use-package completion-preview
-  :ensure nil
-  :hook (prog-mode . completion-preview-mode)
-  :bind ( :map completion-preview-active-mode-map ("M-n" . completion-preview-next-candidate) ("M-p" . completion-preview-prev-candidate)))
-
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 (use-package flexoki-themes)
-(use-package undo-fu
-  :config
+(use-package undo-fu :config
   (global-set-key (kbd "s-z") 'undo-fu-only-undo)
   (global-set-key (kbd "s-Z") 'undo-fu-only-redo))
 (use-package magit)
 (use-package auto-package-update :defer nil :config
   (auto-package-update-maybe))
-(use-package web-mode
-  :mode ("\\.html\\'" . web-mode)
-  :config
+(use-package web-mode :mode ("\\.html\\'" . web-mode) :config
   (with-eval-after-load 'web-mode
     (define-key web-mode-map (kbd "C-c b") 'browse-url-of-file)))
 (use-package copilot :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main") :config
@@ -124,6 +115,7 @@
  '(electric-pair-mode t)
  '(global-auto-revert-mode t)
  '(global-auto-revert-non-file-buffers t)
+ '(global-completion-preview-mode t)
  '(global-display-line-numbers-mode t)
  '(global-prettify-symbols-mode t)
  '(initial-buffer-choice "~/")
@@ -133,6 +125,7 @@
    '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch
 	      "main")))
  '(pixel-scroll-precision-mode t)
+ '(project-mode-line t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
  '(split-height-threshold 0)

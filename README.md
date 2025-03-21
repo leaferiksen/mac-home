@@ -51,3 +51,4 @@ Settings that I haven't (yet) bothered to automate →
 - Keyboard Shortcuts →
   - Mission Control: **☒ Mission Control** & **☒ Application windows**
   - Input Sources: **☒ Next & Previous**
+- Wacom Tablet → Options... → **☒ Show wireless tablet battery status in menu bar**
