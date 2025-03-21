@@ -40,17 +40,27 @@ Spotlight → Full Disk Access → remove Terminal
 
 Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html) and [LM Studio](https://lmstudio.ai) from their websites
 
-Settings that I haven't (yet) bothered to automate → 
-- Night Shift options → Schedule: **▼ Sunrise to Sunset**
-- Control Center → Weather: **▼ Show in Menu Bar**
+Settings that I haven't (yet) bothered to automate:
+
+`Night Shift options`
+Schedule: **▼ Sunrise to Sunset**
+
+`Control Center`
+**Weather ▼ Show in Menu Bar**
 
 `Block search of private files`
-- **Bluetooth File Exchange.app**, **Image Playground.app**, **Stocks.app**, **Tips.app**
-- Spoken Content →
-  - System Voice → ⓘ → Voice: **💾 Matilda (Premium)**
-  - System Voice: **▼ Matilda (Premium)**
-- Language input methods: **➕ Japanese - Romaji**
-- Keyboard Shortcuts →
-  - Mission Control: **☒ Mission Control** & **☒ Application windows**
-  - Input Sources: **☒ Next & Previous**
-- Wacom Tablet → Options...: **☒ Show wireless tablet battery status in menu bar**
+**Bluetooth File Exchange.app**, **Image Playground.app**, **Stocks.app**, **Tips.app**
+
+`Spoken Content`
+System Voice → ⓘ → Voice **💾 Matilda (Premium)**
+**System Voice ▼ Matilda (Premium)**
+
+`Language input methods`
+➕ → **Japanese - Romaji**
+
+`Keyboard Shortcuts`
+Mission Control: **☒ Mission Control** & **☒ Application windows**
+Input Sources: **☒ Next & Previous**
+
+`Wacom Tablet`
+Options → **☒ Show wireless tablet battery status in menu bar**
