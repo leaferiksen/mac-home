@@ -42,8 +42,9 @@ Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](http
 
 Settings that I haven't (yet) bothered to automate → 
 - Night Shift options → Schedule: **▼ Sunrise to Sunset**
-- Control Center → Weather: **☑ Show in Menu Bar**
-- Block search of private files → drag from Spotlight: **Bluetooth File Exchange.app**, **Image Playground.app**, **Stocks.app**, **Tips.app**
+- Control Center → Weather: **▼ Show in Menu Bar**
+`Block search of private files`
+- **Bluetooth File Exchange.app**, **Image Playground.app**, **Stocks.app**, **Tips.app**
 - Spoken Content →
   - System Voice → ⓘ → Voice: **💾 Matilda (Premium)**
   - System Voice: **▼ Matilda (Premium)**
@@ -51,4 +52,4 @@ Settings that I haven't (yet) bothered to automate →
 - Keyboard Shortcuts →
   - Mission Control: **☒ Mission Control** & **☒ Application windows**
   - Input Sources: **☒ Next & Previous**
-- Wacom Tablet → Options... → **☒ Show wireless tablet battery status in menu bar**
+- Wacom Tablet → Options...: **☒ Show wireless tablet battery status in menu bar**
