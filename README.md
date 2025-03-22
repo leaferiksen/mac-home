@@ -42,7 +42,9 @@ Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](http
 
 Settings that I haven't (yet) bothered to automate:
 
-```Night Shift options```
+```
+Night Shift options
+```
 Schedule: **▼ Sunrise to Sunset**
 
 ```Control Center```
