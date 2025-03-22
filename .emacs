@@ -110,7 +110,7 @@
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(dired-kill-when-opening-new-dired-buffer t)
- '(dired-listing-switches "-agho --color=always --group-directories-first")
+ '(dired-listing-switches "-agho --group-directories-first")
  '(dired-omit-files "\\`[.]?#\\|\\.DS_Store\\|\\`\\._")
  '(electric-pair-mode t)
  '(global-auto-revert-mode t)

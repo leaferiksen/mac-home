@@ -7,6 +7,10 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 autoload -Uz compinit
 compinit
 
+# editor 
+export EDITOR="/opt/homebrew/bin/emacs"
+export VISUAL="/opt/homebrew/bin/emacs"
+
 # brew
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications  no-quarantine"
 export HOMEBREW_NO_AUTO_UPDATE=1
