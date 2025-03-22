@@ -60,13 +60,13 @@ Block search of private files
 ```
 Spoken Content
 ```
-- System Voice ⓘ → Voice → **Matilda (Premium) 💾**
+- System Voice ⓘ → Voice → **↖ Matilda (Premium) 💾**
 - System Voice **▼ Matilda (Premium)**
 
 ```
 Language input methods
 ```
-- \+ → **Japanese - Romaji**
+- \+ → **↖ Japanese - Romaji**
 
 ```
 Keyboard Shortcuts
