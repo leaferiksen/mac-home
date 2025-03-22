@@ -45,33 +45,34 @@ Settings that I haven't (yet) bothered to automate:
 ```
 Night Shift options
 ```
-**Schedule ▼ Sunrise to Sunset**
+Schedule **▼ Sunrise to Sunset**
 
 ```
 Control Center
 ```
-**Weather ▼ Show in Menu Bar**
+Weather **▼ Show in Menu Bar**
 
 ```
 Block search of private files
 ```
-**Bluetooth File Exchange.app**, **Image Playground.app**, **Stocks.app**, **Tips.app**
++ → **Bluetooth File Exchange.app**, **Image Playground.app**, **Stocks.app**, **Tips.app**
 
 ```
 Spoken Content
 ```
 System Voice ⓘ → Voice → **Matilda (Premium) 💾**
-**System Voice ▼ Matilda (Premium)**
+System Voice **▼ Matilda (Premium)**
 
 ```
 Language input methods
 ```
-➕ → **Japanese - Romaji**
++ → **Japanese - Romaji**
 
 ```
 Keyboard Shortcuts
 ```
 Mission Control: **☒ Mission Control** & **☒ Application windows**
+
 Input Sources: **☒ Next & Previous**
 
 ```
