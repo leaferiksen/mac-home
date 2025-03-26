@@ -1792,7 +1792,15 @@
             "simple_modifications": [
                 {
                     "from": { "key_code": "right_command" },
-                    "to": [{ "key_code": "right_shift" }]
+                    "to": [{ "key_code": "right_control" }]
+                },
+                {
+                    "from": { "key_code": "b" },
+                    "to": [{ "key_code": "left_shift" }]
+                },
+                {
+                    "from": { "key_code": "left_shift" },
+                    "to": [{ "key_code": "b" }]
                 }
             ],
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }

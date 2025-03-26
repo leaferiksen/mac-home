@@ -74,12 +74,10 @@
  '(global-auto-revert-mode t)
  '(global-auto-revert-non-file-buffers t)
  '(global-completion-preview-mode t)
- '(global-display-line-numbers-mode t)
  '(global-prettify-symbols-mode t)
  '(initial-buffer-choice "~/")
  '(make-backup-files nil)
- '(package-selected-packages
-   '(elfeed flexoki-themes magit undo-fu web-mode))
+ '(package-selected-packages '(elfeed flexoki-themes magit undo-fu web-mode))
  '(pixel-scroll-precision-mode t)
  '(project-mode-line t)
  '(ring-bell-function 'ignore)
@@ -94,7 +92,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 140 :width normal)))))
+ '(default ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 140 :width normal))))
+ '(variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Behavior
@@ -112,6 +111,7 @@
 (global-set-key (kbd "<pinch>") 'ignore)
 (global-set-key (kbd "<C-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Cmd Keybinds
@@ -125,6 +125,7 @@
 (global-set-key (kbd "S-s-<left>") (kbd "M-S-m"))  ;; Select to beginning of line
 (global-set-key (kbd "s-<up>") 'beginning-of-buffer)
 (global-set-key (kbd "s-<down>") 'end-of-buffer)
+
 ;; Go to other windows easily with one keystroke Cmd-something.
 (global-set-key (kbd "s-1") (kbd "C-x 1"))  ;; kill other windows (keep 1)
 (global-set-key (kbd "s-2") (kbd "C-x 2"))  ;; split horizontally
