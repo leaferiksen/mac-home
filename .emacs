@@ -1,4 +1,57 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; GUI Settings ⌘,
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auto-package-update-delete-old-versions t)
+ '(backward-delete-char-untabify-method nil)
+ '(cursor-type 'bar)
+ '(default-frame-alist '((undecorated . t) (fullscreen . maximized)))
+ '(delete-by-moving-to-trash t)
+ '(delete-selection-mode t)
+ '(dired-kill-when-opening-new-dired-buffer t)
+ '(dired-listing-switches "-agho --group-directories-first")
+ '(dired-omit-files "\\`[.]?#\\|\\.DS_Store\\|\\`\\._")
+ '(electric-pair-mode t)
+ '(global-auto-revert-mode t)
+ '(global-auto-revert-non-file-buffers t)
+ '(global-completion-preview-mode t)
+ '(global-display-line-numbers-mode t)
+ '(global-prettify-symbols-mode t)
+ '(initial-buffer-choice "~/")
+ '(make-backup-files nil)
+ '(package-selected-packages '(elfeed flexoki-themes magit undo-fu web-mode))
+ ;; '(package-vc-selected-packages
+ ;;   '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch
+ ;; 	      "main")))
+ '(pixel-scroll-precision-mode t)
+ '(project-mode-line t)
+ '(ring-bell-function 'ignore)
+ '(scroll-bar-mode nil)
+ '(split-height-threshold 0)
+ '(split-width-threshold nil)
+ '(trash-directory "~/.Trash")
+ '(use-package-always-ensure t)
+ '(which-key-mode t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 140 :width normal)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Set up selected packages
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+(package-install-selected-packages)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Behavior
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -34,6 +87,8 @@
 (global-set-key (kbd "s-0") (kbd "C-x 0"))  ;; Cmd-0...
 (global-set-key (kbd "s-w") (kbd "C-x 0"))  ;; ...and Cmd-w to close current window
 ;; Other
+(global-set-key (kbd "s-z") 'undo-fu-only-undo)
+(global-set-key (kbd "s-Z") 'undo-fu-only-redo)
 (global-set-key (kbd "s-r") 'replace-string)
 (global-set-key (kbd "s-d") 'dired)
 (global-set-key (kbd "s-b") 'bookmark-jump)
@@ -74,75 +129,19 @@
            (start-process "default-app" nil "open" fn))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; External Packages
+;; External Package settings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
-(use-package flexoki-themes)
-(use-package undo-fu :config
-  (global-set-key (kbd "s-z") 'undo-fu-only-undo)
-  (global-set-key (kbd "s-Z") 'undo-fu-only-redo))
-(use-package magit)
-(use-package auto-package-update :defer nil :config
-  (auto-package-update-maybe))
 (use-package web-mode :mode ("\\.html\\'" . web-mode) :config
   (with-eval-after-load 'web-mode
     (define-key web-mode-map (kbd "C-c b") 'browse-url-of-file)))
-(use-package copilot :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main") :config
-  (add-to-list 'copilot-indentation-alist '(prog-mode 2))
-  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
-  (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
-  (define-key copilot-completion-map (kbd "<S-tab>") 'copilot-accept-completion-by-word))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; GUI Settings ⌘,
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(auto-package-update-delete-old-versions t)
- '(backward-delete-char-untabify-method nil)
- '(cursor-type 'bar)
- '(default-frame-alist '((undecorated . t) (fullscreen . maximized)))
- '(delete-by-moving-to-trash t)
- '(delete-selection-mode t)
- '(dired-kill-when-opening-new-dired-buffer t)
- '(dired-listing-switches "-agho --group-directories-first")
- '(dired-omit-files "\\`[.]?#\\|\\.DS_Store\\|\\`\\._")
- '(electric-pair-mode t)
- '(global-auto-revert-mode t)
- '(global-auto-revert-non-file-buffers t)
- '(global-completion-preview-mode t)
- '(global-display-line-numbers-mode t)
- '(global-prettify-symbols-mode t)
- '(initial-buffer-choice "~/")
- '(make-backup-files nil)
- '(package-selected-packages nil)
- '(package-vc-selected-packages
-   '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch
-	      "main")))
- '(pixel-scroll-precision-mode t)
- '(project-mode-line t)
- '(ring-bell-function 'ignore)
- '(scroll-bar-mode nil)
- '(split-height-threshold 0)
- '(split-width-threshold nil)
- '(trash-directory "~/.Trash")
- '(use-package-always-ensure t)
- '(which-key-mode t)
- '(winner-mode t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 140 :width normal)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Archived config ideas 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; opens too many tabs (use-package html-autoview-mode :ensure nil :hook (mhtml-mode . html-autoview-mode))
+;; (use-package copilot :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main") :config
+;;   (add-to-list 'copilot-indentation-alist '(prog-mode 2))
+;;   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
+;;   (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+;;   (define-key copilot-completion-map (kbd "<S-tab>") 'copilot-accept-completion-by-word))
+;; (use-package html-autoview-mode :ensure nil :hook (mhtml-mode . html-autoview-mode)) ;;opens too many tabs
 ;; (global-set-key (kbd "s-Z") 'undo-redo)

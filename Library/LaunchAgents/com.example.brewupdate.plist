@@ -4,22 +4,19 @@
 <dict>
     <key>Label</key>
     <string>com.example.brewupdate</string>
-
     <key>ProgramArguments</key>
     <array>
         <string>/bin/zsh</string>
         <string>-c</string>
         <string>/opt/homebrew/bin/brew update && /opt/homebrew/bin/brew upgrade --greedy</string>
     </array>
-
     <key>StartCalendarInterval</key>
     <dict>
         <key>Hour</key>
-        <integer>0</integer>
+        <integer>00</integer>
         <key>Minute</key>
-        <integer>0</integer>
+        <integer>00</integer>
     </dict>
-
     <key>RunAtLoad</key>
     <true/>
 </dict>
