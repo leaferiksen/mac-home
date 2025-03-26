@@ -5,6 +5,26 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Change space to left shift if held and space pressed alone",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [{ "vendor_id": 1452 }],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "spacebar",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "left_shift" }],
+                                "to_if_alone": [{ "key_code": "spacebar" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "command-f1 and f2 to adjust keyboard brightness",
                         "manipulators": [
                             {
@@ -1793,14 +1813,6 @@
                 {
                     "from": { "key_code": "right_command" },
                     "to": [{ "key_code": "right_control" }]
-                },
-                {
-                    "from": { "key_code": "b" },
-                    "to": [{ "key_code": "left_shift" }]
-                },
-                {
-                    "from": { "key_code": "left_shift" },
-                    "to": [{ "key_code": "b" }]
                 }
             ],
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
