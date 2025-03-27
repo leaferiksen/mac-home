@@ -8,12 +8,6 @@
                         "description": "Change space to left shift if held and space pressed alone",
                         "manipulators": [
                             {
-                                "conditions": [
-                                    {
-                                        "identifiers": [{ "vendor_id": 1452 }],
-                                        "type": "device_if"
-                                    }
-                                ],
                                 "from": {
                                     "key_code": "spacebar",
                                     "modifiers": { "optional": ["any"] }
