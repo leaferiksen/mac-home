@@ -13,7 +13,9 @@
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(dired-kill-when-opening-new-dired-buffer t)
- '(dired-listing-switches "-agho --group-directories-first")
+ '(dired-listing-switches
+   "-l --almost-all --human-readable --group-directories-first --no-group")
+ '(dired-mode-hook '(dired-omit-mode dired-hide-details-mode))
  '(dired-omit-files "\\`[.]?#\\|\\.DS_Store\\|\\`\\._")
  '(electric-pair-mode t)
  '(elfeed-feeds
@@ -69,11 +71,12 @@
  '(global-auto-revert-non-file-buffers t)
  '(global-completion-preview-mode t)
  '(global-prettify-symbols-mode t)
- '(initial-buffer-choice "~/")
+ '(initial-buffer-choice 'dirvish)
  '(make-backup-files nil)
  '(package-selected-packages
-   '(elfeed flexoki-themes magit undo-fu visual-fill-column web-mode))
+   '(dirvish elfeed flexoki-themes magit undo-fu visual-fill-column web-mode))
  '(pixel-scroll-precision-mode t)
+ '(prog-mode-hook '(display-line-numbers-mode))
  '(project-mode-line t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
@@ -139,7 +142,7 @@
 (global-set-key (kbd "s-z") 'undo-fu-only-undo)
 (global-set-key (kbd "s-Z") 'undo-fu-only-redo)
 (global-set-key (kbd "s-r") 'replace-string)
-(global-set-key (kbd "s-d") 'dired)
+(global-set-key (kbd "s-d") 'dirvish)
 (global-set-key (kbd "s-b") 'bookmark-jump)
 (global-set-key (kbd "M-s-b") 'bookmark-set)
 (global-set-key (kbd "s-g") 'magit-status)
@@ -154,14 +157,7 @@
                     (when path
                       (shell-command (concat "open -a Ghostty --args --working-directory="
                                              (shell-quote-argument (file-name-directory path))))))))
-;; Dired Mode
-(add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
-(with-eval-after-load 'dired
-  (define-key dired-mode-map [mouse-2] 'dired-find-file))
-(eval-after-load "dired"
-  '(define-key dired-mode-map (kbd "s-o")
-     (lambda () (interactive)
-       (start-process "default-app" nil "open" (dired-get-file-for-visit)))))
+
 ;; Web Mode
 (use-package web-mode :mode ("\\.html\\'" . web-mode) :config
   (define-key web-mode-map (kbd "C-c b") 'browse-url-of-file))
@@ -181,9 +177,7 @@
     (while (re-search-forward "\"\\(https?://[^\"]+\\)\"" end t)
       (replace-match "(\"\\1\")"))))
 
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'emacs-startup-hook (lambda () (run-at-time 5 600 'elfeed-update)))
-
 (add-hook 'elfeed-show-mode-hook (lambda () (setq-local line-spacing 15)))
 (add-hook 'elfeed-show-mode-hook 'variable-pitch-mode)
 (add-hook 'elfeed-show-mode-hook 'visual-fill-column-mode)
