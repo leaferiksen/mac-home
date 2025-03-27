@@ -17,51 +17,38 @@
  '(dired-omit-files "\\`[.]?#\\|\\.DS_Store\\|\\`\\._")
  '(electric-pair-mode t)
  '(elfeed-feeds
-   '(("https://xkcd.com/rss.xml" comics)
-     ("https://www.smbc-comics.com/comic/rss" comics)
+   '(("https://xkcd.com/rss.xml" comics) ("https://www.smbc-comics.com/comic/rss" comics)
      ("https://www.questionablecontent.net/QCRSS.xml" comics)
      ("https://existentialcomics.com/rss.xml" comics)
      ("https://todon.eu/@PinkWug.rss" comics)
      ("https://www.davidrevoy.com/feed/en/rss" comics)
      ("https://www.penny-arcade.com/feed" comics)
-     ("https://www.berkeleymews.com/feed/" comics)
-     ("https://catandgirl.com/feed/" comics)
+     ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics)
      ("https://thesecretknots.com/feed/" comics)
      ("https://feeds.feedburner.com/nerfnow/full" comics)
-     ("https://modmagazine.net/feed.xml" gaming)
-     ("https://aftermath.site/feed" gaming)
+     ("https://modmagazine.net/feed.xml" gaming) ("https://aftermath.site/feed" gaming)
      ("https://remapradio.com/rss/" gaming)
      ("https://tomorrowcorporation.com/feed" gaming)
-     ("https://enikofox.com/feed.xml" gaming)
-     ("https://panic.com/blog/feed/" gaming)
+     ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming)
      ("https://www.codeweavers.com/blog/?rss=1" gaming)
      ("https://www.gameinformer.com/rss.xml" gaming)
-     ("https://drewdevault.com/blog/index.xml" linux)
-     ("https://kde.org/index.xml" linux)
+     ("https://drewdevault.com/blog/index.xml" linux) ("https://kde.org/index.xml" linux)
      ("https://asahilinux.org/blog/index.xml" linux)
      ("https://coffee-and-dreams.uk/feed.xml" linux)
-     ("https://www.ypsidanger.com/rss/" linux)
-     ("https://rosenzweig.io/feed.xml" linux)
+     ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux)
      ("https://theevilskeleton.gitlab.io/feed.xml" linux)
-     ("https://acidiclight.dev/rss.xml" linux)
-     ("https://blog.xfce.org/feed" linux)
-     ("https://blog.fyralabs.com/rss/" linux)
-     ("https://carlschwan.eu/index.xml" linux)
+     ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux)
+     ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux)
      ("https://rabbitictranslator.com/blog/index.xml" linux)
      ("https://redstrate.com/blog/index.xml" linux)
-     ("https://lxqt-project.org/feed.xml" linux)
-     ("https://blogs.kde.org/index.xml" linux)
-     ("https://thelibre.news/rss/" linux)
-     ("https://css-tricks.com/feed/" design)
+     ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux)
+     ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design)
      ("https://www.smashingmagazine.com/feed/" design)
-     ("https://rachelandrew.co.uk/feed/" design)
-     ("https://cdn.jwz.org/blog/feed/" design)
-     ("https://piccalil.li/feed.xml" design)
-     ("http://danluu.com/atom.xml" design)
+     ("https://rachelandrew.co.uk/feed/" design) ("https://cdn.jwz.org/blog/feed/" design)
+     ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design)
      ("https://localghost.dev/feed.xml" design)
      ("https://www.tinylogger.com/90koil/rss" journals)
-     ("https://anhvn.com/feed.xml" journals)
-     ("https://tnywndr.cafe/index.xml" journals)
+     ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals)
      ("https://www.girlonthenet.com/feed/" journals)
      ("https://annas-archive.li/blog/rss.xml" journals)
      ("https://daverupert.com/atom.xml" journals)
@@ -104,6 +91,15 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
  '(variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Install selected packages
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+(package-install-selected-packages)
+(package-autoremove)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Default Behavior
@@ -191,15 +187,6 @@
 (add-hook 'elfeed-show-mode-hook (lambda () (setq-local line-spacing 15)))
 (add-hook 'elfeed-show-mode-hook 'variable-pitch-mode)
 (add-hook 'elfeed-show-mode-hook 'visual-fill-column-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Install selected packages
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
-;; (package-refresh-contents)
-(package-install-selected-packages)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Archived config ideas 
