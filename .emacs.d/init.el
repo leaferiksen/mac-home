@@ -85,15 +85,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ⌘ Keybinds
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Normal arrow movement
-;; (global-set-key (kbd "s-<backspace>") 'kill-whole-line)
-;; (global-set-key (kbd "M-S-<backspace>") 'kill-word)
-;; (global-set-key (kbd "s-<right>") 'end-of-line)
-;; (global-set-key (kbd "S-s-<right>") (kbd "C-S-e")) ;; Select to end of line
-;; (global-set-key (kbd "s-<left>") 'back-to-indentation)
-;; (global-set-key (kbd "S-s-<left>") (kbd "M-S-m"))  ;; Select to beginning of line
-;; (global-set-key (kbd "s-<up>") 'beginning-of-buffer)
-;; (global-set-key (kbd "s-<down>") 'end-of-buffer)
 ;; Go to other windows easily with one keystroke Cmd-something.
 (global-set-key (kbd "s-1") (kbd "C-x 1"))  ;; kill other windows (keep 1)
 (global-set-key (kbd "s-2") (kbd "C-x 2"))  ;; split horizontally
@@ -126,12 +117,6 @@
             (setq-local shr-width 85)
             (variable-pitch-mode)
             (visual-fill-column-mode)))
-(use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
 ;; Web Mode
 (use-package web-mode :mode ("\\.html\\'" . web-mode) :config
   (define-key web-mode-map (kbd "C-c b") 'browse-url-of-file))
@@ -167,6 +152,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Archived config ideas 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Normal arrow movement
+;; (global-set-key (kbd "s-<backspace>") 'kill-whole-line)
+;; (global-set-key (kbd "M-S-<backspace>") 'kill-word)
+;; (global-set-key (kbd "s-<right>") 'end-of-line)
+;; (global-set-key (kbd "S-s-<right>") (kbd "C-S-e")) ;; Select to end of line
+;; (global-set-key (kbd "s-<left>") 'back-to-indentation)
+;; (global-set-key (kbd "S-s-<left>") (kbd "M-S-m"))  ;; Select to beginning of line
+;; (global-set-key (kbd "s-<up>") 'beginning-of-buffer)
+;; (global-set-key (kbd "s-<down>") 'end-of-buffer)
+
 ;; (use-package copilot :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main") :config
 ;;   (add-to-list 'copilot-indentation-alist '(prog-mode 2))
 ;;   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
