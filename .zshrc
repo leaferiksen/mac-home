@@ -10,6 +10,7 @@ compinit
 # editor 
 export EDITOR="/opt/homebrew/bin/emacs"
 export VISUAL="/opt/homebrew/bin/emacs"
+export LESSHISTFILE=-
 
 # brew
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications  no-quarantine"
