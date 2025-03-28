@@ -27,7 +27,6 @@
  '(fill-column 9999)
  '(global-auto-revert-mode t)
  '(global-auto-revert-non-file-buffers t)
- '(global-completion-preview-mode t)
  '(global-prettify-symbols-mode t)
  '(global-visual-line-mode t)
  '(initial-buffer-choice 'dirvish)
@@ -37,7 +36,8 @@
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)
- '(prog-mode-hook '(display-line-numbers-mode))
+ '(prog-mode-hook
+   '(flyspell-prog-mode flymake-mode display-line-numbers-mode completion-preview-mode))
  '(project-mode-line t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
