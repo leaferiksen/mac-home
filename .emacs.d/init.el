@@ -33,7 +33,7 @@
  '(initial-buffer-choice 'dirvish)
  '(make-backup-files nil)
  '(package-selected-packages
-   '(dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss magit undo-fu visual-fill-column web-mode))
+   '(dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss magit treesit-auto undo-fu visual-fill-column))
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)
@@ -83,7 +83,7 @@
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Keybinds
+;; ⌘ Keybinds
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Normal arrow movement
 (global-set-key (kbd "s-<backspace>") 'kill-whole-line)
@@ -114,6 +114,24 @@
                     (when path
                       (shell-command (concat "open -a Ghostty --args --working-directory="
                                              (shell-quote-argument (file-name-directory path))))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Mode-Specific Config
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-hook 'emacs-startup-hook (lambda () (run-at-time 5 600 'elfeed-update)))
+(add-hook 'elfeed-show-mode-hook
+          (lambda ()
+            (setq-local line-spacing 15)
+            (setq-local fill-column 90)
+            (setq-local shr-width 85)
+            (variable-pitch-mode)
+            (visual-fill-column-mode)))
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 ;; Web Mode
 (use-package web-mode :mode ("\\.html\\'" . web-mode) :config
   (define-key web-mode-map (kbd "C-c b") 'browse-url-of-file))
@@ -125,12 +143,11 @@
   :init
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+  :hook (
          (web-mode . lsp)
-         ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
+		 (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
-(use-package lsp-tailwindcss :vc (:url "https://github.com/merrickluo/lsp-tailwindcss" :rev :newest :branch "main")
+(use-package lsp-tailwindcss
   :after lsp-mode
   :init
   (setq lsp-tailwindcss-add-on-mode t
@@ -146,15 +163,6 @@
     (goto-char start)
     (while (re-search-forward "\"\\(https?://[^\"]+\\)\"" end t)
       (replace-match "(\"\\1\")"))))
-
-(add-hook 'emacs-startup-hook (lambda () (run-at-time 5 600 'elfeed-update)))
-(add-hook 'elfeed-show-mode-hook
-          (lambda ()
-            (setq-local line-spacing 15)
-            (setq-local fill-column 90)
-            (setq-local shr-width 85)
-            (variable-pitch-mode)
-            (visual-fill-column-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Archived config ideas 
