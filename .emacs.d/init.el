@@ -33,7 +33,7 @@
  '(initial-buffer-choice 'dirvish)
  '(make-backup-files nil)
  '(package-selected-packages
-   '(dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss magit treesit-auto undo-fu visual-fill-column))
+   '(dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss magit treesit-auto undo-fu visual-fill-column web-mode))
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)
@@ -86,14 +86,14 @@
 ;; ⌘ Keybinds
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Normal arrow movement
-(global-set-key (kbd "s-<backspace>") 'kill-whole-line)
-(global-set-key (kbd "M-S-<backspace>") 'kill-word)
-(global-set-key (kbd "s-<right>") 'end-of-line)
-(global-set-key (kbd "S-s-<right>") (kbd "C-S-e")) ;; Select to end of line
-(global-set-key (kbd "s-<left>") 'back-to-indentation)
-(global-set-key (kbd "S-s-<left>") (kbd "M-S-m"))  ;; Select to beginning of line
-(global-set-key (kbd "s-<up>") 'beginning-of-buffer)
-(global-set-key (kbd "s-<down>") 'end-of-buffer)
+;; (global-set-key (kbd "s-<backspace>") 'kill-whole-line)
+;; (global-set-key (kbd "M-S-<backspace>") 'kill-word)
+;; (global-set-key (kbd "s-<right>") 'end-of-line)
+;; (global-set-key (kbd "S-s-<right>") (kbd "C-S-e")) ;; Select to end of line
+;; (global-set-key (kbd "s-<left>") 'back-to-indentation)
+;; (global-set-key (kbd "S-s-<left>") (kbd "M-S-m"))  ;; Select to beginning of line
+;; (global-set-key (kbd "s-<up>") 'beginning-of-buffer)
+;; (global-set-key (kbd "s-<down>") 'end-of-buffer)
 ;; Go to other windows easily with one keystroke Cmd-something.
 (global-set-key (kbd "s-1") (kbd "C-x 1"))  ;; kill other windows (keep 1)
 (global-set-key (kbd "s-2") (kbd "C-x 2"))  ;; split horizontally
