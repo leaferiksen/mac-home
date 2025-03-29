@@ -50,6 +50,10 @@
             (setq-local shr-width 85)
             (variable-pitch-mode)
             (visual-fill-column-mode)))
+(use-package dirvish
+  :config
+  (define-key dirvish-mode-map (kbd "<mouse-1>") 'dired-find-file)
+  (define-key dirvish-mode-map (kbd "<mouse-2>") 'dired-find-file))
 ;; Web Mode
 (use-package web-mode :mode ("\\.html\\'" . web-mode) :config
   (define-key web-mode-map (kbd "C-c b") 'browse-url-of-file))
@@ -57,14 +61,10 @@
                               (when (eq major-mode 'web-mode)
                                 (shell-command "rustywind --write . > /dev/null 2>&1")
                                 (revert-buffer :ignore-auto :noconfirm))))
-(use-package lsp-mode
-  :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-c l")
-  :hook (
-         (web-mode . lsp)
-		 (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
+(use-package eglot
+  :after web-mode
+  :config
+  (add-to-list 'eglot-server-programs '((web-mode :language-id "html") . ("tailwindcss-language-server"))))
 (use-package lsp-tailwindcss
   :after lsp-mode
   :init
@@ -85,6 +85,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Archived config ideas 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (use-package lsp-mode
+;;   :init
+;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+;;   (setq lsp-keymap-prefix "C-c l")
+;;   :hook (
+;; x         (web-mode . lsp)
+;; 		 (lsp-mode . lsp-enable-which-key-integration))
+;;   :commands lsp)
+
 ;; Normal arrow movement
 ;; (global-set-key (kbd "s-<backspace>") 'kill-whole-line)
 ;; (global-set-key (kbd "M-S-<backspace>") 'kill-word)
@@ -134,13 +143,14 @@
  '(global-visual-line-mode t)
  '(initial-buffer-choice 'dirvish)
  '(make-backup-files nil)
+ '(mouse-1-click-follows-link t)
  '(package-selected-packages
    '(dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss magit undo-fu visual-fill-column web-mode))
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)
  '(prog-mode-hook
-   '(flyspell-prog-mode flymake-mode display-line-numbers-mode completion-preview-mode))
+   '(flymake-mode display-line-numbers-mode completion-preview-mode))
  '(project-mode-line t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
