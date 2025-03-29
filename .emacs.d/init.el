@@ -187,7 +187,7 @@
  '(lsp-enable-snippet nil)
  '(make-backup-files nil)
  '(package-selected-packages
-   '(aggressive-indent dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss magit undo-fu visual-fill-column web-mode))
+   '(aggressive-indent dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss undo-fu visual-fill-column web-mode))
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)
