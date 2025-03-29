@@ -2,7 +2,7 @@
 
 brew tap d12frosted/emacs-plus
 
-brew install --formula duti emacs-plus@30 eza ffmpeg jackett koekeishiya/formulae/skhd mas tailwindcss tailwindcss-language-server tealdeer yt-dlp zsh-autosuggestions zsh-syntax-highlighting
+brew install --formula duti emacs-plus@30 eza ffmpeg jackett koekeishiya/formulae/skhd mas tailwindcss tailwindcss-language-server typescript-language-server tealdeer vscode-langservers-extracted yt-dlp zsh-autosuggestions zsh-syntax-highlighting
 
 ln -s /opt/homebrew/opt/emacs-plus@30/Emacs.app ~/Applications
 
