@@ -43,13 +43,12 @@
 ;; Mode-Specific Config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-hook 'emacs-startup-hook (lambda () (run-at-time 5 600 'elfeed-update)))
-(add-hook 'elfeed-show-mode-hook
-          (lambda ()
-            (setq-local line-spacing 15)
-            (setq-local fill-column 90)
-            (setq-local shr-width 85)
-            (variable-pitch-mode)
-            (visual-fill-column-mode)))
+(add-hook 'elfeed-show-mode-hook (lambda ()
+								   (setq-local line-spacing 15)
+								   (setq-local fill-column 90)
+								   (setq-local shr-width 85)
+								   (variable-pitch-mode)
+								   (visual-fill-column-mode)))
 (use-package dirvish
   :config
   (define-key dirvish-mode-map (kbd "<mouse-1>") 'dired-find-file)
@@ -61,21 +60,26 @@
                               (when (eq major-mode 'web-mode)
                                 (shell-command "rustywind --write . > /dev/null 2>&1")
                                 (revert-buffer :ignore-auto :noconfirm))))
-(use-package eglot
-  :after web-mode
-  :config
-  (add-to-list 'eglot-server-programs '((web-mode :language-id "html") . ("tailwindcss-language-server"))))
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (
+         (web-mode . lsp)
+		 (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
 (use-package lsp-tailwindcss
   :after lsp-mode
   :init
-  (setq lsp-tailwindcss-add-on-mode t
-        lsp-tailwindcss-skip-config-check t))
+  (setq lsp-tailwindcss-add-on-mode t)
+  (setq lsp-tailwindcss-skip-config-check t)
+  (setq lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Various functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun wrap-urls-with-parentheses (start end)
-  "Wrap each quoted URL with another set of parentheses within the selected region."
+  ;; Wrap quoted URLs with parentheses within the selected region
   (interactive "r")
   (save-excursion
     (goto-char start)
@@ -85,14 +89,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Archived config ideas 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (use-package lsp-mode
-;;   :init
-;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-;;   (setq lsp-keymap-prefix "C-c l")
-;;   :hook (
-;; x         (web-mode . lsp)
-;; 		 (lsp-mode . lsp-enable-which-key-integration))
-;;   :commands lsp)
+;; (use-package eglot
+;;   :after web-mode
+;;   :config (add-to-list 'eglot-server-programs '((web-mode :language-id "html") . ("tailwindcss-language-server"))))
 
 ;; Normal arrow movement
 ;; (global-set-key (kbd "s-<backspace>") 'kill-whole-line)
@@ -140,17 +139,15 @@
  '(global-auto-revert-mode t)
  '(global-auto-revert-non-file-buffers t)
  '(global-prettify-symbols-mode t)
- '(global-visual-line-mode t)
  '(initial-buffer-choice 'dirvish)
  '(make-backup-files nil)
- '(mouse-1-click-follows-link t)
  '(package-selected-packages
    '(dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss magit undo-fu visual-fill-column web-mode))
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)
  '(prog-mode-hook
-   '(flymake-mode display-line-numbers-mode completion-preview-mode))
+   '(flymake-mode display-line-numbers-mode completion-preview-mode visual-line-mode))
  '(project-mode-line t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
