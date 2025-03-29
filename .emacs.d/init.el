@@ -56,10 +56,6 @@
 ;; Web Mode
 (use-package web-mode :mode ("\\.html\\'" . web-mode) :config
   (define-key web-mode-map (kbd "C-c b") 'browse-url-of-file))
-(add-hook 'after-save-hook (lambda ()
-                              (when (eq major-mode 'web-mode)
-                                (shell-command "rustywind --write . > /dev/null 2>&1")
-                                (revert-buffer :ignore-auto :noconfirm))))
 (use-package lsp-mode
   :init
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
@@ -74,6 +70,7 @@
   (setq lsp-tailwindcss-add-on-mode t)
   (setq lsp-tailwindcss-skip-config-check t)
   (setq lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server"))
+(add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Various functions
@@ -87,11 +84,16 @@
       (replace-match "(\"\\1\")"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Archived config ideas 
+;; Archived config ideas
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (use-package eglot
-;;   :after web-mode
+;;   :hook (prog-mode . eglot-ensure)
 ;;   :config (add-to-list 'eglot-server-programs '((web-mode :language-id "html") . ("tailwindcss-language-server"))))
+
+;; (add-hook 'after-save-hook (lambda ()
+;;                               (when (eq major-mode 'web-mode)
+;;                                 (shell-command "rustywind --write . > /dev/null 2>&1")
+;;                                 (revert-buffer :ignore-auto :noconfirm))))
 
 ;; Normal arrow movement
 ;; (global-set-key (kbd "s-<backspace>") 'kill-whole-line)
