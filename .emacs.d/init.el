@@ -1,19 +1,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Default Behavior
+;; General Behavior
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defalias 'yes-or-no-p 'y-or-n-p)
-;; Auto theme
-(defun my/apply-theme (appearance)
-  "Load theme, taking current system APPEARANCE into consideration."
-  (mapc #'disable-theme custom-enabled-themes)
-  (pcase appearance
-    ('light (load-theme 'flexoki-themes-light t))
-    ('dark (load-theme 'flexoki-themes-dark t))))
-(add-hook 'ns-system-appearance-change-functions #'my/apply-theme)
 ;; Fix the trackpad
 (global-set-key (kbd "<pinch>") 'ignore)
 (global-set-key (kbd "<C-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
+;;Transform yes-or-no questions into y-or-n
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ⌘ Keybinds
@@ -29,26 +22,16 @@
 (global-set-key (kbd "s-d") 'dirvish)
 (global-set-key (kbd "s-e") 'elfeed)
 ;; Open the folder containing the current file or directory in Ghostty
-(global-set-key (kbd "s-t")
-                (lambda ()
-                  (interactive)
-                  (let ((path (if (derived-mode-p 'dired-mode)
-                                  (dired-get-file-for-visit)
-                                (buffer-file-name))))
-                    (when path
-                      (shell-command (concat "open -a Ghostty --args --working-directory="
-                                             (shell-quote-argument (file-name-directory path))))))))
+(global-set-key (kbd "s-t") (lambda ()
+							  (interactive)
+							  (let ((path (if (derived-mode-p 'dired-mode) (dired-get-file-for-visit) (buffer-file-name))))
+								(when path (shell-command (concat "open -a Ghostty --args --working-directory=" (shell-quote-argument (file-name-directory path))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Mode-Specific Config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-hook 'emacs-startup-hook (lambda () (run-at-time 5 600 'elfeed-update)))
-(add-hook 'elfeed-show-mode-hook (lambda ()
-								   (setq-local line-spacing 15)
-								   (setq-local fill-column 90)
-								   (setq-local shr-width 85)
-								   (variable-pitch-mode)
-								   (visual-fill-column-mode)))
+(add-hook 'elfeed-show-mode-hook (lambda () (setq-local line-spacing 15) (setq-local fill-column 90) (setq-local shr-width 85) (variable-pitch-mode) (visual-fill-column-mode)))
 (use-package dirvish
   :config
   (define-key dirvish-mode-map (kbd "<mouse-1>") 'dired-find-file)
@@ -58,10 +41,10 @@
   (define-key web-mode-map (kbd "C-c b") 'browse-url-of-file))
 (use-package lsp-mode
   :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
   :hook (
          (web-mode . lsp)
+         (css-mode . lsp)
 		 (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 (use-package lsp-tailwindcss
@@ -122,7 +105,6 @@
  '(auto-package-update-delete-old-versions t)
  '(backward-delete-char-untabify-method nil)
  '(cursor-type 'bar)
- '(default-frame-alist '((undecorated . t) (fullscreen . maximized)))
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(dired-kill-when-opening-new-dired-buffer t)
@@ -140,8 +122,11 @@
  '(fill-column 9999)
  '(global-auto-revert-mode t)
  '(global-auto-revert-non-file-buffers t)
+ '(global-hl-line-mode t)
  '(global-prettify-symbols-mode t)
  '(initial-buffer-choice 'dirvish)
+ '(lsp-completion-provider :none)
+ '(lsp-enable-snippet nil)
  '(make-backup-files nil)
  '(package-selected-packages
    '(dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss magit undo-fu visual-fill-column web-mode))
