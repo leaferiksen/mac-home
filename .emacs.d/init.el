@@ -90,7 +90,10 @@
 			  (kbd "<mouse-2>")
 			  'dired-find-file))
 (use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
   :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 (use-package lsp-mode
   :init
@@ -222,7 +225,6 @@
  '(split-width-threshold nil)
  '(tab-width 4)
  '(trash-directory "~/.Trash")
- '(treesit-auto-install 'prompt)
  '(use-package-always-ensure t)
  '(visual-fill-column-center-text t)
  '(which-key-mode t))
