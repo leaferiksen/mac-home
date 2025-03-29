@@ -2,50 +2,106 @@
 ;; General Behavior
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Fix the trackpad
-(global-set-key (kbd "<pinch>") 'ignore)
-(global-set-key (kbd "<C-wheel-up>") 'ignore)
-(global-set-key (kbd "<C-wheel-down>") 'ignore)
+(global-set-key
+ (kbd "<pinch>")
+ 'ignore)
+(global-set-key
+ (kbd "<C-wheel-up>")
+ 'ignore)
+(global-set-key
+ (kbd "<C-wheel-down>")
+ 'ignore)
 ;;Transform yes-or-no questions into y-or-n
 (defalias 'yes-or-no-p 'y-or-n-p)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ⌘ Keybinds
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Go to other windows easily with one keystroke Cmd-something.
-(global-set-key (kbd "s-1") (kbd "C-x 1"))  ;; kill other windows (keep 1)
-(global-set-key (kbd "s-2") (kbd "C-x 2"))  ;; split horizontally
-(global-set-key (kbd "s-3") (kbd "C-x 3"))  ;; split vertically
-(global-set-key (kbd "s-w") (kbd "s-k"))  ;; close current window
-(global-set-key (kbd "s-z") 'undo-fu-only-undo)
-(global-set-key (kbd "s-Z") 'undo-fu-only-redo)
-(global-set-key (kbd "s-r") 'replace-string)
-(global-set-key (kbd "s-d") 'dirvish)
-(global-set-key (kbd "s-e") 'elfeed)
+(global-set-key
+ (kbd "s-1")
+ (kbd "C-x 1"))
+;; kill other windows (keep 1)
+(global-set-key
+ (kbd "s-2")
+ (kbd "C-x 2"))
+;; split horizontally
+(global-set-key
+ (kbd "s-3")
+ (kbd "C-x 3"))
+;; split vertically
+(global-set-key
+ (kbd "s-w")
+ (kbd "s-k"))
+;; close current window
+(global-set-key
+ (kbd "s-z")
+ 'undo-fu-only-undo)
+(global-set-key
+ (kbd "s-Z")
+ 'undo-fu-only-redo)
+(global-set-key
+ (kbd "s-r")
+ 'replace-string)
+(global-set-key
+ (kbd "s-d")
+ 'dirvish)
+(global-set-key
+ (kbd "s-e")
+ 'elfeed)
 ;; Open the folder containing the current file or directory in Ghostty
-(global-set-key (kbd "s-t") (lambda ()
-							  (interactive)
-							  (let ((path (if (derived-mode-p 'dired-mode) (dired-get-file-for-visit) (buffer-file-name))))
-								(when path (shell-command (concat "open -a Ghostty --args --working-directory=" (shell-quote-argument (file-name-directory path))))))))
-
+(global-set-key
+ (kbd "s-t")
+ (lambda
+   ()
+   (interactive)
+   (let
+	   ((path
+		 (if
+			 (derived-mode-p 'dired-mode)
+			 (dired-get-file-for-visit)
+		   (buffer-file-name))))
+	 (when path
+	   (shell-command
+		(concat "open -a Ghostty --args --working-directory="(shell-quote-argument
+															  (file-name-directory path))))))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Mode-Specific Config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-hook 'emacs-startup-hook (lambda () (run-at-time 5 600 'elfeed-update)))
-(add-hook 'elfeed-show-mode-hook (lambda () (setq-local line-spacing 15) (setq-local fill-column 90) (setq-local shr-width 85) (variable-pitch-mode) (visual-fill-column-mode)))
+(add-hook 'emacs-startup-hook
+		  (lambda
+			()
+			(run-at-time 5 600 'elfeed-update)))
+(add-hook 'elfeed-show-mode-hook
+		  (lambda
+			()
+			(setq-local line-spacing 15)
+			(setq-local fill-column 90)
+			(setq-local shr-width 85)
+			(variable-pitch-mode)
+			(visual-fill-column-mode)))
 (use-package dirvish
   :config
-  (define-key dirvish-mode-map (kbd "<mouse-1>") 'dired-find-file)
-  (define-key dirvish-mode-map (kbd "<mouse-2>") 'dired-find-file))
+  (define-key dirvish-mode-map
+			  (kbd "<mouse-1>")
+			  'dired-find-file)
+  (define-key dirvish-mode-map
+			  (kbd "<mouse-2>")
+			  'dired-find-file))
 ;; Web Mode
-(use-package web-mode :mode ("\\.html\\'" . web-mode) :config
-  (define-key web-mode-map (kbd "C-c b") 'browse-url-of-file))
+(use-package web-mode :mode
+  ("\\.html\\'" . web-mode)
+  :config
+  (define-key web-mode-map
+			  (kbd "C-c b")
+			  'browse-url-of-file))
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
-  :hook (
-         (web-mode . lsp)
-         (css-mode . lsp)
-		 (lsp-mode . lsp-enable-which-key-integration))
+  :hook
+  (
+   (web-mode . lsp)
+   (css-mode . lsp)
+   (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 (use-package lsp-tailwindcss
   :after lsp-mode
@@ -54,17 +110,18 @@
   (setq lsp-tailwindcss-skip-config-check t)
   (setq lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server"))
 (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Various functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defun wrap-urls-with-parentheses (start end)
+(defun wrap-urls-with-parentheses
+	(start end)
   ;; Wrap quoted URLs with parentheses within the selected region
   (interactive "r")
   (save-excursion
-    (goto-char start)
-    (while (re-search-forward "\"\\(https?://[^\"]+\\)\"" end t)
-      (replace-match "(\"\\1\")"))))
+	(goto-char start)
+	(while
+		(re-search-forward "\"\\(https?://[^\"]+\\)\"" end t)
+	  (replace-match "(\"\\1\")"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Archived config ideas
@@ -73,10 +130,11 @@
 ;;   :hook (prog-mode . eglot-ensure)
 ;;   :config (add-to-list 'eglot-server-programs '((web-mode :language-id "html") . ("tailwindcss-language-server"))))
 
-;; (add-hook 'after-save-hook (lambda ()
-;;                               (when (eq major-mode 'web-mode)
-;;                                 (shell-command "rustywind --write . > /dev/null 2>&1")
-;;                                 (revert-buffer :ignore-auto :noconfirm))))
+;; (add-hook 'after-save-hook
+;; 		  (lambda ()
+;;             (when (eq major-mode 'web-mode)
+;;               (shell-command "rustywind --write . > /dev/null 2>&1")
+;;               (revert-buffer :ignore-auto :noconfirm))))
 
 ;; Normal arrow movement
 ;; (global-set-key (kbd "s-<backspace>") 'kill-whole-line)
@@ -129,12 +187,12 @@
  '(lsp-enable-snippet nil)
  '(make-backup-files nil)
  '(package-selected-packages
-   '(dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss magit undo-fu visual-fill-column web-mode))
+   '(aggressive-indent dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss magit undo-fu visual-fill-column web-mode))
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)
  '(prog-mode-hook
-   '(flymake-mode display-line-numbers-mode completion-preview-mode visual-line-mode))
+   '(flymake-mode display-line-numbers-mode completion-preview-mode visual-line-mode aggressive-indent-mode))
  '(project-mode-line t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
