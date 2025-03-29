@@ -89,31 +89,29 @@
   (define-key dirvish-mode-map
 			  (kbd "<mouse-2>")
 			  'dired-find-file))
-;; Web Mode
-(use-package web-mode :mode
-  ("\\.html\\'" . web-mode)
-  ("\\.jsx?$" . web-mode)
-  ("\\.tsx?$" . web-mode)
+(use-package treesit-auto
   :config
-  (define-key web-mode-map
-			  (kbd "C-c b")
-			  'browse-url-of-file))
+  (global-treesit-auto-mode))
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
   :hook
   (
-   (web-mode . lsp)
-   (css-mode . lsp)
+   (html-ts-mode . lsp)
+   (css-ts-mode . lsp)
+   (js-ts-mode . lsp)
+   (typescript-ts-mode . lsp)
+   (tsx-ts-mode . lsp)
    (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 (use-package lsp-tailwindcss
-  :after web-mode
+  :after lsp-mode
   :init
   (setq lsp-tailwindcss-add-on-mode t)
   (setq lsp-tailwindcss-skip-config-check t)
   (setq lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server"))
 (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Various functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -130,6 +128,23 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Archived config ideas
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (setq treesit-language-source-alist
+;;       '((typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+;;         (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+;;         (html . ("https://github.com/tree-sitter/tree-sitter-html" "master" "src"))
+;; 		(js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))))
+
+;; (dolist (source treesit-language-source-alist)
+;;   (unless (treesit-ready-p (car source))
+;;     (treesit-install-language-grammar (car source))))
+
+;; (add-to-list 'auto-mode-alist
+;; 			 '("\\.html\\'" . html-ts-mode))
+;; (add-to-list 'auto-mode-alist
+;; 			 '("\\.jsx?$" . js-ts-mode))
+;; (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+;; (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+
 ;; (use-package eglot
 ;;   :hook (prog-mode . eglot-ensure)
 ;;   :config (add-to-list 'eglot-server-programs '((web-mode :language-id "html") . ("tailwindcss-language-server"))))
@@ -194,7 +209,7 @@
  '(minions-mode t)
  '(minions-prominent-modes '(flymake-mode lsp-mode))
  '(package-selected-packages
-   '(aggressive-indent dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss minions undo-fu visual-fill-column web-mode))
+   '(aggressive-indent dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss minions treesit-auto undo-fu visual-fill-column web-mode))
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)
@@ -207,6 +222,7 @@
  '(split-width-threshold nil)
  '(tab-width 4)
  '(trash-directory "~/.Trash")
+ '(treesit-auto-install 'prompt)
  '(use-package-always-ensure t)
  '(visual-fill-column-center-text t)
  '(which-key-mode t))
