@@ -108,7 +108,7 @@
    (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 (use-package lsp-tailwindcss
-  :after lsp-mode
+  :after web-mode
   :init
   (setq lsp-tailwindcss-add-on-mode t)
   (setq lsp-tailwindcss-skip-config-check t)
