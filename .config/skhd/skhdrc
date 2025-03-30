@@ -28,14 +28,13 @@ meh - m : open -a Messages
 hyper - m : open -a Mail
 meh - n : open -a NewsBlur
 meh - e : open -a Emacs
-meh - i : open -a IINA
-hyper - i : open -a iPhone\ Mirroring
+meh - i : open -a iPhone\ Mirroring
 meh - o : open -a Obsidian
 
 # xcdvz/kh 0x2B 0x2F
 meh - c : open -a Calendar
 meh - d : open -a Dictionary
-meh - v : open -a VoiceMemos
+meh - v : open -a IINA
 meh - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
 meh - k : open -a Karabiner-Elements
 meh - h : open -a Hazel

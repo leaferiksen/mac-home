@@ -18,6 +18,87 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ⌘ Keybinds
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package modalka
+  :init
+  (setq-default
+   modalka-cursor-type 'box)
+  :config
+  (modalka-define-kbd "SPC" "C-SPC")
+  (modalka-define-kbd ";" "M-;")
+  (modalka-define-kbd "0" "C-0")
+  (modalka-define-kbd "1" "C-1")
+  (modalka-define-kbd "2" "C-2")
+  (modalka-define-kbd "3" "C-3")
+  (modalka-define-kbd "4" "C-4")
+  (modalka-define-kbd "5" "C-5")
+  (modalka-define-kbd "6" "C-6")
+  (modalka-define-kbd "7" "C-7")
+  (modalka-define-kbd "8" "C-8")
+  (modalka-define-kbd "9" "C-9")
+  
+  (modalka-define-kbd "a" "C-a")
+  (modalka-define-kbd "b" "C-b")
+  (define-key modalka-mode-map "c" mode-specific-map)
+  (modalka-define-kbd "d" "C-d")
+  (modalka-define-kbd "e" "C-e")
+  (modalka-define-kbd "f" "C-f")
+  (modalka-define-kbd "g" "C-g")
+  (define-key modalka-mode-map "h" help-map)
+  (modalka-define-kbd "i" "C-i")
+  (modalka-define-kbd "j" "M-j")
+  (modalka-define-kbd "k" "C-k")
+  (modalka-define-kbd "l" "C-l")
+  (modalka-define-kbd "m" "C-m")
+  (modalka-define-kbd "n" "C-n")
+  (modalka-define-kbd "o" "C-o")
+  (modalka-define-kbd "p" "C-p")
+  (modalka-define-kbd "q" "M-q")
+  (modalka-define-kbd "r" "C-r")
+  (modalka-define-kbd "s" "C-s")
+  (modalka-define-kbd "t" "C-t")
+  (modalka-define-kbd "u" "C-u")
+  (modalka-define-kbd "v" "C-v")
+  (modalka-define-kbd "w" "C-w")
+  (define-key modalka-mode-map "x" ctl-x-map)
+  (modalka-define-kbd "y" "C-y")
+  (modalka-define-kbd "z" "M-z")
+  
+  (modalka-define-kbd "A" "M-SPC") 
+  (modalka-define-kbd "B" "M-b")
+  (modalka-define-kbd "C" "M-c")
+  (modalka-define-kbd "D" "M-d")
+  (modalka-define-kbd "E" "M-e")
+  (modalka-define-kbd "F" "M-f")
+  (define-key modalka-mode-map "g" goto-map)
+  (modalka-define-kbd "H" "M-h")
+  ;; I (bound elsewhere)
+  ;; J (bound elsewhere)
+  (modalka-define-kbd "K" "M-k")
+  (modalka-define-kbd "L" "M-l")
+  (modalka-define-kbd "M" "M-m")
+  (modalka-define-kbd "N" "M-n")
+  (modalka-define-kbd "O" "M-o")
+  (modalka-define-kbd "P" "M-p")
+  ;; Q (bound elsewhere)
+  (modalka-define-kbd "R" "M-r")
+  (modalka-define-kbd "S" "M-S")
+  (modalka-define-kbd "T" "M-t")
+  (modalka-define-kbd "U" "M-u")
+  (modalka-define-kbd "V" "M-v")
+  (modalka-define-kbd "W" "M-w")
+  (define-key modalka-mode-map "X" esc-map)
+  (modalka-define-kbd "Y" "M-y")
+  (modalka-define-kbd "Z" "C-z")
+  :bind
+  (("<f13>" . modalka-mode))
+  :hook
+  ((compilation-mode . modalka-mode)
+   (conf-toml-mode . modalka-mode)
+   (conf-unix-mode . modalka-mode)
+   (diff-mode . modalka-mode)
+   (help-mode . modalka-mode)
+   (prog-mode . modalka-mode)))
+
 ;; Go to other windows easily with one keystroke Cmd-something.
 (global-set-key
  (kbd "s-1")
@@ -108,7 +189,8 @@
    (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 (use-package lsp-tailwindcss
-  :after lsp-mode
+  :after
+  lsp-mode
   :init
   (setq lsp-tailwindcss-add-on-mode t)
   (setq lsp-tailwindcss-skip-config-check t)
@@ -127,52 +209,6 @@
 	(while
 		(re-search-forward "\"\\(https?://[^\"]+\\)\"" end t)
 	  (replace-match "(\"\\1\")"))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Archived config ideas
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (setq treesit-language-source-alist
-;;       '((typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
-;;         (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-;;         (html . ("https://github.com/tree-sitter/tree-sitter-html" "master" "src"))
-;; 		(js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))))
-
-;; (dolist (source treesit-language-source-alist)
-;;   (unless (treesit-ready-p (car source))
-;;     (treesit-install-language-grammar (car source))))
-
-;; (add-to-list 'auto-mode-alist
-;; 			 '("\\.html\\'" . html-ts-mode))
-;; (add-to-list 'auto-mode-alist
-;; 			 '("\\.jsx?$" . js-ts-mode))
-;; (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
-;; (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
-
-;; (use-package eglot
-;;   :hook (prog-mode . eglot-ensure)
-;;   :config (add-to-list 'eglot-server-programs '((web-mode :language-id "html") . ("tailwindcss-language-server"))))
-
-;; (add-hook 'after-save-hook
-;; 		  (lambda ()
-;;             (when (eq major-mode 'web-mode)
-;;               (shell-command "rustywind --write . > /dev/null 2>&1")
-;;               (revert-buffer :ignore-auto :noconfirm))))
-
-;; Normal arrow movement
-;; (global-set-key (kbd "s-<backspace>") 'kill-whole-line)
-;; (global-set-key (kbd "M-S-<backspace>") 'kill-word)
-;; (global-set-key (kbd "s-<right>") 'end-of-line)
-;; (global-set-key (kbd "S-s-<right>") (kbd "C-S-e")) ;; Select to end of line
-;; (global-set-key (kbd "s-<left>") 'back-to-indentation)
-;; (global-set-key (kbd "S-s-<left>") (kbd "M-S-m"))  ;; Select to beginning of line
-;; (global-set-key (kbd "s-<up>") 'beginning-of-buffer)
-;; (global-set-key (kbd "s-<down>") 'end-of-buffer)
-
-;; (use-package copilot :vc (:url "https://github.com/copilot-emacs/copilot.el" :rev :newest :branch "main") :config
-;;   (add-to-list 'copilot-indentation-alist '(prog-mode 2))
-;;   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
-;;   (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
-;;   (define-key copilot-completion-map (kbd "<S-tab>") 'copilot-accept-completion-by-word))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GUI Settings ⌘,
@@ -207,12 +243,13 @@
  '(global-prettify-symbols-mode t)
  '(initial-buffer-choice 'dirvish)
  '(lsp-completion-provider :none)
+ '(lsp-copilot-enabled t)
  '(lsp-enable-snippet nil)
  '(make-backup-files nil)
  '(minions-mode t)
  '(minions-prominent-modes '(flymake-mode lsp-mode))
  '(package-selected-packages
-   '(aggressive-indent dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss minions treesit-auto undo-fu visual-fill-column web-mode))
+   '(aggressive-indent dirvish elfeed flexoki-themes lsp-mode lsp-tailwindcss minions modalka treesit-auto undo-fu visual-fill-column web-mode))
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)

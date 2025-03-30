@@ -73,6 +73,7 @@ Keyboard Shortcuts
 ```
 - Mission Control: **☒ Mission Control** & **☒ Application windows**
 - Input Sources: **☒ Next & Previous**
+- Modifier Keys: **Caps Lock (⇪) key ▼ No Action**
 
 ```
 Wacom Tablet

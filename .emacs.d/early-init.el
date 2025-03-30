@@ -11,3 +11,5 @@
 ;; Maximize with no frame
 (add-to-list 'default-frame-alist '(undecorated . t))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(setenv "LSP_USE_PLISTS" "true")
