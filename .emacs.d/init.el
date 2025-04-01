@@ -21,10 +21,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (eval-after-load "dired"
   '(progn
-	 (setq-local mouse-1-click-follows-link nil)
 	 (define-key dired-mode-map
 				 (kbd "<mouse-1>")
 				 (kbd "<return>"))))
+(add-hook 'dired-mode-hook
+		  (lambda
+			()
+			(dired-omit-mode)
+			(setq-local mouse-1-click-follows-link nil)))
 (add-hook 'emacs-startup-hook
 		  (lambda
 			()
@@ -130,7 +134,6 @@
  '(dired-kill-when-opening-new-dired-buffer t)
  '(dired-listing-switches
    "-l --almost-all --human-readable --group-directories-first -go")
- '(dired-mode-hook '(dired-omit-mode))
  '(dired-omit-files
    "\\`[.]?#\\|\\.DS_Store\\|\\`\\._\\|\\.CFUserTextEncoding\\|\\.Trash")
  '(electric-pair-mode t)
