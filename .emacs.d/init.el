@@ -17,30 +17,35 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Mode-Specific Config
+;; Dired and Elfeed
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(eval-after-load "dired"
-  '(progn
-	 (define-key dired-mode-map
-				 (kbd "<mouse-1>")
-				 (kbd "<return>"))))
 (add-hook 'dired-mode-hook
 		  (lambda
 			()
 			(dired-omit-mode)
-			(setq-local mouse-1-click-follows-link nil)))
-(add-hook 'emacs-startup-hook
-		  (lambda
-			()
-			(run-at-time 5 600 'elfeed-update)))
+			(setq-local mouse-1-click-follows-link nil)
+			(define-key dired-mode-map
+						(kbd "<mouse-1>")
+						(kbd "<return>"))))
 (add-hook 'elfeed-show-mode-hook
 		  (lambda
 			()
+			(variable-pitch-mode)
 			(setq-local line-spacing 15)
 			(setq-local fill-column 90)
 			(setq-local shr-width 85)
-			(variable-pitch-mode)
-			(visual-fill-column-mode)))
+			(setq-local global-hl-line-mode nil)
+			(visual-fill-column-mode)
+			(define-key elfeed-show-mode-map
+						(kbd "<mouse-1>")
+						(kbd "n"))
+			(define-key elfeed-show-mode-map
+						(kbd "<mouse-3>")
+						(kbd "p"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Code Editor
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package treesit-auto
   :custom
   (treesit-auto-install 'prompt)
@@ -70,29 +75,29 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Obsidian MD
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'obsidian)
-;; Location of obsidian vault
-(setopt obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
-;; Default location for new notes from `obsidian-capture'
-(setopt obsidian-inbox-directory "Inbox")
-;; Useful if you're going to be using wiki links
-(setopt markdown-enable-wiki-links t)
+(use-package obsidian
+  :config
+  (global-obsidian-mode t)
+  :custom
+  ;; location of obsidian vault
+  (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
+  ;; Default location for new notes from `obsidian-capture'
+  (obsidian-inbox-directory "Inbox")
+  ;; Useful if you're going to be using wiki links
+  (markdown-enable-wiki-links t)
 
-;; These bindings are only suggestions; it's okay to use other bindings
-;; Create note
-(define-key obsidian-mode-map (kbd "C-c C-n") 'obsidian-capture)
-;; If you prefer you can use `obsidian-insert-wikilink'
-(define-key obsidian-mode-map (kbd "C-c C-l") 'obsidian-insert-link)
-;; Open file pointed to by link at point
-(define-key obsidian-mode-map (kbd "C-c C-o") 'obsidian-follow-link-at-point)
-;; Open a note note from vault
-(define-key obsidian-mode-map (kbd "C-c C-p") 'obsidian-jump)
-;; Follow a backlink for the current file
-(define-key obsidian-mode-map (kbd "C-c C-b") 'obsidian-backlink-jump)
-
-;; Activate obsidian mode and backlinks mode
-(global-obsidian-mode t)
-;; (obsidian-backlinks-mode t)
+  ;; These bindings are only suggestions; it's okay to use other bindings
+  :bind (:map obsidian-mode-map
+              ;; Create note
+              ("C-c C-n" . obsidian-capture)
+              ;; If you prefer you can use `obsidian-insert-wikilink'
+              ("C-c C-l" . obsidian-insert-link)
+              ;; Open file pointed to by link at point
+              ("C-c C-o" . obsidian-follow-link-at-point)
+              ;; Open a different note from vault
+              ("C-c C-p" . obsidian-jump)
+              ;; Follow a backlink for the current file
+              ("C-c C-b" . obsidian-backlink-jump)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Various functions
@@ -320,3 +325,8 @@
    (conf-unix-mode . modalka-mode)
    (diff-mode . modalka-mode)
    (help-mode . modalka-mode)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Low priority
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(run-at-time 5 600 'elfeed-update)
