@@ -22,6 +22,7 @@ meh - a : open -a Activity\ Monitor
 meh - r : open -a Reminders
 meh - s : open -a Soulver\ 3
 meh - t : open -a Ghostty
+hyper - t : open -a Terminal
 meh - g : open -a Steam
 hyper - g : open -a Itch
 meh - m : open -a Messages

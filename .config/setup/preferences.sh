@@ -2,6 +2,28 @@
 
 osascript -e 'tell application "System Preferences" to quit'
 
+# # # Shouldn't be needed
+# # Self Explanitory
+# defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
+# defaults write -g NSScrollViewRubberbanding -int 0
+# defaults write com.apple.universalaccess "virtualKeyboardOnOff" -bool "true"
+# defaults write com.apple.universalaccess "virtualKeyboardCornerActionType" '{
+#     0 = 1;
+#     1 = 0;
+#     2 = 0;
+#     3 = 0;
+# }'
+# # Use scroll gesture with the Ctrl (^) modifier key to zoom
+# defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
+# # Keep windows when quitting an app
+# defaults write -g "NSQuitAlwaysKeepsWindows" -bool "true"
+# # Save screenshots to the Pictures/Screenshots
+# defaults write com.apple.screencapture location -string "/Users/leaf/Pictures/Screenshots"
+# # let karabiner handle media keys
+# defaults write -g "com.apple.keyboard.fnState" -bool "true"
+# # disable disable globe key,
+# defaults write com.apple.HIToolbox "AppleFnUsageType" -int "0"
+
 # fix scroll direction
 defaults write -g "com.apple.swipescrolldirection" -bool "false"
 # show scroll bars
@@ -12,30 +34,13 @@ defaults write -g "NSZoomButtonShowMenu" -bool "false"
 defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 
-# Keep windows when quitting an app
-# defaults write -g "NSQuitAlwaysKeepsWindows" -bool "true"
-# Save screenshots to the Pictures/Screenshots
-# defaults write com.apple.screencapture location -string "/Users/leaf/Pictures/Screenshots"
-
-# defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
-# Use scroll gesture with the Ctrl (^) modifier key to zoom
-defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
-
-# defaults write com.apple.universalaccess "virtualKeyboardOnOff" -bool "true"
-defaults write com.apple.universalaccess "virtualKeyboardCornerActionType" '{
-    0 = 1;
-    1 = 0;
-    2 = 0;
-    3 = 0;
-}'
 
 # fuck .DS_Store files
 defaults write com.apple.desktopservices "DSDontWriteUSBStores" -bool "true"
 defaults write com.apple.desktopservices "DSDontWriteNetworkStores" -bool "true"
 
 # trackpad cmd+ctrl+three-finger drag
-# defaults write -g NSScrollViewRubberbanding -int 0
 defaults write -g "NSWindowShouldDragOnGesture" -bool "true"
 defaults write -g "NSWindowShouldDragOnGestureFeedback" -bool "false"
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadThreeFingerDrag" -bool "true"
@@ -45,11 +50,7 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadTwoFi
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerVertSwipeGesture" -int "0"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerVertSwipeGesture" -int "0"
 
-# let karabiner handle media keys
-# defaults write -g "com.apple.keyboard.fnState" -bool "true" 
-
-# keyboard: UI control, disable disable globe key, quote/ dash conversion and
-defaults write com.apple.HIToolbox "AppleFnUsageType" -int "0"
+# keyboard navigation, quote/ dash conversion and
 defaults write -g "AppleKeyboardUIMode" -int "2"
 defaults write -g "NSAutomaticQuoteSubstitutionEnabled" -int "false"
 defaults write -g "NSAutomaticDashSubstitutionEnabled" -bool "false"
@@ -124,11 +125,11 @@ defaults write com.apple.widgets "widgetAppearance" -int "0"
 # Finder
 chflags nohidden ~/Library
 # defaults write -g "com.apple.springing.delay" -float "0.35"
-# defaults write -g "NSDocumentSaveNewDocumentsToCloud" -bool "false"
-# defaults write -g "NSNavPanelExpandedStateForSaveMode" -bool "true"
-# defaults write -g "NSNavPanelExpandedStateForSaveMode2" -bool "true"
 # defaults write com.apple.finder "CreateDesktop" -bool "false"
 # defaults write com.apple.finder "QuitMenuItem" -bool "true"
+defaults write -g "NSDocumentSaveNewDocumentsToCloud" -bool "false"
+defaults write -g "NSNavPanelExpandedStateForSaveMode" -bool "true"
+defaults write -g "NSNavPanelExpandedStateForSaveMode2" -bool "true"
 defaults write com.apple.finder "FXPreferredViewStyle" -string "clmv"
 defaults write com.apple.finder "ShowPathbar" -bool "true"
 defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true"

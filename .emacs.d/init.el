@@ -19,6 +19,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired and Elfeed
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package nerd-icons-dired
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
 (add-hook 'dired-mode-hook
 		  (lambda
 			()
@@ -34,7 +37,6 @@
 			(setq-local line-spacing 15)
 			(setq-local fill-column 90)
 			(setq-local shr-width 85)
-			(setq-local global-hl-line-mode nil)
 			(visual-fill-column-mode)
 			(define-key elfeed-show-mode-map
 						(kbd "<mouse-1>")
@@ -149,7 +151,6 @@
  '(gc-cons-threshold 100000000)
  '(global-auto-revert-mode t)
  '(global-auto-revert-non-file-buffers t)
- '(global-hl-line-mode t)
  '(global-prettify-symbols-mode t)
  '(initial-buffer-choice "~/")
  '(lsp-completion-provider :none)
@@ -160,12 +161,12 @@
  '(minions-prominent-modes '(flymake-mode lsp-mode))
  '(mouse-wheel-progressive-speed nil)
  '(package-selected-packages
-   '(aggressive-indent elfeed flexoki-themes lsp-mode lsp-tailwindcss minions modalka obsidian treesit-auto undo-fu visual-fill-column))
+   '(aggressive-indent elfeed flexoki-themes lsp-mode lsp-tailwindcss minions modalka nerd-icons-dired obsidian treesit-auto undo-fu visual-fill-column))
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)
  '(prog-mode-hook
-   '(flymake-mode display-line-numbers-mode completion-preview-mode visual-line-mode aggressive-indent-mode modalka-mode))
+   '(flymake-mode display-line-numbers-mode completion-preview-mode visual-line-mode aggressive-indent-mode))
  '(project-mode-line t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
@@ -232,12 +233,20 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Navigation and Selection mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 (use-package modalka
   :init
   (setq-default
    modalka-cursor-type 'box)
+  (modalka-global-mode 1)
+  (add-to-list 'modalka-excluded-modes 'elfeed-show-mode)
+  (add-to-list 'modalka-excluded-modes 'vc-git-log-edit-mode)  
   :config
-  (modalka-define-kbd "SPC" "C-SPC")
+  (define-key modalka-mode-map (kbd "SPC") 'set-mark-command)
   (modalka-define-kbd ":" "M-;")
   (modalka-define-kbd ";" "C-;")
   (modalka-define-kbd "&" "M-&")
@@ -253,25 +262,14 @@
   (modalka-define-kbd "9" "C-9")
   (modalka-define-kbd "a" "C-a")
   (modalka-define-kbd "b" "C-b")
-  (modalka-define-kbd "c b" "C-c C-b")
-  (modalka-define-kbd "c c" "C-c C-c")
-  (modalka-define-kbd "c k" "C-c C-k")
-  (modalka-define-kbd "c l" "C-c C-l")
-  (modalka-define-kbd "c n" "C-c C-n")
-  (modalka-define-kbd "c o" "C-c C-o")
-  (modalka-define-kbd "c p" "C-c C-p")
-  (modalka-define-kbd "c s" "C-c C-s")
-  (modalka-define-kbd "c t" "C-c C-t")
-  (modalka-define-kbd "c u" "C-c C-u")
-  (modalka-define-kbd "c v" "C-c C-v")
-  (modalka-define-kbd "c x" "C-c C-x")
+  (define-key modalka-mode-map "c" mode-specific-map)
   (modalka-define-kbd "d" "C-d")
   (modalka-define-kbd "e" "C-e")
   (modalka-define-kbd "f" "C-f")
   (modalka-define-kbd "g" "C-g")
-  (modalka-define-kbd "h" "M-h")
+  (define-key modalka-mode-map "h" help-map)
   (modalka-define-kbd "i" "C-i")
-  (modalka-define-kbd "j" "M-j")
+  (modalka-define-kbd "j" "C-j")
   (modalka-define-kbd "k" "C-k")
   (modalka-define-kbd "l" "C-l")
   (modalka-define-kbd "m" "C-m")
@@ -285,22 +283,19 @@
   (modalka-define-kbd "u" "C-u")
   (modalka-define-kbd "v" "C-v")
   (modalka-define-kbd "w" "C-w")
-  (modalka-define-kbd "x 3" "C-x #")
-  (modalka-define-kbd "x ;" "C-x C-;")
-  (modalka-define-kbd "x e" "C-x C-e")
-  (modalka-define-kbd "x o" "C-x C-o")
+  (define-key modalka-mode-map "x" ctl-x-map)
   (modalka-define-kbd "y" "C-y")
   (modalka-define-kbd "z" "M-z")
-  (modalka-define-kbd "A" "M-SPC")
+  (modalka-define-kbd "A" "M-a")
   (modalka-define-kbd "B" "M-b")
   (modalka-define-kbd "C" "M-c")
   (modalka-define-kbd "D" "M-d")
   (modalka-define-kbd "E" "M-e")
   (modalka-define-kbd "F" "M-f")
-  (modalka-define-kbd "G" "C-`")
-  (modalka-define-kbd "H" "M-H")
+  (define-key modalka-mode-map "g" goto-map)
+  (modalka-define-kbd "H" "M-h")
   ;; I (bound elsewhere)
-  ;; J (bound elsewhere)
+  (modalka-define-kbd "J" "M-j")
   (modalka-define-kbd "K" "M-k")
   (modalka-define-kbd "L" "M-l")
   (modalka-define-kbd "M" "M-m")
@@ -314,17 +309,11 @@
   (modalka-define-kbd "U" "M-u")
   (modalka-define-kbd "V" "M-v")
   (modalka-define-kbd "W" "M-w")
-  ;; X (not bound)
+  (define-key modalka-mode-map "X" 'execute-extended-command)
   (modalka-define-kbd "Y" "M-y")
   (modalka-define-kbd "Z" "C-z")
   :bind
-  (("<f13>" . modalka-mode))
-  :hook
-  ((compilation-mode . modalka-mode)
-   (conf-toml-mode . modalka-mode)
-   (conf-unix-mode . modalka-mode)
-   (diff-mode . modalka-mode)
-   (help-mode . modalka-mode)))
+  (("<f13>" . modalka-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Low priority
