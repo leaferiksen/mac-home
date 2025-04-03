@@ -4,79 +4,67 @@
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 ;; Fix the trackpad
-(global-set-key
- (kbd "<pinch>")
- 'ignore)
-(global-set-key
- (kbd "<C-wheel-up>")
- 'ignore)
-(global-set-key
- (kbd "<C-wheel-down>")
- 'ignore)
+(global-set-key (kbd "<pinch>") 'ignore)
+(global-set-key (kbd "<C-wheel-up>") 'ignore)
+(global-set-key (kbd "<C-wheel-down>") 'ignore)
 ;;Transform yes-or-no questions into y-or-n
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired and Elfeed
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package nerd-icons-dired
+(use-package dired
   :hook
-  (dired-mode . nerd-icons-dired-mode))
-(add-hook 'dired-mode-hook
-		  (lambda
-			()
-			(dired-omit-mode)
-			(setq-local mouse-1-click-follows-link nil)
-			(define-key dired-mode-map
-						(kbd "<mouse-1>")
-						(kbd "<return>"))))
-(add-hook 'elfeed-show-mode-hook
-		  (lambda
-			()
-			(variable-pitch-mode)
-			(setq-local line-spacing 15)
-			(setq-local fill-column 90)
-			(setq-local shr-width 85)
-			(visual-fill-column-mode)
-			(define-key elfeed-show-mode-map
-						(kbd "<mouse-1>")
-						(kbd "n"))
-			(define-key elfeed-show-mode-map
-						(kbd "<mouse-3>")
-						(kbd "p"))))
+  (dired-mode . dired-omit-mode)
+  (dired-mode . nerd-icons-dired-mode)
+  :bind (:map dired-mode-map
+			  ("<mouse-2>" . dired-mouse-find-file)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Code Editor
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package elfeed
+  :config
+  (add-hook 'elfeed-show-mode-hook
+			(lambda ()
+			  (variable-pitch-mode)
+			  (visual-fill-column-mode)
+			  (setq-local line-spacing 15)
+			  (setq-local fill-column 90)
+			  (setq-local shr-width 85)))
+  :bind
+  ("C-c e" . elfeed)
+  (:map elfeed-show-mode-map
+		("<mouse-1>" . elfeed-show-next)
+		("<mouse-3>" . elfeed-show-prev)))
+
 (use-package treesit-auto
   :custom
   (treesit-auto-install 'prompt)
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
+
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
+  '(lsp-completion-provider :none)
+  '(lsp-copilot-enabled t)
+  '(lsp-enable-snippet nil)
   :hook
-  (
-   (html-ts-mode . lsp)
-   (css-ts-mode . lsp)
-   (js-ts-mode . lsp)
-   (typescript-ts-mode . lsp)
-   (tsx-ts-mode . lsp)
-   (lsp-mode . lsp-enable-which-key-integration))
+  (html-ts-mode . lsp)
+  (css-ts-mode . lsp)
+  (js-ts-mode . lsp)
+  (typescript-ts-mode . lsp)
+  (tsx-ts-mode . lsp)
+  (lsp-mode . lsp-enable-which-key-integration)
   :commands lsp)
+
 (use-package lsp-tailwindcss
   :after lsp-mode
   :init
   (setq lsp-tailwindcss-add-on-mode t)
   (setq lsp-tailwindcss-skip-config-check t)
-  (setq lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server"))
-(add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save)
+  (setq lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")
+  (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Obsidian MD
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package obsidian
   :config
   (global-obsidian-mode t)
@@ -85,20 +73,11 @@
   (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   ;; Default location for new notes from `obsidian-capture'
   (obsidian-inbox-directory "Inbox")
-  ;; Useful if you're going to be using wiki links
   (markdown-enable-wiki-links t)
-
-  ;; These bindings are only suggestions; it's okay to use other bindings
   :bind (:map obsidian-mode-map
-              ;; Create note
-              ("C-c C-n" . obsidian-capture)
-              ;; If you prefer you can use `obsidian-insert-wikilink'
-              ("C-c C-l" . obsidian-insert-link)
-              ;; Open file pointed to by link at point
+              ("C-c C-l" . obsidian-insert-wikilink)
               ("C-c C-o" . obsidian-follow-link-at-point)
-              ;; Open a different note from vault
               ("C-c C-p" . obsidian-jump)
-              ;; Follow a backlink for the current file
               ("C-c C-b" . obsidian-backlink-jump)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -152,10 +131,7 @@
  '(global-auto-revert-mode t)
  '(global-auto-revert-non-file-buffers t)
  '(global-prettify-symbols-mode t)
- '(initial-buffer-choice "~/")
- '(lsp-completion-provider :none)
- '(lsp-copilot-enabled t)
- '(lsp-enable-snippet nil)
+ '(initial-buffer-choice t)
  '(make-backup-files nil)
  '(minions-mode t)
  '(minions-prominent-modes '(flymake-mode lsp-mode))
@@ -198,37 +174,16 @@
 ;; ⌘ Keybinds
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Go to other windows easily with one keystroke Cmd-something.
-(global-set-key
- (kbd "s-1")
- (kbd "C-x 1"))
+(global-set-key (kbd "s-1") (kbd "C-x 1"))
 ;; kill other windows (keep 1)
-(global-set-key
- (kbd "s-2")
- (kbd "C-x 2"))
+(global-set-key (kbd "s-2") (kbd "C-x 2"))
 ;; split horizontally
-(global-set-key
- (kbd "s-3")
- (kbd "C-x 3"))
+(global-set-key (kbd "s-3") (kbd "C-x 3"))
 ;; split vertically
-(global-set-key
- (kbd "s-w")
- (kbd "s-k"))
+(global-set-key (kbd "s-w") (kbd "s-k"))
 ;; close current window
-(global-set-key
- (kbd "s-z")
- 'undo-fu-only-undo)
-(global-set-key
- (kbd "s-Z")
- 'undo-fu-only-redo)
-(global-set-key
- (kbd "s-r")
- 'replace-string)
-(global-set-key
- (kbd "s-d")
- 'dired)
-(global-set-key
- (kbd "s-e")
- 'elfeed)
+(global-set-key (kbd "s-z") 'undo-fu-only-undo)
+(global-set-key (kbd "s-Z") 'undo-fu-only-redo)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Navigation and Selection mode
@@ -243,6 +198,7 @@
   (setq-default
    modalka-cursor-type 'box)
   (modalka-global-mode 1)
+  (add-to-list 'modalka-excluded-modes 'elfeed-search-mode)
   (add-to-list 'modalka-excluded-modes 'elfeed-show-mode)
   (add-to-list 'modalka-excluded-modes 'vc-git-log-edit-mode)  
   :config
@@ -287,21 +243,21 @@
   (modalka-define-kbd "y" "C-y")
   (modalka-define-kbd "z" "M-z")
   (modalka-define-kbd "A" "M-a")
-  (modalka-define-kbd "B" "M-b")
+  (modalka-define-kbd "B" "C-M-b")
   (modalka-define-kbd "C" "M-c")
   (modalka-define-kbd "D" "M-d")
   (modalka-define-kbd "E" "M-e")
-  (modalka-define-kbd "F" "M-f")
-  (define-key modalka-mode-map "g" goto-map)
+  (modalka-define-kbd "F" "C-M-f")
+  (define-key modalka-mode-map "G" goto-map)
   (modalka-define-kbd "H" "M-h")
   ;; I (bound elsewhere)
   (modalka-define-kbd "J" "M-j")
   (modalka-define-kbd "K" "M-k")
   (modalka-define-kbd "L" "M-l")
   (modalka-define-kbd "M" "M-m")
-  (modalka-define-kbd "N" "M-n")
+  (modalka-define-kbd "N" "C-M-n")
   (modalka-define-kbd "O" "M-o")
-  (modalka-define-kbd "P" "M-p")
+  (modalka-define-kbd "P" "C-M-p")
   ;; Q (bound elsewhere)
   (modalka-define-kbd "R" "M-r")
   (modalka-define-kbd "S" "M-S")
