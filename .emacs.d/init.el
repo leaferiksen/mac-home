@@ -2,87 +2,12 @@
 ;;; Commentary:
 ;; Initialization file for Emacs
 ;;; Code:
-
-;; https://emacs-lsp.github.io/lsp-mode/page/performance/
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
-;;Transform yes-or-no questions into y-or-n
-(defalias 'yes-or-no-p 'y-or-n-p)
-(run-at-time 5 600 'elfeed-update)
-(use-package dired
-  :hook
-  (dired-mode . dired-omit-mode)
-  (dired-mode . nerd-icons-dired-mode)
-  :bind (:map dired-mode-map
-			  ("<mouse-2>" . dired-mouse-find-file)))
-;; https://github.com/skeeto/elfeed
-(use-package elfeed
-  :hook
-  (elfeed-show-mode . variable-pitch-mode)
-  (elfeed-show-mode . visual-fill-column-mode)
-  (elfeed-show-mode . (lambda ()
-						(setq-local line-spacing 12)
-						(setq-local fill-column 90)
-						(setq-local shr-width 85)))
-  :bind
-  ("C-c e" . elfeed)
-  (:map elfeed-show-mode-map
-		("<mouse-1>" . elfeed-show-next)
-		("<mouse-3>" . elfeed-show-prev)))
-;; https://github.com/renzmann/treesit-auto
-(use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
-;; https://emacs-lsp.github.io/lsp-mode/
-(use-package lsp-mode
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  '(lsp-completion-provider :none)
-  '(lsp-copilot-enabled t)
-  '(lsp-enable-snippet nil)
-  :hook
-  (html-ts-mode . lsp)
-  (css-ts-mode . lsp)
-  (js-ts-mode . lsp)
-  (typescript-ts-mode . lsp)
-  (tsx-ts-mode . lsp)
-  (lsp-mode . lsp-enable-which-key-integration)
-  :commands lsp)
-;; https://github.com/merrickluo/lsp-tailwindcss
-(use-package lsp-tailwindcss
-  :after lsp-mode
-  :init
-  (setq lsp-tailwindcss-add-on-mode t)
-  (setq lsp-tailwindcss-skip-config-check t)
-  (setq lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")
-  (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save))
-;; https://jblevins.org/projects/markdown-mode/
-(use-package markdown
-  :config
-  (markdown-header-scaling t)
-  :hook
-  (markdown-mode . visual-fill-column-mode)
-  (markdown-mode . variable-pitch-mode)
-  (markdown-mode . (lambda ()
-					 (setq-local fill-column 90)
-					 (setq-local line-spacing 12))))
-;; https://github.com/licht1stein/obsidian.el
-(use-package obsidian
-  :hook markdown-mode
-  :custom
-  (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
-  (markdown-enable-wiki-links t)
-  :bind
-  ("C-c l" . obsidian-insert-wikilink)
-  ("C-c o" . obsidian-follow-link-at-point)
-  ("C-c p" . obsidian-jump)
-  ("C-c b" . obsidian-backlink-jump))
 ;; Fix the trackpad
 (global-set-key (kbd "<pinch>") 'ignore)
 (global-set-key (kbd "<C-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
+(global-set-key (kbd "<C-M-wheel-up>") 'ignore)
+(global-set-key (kbd "<C-M-wheel-down>") 'ignore)
 ;; Mac standards
 (global-set-key (kbd "s-w") (kbd "s-k"))
 (global-set-key (kbd "s-z") 'undo-fu-only-undo)
@@ -176,6 +101,89 @@
   ;; Z (bound to z)
   :bind
   (("<f13>" . modalka-mode)))
+;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+;;Transform yes-or-no questions into y-or-n
+(defalias 'yes-or-no-p 'y-or-n-p)
+(run-at-time 5 600 'elfeed-update)
+(defun quicklook ()
+  "QuickLook the currently selected file in Dired."
+  (interactive)
+  (let ((filename (dired-get-file-for-visit))) (shell-command (format "qlmanage -p '%s'" filename))))
+(use-package dired
+  :hook
+  (dired-mode . dired-omit-mode)
+  (dired-mode . nerd-icons-dired-mode)
+  :bind
+  ("C-c SPC" . 'quicklook)
+  (:map dired-mode-map
+		("<mouse-2>" . dired-mouse-find-file)))
+;; https://github.com/skeeto/elfeed
+(use-package elfeed
+  :hook
+  (elfeed-show-mode . variable-pitch-mode)
+  (elfeed-show-mode . visual-fill-column-mode)
+  (elfeed-show-mode . (lambda ()
+						(setq-local line-spacing 12)
+						(setq-local fill-column 90)
+						(setq-local shr-width 85)))
+  :bind
+  (:map elfeed-show-mode-map
+		("<mouse-1>" . elfeed-show-next)
+		("<mouse-3>" . elfeed-show-prev)))
+;; https://github.com/renzmann/treesit-auto
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+;; https://emacs-lsp.github.io/lsp-mode/
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  '(lsp-completion-provider :none)
+  '(lsp-copilot-enabled t)
+  '(lsp-enable-snippet nil)
+  :hook
+  (html-ts-mode . lsp)
+  (css-ts-mode . lsp)
+  (js-ts-mode . lsp)
+  (typescript-ts-mode . lsp)
+  (tsx-ts-mode . lsp)
+  (lsp-mode . lsp-enable-which-key-integration)
+  :commands lsp)
+;; https://github.com/merrickluo/lsp-tailwindcss
+(use-package lsp-tailwindcss
+  :after lsp-mode
+  :init
+  (setq lsp-tailwindcss-add-on-mode t)
+  (setq lsp-tailwindcss-skip-config-check t)
+  (setq lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")
+  (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save))
+;; https://jblevins.org/projects/markdown-mode/
+(use-package markdown
+  :hook
+  (markdown-mode . visual-fill-column-mode)
+  (markdown-mode . variable-pitch-mode)
+  (markdown-mode . (lambda ()
+					 (setq-local fill-column 90)
+					 (setq-local line-spacing 12))))
+;; https://github.com/licht1stein/obsidian.el
+(use-package obsidian
+  :hook markdown-mode
+  :custom
+  (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
+  :bind
+  ("C-c w" . obsidian-insert-wikilink)
+  ("C-c f" . obsidian-follow-link-at-point)
+  ("C-c b" . obsidian-backlink-jump))
+(defun backup-obsidian ()
+  "Run the zsh script to backup Obsidian and send a message."
+  (shell-command "cd \"$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes\" && zip -r \"$HOME/Git/Obsidian Backups/$(date +%Y-%m-%d_%H%M).zip\" . && osascript -e 'tell application \"Messages\" to send \"Obsidian Backup Complete\" to buddy \"leaferiksen@gmail.com\"'"))
+(require 'midnight)
+(midnight-delay-set 'midnight-delay 7200)
+(add-hook 'midnight-hook 'backup-obsidian)
 ;; Various functions
 (defun wrap-urls-with-parentheses (start end)
   "Wrap quoted URLs with parentheses from START to END."
@@ -214,6 +222,9 @@
  '(global-visual-line-mode t)
  '(initial-buffer-choice t)
  '(make-backup-files nil)
+ '(markdown-enable-wiki-links t)
+ '(markdown-header-scaling t)
+ '(markdown-wiki-link-alias-first nil)
  '(minions-mode t)
  '(minions-prominent-modes '(flymake-mode lsp-mode))
  '(mouse-wheel-progressive-speed nil)
@@ -240,6 +251,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
+ '(markdown-italic-face ((t (:inherit variable-pitch :slant italic))))
  '(variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal)))))
 ;; Install selected packages
 (require 'package)
@@ -247,4 +259,4 @@
 (package-initialize)
 (package-install-selected-packages)
 (package-autoremove)
-;;; early-init.el ends here
+;;; init.el ends here
