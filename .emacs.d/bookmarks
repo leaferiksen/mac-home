@@ -2,7 +2,17 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Music"
+(("Elfeed"
+ (location . "@1-month-ago +unread")
+ (tags "unread")
+ (handler . elfeed-search-bookmark-handler))
+("Home.md"
+ (filename . "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Home.md")
+ (front-context-string . "[[School]]\n[[Lan")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 26607 1476 956465 0))
+("Music"
  (filename . "~/Library/Mobile Documents/com~apple~CloudDocs/Music/")
  (front-context-string . "AMVs\n  drwx-----")
  (rear-context-string . "1K Mar 10 22:11 ")
@@ -20,18 +30,6 @@
  (rear-context-string . "05 Mar 14 17:34 ")
  (position . 137)
  (last-modified 26582 18631 43659 0))
-("Notes"
- (filename . "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/")
- (front-context-string . "Assets\n  drwxr-x")
- (rear-context-string . "92 Mar 12 20:56 ")
- (position . 231)
- (last-modified 26580 61700 500586 0))
-("Home"
- (filename . "~/")
- (front-context-string)
- (rear-context-string . "10 22:09 before\n")
- (position . 1542)
- (last-modified 26575 59102 419723 0))
 ("Spring 25"
  (filename . "~/Documents/College/Spring 25/")
  (front-context-string . "ART 102\n  drwx--")

@@ -33,7 +33,7 @@ meh - i : open -a iPhone\ Mirroring
 meh - o : open -a Obsidian
 
 # xcdvz/kh 0x2B 0x2F
-meh - c : open -a Calendar
+meh - c : open -a Canvas\ Student
 meh - d : open -a Dictionary
 meh - v : open -a IINA
 meh - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero

@@ -5,19 +5,6 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Change Right command to left shift",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "right_command",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [{ "key_code": "left_shift" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "command-f1 and f2 to adjust keyboard brightness",
                         "manipulators": [
                             {
@@ -1802,6 +1789,12 @@
             },
             "name": "Default",
             "selected": true,
+            "simple_modifications": [
+                {
+                    "from": { "key_code": "right_command" },
+                    "to": [{ "key_code": "left_shift" }]
+                }
+            ],
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }
     ]

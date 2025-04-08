@@ -1,3 +1,7 @@
+;;; early-init.el -- -*- lexical-binding: t -*-
+;;; Commentary:
+;; Early initialization file for Emacs
+;;; Code:
 ;; Load theme, taking current system APPEARANCE into consideration
 (add-hook 'ns-system-appearance-change-functions
 		  (lambda
@@ -13,3 +17,4 @@
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (setenv "LSP_USE_PLISTS" "true")
+;;; early-init.el ends here
