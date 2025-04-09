@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Elfeed"
+(("Spring 25.md"
+ (filename . "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Spring 25.md")
+ (front-context-string . "[[SII 210]]\n[[Ar")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 26613 40049 109717 0))
+("Elfeed"
  (location . "@1-month-ago +unread")
  (tags "unread")
  (handler . elfeed-search-bookmark-handler))

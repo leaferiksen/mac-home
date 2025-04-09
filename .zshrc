@@ -13,7 +13,7 @@ export VISUAL="/opt/homebrew/bin/emacs"
 export LESSHISTFILE=-
 
 # brew
-export HOMEBREW_CASK_OPTS="--appdir=~/Applications  no-quarantine"
+export HOMEBREW_CASK_OPTS="--appdir=~/Applications --no-quarantine"
 export HOMEBREW_NO_AUTO_UPDATE=1
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"

@@ -12,8 +12,9 @@
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
 (global-set-key (kbd "<C-M-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-M-wheel-down>") 'ignore)
+;; Better undo & redo
 (global-set-key (kbd "s-z") 'undo-fu-only-undo)
-(global-set-key (kbd "s-y") 'undo-fu-only-redo)
+(global-set-key (kbd "s-Z") 'undo-fu-only-redo)
 ;; Make Escape actually escape
 (define-key esc-map [escape] 'keyboard-quit)
 (define-key ctl-x-map [escape] 'keyboard-quit)
@@ -104,6 +105,18 @@
   ;; Z (bound to z)
   :bind
   (("<f13>" . modalka-mode)))
+;; Various functions
+(defun update-homebrew ()
+  "Update all casks and formulae."
+  (call-process-shell-command "brew update && brew upgrade --greedy --no-quarantine && osascript -e 'tell application \"Messages\" to send \"Homebrew Update Complete\" to buddy \"leaferiksen@gmail.com\"'"))
+(defun backup-obsidian ()
+  "Run the zsh script to backup Obsidian and send a message."
+  (call-process-shell-command "cd \"$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes\" && zip -r \"$HOME/Git/Obsidian Backups/$(date +%Y-%m-%d_%H%M).zip\" . && osascript -e 'tell application \"Messages\" to send \"Obsidian Backup Complete\" to buddy \"leaferiksen@gmail.com\"'"))
+(defun wrap-urls-with-parentheses (start end)
+  "Wrap quoted URLs with parentheses from START to END."
+  (interactive "r")
+  (save-excursion (goto-char start)
+				  (while (re-search-forward "\"\\(https?://[^\"]+\\)\"" end t) (replace-match "(\"\\1\")"))))
 ;; Dired
 (defun quicklook ()
   "QuickLook the currently selected file in Dired."
@@ -186,15 +199,6 @@
   ("C-c w" . obsidian-insert-wikilink)
   ("C-c f" . obsidian-follow-link-at-point)
   ("C-c b" . obsidian-backlink-jump))
-(defun backup-obsidian ()
-  "Run the zsh script to backup Obsidian and send a message."
-  (call-process-shell-command "cd \"$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes\" && zip -r \"$HOME/Git/Obsidian Backups/$(date +%Y-%m-%d_%H%M).zip\" . && osascript -e 'tell application \"Messages\" to send \"Obsidian Backup Complete\" to buddy \"leaferiksen@gmail.com\"'"))
-;; Various functions
-(defun wrap-urls-with-parentheses (start end)
-  "Wrap quoted URLs with parentheses from START to END."
-  (interactive "r")
-  (save-excursion (goto-char start)
-				  (while (re-search-forward "\"\\(https?://[^\"]+\\)\"" end t) (replace-match "(\"\\1\")"))))
 ;; GUI Settings ⌘,
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -215,7 +219,7 @@
    "\\`[.]?#\\|\\.DS_Store\\|\\`\\._\\|\\.CFUserTextEncoding\\|\\.Trash")
  '(electric-pair-mode t)
  '(elfeed-feeds
-   '(("https://xkcd.com/rss.xml" comics) ("https://www.smbc-comics.com/comic/rss" comics) ("https://www.questionablecontent.net/QCRSS.xml" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://aftermath.site/feed" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://www.gameinformer.com/rss.xml" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://redstrate.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://cdn.jwz.org/blog/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://www.girlonthenet.com/feed/" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://lwlies.com/feed/" journals) ("https://howtodothingswithmemes.substack.com/feed" journals) ("https://basicappleguy.com/basicappleblog?format=rss" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
+   '(("https://xkcd.com/rss.xml" comics) ("https://www.smbc-comics.com/comic/rss" comics) ("https://www.questionablecontent.net/QCRSS.xml" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://aftermath.site/feed" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://www.gameinformer.com/rss.xml" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://redstrate.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://www.girlonthenet.com/feed/" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://lwlies.com/feed/" journals) ("https://basicappleguy.com/basicappleblog?format=rss" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
  '(elfeed-search-filter "@1-month-ago +unread")
  '(fill-column 9999)
  '(frame-resize-pixelwise t)
@@ -232,11 +236,13 @@
  '(markdown-header-scaling t)
  '(markdown-wiki-link-alias-first nil)
  '(midnight-delay 7200)
- '(midnight-hook '(backup-obsidian))
+ '(midnight-hook '(update-homebrew backup-obsidian))
  '(midnight-mode t)
  '(minions-mode t)
  '(minions-prominent-modes '(flymake-mode lsp-mode))
  '(mouse-wheel-progressive-speed nil)
+ '(obsidian-directory
+   "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
    '(aggressive-indent elfeed elfeed-protocol flexoki-themes lsp-mode lsp-tailwindcss minions modalka nerd-icons-dired obsidian treesit-auto undo-fu visual-fill-column))
  '(package-vc-selected-packages
