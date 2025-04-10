@@ -6,6 +6,11 @@ Initial user setup
 - Screen Time: **↖ Set Up Later**
 - Siri: **☒ Enable Ask Siri**
 
+For virtual machines only
+```bash
+defaults write com.apple.dock "persistent-apps" -array && killall Dock && spctl --global-disable && softwareupdate --install-rosetta --agree-to-license
+```
+
 To sync home with this repo, open Terminal as user `leaf` and run
 ```bash
 xcode-select --install

@@ -1,4 +1,4 @@
-;;; init.el -- -*- lexical-binding: t -*-
+;;; init.el --  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;; Initialization file for Emacs
 ;;; Code:
@@ -207,6 +207,7 @@
  ;; If there is more than one, they won't work right.
  '(auto-package-update-delete-old-versions t)
  '(backward-delete-char-untabify-method nil)
+ '(completion-styles '(basic partial-completion emacs22 flex))
  '(cursor-type 'bar)
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
@@ -234,6 +235,7 @@
  '(make-backup-files nil)
  '(markdown-enable-wiki-links t)
  '(markdown-header-scaling t)
+ '(markdown-hide-markup nil)
  '(markdown-wiki-link-alias-first nil)
  '(midnight-delay 7200)
  '(midnight-hook '(update-homebrew backup-obsidian))

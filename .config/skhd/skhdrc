@@ -13,11 +13,10 @@ meh - p : open -a Preview
 meh - b : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zen
 hyper - b : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
 meh - l : open -a LuLu
-meh - u : open -a VirtualBuddy
-hyper - u : open -a UTM
 
 # arstg]mneio
 meh - a : open -a Activity\ Monitor
+hyper - a : open -a ManGo
 # Affinity\ Photo\ 2
 meh - r : open -a Reminders
 meh - s : open -a Soulver\ 3
@@ -30,12 +29,14 @@ hyper - m : open -a Mail
 meh - n : open -a NewsBlur
 meh - e : open -a Emacs
 meh - i : open -a iPhone\ Mirroring
+hyper - i : open -a IINA
 meh - o : open -a Obsidian
 
 # xcdvz/kh 0x2B 0x2F
-meh - c : open -a Canvas\ Student
+meh - c : open -a Calendar
+hyper - c : open -a Canvas\ Student
 meh - d : open -a Dictionary
-meh - v : open -a IINA
+meh - v : open -a VirtualBuddy
 meh - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
 meh - k : open -a Karabiner-Elements
 meh - h : open -a Hazel

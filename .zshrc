@@ -8,8 +8,9 @@ autoload -Uz compinit
 compinit
 
 # editor 
-export EDITOR="/opt/homebrew/bin/emacs"
-export VISUAL="/opt/homebrew/bin/emacs"
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
+export VISUAL="emacsclient -r -a emacs"         # $VISUAL opens in GUI mode
 export LESSHISTFILE=-
 
 # brew
