@@ -38,8 +38,8 @@
   :config
   (define-key modalka-mode-map "`" 'execute-extended-command)
   (define-key modalka-mode-map (kbd "SPC") 'set-mark-command)
-  (modalka-define-kbd ":" "M-;")
-  (modalka-define-kbd ";" "C-;")
+  (modalka-define-kbd ";" "M-;")
+  (modalka-define-kbd ";" "M-:")
   (modalka-define-kbd "&" "M-&")
   (modalka-define-kbd "0" "C-0")
   (modalka-define-kbd "1" "C-1")
@@ -51,6 +51,9 @@
   (modalka-define-kbd "7" "C-7")
   (modalka-define-kbd "8" "C-8")
   (modalka-define-kbd "9" "C-9")
+  (modalka-define-kbd "!" "M-!")
+  (modalka-define-kbd "%" "M-%")
+  (modalka-define-kbd "|" "M-|")
   (modalka-define-kbd "a" "C-a")
   (modalka-define-kbd "b" "C-b")
   (define-key modalka-mode-map "c" mode-specific-map)
@@ -106,12 +109,19 @@
   :bind
   (("<f13>" . modalka-mode)))
 ;; Various functions
+(defun send-to-self (message)
+  "Send a MESSAGE to myself."
+  (interactive "sMessage to send: ")
+  (let ((message (or message "")))  ; Ensure message isn't nil
+    (shell-command
+     (format "osascript -e 'tell application \"Messages\" to send \"%s\" to buddy \"leaferiksen@gmail.com\"'"
+             (shell-quote-argument message)))))
 (defun update-homebrew ()
   "Update all casks and formulae."
-  (call-process-shell-command "brew update && brew upgrade --greedy --no-quarantine && osascript -e 'tell application \"Messages\" to send \"Homebrew Update Complete\" to buddy \"leaferiksen@gmail.com\"'"))
+  (call-process-shell-command "brew update && brew upgrade --greedy"))
 (defun backup-obsidian ()
   "Run the zsh script to backup Obsidian and send a message."
-  (call-process-shell-command "cd \"$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes\" && zip -r \"$HOME/Git/Obsidian Backups/$(date +%Y-%m-%d_%H%M).zip\" . && osascript -e 'tell application \"Messages\" to send \"Obsidian Backup Complete\" to buddy \"leaferiksen@gmail.com\"'"))
+  (call-process-shell-command "cd \"$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes\" && zip -r \"$HOME/Git/Obsidian Backups/$(date +%Y-%m-%d_%H%M).zip\" ."))
 (defun wrap-urls-with-parentheses (start end)
   "Wrap quoted URLs with parentheses from START to END."
   (interactive "r")
@@ -138,6 +148,11 @@
 		("<mouse-2>" . dired-mouse-find-file)
 		("SPC" . 'quicklook)
 		("o" . 'macopen)))
+(use-package flexoki-themes
+  :custom
+  (flexoki-themes-use-bold-keywords t)
+  (flexoki-themes-use-bold-builtins t)
+  (flexoki-themes-use-italic-comments t))
 ;; https://github.com/skeeto/elfeed
 (use-package elfeed
   :hook
@@ -151,7 +166,7 @@
   (:map elfeed-show-mode-map
 		("<mouse-1>" . elfeed-show-next)
 		("<mouse-3>" . elfeed-show-prev)))
-(run-at-time 5 600 'elfeed-update)
+;; (run-at-time 5 600 'elfeed-update)
 ;; https://github.com/renzmann/treesit-auto
 (use-package treesit-auto
   :custom
@@ -189,16 +204,21 @@
   (markdown-mode . variable-pitch-mode)
   (markdown-mode . (lambda ()
 					 (setq-local fill-column 90)
-					 (setq-local line-spacing 12))))
+					 (setq-local line-spacing 12)))
+  :bind
+  (:map markdown-mode-map
+		("s-i" . "C-c C-s i") ;;markdown-insert-italic
+		("s-b" . "C-c C-s b"))) ;;markdown-insert-bold
 ;; https://github.com/licht1stein/obsidian.el
 (use-package obsidian
   :hook markdown-mode
   :custom
   (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   :bind
-  ("C-c w" . obsidian-insert-wikilink)
-  ("C-c f" . obsidian-follow-link-at-point)
-  ("C-c b" . obsidian-backlink-jump))
+  (:map obsidian-mode-map
+		("C-c w" . obsidian-insert-wikilink)
+		("C-c f" . obsidian-follow-link-at-point)
+		("C-c b" . obsidian-backlink-jump)))
 ;; GUI Settings ⌘,
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -214,7 +234,8 @@
  '(dired-kill-when-opening-new-dired-buffer t)
  '(dired-listing-switches
    "-l --almost-all --human-readable --group-directories-first")
- '(dired-mode-hook '(nerd-icons-dired-mode dired-omit-mode))
+ '(dired-mode-hook
+   '(dired-hide-details-mode nerd-icons-dired-mode dired-omit-mode))
  '(dired-mouse-drag-files 'move)
  '(dired-omit-files
    "\\`[.]?#\\|\\.DS_Store\\|\\`\\._\\|\\.CFUserTextEncoding\\|\\.Trash")
@@ -255,6 +276,7 @@
  '(project-mode-line t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
+ '(sentence-end-double-space nil)
  '(split-height-threshold 0)
  '(split-width-threshold nil)
  '(tab-width 4)
@@ -269,7 +291,7 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
  '(markdown-code-face ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
- '(markdown-italic-face ((t (:inherit variable-pitch :slant italic))))
+ '(markdown-italic-face ((t (:inherit italic :foreground "#b7b5ac"))))
  '(variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal)))))
 ;; Install selected packages
 (require 'package)

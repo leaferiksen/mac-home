@@ -38,6 +38,7 @@ hyper - c : open -a Canvas\ Student
 meh - d : open -a Dictionary
 meh - v : open -a VirtualBuddy
 meh - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
-meh - k : open -a Karabiner-Elements
+meh - k : osascript -e 'tell application "System Events" to click menu bar item "apple.passwords" of menu bar 2 of application process "PasswordsMenuBarExtra"'
+hyper - k : open -a Karabiner-Elements
 meh - h : open -a Hazel
 meh - 0x2B : open -a Settings
