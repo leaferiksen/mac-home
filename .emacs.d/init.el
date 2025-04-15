@@ -210,8 +210,8 @@
 					 (setq-local line-spacing 12)))
   :bind
   (:map markdown-mode-map
-		("s-i" . "C-c C-s i") ;;markdown-insert-italic
-		("s-b" . "C-c C-s b"))) ;;markdown-insert-bold
+		("s-i" . markdown-insert-italic)
+		("s-b" . markdown-insert-bold))) 
 ;; https://github.com/licht1stein/obsidian.el
 (use-package obsidian
   :hook markdown-mode
