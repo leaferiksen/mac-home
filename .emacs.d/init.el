@@ -15,6 +15,9 @@
 ;; Better undo & redo
 (global-set-key (kbd "s-z") 'undo-fu-only-undo)
 (global-set-key (kbd "s-Z") 'undo-fu-only-redo)
+(global-set-key (kbd "s-o") 'bookmark-jump)
+(global-set-key (kbd "s-w") 'kill-current-buffer)
+(global-unset-key (kbd "s-k"))
 ;; Make Escape actually escape
 (define-key esc-map [escape] 'keyboard-quit)
 (define-key ctl-x-map [escape] 'keyboard-quit)
@@ -216,9 +219,9 @@
   (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   :bind
   (:map obsidian-mode-map
-		("C-c w" . obsidian-insert-wikilink)
-		("C-c f" . obsidian-follow-link-at-point)
-		("C-c b" . obsidian-backlink-jump)))
+		("s-k" . obsidian-insert-wikilink)
+		("s-<return>" . obsidian-follow-link-at-point)
+		("s-S-<return>" . obsidian-backlink-jump)))
 ;; GUI Settings ⌘,
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
