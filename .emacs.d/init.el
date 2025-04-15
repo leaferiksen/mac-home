@@ -222,6 +222,18 @@
 		("s-k" . obsidian-insert-wikilink)
 		("s-<return>" . obsidian-follow-link-at-point)
 		("s-S-<return>" . obsidian-backlink-jump)))
+;; Load theme, taking current system APPEARANCE into consideration
+(add-hook 'ns-system-appearance-change-functions
+		  (lambda
+			(appearance)
+			(mapc #'disable-theme custom-enabled-themes)
+			(pcase appearance
+			  ('light
+			   (load-theme 'flexoki-themes-light t)
+			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#100f0f"))
+			  ('dark
+			   (load-theme 'flexoki-themes-dark t)
+			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#fffcf0")))))
 ;; GUI Settings ⌘,
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -294,7 +306,6 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
  '(markdown-code-face ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
- '(markdown-italic-face ((t (:inherit italic :foreground "#b7b5ac"))))
  '(variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal)))))
 ;; Install selected packages
 (require 'package)

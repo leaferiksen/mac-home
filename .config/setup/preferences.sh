@@ -11,6 +11,7 @@ defaults write -g "NSZoomButtonShowMenu" -bool "false"
 defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
+defaults write com.apple.universalaccess "differentiateWithoutColor" -bool "true"
 # fuck .DS_Store files
 defaults write com.apple.desktopservices "DSDontWriteUSBStores" -bool "true"
 defaults write com.apple.desktopservices "DSDontWriteNetworkStores" -bool "true"
