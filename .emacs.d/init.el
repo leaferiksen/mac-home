@@ -220,7 +220,6 @@
   (lsp-keymap-prefix "C-c l")
   (lsp-diagnostics-provider :none)
   (lsp-completion-provider :none)
-  (lsp-copilot-enabled t)
   (lsp-enable-snippet nil)
   :hook
   (html-ts-mode . lsp)
@@ -233,10 +232,11 @@
 ;; https://github.com/merrickluo/lsp-tailwindcss
 (use-package lsp-tailwindcss
   :after lsp-mode
+  :custom
+  (lsp-tailwindcss-add-on-mode t)
+  (lsp-tailwindcss-skip-config-check t)
+  (lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")
   :init
-  (setq lsp-tailwindcss-add-on-mode t)
-  (setq lsp-tailwindcss-skip-config-check t)
-  (setq lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")
   (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Note-taking

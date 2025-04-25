@@ -7,11 +7,11 @@ cmd + alt - m : skhd -k
 # qwfpb[jluy
 meh - q : open -a qBittorrent 
 meh - w : open -a Microsoft\ Word
-hyper - w : open -a Microsoft\ Word ~/Documents/College/Template.dotx
 meh - f : open -a Finder
 meh - p : open -a Preview
+hyper - p : osascript -e 'tell application "System Events" to click menu bar item "apple.passwords" of menu bar 2 of application process "PasswordsMenuBarExtra"'
 meh - b : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zen
-hyper - b : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium
+hyper - b : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFAULT_CLIENT_SECRET="no"; open -a Chromium --args --incognito
 meh - l : open -a LuLu
 
 # arstg]mneio
@@ -38,7 +38,7 @@ hyper - c : open -a Canvas\ Student
 meh - d : open -a Dictionary
 meh - v : open -a VirtualBuddy
 meh - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
-meh - k : osascript -e 'tell application "System Events" to click menu bar item "apple.passwords" of menu bar 2 of application process "PasswordsMenuBarExtra"'
+meh - k : open -a kanri
 hyper - k : open -a Karabiner-Elements
 meh - h : open -a Hazel
 meh - 0x2B : open -a Settings

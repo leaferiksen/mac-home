@@ -7,6 +7,12 @@ defaults write -g "com.apple.swipescrolldirection" -bool "false"
 defaults write -g "AppleShowScrollBars" -string "Always"
 # disable zoom button popup
 defaults write -g "NSZoomButtonShowMenu" -bool "false"
+# Expanded Save/Print Modals and file extensions
+defaults write -g "AppleShowAllExtensions" -bool "true"
+defaults write -g "NSDocumentSaveNewDocumentsToCloud" -bool "false"
+defaults write -g "NSNavPanelExpandedStateForSaveMode" -bool "true"
+defaults write -g "NSNavPanelExpandedStateForSaveMode2" -bool "true"
+defaults write -g "PMPrintingExpandedStateForPrint" -bool "true"
 # accent colors
 defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
@@ -72,12 +78,6 @@ defaults write com.apple.WindowManager "AutoHideDelay" -int "0"
 # Disable in-app rating requests from apps downloaded from the App Store.
 defaults write com.apple.appstore InAppReviewEnabled -int 0
 chflags nohidden ~/Library
-# Expanded Save/Print Modals and file extensions
-defaults write -g "AppleShowAllExtensions" -bool "true"
-defaults write -g "NSDocumentSaveNewDocumentsToCloud" -bool "false"
-defaults write -g "NSNavPanelExpandedStateForSaveMode" -bool "true"
-defaults write -g "NSNavPanelExpandedStateForSaveMode2" -bool "true"
-defaults write -g "PMPrintingExpandedStateForPrint" -bool "true"
 # Finder
 defaults write com.apple.finder "FXPreferredViewStyle" -string "clmv"
 defaults write com.apple.finder "ShowPathbar" -bool "true"
@@ -186,6 +186,10 @@ defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "tru
 # our lord and savior, Jesus enterprise policies Christ
 defaults write app.zen-browser.zen "EnterprisePoliciesEnabled" -bool "true"
 defaults write app.zen-browser.zen "DisableAppUpdate" -bool "true"
+
+###############################################################################
+# Chromium
+defaults write org.chromium.Chromium ExtensionManifestV2Availability -int 2
 
 ###############################################################################
 # Hazel
