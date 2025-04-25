@@ -4,21 +4,21 @@
 ;;; Code:
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
-;;Transform yes-or-no questions into y-or-n
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; System consistency improvements to trackpad, ⌘, ⌥, and esc.
 (defalias 'yes-or-no-p 'y-or-n-p)
-;; Fix the trackpad
+(setq mac-right-option-modifier nil)
 (global-set-key (kbd "<pinch>") 'ignore)
 (global-set-key (kbd "<C-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
 (global-set-key (kbd "<C-M-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-M-wheel-down>") 'ignore)
-;; Better undo & redo
 (global-set-key (kbd "s-z") 'undo-fu-only-undo)
 (global-set-key (kbd "s-Z") 'undo-fu-only-redo)
 (global-set-key (kbd "s-o") 'bookmark-jump)
 (global-set-key (kbd "s-w") 'kill-current-buffer)
 (global-unset-key (kbd "s-k"))
-;; Make Escape actually escape
+(global-set-key [escape] 'keyboard-quit)
 (define-key esc-map [escape] 'keyboard-quit)
 (define-key ctl-x-map [escape] 'keyboard-quit)
 (define-key help-map [escape] 'keyboard-quit)
@@ -28,7 +28,9 @@
 (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-;; Navigation and Selection mode with https://github.com/mrkkrp/modalka
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Navigation and Selection mode
+;; https://github.com/mrkkrp/modalka
 (use-package modalka
   :init
   (setq-default
@@ -39,7 +41,6 @@
   (add-to-list 'modalka-excluded-modes 'elfeed-search-mode)
   (add-to-list 'modalka-excluded-modes 'elfeed-show-mode)
   :config
-  (define-key modalka-mode-map "`" 'execute-extended-command)
   (define-key modalka-mode-map (kbd "SPC") 'set-mark-command)
   (modalka-define-kbd ";" "M-;")
   (modalka-define-kbd ";" "M-:")
@@ -89,7 +90,7 @@
   (modalka-define-kbd "D" "M-d")
   (modalka-define-kbd "E" "M-e")
   (modalka-define-kbd "F" "C-M-f")
-  ;; G (bound to g)
+  (define-key modalka-mode-map "G" goto-map)
   (modalka-define-kbd "H" "M-h")
   (modalka-define-kbd "I" "M-i")
   (modalka-define-kbd "J" "M-j")
@@ -99,18 +100,19 @@
   (modalka-define-kbd "N" "C-M-n")
   (modalka-define-kbd "O" "M-o")
   (modalka-define-kbd "P" "C-M-p")
-  ;; Q (bound to q)
+  (modalka-define-kbd "Q" "M-q")
   (modalka-define-kbd "R" "M-r")
   (modalka-define-kbd "S" "M-s")
   (modalka-define-kbd "T" "M-t")
   (modalka-define-kbd "U" "M-u")
   (modalka-define-kbd "V" "M-v")
   (modalka-define-kbd "W" "M-w")
-  ;; X (bound to `)
+  (define-key modalka-mode-map "X" 'execute-extended-command)
   (modalka-define-kbd "Y" "M-y")
-  ;; Z (bound to z)
+  (modalka-define-kbd "Z" "M-z")
   :bind
   (("<f13>" . modalka-mode)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Various functions
 (defun send-to-self (message)
   "Send a MESSAGE to myself."
@@ -119,17 +121,25 @@
     (shell-command
      (format "osascript -e 'tell application \"Messages\" to send \"%s\" to buddy \"leaferiksen@gmail.com\"'"
              (shell-quote-argument message)))))
+(defun wrap-urls-with-parentheses (start end)
+  "Wrap quoted URLs with parentheses from START to END."
+  (interactive "r")
+  (save-excursion (goto-char start)
+				  (while (re-search-forward "\"\\(https?://[^\"]+\\)\"" end t) (replace-match "(\"\\1\")"))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Midnight automations
 (defun update-homebrew ()
   "Update all casks and formulae."
   (call-process-shell-command "brew update && brew upgrade --greedy"))
 (defun backup-obsidian ()
   "Run the zsh script to backup Obsidian and send a message."
   (call-process-shell-command "cd \"$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes\" && zip -r \"$HOME/Git/Obsidian Backups/$(date +%Y-%m-%d_%H%M).zip\" ."))
-(defun wrap-urls-with-parentheses (start end)
-  "Wrap quoted URLs with parentheses from START to END."
-  (interactive "r")
-  (save-excursion (goto-char start)
-				  (while (re-search-forward "\"\\(https?://[^\"]+\\)\"" end t) (replace-match "(\"\\1\")"))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Spellcheck
+(use-package jinx
+  :init
+  (setenv "PKG_CONFIG_PATH" (concat "/opt/homebrew/opt/glib/lib/pkgconfig/:" (getenv "PKG_CONFIG_PATH"))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired
 (defun quicklook ()
   "QuickLook the currently selected file in Dired."
@@ -151,15 +161,41 @@
 		("<mouse-2>" . dired-mouse-find-file)
 		("SPC" . 'quicklook)
 		("o" . 'macopen)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://codeberg.org/crmsnbleyd/flexoki-emacs-theme
 (use-package flexoki-themes
   :custom
   (flexoki-themes-use-bold-keywords t)
   (flexoki-themes-use-bold-builtins t)
   (flexoki-themes-use-italic-comments t))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Read ePub files
+;; https://depp.brause.cc/nov.el/
+(use-package nov
+  :init
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  :hook
+  (nov-mode . (lambda ()
+				(setq-local line-spacing 12)
+				(setq-local fill-column 90)))
+  :config
+  (add-hook 'nov-mode-hook 'visual-line-mode)
+  (add-hook 'nov-mode-hook 'visual-fill-column-mode)
+  :custom
+  (nov-text-width t)
+  (visual-fill-column-center-text t))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://codeberg.org/martianh/mastodon.el
+(use-package mastodon
+  :custom
+  (mastodon-instance-url "https://mastodon.social/"
+						 mastodon-active-user "leaferiksen"))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/skeeto/elfeed
 (use-package elfeed
   :hook
   (elfeed-show-mode . variable-pitch-mode)
+  (elfeed-show-mode . visual-line-mode)
   (elfeed-show-mode . visual-fill-column-mode)
   (elfeed-show-mode . (lambda ()
 						(setq-local line-spacing 12)
@@ -169,7 +205,8 @@
   (:map elfeed-show-mode-map
 		("<mouse-1>" . elfeed-show-next)
 		("<mouse-3>" . elfeed-show-prev)))
-;; (run-at-time 5 600 'elfeed-update)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Coding
 ;; https://github.com/renzmann/treesit-auto
 (use-package treesit-auto
   :custom
@@ -179,11 +216,12 @@
   (global-treesit-auto-mode))
 ;; https://emacs-lsp.github.io/lsp-mode/
 (use-package lsp-mode
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  '(lsp-completion-provider :none)
-  '(lsp-copilot-enabled t)
-  '(lsp-enable-snippet nil)
+  :custom
+  (lsp-keymap-prefix "C-c l")
+  (lsp-diagnostics-provider :none)
+  (lsp-completion-provider :none)
+  (lsp-copilot-enabled t)
+  (lsp-enable-snippet nil)
   :hook
   (html-ts-mode . lsp)
   (css-ts-mode . lsp)
@@ -200,6 +238,8 @@
   (setq lsp-tailwindcss-skip-config-check t)
   (setq lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")
   (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Note-taking
 ;; https://jblevins.org/projects/markdown-mode/
 (use-package markdown
   :hook
@@ -207,11 +247,7 @@
   (markdown-mode . variable-pitch-mode)
   (markdown-mode . (lambda ()
 					 (setq-local fill-column 90)
-					 (setq-local line-spacing 12)))
-  :bind
-  (:map markdown-mode-map
-		("s-i" . markdown-insert-italic)
-		("s-b" . markdown-insert-bold))) 
+					 (setq-local line-spacing 12))))
 ;; https://github.com/licht1stein/obsidian.el
 (use-package obsidian
   :hook markdown-mode
@@ -219,10 +255,14 @@
   (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   :bind
   (:map obsidian-mode-map
+		("s-i" . markdown-insert-italic)
+		("s-b" . markdown-insert-bold)
 		("s-k" . obsidian-insert-wikilink)
 		("s-<return>" . obsidian-follow-link-at-point)
 		("s-S-<return>" . obsidian-backlink-jump)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Load theme, taking current system APPEARANCE into consideration
+;; https://github.com/d12frosted/homebrew-emacs-plus
 (add-hook 'ns-system-appearance-change-functions
 		  (lambda
 			(appearance)
@@ -234,12 +274,14 @@
 			  ('dark
 			   (load-theme 'flexoki-themes-dark t)
 			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#fffcf0")))))
-;; GUI Settings ⌘,
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; GUI Settings
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(apheleia-global-mode t)
  '(auto-package-update-delete-old-versions t)
  '(backward-delete-char-untabify-method nil)
  '(completion-styles '(basic partial-completion emacs22 flex))
@@ -256,7 +298,7 @@
    "\\`[.]?#\\|\\.DS_Store\\|\\`\\._\\|\\.CFUserTextEncoding\\|\\.Trash")
  '(electric-pair-mode t)
  '(elfeed-feeds
-   '(("https://xkcd.com/rss.xml" comics) ("https://www.smbc-comics.com/comic/rss" comics) ("https://www.questionablecontent.net/QCRSS.xml" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://aftermath.site/feed" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://www.gameinformer.com/rss.xml" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://redstrate.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://www.girlonthenet.com/feed/" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://lwlies.com/feed/" journals) ("https://basicappleguy.com/basicappleblog?format=rss" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
+   '(("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://aftermath.site/feed" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://www.gameinformer.com/rss.xml" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://redstrate.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://www.girlonthenet.com/feed/" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://lwlies.com/feed/" journals) ("https://basicappleguy.com/basicappleblog?format=rss" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
  '(elfeed-search-filter "@1-month-ago +unread")
  '(fill-column 9999)
  '(frame-resize-pixelwise t)
@@ -276,13 +318,11 @@
  '(midnight-delay 7200)
  '(midnight-hook '(update-homebrew backup-obsidian))
  '(midnight-mode t)
- '(minions-mode t)
- '(minions-prominent-modes '(flymake-mode lsp-mode))
  '(mouse-wheel-progressive-speed nil)
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
-   '(aggressive-indent elfeed elfeed-protocol flexoki-themes lsp-mode lsp-tailwindcss minions modalka nerd-icons-dired obsidian treesit-auto undo-fu visual-fill-column))
+   '(aggressive-indent apheleia elfeed elfeed-protocol esxml flexoki-themes jinx lsp-mode lsp-tailwindcss mastodon minions modalka nerd-icons-dired nov obsidian treesit-auto undo-fu visual-fill-column))
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)
@@ -307,10 +347,12 @@
  '(default ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
  '(markdown-code-face ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
  '(variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal)))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Install selected packages
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 (package-install-selected-packages)
 (package-autoremove)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init.el ends here
