@@ -30,7 +30,7 @@ meh - n : open -a NewsBlur
 meh - e : open -a Emacs
 meh - i : open -a iPhone\ Mirroring
 hyper - i : open -a IINA
-meh - o : open -a Obsidian
+meh - o : open -a Osu!
 
 # xcdvz/kh 0x2B 0x2F
 meh - c : open -a Calendar

@@ -177,7 +177,8 @@
   :hook
   (nov-mode . (lambda ()
 				(setq-local line-spacing 12)
-				(setq-local fill-column 90)))
+				(setq-local fill-column 90)
+				(face-remap-add-relative 'variable-pitch :family "kermit" :height 240)))
   :config
   (add-hook 'nov-mode-hook 'visual-line-mode)
   (add-hook 'nov-mode-hook 'visual-fill-column-mode)
