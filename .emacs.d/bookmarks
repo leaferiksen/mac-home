@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Documents"
+(("Media"
+ (filename . "/Volumes/Media/")
+ (front-context-string . ".DocumentRevisio")
+ (rear-context-string . "88 May  2 22:39 ")
+ (position . 64)
+ (last-modified 26645 44734 80693 0))
+("Documents"
  (filename . "~/Documents/")
  (front-context-string . "Apps\n  drwx-----")
  (rear-context-string . "12 Apr 12 15:05 ")
@@ -36,10 +42,4 @@
  (rear-context-string . "05 Mar 14 17:34 ")
  (position . 137)
  (last-modified 26582 18631 43659 0))
-("Leafs Media"
- (filename . "/Volumes/Leafs Media/")
- (front-context-string . ".Spotlight-V100\n")
- (rear-context-string . "6K Jul 27  2024 ")
- (position . 129)
- (last-modified 26575 56472 484461 0))
 )

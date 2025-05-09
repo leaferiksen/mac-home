@@ -168,8 +168,8 @@
 ;; https://codeberg.org/martianh/mastodon.el
 (use-package mastodon
   :custom
-  (mastodon-instance-url "https://mastodon.social/"
-						 mastodon-active-user "leaferiksen"))
+  (mastodon-instance-url "https://mastodon.social")
+  (mastodon-active-user "leaferiksen"))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/skeeto/elfeed
 (use-package elfeed

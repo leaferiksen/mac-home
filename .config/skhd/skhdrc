@@ -36,9 +36,9 @@ meh - o : open -a Osu!
 meh - c : open -a Calendar
 hyper - c : open -a Canvas\ Student
 meh - d : open -a Dictionary
-meh - v : open -a VirtualBuddy
+meh - v : open -a Vesktop
 meh - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
-meh - k : open -a kanri
-hyper - k : open -a Karabiner-Elements
+meh - k : open -a Karabiner-Elements
+# hyper - k : open -a kanri
 meh - h : open -a Hazel
 meh - 0x2B : open -a Settings
