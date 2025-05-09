@@ -5,7 +5,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "command-f1 and f2 to adjust keyboard brightness",
+                        "description": "Adjust keyboard brightness with ⌘🔅 and ⌘🔆",
                         "manipulators": [
                             {
                                 "from": {
@@ -32,7 +32,7 @@
                         ]
                     },
                     {
-                        "description": "Change DnD to theme toggle",
+                        "description": "Toggle dark mode with 🌙",
                         "manipulators": [
                             {
                                 "from": {
@@ -70,6 +70,83 @@
                                     }
                                 ],
                                 "to_if_alone": [{ "key_code": "f13" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Colemak Fat Z",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "keyboard_types": ["ansi"],
+                                        "type": "keyboard_type_if"
+                                    },
+                                    {
+                                        "name": "qwerty",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    },
+                                    {
+                                        "name": "extend",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "b",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "delete_or_backspace" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "keyboard_types": ["ansi", "iso"],
+                                        "type": "keyboard_type_if"
+                                    },
+                                    {
+                                        "name": "qwerty",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    },
+                                    {
+                                        "name": "extend",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "left_shift",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "z" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "keyboard_types": ["ansi", "iso"],
+                                        "type": "keyboard_type_if"
+                                    },
+                                    {
+                                        "name": "qwerty",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    },
+                                    {
+                                        "name": "extend",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "right_command",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "left_shift" }],
                                 "type": "basic"
                             }
                         ]
@@ -1789,20 +1866,6 @@
             },
             "name": "Default",
             "selected": true,
-            "simple_modifications": [
-                {
-                    "from": { "key_code": "b" },
-                    "to": [{ "key_code": "delete_or_backspace" }]
-                },
-                {
-                    "from": { "key_code": "left_shift" },
-                    "to": [{ "key_code": "b" }]
-                },
-                {
-                    "from": { "key_code": "right_command" },
-                    "to": [{ "key_code": "left_shift" }]
-                }
-            ],
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }
     ]
