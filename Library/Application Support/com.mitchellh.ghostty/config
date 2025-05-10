@@ -3,13 +3,14 @@ auto-update = off
 macos-icon = chalkboard
 macos-option-as-alt = true
 mouse-hide-while-typing = true
-# keybind = global:opt+grave_accent=toggle_quick_terminal
-focus-follows-mouse = true
-macos-non-native-fullscreen = visible-menu
 macos-titlebar-style = hidden
-fullscreen = true
 
 font-size = 14
 theme = light:flexoki-light, dark:flexoki-dark
-# background-opacity = .9
-# background-blur = true
+background-opacity = .8
+background-blur = true
+
+# keybind = global:opt+grave_accent=toggle_quick_terminal
+# focus-follows-mouse = true
+# macos-non-native-fullscreen = visible-menu
+# fullscreen = true

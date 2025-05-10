@@ -87,11 +87,6 @@
                                         "name": "qwerty",
                                         "type": "variable_if",
                                         "value": 0
-                                    },
-                                    {
-                                        "name": "extend",
-                                        "type": "variable_if",
-                                        "value": 0
                                     }
                                 ],
                                 "from": {
@@ -111,11 +106,6 @@
                                         "name": "qwerty",
                                         "type": "variable_if",
                                         "value": 0
-                                    },
-                                    {
-                                        "name": "extend",
-                                        "type": "variable_if",
-                                        "value": 0
                                     }
                                 ],
                                 "from": {
@@ -133,11 +123,6 @@
                                     },
                                     {
                                         "name": "qwerty",
-                                        "type": "variable_if",
-                                        "value": 0
-                                    },
-                                    {
-                                        "name": "extend",
                                         "type": "variable_if",
                                         "value": 0
                                     }

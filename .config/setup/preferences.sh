@@ -170,19 +170,6 @@ defaults write com.colliderli.iina "ytdlSearchPath" -string "/opt/homebrew/opt/"
 defaults write com.colliderli.iina "SUEnableAutomaticChecks" -bool "false"
 
 ###############################################################################
-# Loop
-defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
-defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
-/usr/libexec/PlistBuddy -c  "delete :trigger: array '0'" \
-/Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-/usr/libexec/PlistBuddy -c "add :trigger: integer '56'" \
-/Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-/usr/libexec/PlistBuddy -c "add :trigger: integer '59'" \
-/Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-/usr/libexec/PlistBuddy -c "add :trigger: integer '58'" \
-/Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-
-###############################################################################
 # our lord and savior, Jesus enterprise policies Christ
 defaults write app.zen-browser.zen "EnterprisePoliciesEnabled" -bool "true"
 defaults write app.zen-browser.zen "DisableAppUpdate" -bool "true"
@@ -253,6 +240,15 @@ defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
 # defaults write com.apple.Safari SuppressSearchSuggestions -bool true
 # disable tracking backdoor
 # defaults write com.apple.safari "WebKitPreferences.privateClickMeasurementEnabled" -bool "false"
+
+###############################################################################
+# Loop
+# defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
+# defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
+# /usr/libexec/PlistBuddy -c  "delete :trigger: array '0'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+# /usr/libexec/PlistBuddy -c "add :trigger: integer '56'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+# /usr/libexec/PlistBuddy -c "add :trigger: integer '59'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+# /usr/libexec/PlistBuddy -c "add :trigger: integer '58'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 
 ###############################################################################
 # Lickable Menu Bar
