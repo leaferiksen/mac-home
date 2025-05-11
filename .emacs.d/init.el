@@ -16,8 +16,6 @@
 (global-set-key (kbd "s-z") 'undo-fu-only-undo)
 (global-set-key (kbd "s-Z") 'undo-fu-only-redo)
 (global-set-key (kbd "s-o") 'bookmark-jump)
-(global-set-key (kbd "s-w") 'kill-current-buffer)
-(global-unset-key (kbd "s-k"))
 (global-set-key [escape] 'keyboard-quit)
 (define-key esc-map [escape] 'keyboard-quit)
 (define-key ctl-x-map [escape] 'keyboard-quit)
@@ -135,6 +133,20 @@
   (interactive)
   (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
 	(if path (dired (string-trim path)) (message "No Finder window found."))))
+(defun yt-dlp (url)
+  "Download the audio, video, or video with subs from a given URL."
+  (interactive "sEnter URL to download: ")
+  (let ((choice (completing-read
+                 "Choose download option: "
+				 '("Video" "Video with Subtitles" "Audio"))))
+	(cond
+     ((string-equal choice "Video")
+      (shell-command (format "yt-dlp \"%s\"" url)))
+     ((string-equal choice "Video with Subtitles")
+      (shell-command (format "yt-dlp --write-subs \"%s\"" url)))
+     ((string-equal choice "Audio")
+      (shell-command (format "yt-dlp -x --embed-thumbnail \"%s\"" url))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/minad/jinx
 (use-package jinx
@@ -239,7 +251,6 @@
   (:map obsidian-mode-map
 		("s-i" . markdown-insert-italic)
 		("s-b" . markdown-insert-bold)
-		("s-k" . obsidian-insert-wikilink)
 		("s-<return>" . obsidian-follow-link-at-point)
 		("s-S-<return>" . obsidian-backlink-jump)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

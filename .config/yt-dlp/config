@@ -1,0 +1,10 @@
+# Download the best video with the best extension
+# (For video, mp4 > mov > webm > flv. For audio, m4a > aac > mp3 ...)
+-S "ext"
+
+# Format names nicely
+-o "%(title)s.%(ext)s"
+
+# General
+--embed-metadata
+--sub-langs "en.*,ja"

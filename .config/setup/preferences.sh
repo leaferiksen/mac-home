@@ -30,6 +30,8 @@ defaults write com.apple.AppleMultitouchTrackpad "TrackpadTwoFingerFromRightEdge
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadTwoFingerFromRightEdgeSwipeGesture" -int "0"
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerVertSwipeGesture" -int "0"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerVertSwipeGesture" -int "0"
+# defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
+# defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
 # keyboard navigation, quote/ dash conversion and
 defaults write -g "AppleKeyboardUIMode" -int "2"
 defaults write -g "NSAutomaticQuoteSubstitutionEnabled" -int "false"
