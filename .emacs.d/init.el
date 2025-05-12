@@ -16,6 +16,7 @@
 (global-set-key (kbd "s-z") 'undo-fu-only-undo)
 (global-set-key (kbd "s-Z") 'undo-fu-only-redo)
 (global-set-key (kbd "s-o") 'bookmark-jump)
+(global-set-key (kbd "s-;") 'comment-box)
 (global-set-key [escape] 'keyboard-quit)
 (define-key esc-map [escape] 'keyboard-quit)
 (define-key ctl-x-map [escape] 'keyboard-quit)
@@ -141,11 +142,11 @@
 				 '("Video" "Video with Subtitles" "Audio"))))
 	(cond
      ((string-equal choice "Video")
-      (shell-command (format "yt-dlp \"%s\"" url)))
-     ((string-equal choice "Video with Subtitles")
+      (async-shell-command (format "yt-dlp \"%s\"" url)))
+     ((async-string-equal choice "Video with Subtitles")
       (shell-command (format "yt-dlp --write-subs \"%s\"" url)))
      ((string-equal choice "Audio")
-      (shell-command (format "yt-dlp -x --embed-thumbnail \"%s\"" url))))))
+      (async-shell-command (format "yt-dlp -x --embed-thumbnail \"%s\"" url))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/minad/jinx

@@ -7,18 +7,24 @@ defaults write -g "com.apple.swipescrolldirection" -bool "false"
 defaults write -g "AppleShowScrollBars" -string "Always"
 # disable zoom button popup
 defaults write -g "NSZoomButtonShowMenu" -bool "false"
-# Expanded Save/Print Modals and file extensions
+##################################################
+# Expanded Save/Print Modals and file extensions #
+##################################################
 defaults write -g "AppleShowAllExtensions" -bool "true"
 defaults write -g "NSDocumentSaveNewDocumentsToCloud" -bool "false"
 defaults write -g "NSNavPanelExpandedStateForSaveMode" -bool "true"
 defaults write -g "NSNavPanelExpandedStateForSaveMode2" -bool "true"
 defaults write -g "PMPrintingExpandedStateForPrint" -bool "true"
-# accent colors
+#################
+# accent colors #
+#################
 defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
 defaults write com.apple.universalaccess "differentiateWithoutColor" -bool "true"
-# fuck .DS_Store files
+########################
+# fuck .DS_Store files #
+########################
 defaults write com.apple.desktopservices "DSDontWriteUSBStores" -bool "true"
 defaults write com.apple.desktopservices "DSDontWriteNetworkStores" -bool "true"
 # trackpad cmd+ctrl+three-finger drag
@@ -41,7 +47,9 @@ defaults write -g "NSUserKeyEquivalents" '{
     "Hide Sidebar" = "~^$`";
     "Show Sidebar" = "~^$`";
 }'
-# disable dock, screensaver hot corner and quick notes
+########################################################
+# disable dock, screensaver hot corner and quick notes #
+########################################################
 defaults write com.apple.dock "autohide" -bool "true"
 defaults write com.apple.dock "autohide-delay" -float "1000"
 defaults write com.apple.dock "no-bouncing" -bool "true"
@@ -71,16 +79,19 @@ defaults delete com.apple.dock wvous-br-corner
 # 524288: Option Key
 # 1048576: Command Key
 defaults delete com.apple.dock wvous-br-modifier
-# Window Manager
-# defaults write com.apple.WindowManager "GloballyEnabled" -bool "true" # Stage Manager
-defaults write com.apple.WindowManager EnableTiledWindowMargins -bool false
-defaults write com.apple.WindowManager "HideDesktop" -bool "false"
-defaults write com.apple.WindowManager "AutoHide" -bool "true"
-defaults write com.apple.WindowManager "AutoHideDelay" -int "0"
-# Disable in-app rating requests from apps downloaded from the App Store.
-defaults write com.apple.appstore InAppReviewEnabled -int 0
+#################
+# window tiling #
+#################
+defaults write com.apple.WindowManager "EnableTilingByEdgeDrag" -int "0"
+# defaults write com.apple.WindowManager EnableTiledWindowMargins -bool false
+#############
+# App Store #
+#############
+defaults write com.apple.appstore "InAppReviewEnabled" -int "0"
+##########
+# Finder #
+##########
 chflags nohidden ~/Library
-# Finder
 defaults write com.apple.finder "FXPreferredViewStyle" -string "clmv"
 defaults write com.apple.finder "ShowPathbar" -bool "true"
 defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true"
@@ -109,45 +120,45 @@ defaults write com.apple.finder "FXPreferredViewStyle" "clmv"
 defaults write com.apple.finder "NewWindowTarget" "PfDe"
 defaults write com.apple.finder "ShowPreviewPane" -bool "true"
 /usr/libexec/PlistBuddy -c \
-	"add 'PreviewPaneSettings':com.adobe.pdf:showQuickActions bool false" \
-	/Users/leaf/Library/Preferences/com.apple.finder.plist
+						"add 'PreviewPaneSettings':com.adobe.pdf:showQuickActions bool false" \
+						/Users/leaf/Library/Preferences/com.apple.finder.plist
 /usr/libexec/PlistBuddy -c \
-	"add 'PreviewPaneSettings':com.apple.application:showQuickActions bool false" \
-	/Users/leaf/Library/Preferences/com.apple.finder.plist
+						"add 'PreviewPaneSettings':com.apple.application:showQuickActions bool false" \
+						/Users/leaf/Library/Preferences/com.apple.finder.plist
 /usr/libexec/PlistBuddy -c \
-	"add 'PreviewPaneSettings':public.archive:showQuickActions bool false" \
-	/Users/leaf/Library/Preferences/com.apple.finder.plist
+						"add 'PreviewPaneSettings':public.archive:showQuickActions bool false" \
+						/Users/leaf/Library/Preferences/com.apple.finder.plist
 /usr/libexec/PlistBuddy -c \
-	"add 'PreviewPaneSettings':public.folder:showQuickActions bool false" \
-	/Users/leaf/Library/Preferences/com.apple.finder.plist
+						"add 'PreviewPaneSettings':public.folder:showQuickActions bool false" \
+						/Users/leaf/Library/Preferences/com.apple.finder.plist
 /usr/libexec/PlistBuddy -c \
-	"add 'PreviewPaneSettings':public.image:showQuickActions bool false" \
-	/Users/leaf/Library/Preferences/com.apple.finder.plist
+						"add 'PreviewPaneSettings':public.image:showQuickActions bool false" \
+						/Users/leaf/Library/Preferences/com.apple.finder.plist
 /usr/libexec/PlistBuddy -c \
-	"add 'PreviewPaneSettings':public.item:showQuickActions bool false" \
-	/Users/leaf/Library/Preferences/com.apple.finder.plist
+						"add 'PreviewPaneSettings':public.item:showQuickActions bool false" \
+						/Users/leaf/Library/Preferences/com.apple.finder.plist
 /usr/libexec/PlistBuddy -c \
-	"add 'PreviewPaneSettings':public.movie:showQuickActions bool false" \
-	/Users/leaf/Library/Preferences/com.apple.finder.plist
+						"add 'PreviewPaneSettings':public.movie:showQuickActions bool false" \
+						/Users/leaf/Library/Preferences/com.apple.finder.plist
 /usr/libexec/PlistBuddy -c \
-	"add 'PreviewPaneSettings':public.text:showQuickActions bool false" \
-	/Users/leaf/Library/Preferences/com.apple.finder.plist
+						"add 'PreviewPaneSettings':public.text:showQuickActions bool false" \
+						/Users/leaf/Library/Preferences/com.apple.finder.plist
 /usr/libexec/PlistBuddy -c \
-	"add 'PreviewPaneSettings':public.html:showQuickActions bool false" \
-	/Users/leaf/Library/Preferences/com.apple.finder.plist
+						"add 'PreviewPaneSettings':public.html:showQuickActions bool false" \
+						/Users/leaf/Library/Preferences/com.apple.finder.plist
 # defaults write com.apple.finder "CreateDesktop" -bool "false"
 # defaults write com.apple.finder "QuitMenuItem" -bool "true"
 # Disable Notifications
 launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
 # soft restart
 killall Finder Dock NotificationCenter
-
-###############################################################################
-# Spotlight Privacy
+#####################
+# Spotlight Privacy #
+#####################
 defaults write com.apple.assistant.support "Search Queries Data Sharing Status" -int "2"
-
-###############################################################################
-# Mail
+########
+# Mail #
+########
 # https://useplaintext.email/
 defaults write com.apple.mail "SendFormat" -string "Plain"
 defaults write com.apple.mail "AutoReplyFormat" -bool "true"
@@ -156,9 +167,9 @@ defaults write com.apple.mail "NumberOfSnippetLines" -int "0"
 defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
 # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
 defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
-
-###############################################################################
-# IINA
+########
+# IINA #
+########
 defaults write com.colliderli.iina "currentInputConfigName" -string "Movist Default"
 defaults write com.colliderli.iina "actionAfterLaunch" -int "1"
 defaults write com.colliderli.iina "useLegacyFullScreen" -bool "true"
@@ -170,37 +181,37 @@ defaults write com.colliderli.iina "playlistAutoPlayNext" -bool "false"
 defaults write com.colliderli.iina "windowBehaviorWhenPip" -int "1"
 defaults write com.colliderli.iina "ytdlSearchPath" -string "/opt/homebrew/opt/"
 defaults write com.colliderli.iina "SUEnableAutomaticChecks" -bool "false"
-
-###############################################################################
-# our lord and savior, Jesus enterprise policies Christ
+#########################################################
+# our lord and savior, Jesus enterprise policies Christ #
+#########################################################
 defaults write app.zen-browser.zen "EnterprisePoliciesEnabled" -bool "true"
 defaults write app.zen-browser.zen "DisableAppUpdate" -bool "true"
-
-###############################################################################
-# Chromium
+############
+# Chromium #
+############
 defaults write org.chromium.Chromium ExtensionManifestV2Availability -int 2
-
-###############################################################################
-# Hazel
+#########
+# Hazel #
+#########
 defaults write com.noodlesoft.Hazel "ShowStatusInMenuBar" -bool "false"
 defaults write com.noodlesoft.Hazel "TrashUninstallApps" -bool "true"
 defaults write com.noodlesoft.Hazel "SUEnableAutomaticChecks" -bool "false"
-
-###############################################################################
-# Pure Paste
+##############
+# Pure Paste #
+##############
 defaults write com.sindresorhus.Pure-Paste "NSStatusItem Visible Item-0" -bool "false"
 defaults write com.sindresorhus.Pure-Paste "hideMenuBarIcon" -bool "true"
-
-###############################################################################
-# Maccy
+#########
+# Maccy #
+#########
 defaults write org.p0deje.Maccy "showInStatusBar" -bool "false"
 defaults write org.p0deje.Maccy "popupPosition" -string "center"
 defaults write org.p0deje.Maccy "historySize" -int "10"
 defaults write org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonModifiers\":768,\"carbonKeyCode\":9}"
 defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
-
-###############################################################################
-# # General
+#####################
+# Disabled features #
+#####################
 # defaults write com.apple.Accessibility "ReduceMotionEnabled" -int "1"
 # defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
 # defaults write -g NSScrollViewRubberbanding -int 0
@@ -225,9 +236,16 @@ defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
 # defaults write com.apple.chronod "remoteWidgetsEnabled" -bool "false"
 # # monocrome widgets
 # defaults write com.apple.widgets "widgetAppearance" -int "0"
-
-###############################################################################
-# Safari
+#################
+# Stage Manager #
+#################
+# defaults write com.apple.WindowManager "GloballyEnabled" -bool "true"
+# defaults write com.apple.WindowManager "HideDesktop" -bool "false"
+# defaults write com.apple.WindowManager "AutoHide" -bool "true"
+# defaults write com.apple.WindowManager "AutoHideDelay" -int "0"
+##########
+# Safari #
+##########
 # Disable preloading top hit in the background
 # defaults write com.apple.Safari PreloadTopHit -bool false
 # Disable Quick Website Search
@@ -242,33 +260,33 @@ defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
 # defaults write com.apple.Safari SuppressSearchSuggestions -bool true
 # disable tracking backdoor
 # defaults write com.apple.safari "WebKitPreferences.privateClickMeasurementEnabled" -bool "false"
-
-###############################################################################
-# Loop
+########
+# Loop #
+########
 # defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
 # defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
 # /usr/libexec/PlistBuddy -c  "delete :trigger: array '0'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 # /usr/libexec/PlistBuddy -c "add :trigger: integer '56'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 # /usr/libexec/PlistBuddy -c "add :trigger: integer '59'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 # /usr/libexec/PlistBuddy -c "add :trigger: integer '58'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-
-###############################################################################
-# Lickable Menu Bar
+#####################
+# Lickable Menu Bar #
+#####################
 # defaults write com.ibluebox.aqua-menu-bar "style" -int "3"
 # defaults write com.ibluebox.aqua-menu-bar "lows" -bool "false"
-
-###############################################################################
-# SaneSideButtons
+###################
+# SaneSideButtons #
+###################
 # defaults write com.janhuelsmann.SaneSideButtons "NSStatusItem Visible Item-0" -bool "false"
-
-###############################################################################
-# AlDente
+###########
+# AlDente #
+###########
 # defaults write com.apphousekitchen.aldente-pro "showDockIcon" -bool "false"
-
-###############################################################################
-# TopNotch
+############
+# TopNotch #
+############
 # defaults write pl.maketheweb.TopNotch "hideMenubarIcon" -bool "false"
-
-###############################################################################
-# Lunar
+#########
+# Lunar #
+#########
 # defaults write fyi.lunar.Lunar "hideMenuBarIcon" -bool "true"

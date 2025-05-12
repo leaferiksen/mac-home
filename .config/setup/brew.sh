@@ -1,6 +1,6 @@
 #!/bin/sh
 
-brew install --formula d12frosted/emacs-plus/emacs-plus@30 duti enchant eza ffmpeg ipatool jackett koekeishiya/formulae/skhd mas node spaceman tealdeer yt-dlp zsh-autosuggestions zsh-syntax-highlighting
+brew install --formula d12frosted/emacs-plus/emacs-plus@30 duti enchant eza ffmpeg ipatool jackett koekeishiya/formulae/skhd mas node tealdeer yt-dlp zsh-autosuggestions zsh-syntax-highlighting
 
 brew install --cask anki calibre chromium font-atkinson-hyperlegible-mono font-atkinson-hyperlegible-next font-red-hat-mono hammerspoon ghostty iina itch kanriapp/cask/kanri knockknock maccy notunes obsidian osu qbittorrent@lt20 qlmarkdown qlvideo soulver steam zen-browser zotero
 
