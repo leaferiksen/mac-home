@@ -1,17 +1,9 @@
 meh = {"ctrl", "alt", "shift"}
 hyper = {"ctrl", "alt", "cmd", "shift"}
-
 hs.loadSpoon("SpoonInstall")
-
 spoon.SpoonInstall:andUse("Caffeine", {
     start = true,
 })
-
-spoon.SpoonInstall:andUse("RoundedCorners", {
-	config = { radius = 10 },
-    start = true,
-})
-
 spoon.SpoonInstall.repos.PaperWM = {
     url = "https://github.com/mogenson/PaperWM.spoon",
     desc = "PaperWM.spoon repository",
@@ -19,7 +11,12 @@ spoon.SpoonInstall.repos.PaperWM = {
 }
 spoon.SpoonInstall:andUse("PaperWM", {
     repo = "PaperWM",
-    config = { window_ratios = { 0.3, 0.5, 0.68, 1 }, rejectApp = {"IINA"} },
+    config = {
+		window_ratios = { 0.3, 0.5, 0.68, 1 },
+		rejectApp = {"IINA", "java"},
+		swipe_fingers = 4,
+		swipe_gain = 2.0
+	},
 	start = true,
     hotkeys = {
 		-- Switch to a new focused window in tiled grid

@@ -1,32 +1,71 @@
-;;; init.el --  -*- lexical-binding: t; -*-
+;;; init.el --- Emacs Initialization user config  -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Initialization file for Emacs
+;; by Leaf Eriksen
 ;;; Code:
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
+(setq read-process-output-max
+	  (* 1024 1024))
+;; 1mb
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; System consistency improvements to trackpad, ⌘, ⌥, and esc.
 (defalias 'yes-or-no-p 'y-or-n-p)
-(setq mac-right-option-modifier nil)
-(global-set-key (kbd "<pinch>") 'ignore)
-(global-set-key (kbd "<C-wheel-up>") 'ignore)
-(global-set-key (kbd "<C-wheel-down>") 'ignore)
-(global-set-key (kbd "<C-M-wheel-up>") 'ignore)
-(global-set-key (kbd "<C-M-wheel-down>") 'ignore)
-(global-set-key (kbd "s-z") 'undo-fu-only-undo)
-(global-set-key (kbd "s-Z") 'undo-fu-only-redo)
-(global-set-key (kbd "s-o") 'bookmark-jump)
-(global-set-key (kbd "s-;") 'comment-box)
-(global-set-key [escape] 'keyboard-quit)
-(define-key esc-map [escape] 'keyboard-quit)
-(define-key ctl-x-map [escape] 'keyboard-quit)
-(define-key help-map [escape] 'keyboard-quit)
-(define-key goto-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(global-set-key
+ (kbd "<pinch>")
+ 'ignore)
+(global-set-key
+ (kbd "<C-wheel-up>")
+ 'ignore)
+(global-set-key
+ (kbd "<C-wheel-down>")
+ 'ignore)
+(global-set-key
+ (kbd "<C-M-wheel-up>")
+ 'ignore)
+(global-set-key
+ (kbd "<C-M-wheel-down>")
+ 'ignore)
+(global-set-key
+ (kbd "s-z")
+ 'undo-fu-only-undo)
+(global-set-key
+ (kbd "s-Z")
+ 'undo-fu-only-redo)
+(global-set-key
+ (kbd "s-o")
+ 'bookmark-jump)
+(global-set-key
+ (kbd "s-;")
+ 'comment-box)
+(global-set-key
+ [escape]
+ 'keyboard-quit)
+(define-key esc-map
+			[escape]
+			'keyboard-quit)
+(define-key ctl-x-map
+			[escape]
+			'keyboard-quit)
+(define-key help-map
+			[escape]
+			'keyboard-quit)
+(define-key goto-map
+			[escape]
+			'keyboard-quit)
+(define-key minibuffer-local-map
+			[escape]
+			'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map
+			[escape]
+			'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map
+			[escape]
+			'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map
+			[escape]
+			'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map
+			[escape]
+			'minibuffer-keyboard-quit)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Navigation and Selection mode
 ;; https://github.com/mrkkrp/modalka
@@ -37,12 +76,16 @@
   (modalka-global-mode 1)
   (add-to-list 'modalka-excluded-modes 'dired-mode)
   (add-to-list 'modalka-excluded-modes 'vc-git-log-edit-mode)
+  (add-to-list 'modalka-excluded-modes 'term-mode)
+  (add-to-list 'modalka-excluded-modes 'eshell-mode)
   (add-to-list 'modalka-excluded-modes 'elfeed-search-mode)
   (add-to-list 'modalka-excluded-modes 'elfeed-show-mode)
   :config
-  (define-key modalka-mode-map (kbd "SPC") 'set-mark-command)
+  (define-key modalka-mode-map
+			  (kbd "SPC")
+			  'set-mark-command)
   (modalka-define-kbd ";" "M-;")
-  (modalka-define-kbd ":" "M-:")  
+  (modalka-define-kbd ":" "M-:")
   (modalka-define-kbd "$" "M-$")
   (modalka-define-kbd "&" "M-&")
   (modalka-define-kbd "0" "C-0")
@@ -121,39 +164,62 @@
 		("<mouse-2>" . dired-mouse-find-file)
 		("SPC" . 'quicklook)
 		("o" . 'macopen)))
-(defun quicklook ()
+(defun quicklook
+	()
   "QuickLook the currently selected file in Dired."
   (interactive)
-  (let ((filename (dired-get-file-for-visit))) (shell-command (format "qlmanage -p '%s'" filename))))
-(defun macopen ()
+  (let
+	  ((filename
+		(dired-get-file-for-visit)))
+	(shell-command
+	 (format "qlmanage -p '%s'" filename))))
+(defun macopen
+	()
   "QuickLook the currently selected file in Dired."
   (interactive)
-  (let ((filename (dired-get-file-for-visit))) (shell-command (format "open '%s'" filename))))
-(defun dired-finder-path ()
+  (let
+	  ((filename
+		(dired-get-file-for-visit)))
+	(shell-command
+	 (format "open '%s'" filename))))
+(defun dired-finder-path
+	()
   "Open Dired in the frontmost Finder window path, if available."
   (interactive)
-  (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
-	(if path (dired (string-trim path)) (message "No Finder window found."))))
-(defun yt-dlp (url)
+  (let
+	  ((path
+		(ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
+	(if path
+		(dired
+		 (string-trim path))
+	  (message "No Finder window found."))))
+(defun yt-dlp
+	(url)
   "Download the audio, video, or video with subs from a given URL."
   (interactive "sEnter URL to download: ")
-  (let ((choice (completing-read
-                 "Choose download option: "
-				 '("Video" "Video with Subtitles" "Audio"))))
+  (let
+	  ((choice
+		(completing-read
+         "Choose download option: "
+		 '("video" "video with subtitles" "audio"))))
 	(cond
-     ((string-equal choice "Video")
-      (async-shell-command (format "yt-dlp \"%s\"" url)))
-     ((async-string-equal choice "Video with Subtitles")
-      (shell-command (format "yt-dlp --write-subs \"%s\"" url)))
-     ((string-equal choice "Audio")
-      (async-shell-command (format "yt-dlp -x --embed-thumbnail \"%s\"" url))))))
-
+	 ((string-equal choice "video")
+	  (async-shell-command
+	   (format "yt-dlp \"%s\"" url)))
+	 ((async-string-equal choice "video with subtitles")
+	  (shell-command
+	   (format "yt-dlp --write-subs \"%s\"" url)))
+	 ((string-equal choice "audio")
+	  (async-shell-command
+	   (format "yt-dlp -x --embed-thumbnail \"%s\"" url))))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/minad/jinx
 (use-package jinx
-  :hook (emacs-startup . global-jinx-mode)
-  :bind (("M-$" . jinx-correct)
-         ("C-M-$" . jinx-languages)))
+  :hook
+  (emacs-startup . global-jinx-mode)
+  :bind
+  (("M-$" . jinx-correct)
+   ("C-M-$" . jinx-languages)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://codeberg.org/crmsnbleyd/flexoki-emacs-theme
 (use-package flexoki-themes
@@ -165,12 +231,15 @@
 ;; https://depp.brause.cc/nov.el/
 (use-package nov
   :init
-  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  (add-to-list 'auto-mode-alist
+			   '("\\.epub\\'" . nov-mode))
   :hook
-  (nov-mode . (lambda ()
-				(setq-local line-spacing 15)
-				(setq-local fill-column 90)
-				(face-remap-add-relative 'variable-pitch :family "kermit" :height 240)))
+  (nov-mode .
+			(lambda
+			  ()
+			  (setq-local line-spacing 15)
+			  (setq-local fill-column 90)
+			  (face-remap-add-relative 'variable-pitch :family "kermit" :height 240)))
   :config
   (add-hook 'nov-mode-hook 'visual-line-mode)
   (add-hook 'nov-mode-hook 'visual-fill-column-mode)
@@ -190,16 +259,27 @@
   (elfeed-show-mode . variable-pitch-mode)
   (elfeed-show-mode . visual-line-mode)
   (elfeed-show-mode . visual-fill-column-mode)
-  (elfeed-show-mode . (lambda ()
-						(setq-local line-spacing 12)
-						(setq-local fill-column 90)
-						(setq-local shr-width 85)
-						(setq-local shr-max-image-proportion 0.5)
-						(setq-local shr-inhibit-images t)))
+  (elfeed-show-mode .
+					(lambda
+					  ()
+					  (setq-local line-spacing 12)
+					  (setq-local fill-column 90)
+					  (setq-local shr-width 85)
+					  (setq-local shr-max-image-proportion 0.5)
+					  (setq-local shr-inhibit-images t)))
   :bind
   (:map elfeed-show-mode-map
 		("<mouse-1>" . elfeed-show-next)
 		("<mouse-3>" . elfeed-show-prev)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/lorniu/go-translate
+(use-package go-translate
+  :custom
+  (gt-langs
+   '(en jp))
+  (gt-default-translator
+   (gt-translator :engines
+				  (gt-google-engine))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Coding
 ;; https://github.com/renzmann/treesit-auto
@@ -240,9 +320,11 @@
   :hook
   (markdown-mode . visual-fill-column-mode)
   (markdown-mode . variable-pitch-mode)
-  (markdown-mode . (lambda ()
-					 (setq-local fill-column 90)
-					 (setq-local line-spacing 12))))
+  (markdown-mode .
+				 (lambda
+				   ()
+				   (setq-local fill-column 90)
+				   (setq-local line-spacing 12))))
 ;; https://github.com/licht1stein/obsidian.el
 (use-package obsidian
   :hook markdown-mode
@@ -270,26 +352,37 @@
 			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#fffcf0")))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Midnight automations
-(defun update-homebrew ()
+(defun update-homebrew
+	()
   "Update all casks and formulae."
   (call-process-shell-command "brew update && brew upgrade --greedy"))
-(defun backup-obsidian ()
+(defun backup-obsidian
+	()
   "Run the zsh script to backup Obsidian and send a message."
   (call-process-shell-command "cd \"$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes\" && zip -r \"$HOME/Git/Obsidian Backups/$(date +%Y-%m-%d_%H%M).zip\" ."))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Various functions
-(defun send-to-self (message)
+(defun send-to-self
+	(message)
   "Send a MESSAGE to myself."
   (interactive "sMessage to send: ")
-  (let ((message (or message "")))  ; Ensure message isn't nil
-    (shell-command
-     (format "osascript -e 'tell application \"Messages\" to send \"%s\" to buddy \"leaferiksen@gmail.com\"'"
-             (shell-quote-argument message)))))
-(defun wrap-urls-with-parentheses (start end)
+  (let
+	  ((message
+		(or message "")))
+										; Ensure message isn't nil
+	(shell-command
+	 (format "osascript -e 'tell application \"Messages\" to send \"%s\" to buddy \"leaferiksen@gmail.com\"'"
+			 (shell-quote-argument message)))))
+(defun wrap-urls-with-parentheses
+	(start end)
   "Wrap quoted URLs with parentheses from START to END."
   (interactive "r")
-  (save-excursion (goto-char start)
-				  (while (re-search-forward "\"\\(https?://[^\"]+\\)\"" end t) (replace-match "(\"\\1\")"))))
+  (save-excursion
+	(goto-char start)
+	(while
+		(re-search-forward "\"\\(https?://[^\"]+\\)\"" end t)
+	  (replace-match "(\"\\1\")"))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GUI Settings
 (custom-set-variables
@@ -338,12 +431,12 @@
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
-   '(aggressive-indent apheleia elfeed elfeed-protocol esxml flexoki-themes jinx lsp-mode lsp-tailwindcss mastodon minions modalka nerd-icons-dired nov obsidian treesit-auto undo-fu visual-fill-column))
+   '(apheleia elfeed elfeed-protocol esxml flexoki-themes go-translate jinx lsp-mode lsp-tailwindcss mastodon minesweeper minions modalka nerd-icons-dired nov obsidian terminal-here treesit-auto undo-fu visual-fill-column))
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)
  '(prog-mode-hook
-   '(flymake-mode display-line-numbers-mode completion-preview-mode aggressive-indent-mode))
+   '(flymake-mode display-line-numbers-mode completion-preview-mode))
  '(project-mode-line t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)

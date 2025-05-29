@@ -7,6 +7,8 @@ defaults write -g "com.apple.swipescrolldirection" -bool "false"
 defaults write -g "AppleShowScrollBars" -string "Always"
 # disable zoom button popup
 defaults write -g "NSZoomButtonShowMenu" -bool "false"
+# disable controller launchpad
+defaults write com.apple.GameController "bluetoothPrefsMenuLongPressAction" -int "0"
 ##################################################
 # Expanded Save/Print Modals and file extensions #
 ##################################################
@@ -36,16 +38,16 @@ defaults write com.apple.AppleMultitouchTrackpad "TrackpadTwoFingerFromRightEdge
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadTwoFingerFromRightEdgeSwipeGesture" -int "0"
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerVertSwipeGesture" -int "0"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerVertSwipeGesture" -int "0"
-# defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
-# defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
-# keyboard navigation, quote/ dash conversion and
+# disable swiping between desktops
+defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
+# keyboard navigation
 defaults write -g "AppleKeyboardUIMode" -int "2"
-defaults write -g "NSAutomaticQuoteSubstitutionEnabled" -int "false"
-defaults write -g "NSAutomaticDashSubstitutionEnabled" -bool "false"
 # Universal sidebar toggle
 defaults write -g "NSUserKeyEquivalents" '{
-    "Hide Sidebar" = "~^$`";
-    "Show Sidebar" = "~^$`";
+	"Hide Sidebar" = "~^$`";
+	"Show Sidebar" = "~^$`";
+	"System Settings…" = "~^$,";
 }'
 ########################################################
 # disable dock, screensaver hot corner and quick notes #
@@ -172,7 +174,7 @@ defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
 ########
 defaults write com.colliderli.iina "currentInputConfigName" -string "Movist Default"
 defaults write com.colliderli.iina "actionAfterLaunch" -int "1"
-defaults write com.colliderli.iina "useLegacyFullScreen" -bool "true"
+# defaults write com.colliderli.iina "useLegacyFullScreen" -bool "true"
 defaults write com.colliderli.iina "fullScreenWhenOpen" -bool "true"
 defaults write com.colliderli.iina "oscPosition" -int "2"
 defaults write com.colliderli.iina "arrowBtnAction" -int "1"

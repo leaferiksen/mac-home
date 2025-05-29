@@ -41,4 +41,4 @@ meh - z : export MOZ_DISABLE_SAFE_MODE_KEY=1; open -a Zotero
 meh - k : open -a Karabiner-Elements
 # hyper - k : open -a kanri
 meh - h : open -a Hazel
-meh - 0x2B : open -a Settings
+# meh - 0x2B : open -a Settings

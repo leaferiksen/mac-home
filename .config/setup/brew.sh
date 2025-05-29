@@ -4,7 +4,7 @@ brew install --formula d12frosted/emacs-plus/emacs-plus@30 duti enchant eza ffmp
 
 brew install --cask anki calibre chromium font-atkinson-hyperlegible-mono font-atkinson-hyperlegible-next font-red-hat-mono hammerspoon ghostty iina itch kanriapp/cask/kanri knockknock maccy notunes obsidian osu qbittorrent@lt20 qlmarkdown qlvideo soulver steam zen-browser zotero
 
-npm install -g @tailwindcss/cli @tailwindcss/language-server prettier rustywind tailwindcss typescript typescript-language-server vscode-langservers-extracted
+npm install -g @tailwindcss/language-server prettier rustywind typescript typescript-language-server vscode-langservers-extracted
 
 ###############################################################################
 
