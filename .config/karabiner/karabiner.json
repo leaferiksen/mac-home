@@ -1,5 +1,4 @@
 {
-    "global": { "show_in_menu_bar": false },
     "profiles": [
         {
             "complex_modifications": {
@@ -75,7 +74,7 @@
                         ]
                     },
                     {
-                        "description": "Colemak Fat Z",
+                        "description": "Colemak ANSI Fat Z",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -99,7 +98,7 @@
                             {
                                 "conditions": [
                                     {
-                                        "keyboard_types": ["ansi", "iso"],
+                                        "keyboard_types": ["ansi"],
                                         "type": "keyboard_type_if"
                                     },
                                     {
@@ -118,7 +117,7 @@
                             {
                                 "conditions": [
                                     {
-                                        "keyboard_types": ["ansi", "iso"],
+                                        "keyboard_types": ["ansi"],
                                         "type": "keyboard_type_if"
                                     },
                                     {
@@ -1851,6 +1850,46 @@
             },
             "name": "Default",
             "selected": true,
+            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
+        },
+        {
+            "devices": [
+                {
+                    "identifiers": {
+                        "is_game_pad": true,
+                        "product_id": 8198,
+                        "vendor_id": 1406
+                    },
+                    "ignore": false,
+                    "simple_modifications": [
+                        {
+                            "from": { "pointing_button": "button1" },
+                            "to": [{ "key_code": "g" }]
+                        },
+                        {
+                            "from": { "pointing_button": "button2" },
+                            "to": [{ "key_code": "e" }]
+                        },
+                        {
+                            "from": { "pointing_button": "button3" },
+                            "to": [{ "key_code": "b" }]
+                        },
+                        {
+                            "from": { "pointing_button": "button4" },
+                            "to": [{ "key_code": "l" }]
+                        },
+                        {
+                            "from": { "pointing_button": "button5" },
+                            "to": [{ "key_code": "h" }]
+                        },
+                        {
+                            "from": { "pointing_button": "button6" },
+                            "to": [{ "key_code": "z" }]
+                        }
+                    ]
+                }
+            ],
+            "name": "Drawing",
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }
     ]
