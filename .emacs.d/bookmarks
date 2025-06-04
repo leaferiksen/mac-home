@@ -14,12 +14,6 @@
  (rear-context-string . "12 Apr 12 15:05 ")
  (position . 71)
  (last-modified 26620 19922 519430 0))
-("24-25 Spring"
- (filename . "~/Documents/College/24-25 Spring/")
- (front-context-string . "ART 102\n  drwx--")
- (rear-context-string . "56 Mar 24 21:21 ")
- (position . 92)
- (last-modified 26619 2352 708636 0))
 ("Elfeed"
  (location . "@1-month-ago +unread")
  (tags "unread")

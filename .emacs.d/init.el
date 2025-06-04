@@ -2,70 +2,32 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
-;; https://emacs-lsp.github.io/lsp-mode/page/performance/
-(setq read-process-output-max
-	  (* 1024 1024))
-;; 1mb
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; System consistency improvements to trackpad, ⌘, ⌥, and esc.
 (defalias 'yes-or-no-p 'y-or-n-p)
-(global-set-key
- (kbd "<pinch>")
- 'ignore)
-(global-set-key
- (kbd "<C-wheel-up>")
- 'ignore)
-(global-set-key
- (kbd "<C-wheel-down>")
- 'ignore)
-(global-set-key
- (kbd "<C-M-wheel-up>")
- 'ignore)
-(global-set-key
- (kbd "<C-M-wheel-down>")
- 'ignore)
-(global-set-key
- (kbd "s-z")
- 'undo-fu-only-undo)
-(global-set-key
- (kbd "s-Z")
- 'undo-fu-only-redo)
-(global-set-key
- (kbd "s-o")
- 'bookmark-jump)
-(global-set-key
- (kbd "s-;")
- 'comment-box)
-(global-set-key
- [escape]
- 'keyboard-quit)
-(define-key esc-map
-			[escape]
-			'keyboard-quit)
-(define-key ctl-x-map
-			[escape]
-			'keyboard-quit)
-(define-key help-map
-			[escape]
-			'keyboard-quit)
-(define-key goto-map
-			[escape]
-			'keyboard-quit)
-(define-key minibuffer-local-map
-			[escape]
-			'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map
-			[escape]
-			'minibuffer-keyboard-quit)
-(define-key minibuffer-local-completion-map
-			[escape]
-			'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map
-			[escape]
-			'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map
-			[escape]
-			'minibuffer-keyboard-quit)
+;; Disable text rescaling
+(global-set-key (kbd "<pinch>") 'ignore)
+(global-set-key (kbd "<C-wheel-up>") 'ignore)
+(global-set-key (kbd "<C-wheel-down>") 'ignore)
+(global-set-key (kbd "<C-M-wheel-up>") 'ignore)
+(global-set-key (kbd "<C-M-wheel-down>") 'ignore)
+;; My custom keybinds
+(global-set-key (kbd "C-,") 'customize)
+(global-unset-key (kbd "C-z"))
+(global-set-key (kbd "C-z")   'undo-fu-only-undo)
+(global-set-key (kbd "C-S-z") 'undo-fu-only-redo)
+(global-set-key (kbd "C-c j") 'bookmark-jump)
+(global-set-key (kbd "C-c ;") 'comment-box)
+(global-set-key (kbd "C-c y") 'yt-dlp)
+;; Escape hatch
+(global-set-key [escape] 'keyboard-quit)
+(define-key esc-map	[escape] 'keyboard-quit)
+(define-key ctl-x-map [escape] 'keyboard-quit)
+(define-key help-map [escape] 'keyboard-quit)
+(define-key goto-map [escape] 'keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Navigation and Selection mode
 ;; https://github.com/mrkkrp/modalka
@@ -78,12 +40,9 @@
   (add-to-list 'modalka-excluded-modes 'vc-git-log-edit-mode)
   (add-to-list 'modalka-excluded-modes 'term-mode)
   (add-to-list 'modalka-excluded-modes 'eshell-mode)
-  (add-to-list 'modalka-excluded-modes 'elfeed-search-mode)
   (add-to-list 'modalka-excluded-modes 'elfeed-show-mode)
   :config
-  (define-key modalka-mode-map
-			  (kbd "SPC")
-			  'set-mark-command)
+  (define-key modalka-mode-map (kbd "SPC") 'set-mark-command)
   ;; Symbols
   (modalka-define-kbd "`" "nil")
   (modalka-define-kbd "~" "nil")
@@ -109,6 +68,12 @@
   (modalka-define-kbd "}" "nil")
   (modalka-define-kbd "\\" "nil")
   (modalka-define-kbd "|" "M-|")
+  (modalka-define-kbd "," "nil")
+  (modalka-define-kbd "." "nil")
+  (modalka-define-kbd "/" "nil")
+  (modalka-define-kbd "?" "nil")
+  (modalka-define-kbd "<" "nil")
+  (modalka-define-kbd ">" "nil")
   ;; Numbers
   (modalka-define-kbd "0" "C-0")
   (modalka-define-kbd "1" "C-1")
@@ -141,7 +106,7 @@
   (modalka-define-kbd "n" "C-n")
   (modalka-define-kbd "o" "C-o")
   (modalka-define-kbd "p" "C-p")
-  (modalka-define-kbd "q" "M-q")
+  (modalka-define-kbd "q" "C-q")
   (modalka-define-kbd "r" "C-r")
   (modalka-define-kbd "s" "C-s")
   (modalka-define-kbd "t" "C-t")
@@ -313,6 +278,8 @@
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
+;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
 ;; https://emacs-lsp.github.io/lsp-mode/
 (use-package lsp-mode					;
   :custom
@@ -356,10 +323,10 @@
   (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   :bind
   (:map obsidian-mode-map
-		("s-i" . markdown-insert-italic)
-		("s-b" . markdown-insert-bold)
-		("s-<return>" . obsidian-follow-link-at-point)
-		("s-S-<return>" . obsidian-backlink-jump)))
+		("C-c i" . markdown-insert-italic)
+		("C-c b" . markdown-insert-bold)
+		("C-c <return>" . obsidian-follow-link-at-point)
+		("C-c S-<return>" . obsidian-backlink-jump)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Load theme, taking current system APPEARANCE into consideration
 ;; https://github.com/d12frosted/homebrew-emacs-plus
@@ -459,6 +426,7 @@
  '(midnight-mode t)
  '(mouse-wheel-progressive-speed nil)
  '(ns-command-modifier 'control)
+ '(ns-pop-up-frames nil)
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
