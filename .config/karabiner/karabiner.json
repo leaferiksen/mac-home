@@ -1848,11 +1848,151 @@
                     }
                 ]
             },
+            "devices": [
+                {
+                    "identifiers": {
+                        "is_game_pad": true,
+                        "product_id": 8198,
+                        "vendor_id": 1406
+                    },
+                    "ignore": false
+                }
+            ],
             "name": "Default",
             "selected": true,
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         },
         {
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "description": "Remap shoulder buttons to undo/redo",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "modifiers": { "optional": ["any"] },
+                                    "pointing_button": "button5"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "z",
+                                        "modifiers": ["left_command"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "modifiers": { "optional": ["any"] },
+                                    "pointing_button": "button6"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "z",
+                                        "modifiers": ["left_command", "shift"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "generic_desktop": "dpad_up",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "open_bracket",
+                                        "modifiers": []
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "generic_desktop": "dpad_down",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "close_bracket",
+                                        "modifiers": []
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "generic_desktop": "dpad_left",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "equal_sign",
+                                        "modifiers": ["left_command"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "generic_desktop": "dpad_right",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "hyphen",
+                                        "modifiers": ["left_command"]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Toggle dark mode with 🌙",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "f6",
+                                    "modifiers": {
+                                        "mandatory": ["fn"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "key_code": "f6" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "f6",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "shell_command": "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Caps Lock → Meh Key (⌃⌥⇧) (F13 if alone)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["caps_lock"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": ["left_control", "left_option"]
+                                    }
+                                ],
+                                "to_if_alone": [{ "key_code": "f13" }],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
             "devices": [
                 {
                     "identifiers": {
@@ -1864,11 +2004,11 @@
                     "simple_modifications": [
                         {
                             "from": { "pointing_button": "button1" },
-                            "to": [{ "key_code": "g" }]
+                            "to": [{ "key_code": "e" }]
                         },
                         {
                             "from": { "pointing_button": "button2" },
-                            "to": [{ "key_code": "e" }]
+                            "to": [{ "key_code": "m" }]
                         },
                         {
                             "from": { "pointing_button": "button3" },
@@ -1876,15 +2016,15 @@
                         },
                         {
                             "from": { "pointing_button": "button4" },
-                            "to": [{ "key_code": "l" }]
+                            "to": [{ "key_code": "v" }]
                         },
                         {
-                            "from": { "pointing_button": "button5" },
-                            "to": [{ "key_code": "h" }]
+                            "from": { "pointing_button": "button15" },
+                            "to": [{ "key_code": "left_option" }]
                         },
                         {
-                            "from": { "pointing_button": "button6" },
-                            "to": [{ "key_code": "z" }]
+                            "from": { "pointing_button": "button16" },
+                            "to": [{ "key_code": "left_shift" }]
                         }
                     ]
                 }

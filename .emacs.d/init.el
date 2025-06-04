@@ -205,13 +205,13 @@
 	(cond
 	 ((string-equal choice "video")
 	  (async-shell-command
-	   (format "yt-dlp \"%s\"" url)))
-	 ((async-string-equal choice "video with subtitles")
+	   (format "yt-dlp -S \"ext\" \"%s\"" url)))
+	 ((string-equal choice "video with subtitles")
 	  (shell-command
-	   (format "yt-dlp --write-subs \"%s\"" url)))
+	   (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url)))
 	 ((string-equal choice "audio")
 	  (async-shell-command
-	   (format "yt-dlp -x --embed-thumbnail \"%s\"" url))))))
+	   (format "yt-dlp -S \"ext\" -x --embed-thumbnail \"%s\"" url))))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/minad/jinx
 (use-package jinx
@@ -290,7 +290,7 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 ;; https://emacs-lsp.github.io/lsp-mode/
-(use-package lsp-mode
+(use-package lsp-mode					;
   :custom
   (lsp-keymap-prefix "C-c l")
   (lsp-diagnostics-provider :none)
@@ -431,7 +431,7 @@
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
-   '(apheleia elfeed elfeed-protocol esxml flexoki-themes go-translate jinx lsp-mode lsp-tailwindcss mastodon minesweeper minions modalka nerd-icons-dired nov obsidian terminal-here treesit-auto undo-fu visual-fill-column))
+   '(apheleia eglot elfeed elfeed-protocol esxml flexoki-themes go-translate jinx lsp-mode lsp-tailwindcss mastodon minesweeper minions modalka nerd-icons-dired nov obsidian terminal-here treesit-auto undo-fu visual-fill-column))
  '(package-vc-selected-packages
    '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
  '(pixel-scroll-precision-mode t)
