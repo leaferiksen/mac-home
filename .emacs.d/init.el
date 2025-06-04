@@ -84,10 +84,32 @@
   (define-key modalka-mode-map
 			  (kbd "SPC")
 			  'set-mark-command)
+  ;; Symbols
+  (modalka-define-kbd "`" "nil")
+  (modalka-define-kbd "~" "nil")
+  (modalka-define-kbd "!" "M-!")
+  (modalka-define-kbd "@" "nil")
+  (modalka-define-kbd "#" "nil")
+  (modalka-define-kbd "%" "M-%")
+  (modalka-define-kbd "$" "M-$")
+  (modalka-define-kbd "^" "nil")
+  (modalka-define-kbd "&" "M-&")
+  (modalka-define-kbd "*" "nil")
+  (modalka-define-kbd "(" "nil")
+  (modalka-define-kbd ")" "nil")
+  (modalka-define-kbd "-" "nil")
+  (modalka-define-kbd "_" "nil")
+  (modalka-define-kbd "=" "nil")
+  (modalka-define-kbd "+" "nil")
   (modalka-define-kbd ";" "M-;")
   (modalka-define-kbd ":" "M-:")
-  (modalka-define-kbd "$" "M-$")
-  (modalka-define-kbd "&" "M-&")
+  (modalka-define-kbd "[" "nil")
+  (modalka-define-kbd "]" "nil")
+  (modalka-define-kbd "{" "nil")
+  (modalka-define-kbd "}" "nil")
+  (modalka-define-kbd "\\" "nil")
+  (modalka-define-kbd "|" "M-|")
+  ;; Numbers
   (modalka-define-kbd "0" "C-0")
   (modalka-define-kbd "1" "C-1")
   (modalka-define-kbd "2" "C-2")
@@ -98,12 +120,14 @@
   (modalka-define-kbd "7" "C-7")
   (modalka-define-kbd "8" "C-8")
   (modalka-define-kbd "9" "C-9")
-  (modalka-define-kbd "!" "M-!")
-  (modalka-define-kbd "%" "M-%")
-  (modalka-define-kbd "|" "M-|")
+  ;; Letters
   (modalka-define-kbd "a" "C-a")
   (modalka-define-kbd "b" "C-b")
-  (define-key modalka-mode-map "c" mode-specific-map)
+  (define-key modalka-mode-map "c"
+			  `(lambda () "Simulates the `C-c' key-press" (interactive)
+				 (setq prefix-arg current-prefix-arg)
+				 (setq unread-command-events
+					   (listify-key-sequence (read-kbd-macro "C-c"))))) ; C-c prefix
   (modalka-define-kbd "d" "C-d")
   (modalka-define-kbd "e" "C-e")
   (modalka-define-kbd "f" "C-f")
@@ -362,6 +386,11 @@
   (call-process-shell-command "cd \"$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes\" && zip -r \"$HOME/Git/Obsidian Backups/$(date +%Y-%m-%d_%H%M).zip\" ."))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Various functions
+(defun vc-amend ()
+  (interactive)
+  (vc-checkin nil 'git)
+  (vc-git-log-edit-toggle-amend)
+  )
 (defun send-to-self
 	(message)
   "Send a MESSAGE to myself."
@@ -394,6 +423,7 @@
  '(auto-package-update-delete-old-versions t)
  '(backward-delete-char-untabify-method nil)
  '(completion-styles '(basic partial-completion emacs22 flex))
+ '(cua-mode t)
  '(cursor-type 'bar)
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
@@ -428,6 +458,7 @@
  '(midnight-hook '(update-homebrew backup-obsidian))
  '(midnight-mode t)
  '(mouse-wheel-progressive-speed nil)
+ '(ns-command-modifier 'control)
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages

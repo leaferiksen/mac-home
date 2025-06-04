@@ -4,7 +4,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Adjust keyboard brightness with ⌘🔅 and ⌘🔆",
+                        "description": "adjust keyboard brightness with ⌘🔅 and ⌘🔆",
                         "manipulators": [
                             {
                                 "from": {
@@ -31,7 +31,7 @@
                         ]
                     },
                     {
-                        "description": "Toggle dark mode with 🌙",
+                        "description": "toggle dark mode with 🌙",
                         "manipulators": [
                             {
                                 "from": {
@@ -55,7 +55,7 @@
                         ]
                     },
                     {
-                        "description": "Caps Lock → Meh Key (⌃⌥⇧) (F13 if alone)",
+                        "description": "caps lock → meh (⌃⌥⇧) (esc if alone)",
                         "manipulators": [
                             {
                                 "from": {
@@ -68,6 +68,31 @@
                                         "modifiers": ["left_control", "left_option"]
                                     }
                                 ],
+                                "to_if_alone": [{ "key_code": "escape" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "right ⌘ to shift (f13 if alone)",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "keyboard_types": ["ansi"],
+                                        "type": "keyboard_type_if"
+                                    },
+                                    {
+                                        "name": "qwerty",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "right_command",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "left_shift" }],
                                 "to_if_alone": [{ "key_code": "f13" }],
                                 "type": "basic"
                             }
@@ -112,25 +137,6 @@
                                     "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [{ "key_code": "z" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "keyboard_types": ["ansi"],
-                                        "type": "keyboard_type_if"
-                                    },
-                                    {
-                                        "name": "qwerty",
-                                        "type": "variable_if",
-                                        "value": 0
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "right_command",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [{ "key_code": "left_shift" }],
                                 "type": "basic"
                             }
                         ]
