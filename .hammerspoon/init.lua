@@ -13,7 +13,7 @@ spoon.SpoonInstall:andUse("PaperWM", {
     repo = "PaperWM",
     config = {
 		window_ratios = { 0.3, 0.5, 0.68, 1 },
-		rejectApp = {"IINA", "java"},
+		rejectApp = {"LuLu", "IINA", "java"},
 		swipe_fingers = 4,
 		swipe_gain = 2.0
 	},

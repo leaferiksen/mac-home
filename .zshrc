@@ -15,8 +15,6 @@ export LESSHISTFILE=-
 
 # brew
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications --no-quarantine"
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="/opt/homebrew/sbin:$PATH"
 
 # named directories
 export ic="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
