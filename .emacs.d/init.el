@@ -95,11 +95,18 @@
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
+;; (add-hook 'after-init-hook #'global-prettier-mode)
+(use-package prettier
+  :hook after-init)
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 (use-package eglot
+  :config
+  (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp")))
   :hook (html-ts-mode css-ts-mode js-ts-mode typescript-ts-mode) . 'eglot-ensure)
-(add-hook 'after-init-hook #'global-prettier-mode)
+;; (require-package 'swift-mode) (with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp"))))
+(use-package swift-mode
+  :after eglot)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Note-taking
 ;; https://jblevins.org/projects/markdown-mode/
@@ -364,7 +371,7 @@
  '(global-tab-line-mode t)
  '(global-visual-line-mode t)
  '(initial-buffer-choice t)
- '(lsp-dired-mode t nil (lsp-dired))
+ '(lsp-dired-mode t)
  '(make-backup-files nil)
  '(markdown-enable-wiki-links t)
  '(markdown-header-scaling t)
@@ -379,7 +386,7 @@
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
-   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes go-translate jinx mastodon minesweeper minions modalka nerd-icons-dired nov obsidian prettier terminal-here treesit-auto undo-fu visual-fill-column))
+   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes go-translate jinx mastodon minesweeper minions modalka nerd-icons-dired nov obsidian prettier swift-mode terminal-here treesit-auto undo-fu visual-fill-column))
  '(pixel-scroll-precision-mode t)
  '(prog-mode-hook
    '(flymake-mode display-line-numbers-mode completion-preview-mode))
