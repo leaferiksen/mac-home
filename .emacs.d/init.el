@@ -2,8 +2,6 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;; Disable text rescaling
 (global-set-key (kbd "<pinch>") 'ignore)
@@ -33,62 +31,11 @@
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Dired
-(use-package dired
+;; Tab bar
+(use-package tab-line
   :bind
-  ("C-c d" . 'dired-finder-path)
-  (:map dired-mode-map
-		("<mouse-2>" . dired-mouse-find-file)
-		("SPC" . 'quicklook)
-		("o" . 'macopen)))
-(defun quicklook
-	()
-  "QuickLook the currently selected file in Dired."
-  (interactive)
-  (let
-	  ((filename
-		(dired-get-file-for-visit)))
-	(shell-command
-	 (format "qlmanage -p '%s'" filename))))
-(defun macopen
-	()
-  "QuickLook the currently selected file in Dired."
-  (interactive)
-  (let
-	  ((filename
-		(dired-get-file-for-visit)))
-	(shell-command
-	 (format "open '%s'" filename))))
-(defun dired-finder-path
-	()
-  "Open Dired in the frontmost Finder window path, if available."
-  (interactive)
-  (let
-	  ((path
-		(ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
-	(if path
-		(dired
-		 (string-trim path))
-	  (message "No Finder window found."))))
-(defun yt-dlp
-	(url)
-  "Download the audio, video, or video with subs from a given URL."
-  (interactive "sEnter URL to download: ")
-  (let
-	  ((choice
-		(completing-read
-         "Choose download option: "
-		 '("video" "video with subtitles" "audio"))))
-	(cond
-	 ((string-equal choice "video")
-	  (async-shell-command
-	   (format "yt-dlp -S \"ext\" \"%s\"" url)))
-	 ((string-equal choice "video with subtitles")
-	  (shell-command
-	   (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url)))
-	 ((string-equal choice "audio")
-	  (async-shell-command
-	   (format "yt-dlp -S \"ext\" -x --embed-thumbnail \"%s\"" url))))))
+  ("M-S-<tab>" . tab-line-switch-to-prev-tab)
+  ("M-<tab>" . tab-line-switch-to-next-tab))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Load theme, taking current system APPEARANCE into consideration
 ;; https://codeberg.org/crmsnbleyd/flexoki-emacs-theme
@@ -110,6 +57,36 @@
 			   (load-theme 'flexoki-themes-dark t)
 			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#fffcf0")))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Dired
+(use-package dired
+  :bind
+  ("C-c d" . 'dired-finder-path)
+  (:map dired-mode-map
+		("<mouse-2>" . dired-mouse-find-file)
+		("SPC" . 'quicklook)
+		("o" . 'macopen)))
+(defun quicklook ()
+  "QuickLook the currently selected file in Dired."
+  (interactive)
+  (let ((filename (dired-get-file-for-visit))) (shell-command (format "qlmanage -p '%s'" filename))))
+(defun macopen ()
+  "QuickLook the currently selected file in Dired."
+  (interactive)
+  (let ((filename (dired-get-file-for-visit))) (shell-command (format "open '%s'" filename))))
+(defun dired-finder-path ()
+  "Open Dired in the frontmost Finder window path, if available."
+  (interactive)
+  (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
+	(if path (dired (string-trim path)) (message "No Finder window found."))))
+(defun yt-dlp (url)
+  "Download the audio, video, or video with subs from a given URL."
+  (interactive "sEnter URL to download: ")
+  (let ((choice	(completing-read "Choose download option: " '("video" "video with subtitles" "audio"))))
+	(cond
+	 ((string-equal choice "video") (async-shell-command (format "yt-dlp -S \"ext\" \"%s\"" url)))
+	 ((string-equal choice "video with subtitles") (async-shell-command (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url)))
+	 ((string-equal choice "audio") (async-shell-command (format "yt-dlp -S \"ext\" -x --embed-thumbnail \"%s\"" url))))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Coding
 ;; https://github.com/renzmann/treesit-auto
 (use-package treesit-auto
@@ -121,24 +98,8 @@
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 (use-package eglot
-  :config
-  (add-to-list 'eglot-server-programs '(html-ts-mode . ("lspx" "--lsp" "vscode-html-language-server --stdio" "--lsp" "tailwindcss-language-server --stdio" "--lsp" "vscode-eslint-language-server --stdio")))
-  (add-to-list 'eglot-server-programs '(css-ts-mode . ("lspx" "--lsp" "vscode-css-language-server --stdio" "--lsp" "tailwindcss-language-server --stdio" "--lsp" "vscode-eslint-language-server --stdio")))
-  (add-to-list 'eglot-server-programs '(js-ts-mode . ("lspx" "--lsp" "vscode-js-language-server --stdio" "--lsp" "tailwindcss-language-server --stdio" "--lsp" "vscode-eslint-language-server --stdio")))
-  (add-to-list 'eglot-server-programs '(typescript-ts-mode . ("lspx" "--lsp" "typescript-language-server --stdio" "--lsp" "tailwindcss-language-server --stdio" "--lsp" "vscode-eslint-language-server --stdio")))
-  :init
-  (add-hook 'html-ts-mode 'eglot-ensure)
-  (add-hook 'css-ts-mode 'eglot-ensure)
-  (add-hook 'js-ts-mode 'eglot-ensure)
-  (add-hook 'typescript-ts-mode 'eglot-ensure))
-;; https://github.com/merrickluo/lsp-tailwindcss
-(use-package lsp-tailwindcss
-  :after eglot
-  :custom
-  (lsp-tailwindcss-skip-config-check t)
-  (lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")
-  :init
-  (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save))
+  :hook (html-ts-mode css-ts-mode js-ts-mode typescript-ts-mode) . 'eglot-ensure)
+(add-hook 'after-init-hook #'global-prettier-mode)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Note-taking
 ;; https://jblevins.org/projects/markdown-mode/
@@ -228,12 +189,10 @@
 				  (gt-google-engine))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Midnight automations
-(defun update-homebrew
-	()
+(defun update-homebrew ()
   "Update all casks and formulae."
   (call-process-shell-command "brew update && brew upgrade --greedy"))
-(defun backup-obsidian
-	()
+(defun backup-obsidian ()
   "Run the zsh script to backup Obsidian and send a message."
   (call-process-shell-command "cd \"$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes\" && zip -r \"$HOME/Git/Obsidian Backups/$(date +%Y-%m-%d_%H%M).zip\" ."))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -241,28 +200,18 @@
 (defun vc-amend ()
   (interactive)
   (vc-checkin nil 'git)
-  (vc-git-log-edit-toggle-amend)
-  )
-(defun send-to-self
-	(message)
+  (vc-git-log-edit-toggle-amend))
+(defun send-to-self	(message)
   "Send a MESSAGE to myself."
   (interactive "sMessage to send: ")
-  (let
-	  ((message
-		(or message "")))
-										; Ensure message isn't nil
-	(shell-command
-	 (format "osascript -e 'tell application \"Messages\" to send \"%s\" to buddy \"leaferiksen@gmail.com\"'"
-			 (shell-quote-argument message)))))
-(defun wrap-urls-with-parentheses
-	(start end)
+  (let ((message
+		 (or message "")))	; Ensure message isn't nil
+	(shell-command (format "osascript -e 'tell application \"Messages\" to send \"%s\" to buddy \"leaferiksen@gmail.com\"'" (shell-quote-argument message)))))
+(defun wrap-urls-with-parentheses (start end)
   "Wrap quoted URLs with parentheses from START to END."
   (interactive "r")
-  (save-excursion
-	(goto-char start)
-	(while
-		(re-search-forward "\"\\(https?://[^\"]+\\)\"" end t)
-	  (replace-match "(\"\\1\")"))))
+  (save-excursion (goto-char start)
+				  (while (re-search-forward "\"\\(https?://[^\"]+\\)\"" end t) (replace-match "(\"\\1\")"))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Navigation and Selection mode
 ;; https://github.com/mrkkrp/modalka
@@ -326,8 +275,7 @@
   (define-key modalka-mode-map "c"
 			  `(lambda () "Simulates the `C-c' key-press" (interactive)
 				 (setq prefix-arg current-prefix-arg)
-				 (setq unread-command-events
-					   (listify-key-sequence (read-kbd-macro "C-c"))))) ; C-c prefix
+				 (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-c"))))) ; C-c prefix
   (modalka-define-kbd "d" "C-d")
   (modalka-define-kbd "e" "C-e")
   (modalka-define-kbd "f" "C-f")
@@ -413,6 +361,7 @@
  '(global-auto-revert-non-file-buffers t)
  '(global-flycheck-mode t)
  '(global-prettify-symbols-mode t)
+ '(global-tab-line-mode t)
  '(global-visual-line-mode t)
  '(initial-buffer-choice t)
  '(lsp-dired-mode t nil (lsp-dired))
@@ -430,9 +379,7 @@
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
-   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes go-translate jinx lsp-mode lsp-tailwindcss mastodon minesweeper minions modalka nerd-icons-dired nov obsidian terminal-here treesit-auto undo-fu visual-fill-column))
- '(package-vc-selected-packages
-   '((lsp-tailwindcss :url "https://github.com/merrickluo/lsp-tailwindcss" :branch "main")))
+   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes go-translate jinx mastodon minesweeper minions modalka nerd-icons-dired nov obsidian prettier terminal-here treesit-auto undo-fu visual-fill-column))
  '(pixel-scroll-precision-mode t)
  '(prog-mode-hook
    '(flymake-mode display-line-numbers-mode completion-preview-mode))
@@ -442,6 +389,8 @@
  '(sentence-end-double-space nil)
  '(split-height-threshold 0)
  '(split-width-threshold nil)
+ '(tab-line-close-button-show nil)
+ '(tab-line-new-button-show nil)
  '(tab-width 4)
  '(trash-directory "~/.Trash")
  '(use-package-always-ensure t)
