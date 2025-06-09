@@ -15,7 +15,7 @@ hyper - b : export GOOGLE_API_KEY="no" GOOGLE_DEFAULT_CLIENT_ID="no" GOOGLE_DEFA
 meh - l : open -a LuLu
 
 # arstg]mneio
-meh - a : open -a Activity\ Monitor
+meh - a : shortcuts run "Open Adobe apps"
 hyper - a : open -a ManGo
 # Affinity\ Photo\ 2
 meh - r : open -a Reminders

@@ -2,13 +2,7 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("hammerspoon config"
- (filename . "~/.hammerspoon/init.lua")
- (front-context-string . "meh = {\"ctrl\", \"")
- (rear-context-string)
- (position . 1)
- (last-modified 26691 7109 297543 0))
-("Media"
+(("Media"
  (filename . "/Volumes/Media/")
  (front-context-string . ".DocumentRevisio")
  (rear-context-string . "88 May  2 22:39 ")
@@ -24,12 +18,12 @@
  (location . "@1-month-ago +unread")
  (tags "unread")
  (handler . elfeed-search-bookmark-handler))
-("Home.md"
+("Obsidian"
  (filename . "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Home.md")
  (front-context-string . "[[School]]\n[[Lan")
  (rear-context-string)
  (position . 1)
- (last-modified 26607 1476 956465 0))
+ (last-modified 26691 9360 435413 0))
 ("skhdrc"
  (filename . "~/.config/skhd/skhdrc")
  (front-context-string . "# keywords https")
