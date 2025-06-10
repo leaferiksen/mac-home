@@ -73,6 +73,11 @@ Settings that I haven't (yet) bothered to automate:
 `Wacom Tablet`
 - Options... → **☒ Show wireless tablet battery status in menu bar**
 
+`Wacom Center`
+- Mapping → **☑ Show advanced options**
+- Mapping → Tablet area → Use custom area... → **11784 by 18144** (6 * screen resolution)
+- Osu! custom area → **2700 by 4320** (a fifth of the tablet resolution)
+
 `Adobe Photoshop`
 ```
 mkdir /Users/leaf/Library/Preferences/Adobe\ Photoshop\ $(date +%Y)\ Settings/

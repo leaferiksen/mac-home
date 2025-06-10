@@ -2,6 +2,10 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
+(global-set-key (kbd "C-q") 'kill-emacs)
+(global-set-key (kbd "C-c q") 'quoted-insert)
+(global-set-key (kbd "C-,") 'customize)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://codeberg.org/martianh/mastodon.el
 (use-package mastodon
   :custom

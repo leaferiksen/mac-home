@@ -10,17 +10,13 @@
 (global-set-key (kbd "<C-M-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-M-wheel-down>") 'ignore)
 ;; My custom keybinds
-(global-set-key (kbd "C-q") 'kill-emacs)
-(global-set-key (kbd "C-c q") 'quoted-insert)
-(global-set-key (kbd "C-,") 'customize)
-(global-unset-key (kbd "C-z"))
-(global-set-key (kbd "C-z")   'undo-fu-only-undo)
-(global-set-key (kbd "C-S-z") 'undo-fu-only-redo)
+(global-unset-key (kbd "s-z"))
+(global-set-key (kbd "s-z")   'undo-fu-only-undo)
+(global-set-key (kbd "s-S-z") 'undo-fu-only-redo)
 (global-set-key (kbd "C-c j") 'bookmark-jump)
 (global-set-key (kbd "C-c ;") 'comment-box)
 (global-set-key (kbd "C-c y") 'yt-dlp)
 ;; Escape hatch
-(global-set-key [escape] 'keyboard-quit)
 (define-key esc-map	[escape] 'keyboard-quit)
 (define-key ctl-x-map [escape] 'keyboard-quit)
 (define-key help-map [escape] 'keyboard-quit)
@@ -126,10 +122,10 @@
   (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   :bind
   (:map obsidian-mode-map
-		("C-c i" . markdown-insert-italic)
-		("C-c b" . markdown-insert-bold)
-		("C-c <return>" . obsidian-follow-link-at-point)
-		("C-c S-<return>" . obsidian-backlink-jump)))
+		("s-i" . markdown-insert-italic)
+		("s-b" . markdown-insert-bold)
+		("s-<return>" . obsidian-follow-link-at-point)
+		("s-S-<return>" . obsidian-backlink-jump)))
 ;; https://github.com/minad/jinx
 (use-package jinx
   :hook markdown-mode
@@ -215,7 +211,6 @@
  '(auto-package-update-delete-old-versions t)
  '(backward-delete-char-untabify-method nil)
  '(completion-styles '(basic partial-completion emacs22 flex))
- '(cua-mode t)
  '(cursor-type 'bar)
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
@@ -251,8 +246,8 @@
  '(midnight-hook '(update-homebrew backup-obsidian))
  '(midnight-mode t)
  '(mouse-wheel-progressive-speed nil)
- '(ns-command-modifier 'control)
  '(ns-pop-up-frames nil)
+ '(ns-right-alternate-modifier 'control)
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
