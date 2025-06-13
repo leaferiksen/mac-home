@@ -7,6 +7,9 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 autoload -Uz compinit
 compinit
 
+# disable macOS's Zsh session saving
+export SHELL_SESSIONS_DISABLE=1
+
 # editor 
 export ALTERNATE_EDITOR=""
 export EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
@@ -14,6 +17,7 @@ export VISUAL="emacsclient -r -a emacs"         # $VISUAL opens in GUI mode
 export LESSHISTFILE=-
 
 # brew
+export PATH=/Users/leaf/bin:/opt/homebrew/sbin:/opt/homebrew/bin:$PATH
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications --no-quarantine"
 
 # named directories

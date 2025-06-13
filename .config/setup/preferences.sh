@@ -85,7 +85,7 @@ defaults delete com.apple.dock wvous-br-modifier
 # window tiling #
 #################
 defaults write com.apple.WindowManager "EnableTilingByEdgeDrag" -int "0"
-# defaults write com.apple.WindowManager EnableTiledWindowMargins -bool false
+defaults write com.apple.WindowManager EnableTiledWindowMargins -bool false
 #############
 # App Store #
 #############
