@@ -13,7 +13,7 @@
 (global-set-key (kbd "s-w")   'kill-current-buffer)
 (global-unset-key (kbd "s-z"))
 (global-set-key (kbd "s-z")   'undo-fu-only-undo)
-(global-set-key (kbd "s-S-z") 'undo-fu-only-redo)
+(global-set-key (kbd "s-Z") 'undo-fu-only-redo)
 (global-set-key (kbd "s-j") 'bookmark-jump)
 (global-set-key (kbd "C-;") 'comment-box)
 (global-set-key (kbd "C-y") 'yt-dlp)
@@ -27,12 +27,6 @@
 (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Tab bar
-(use-package tab-line
-  :bind
-  ("M-S-<tab>" . tab-line-switch-to-prev-tab)
-  ("M-<tab>" . tab-line-switch-to-next-tab))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Load theme, taking current system APPEARANCE into consideration
 ;; https://codeberg.org/crmsnbleyd/flexoki-emacs-theme
@@ -100,7 +94,7 @@
 (use-package eglot
   :config
   (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp")))
-  :hook (html-ts-mode css-ts-mode js-ts-mode typescript-ts-mode) . 'eglot-ensure)
+  :hook (html-ts-mode css-ts-mode js-ts-mode typescript-ts-mode swift-mode) . 'eglot-ensure)
 (use-package swift-mode
   :mode "\\.swift\\'"
   :interpreter "swift")
@@ -178,15 +172,17 @@
 					  (face-remap-add-relative 'default :height 200))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Midnight automations
-(defun update-homebrew ()
-  "Update all casks and formulae."
-  (call-process-shell-command "brew update && brew upgrade --greedy"))
 (defun backup-obsidian ()
   "Run the zsh script to backup Obsidian and send a message."
   (call-process-shell-command "cd \"$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes\" && zip -r \"$HOME/Git/Obsidian Backups/$(date +%Y-%m-%d_%H%M).zip\" ."))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Various functions
+(defun insert-date ()
+  "Insert today's date in iso format."
+  (interactive)
+  (format-time-string "%Y-%m-%d"))
 (defun vc-amend ()
+  "Amend the previous commit title."
   (interactive)
   (vc-checkin nil 'git)
   (vc-git-log-edit-toggle-amend))

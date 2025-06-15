@@ -6,6 +6,12 @@
 (global-set-key (kbd "C-c q") 'quoted-insert)
 (global-set-key (kbd "C-,") 'customize)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Tab bar
+(use-package tab-line
+  :bind
+  ("M-S-<tab>" . tab-line-switch-to-prev-tab)
+  ("M-<tab>" . tab-line-switch-to-next-tab))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://codeberg.org/martianh/mastodon.el
 (use-package mastodon
   :custom

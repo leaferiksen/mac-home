@@ -29,7 +29,7 @@ export sf="${HOME}/Documents/College/Spring 25"
 # My fun tools
 alias q='qlmanage -p'
 alias fix='xattr -dr com.apple.quarantine'
-alias up='brew update && brew upgrade --greedy --no-quarantine'
+alias up='brew update && brew upgrade'
 alias tw='npx @tailwindcss/cli -i app.css -o dist.css --watch'
 ## https://eclecticlight.co/2023/10/11/launchservices-problems-in-sonoma-14-0/
 ## https://lapcatsoftware.com/articles/2023/10/4.html
