@@ -55,7 +55,22 @@
                         ]
                     },
                     {
+                        "description": "caps lock → ⌃ (esc if alone)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["caps_lock"] }
+                                },
+                                "to": [{ "key_code": "left_control" }],
+                                "to_if_alone": [{ "key_code": "escape" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "caps lock → meh (⌃⌥⇧) (esc if alone)",
+                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {

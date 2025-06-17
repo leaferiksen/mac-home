@@ -17,6 +17,10 @@
 (global-set-key (kbd "s-j") 'bookmark-jump)
 (global-set-key (kbd "C-;") 'comment-box)
 (global-set-key (kbd "C-y") 'yt-dlp)
+(global-set-key (kbd "s-<up>") 'beginning-of-buffer)
+(global-set-key (kbd "s-<down>") 'end-of-buffer)
+(global-set-key (kbd "M-<up>") 'completion-preview-prev-candidate)
+(global-set-key (kbd "M-<down>") 'completion-preview-next-candidate)
 ;; Escape hatch
 (define-key esc-map	[escape] 'keyboard-quit)
 (define-key ctl-x-map [escape] 'keyboard-quit)
@@ -94,7 +98,7 @@
 (use-package eglot
   :config
   (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp")))
-  :hook (html-ts-mode css-ts-mode js-ts-mode typescript-ts-mode swift-mode) . 'eglot-ensure)
+  :hook (html-mode css-mode js-mode typescript-mode swift-mode) . 'eglot-ensure)
 (use-package swift-mode
   :mode "\\.swift\\'"
   :interpreter "swift")
@@ -180,7 +184,11 @@
 (defun insert-date ()
   "Insert today's date in iso format."
   (interactive)
-  (format-time-string "%Y-%m-%d"))
+  (insert (format-time-string "%Y-%m-%d")))
+(defun fix-node ()
+  "Unlink and relink node binaries."
+  (interactive)
+  (async-shell-command "/opt/homebrew/bin/brew unlink node && /opt/homebrew/bin/brew link node"))
 (defun vc-amend ()
   "Amend the previous commit title."
   (interactive)
@@ -207,7 +215,6 @@
  '(apheleia-global-mode t)
  '(auto-package-update-delete-old-versions t)
  '(backward-delete-char-untabify-method nil)
- '(completion-styles '(basic partial-completion emacs22 flex))
  '(cursor-type 'bar)
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
@@ -243,7 +250,6 @@
  '(midnight-mode t)
  '(mouse-wheel-progressive-speed nil)
  '(ns-pop-up-frames nil)
- '(ns-right-alternate-modifier 'control)
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
@@ -278,6 +284,8 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 (package-install-selected-packages)
 (package-autoremove)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

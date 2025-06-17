@@ -43,12 +43,6 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourF
 # defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
 # keyboard navigation
 defaults write -g "AppleKeyboardUIMode" -int "2"
-# Universal sidebar toggle
-defaults write -g "NSUserKeyEquivalents" '{
-	"Hide Sidebar" = "~^$`";
-	"Show Sidebar" = "~^$`";
-	"System Settings…" = "~^$,";
-}'
 ########################################################
 # disable dock, screensaver hot corner and quick notes #
 ########################################################
@@ -211,15 +205,6 @@ defaults write org.p0deje.Maccy "popupPosition" -string "center"
 defaults write org.p0deje.Maccy "historySize" -int "10"
 defaults write org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonModifiers\":768,\"carbonKeyCode\":9}"
 defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
-########
-# Loop #
-########
-defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
-defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
-/usr/libexec/PlistBuddy -c  "delete :trigger: array '0'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-/usr/libexec/PlistBuddy -c "add :trigger: integer '59'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-/usr/libexec/PlistBuddy -c "add :trigger: integer '58'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-/usr/libexec/PlistBuddy -c "add :trigger: integer '56'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 #####################
 # Disabled features #
 #####################
@@ -247,6 +232,12 @@ defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "tru
 # defaults write com.apple.chronod "remoteWidgetsEnabled" -bool "false"
 # # monocrome widgets
 # defaults write com.apple.widgets "widgetAppearance" -int "0"
+# # Universal sidebar toggle
+# defaults write -g "NSUserKeyEquivalents" '{
+# 	"Hide Sidebar" = "~^$`";
+# 	"Show Sidebar" = "~^$`";
+# 	"System Settings…" = "~^$,";
+# }'
 #################
 # Stage Manager #
 #################
@@ -271,6 +262,15 @@ defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "tru
 # defaults write com.apple.Safari SuppressSearchSuggestions -bool true
 # disable tracking backdoor
 # defaults write com.apple.safari "WebKitPreferences.privateClickMeasurementEnabled" -bool "false"
+########
+# Loop #
+########
+# defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
+# defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
+# /usr/libexec/PlistBuddy -c  "delete :trigger: array '0'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+# /usr/libexec/PlistBuddy -c "add :trigger: integer '59'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+# /usr/libexec/PlistBuddy -c "add :trigger: integer '58'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+# /usr/libexec/PlistBuddy -c "add :trigger: integer '56'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 ###############
 # Hammerspoon #
 ###############
