@@ -253,7 +253,7 @@
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
-   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes flymake-eslint jinx minesweeper minions nerd-icons-dired nov obsidian prettier swift-mode terminal-here treesit-auto undo-fu visual-fill-column))
+   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes flymake-eslint jinx minesweeper minions nerd-icons-dired nov obsidian prettier swift-mode treesit-auto undo-fu visual-fill-column))
  '(pixel-scroll-precision-mode t)
  '(prog-mode-hook
    '(flymake-mode display-line-numbers-mode completion-preview-mode))
