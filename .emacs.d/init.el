@@ -14,13 +14,25 @@
 (global-unset-key (kbd "s-z"))
 (global-set-key (kbd "s-z")   'undo-fu-only-undo)
 (global-set-key (kbd "s-Z") 'undo-fu-only-redo)
-(global-set-key (kbd "s-j") 'bookmark-jump)
-(global-set-key (kbd "C-;") 'comment-box)
-(global-set-key (kbd "C-y") 'yt-dlp)
+(global-set-key (kbd "C-c b") 'bookmark-jump)
+(global-set-key (kbd "C-c g") 'ghostty)
+(global-set-key (kbd "C-c e") 'elfeed)
+(global-set-key (kbd "C-c j") 'obsidian-daily-note)
+(global-set-key (kbd "C-c ;") 'comment-box)
+(global-set-key (kbd "C-c y") 'yt-dlp)
 (global-set-key (kbd "s-<up>") 'beginning-of-buffer)
 (global-set-key (kbd "s-<down>") 'end-of-buffer)
 (global-set-key (kbd "M-<up>") 'completion-preview-prev-candidate)
 (global-set-key (kbd "M-<down>") 'completion-preview-next-candidate)
+(global-set-key (kbd "s-1")
+				`(lambda () "Simulates the `C-x' key-press" (interactive)
+				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-x")))))
+(global-set-key (kbd "s-2")
+				`(lambda () "Simulates the `C-c' key-press" (interactive)
+				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-c")))))
+(global-set-key (kbd "s-3")
+				`(lambda () "Simulates the `C-c' key-press" (interactive)
+				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-h")))))
 ;; Escape hatch
 (define-key esc-map	[escape] 'keyboard-quit)
 (define-key ctl-x-map [escape] 'keyboard-quit)
@@ -53,6 +65,7 @@
 			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#fffcf0")))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired
+(require 'ls-lisp)
 (use-package dired
   :bind
   ("C-c d" . 'dired-finder-path)
@@ -96,9 +109,13 @@
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 (use-package eglot
+  :custom
+  (eglot-autoshutdown t)
   :config
-  (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp")))
-  :hook (html-mode css-mode js-mode typescript-mode swift-mode) . 'eglot-ensure)
+  (add-to-list 'eglot-server-programs
+			   '(markdown-mode . ("harper-ls" "--stdio"))
+			   '(swift-mode . ("xcrun" "sourcekit-lsp")))
+  :hook (markdown-mode html-mode css-mode js-mode typescript-mode swift-mode) . 'eglot-ensure)
 (use-package swift-mode
   :mode "\\.swift\\'"
   :interpreter "swift")
@@ -116,7 +133,8 @@
 				   (setq-local line-spacing 12))))
 ;; https://github.com/licht1stein/obsidian.el
 (use-package obsidian
-  :hook markdown-mode
+  :config
+  (global-obsidian-mode t)
   :custom
   (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   :bind
@@ -166,7 +184,9 @@
   :bind
   (:map elfeed-show-mode-map
 		("<mouse-1>" . elfeed-show-next)
-		("<mouse-3>" . elfeed-show-prev)))
+		("<mouse-3>" . elfeed-show-prev)
+		("<return>" . elfeed-show-next)
+		("S-<return>" . elfeed-show-prev)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Minesweeper
 (use-package minesweeper
@@ -181,6 +201,10 @@
   (call-process-shell-command "cd \"$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes\" && zip -r \"$HOME/Git/Obsidian Backups/$(date +%Y-%m-%d_%H%M).zip\" ."))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Various functions
+(defun ghostty ()
+  "Open current directory in Ghostty."
+  (interactive)
+  (shell-command (concat "open -a Ghostty --args --working-directory=" (expand-file-name default-directory))))
 (defun insert-date ()
   "Insert today's date in iso format."
   (interactive)
@@ -219,14 +243,14 @@
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(dired-kill-when-opening-new-dired-buffer t)
+ '(dired-listing-switches "-alh")
  '(dired-mode-hook
    '(dired-hide-details-mode nerd-icons-dired-mode dired-omit-mode))
  '(dired-omit-files
    "\\`[.]?#\\|\\.DS_Store\\|\\`\\._\\|\\.CFUserTextEncoding\\|\\.Trash")
- '(dired-use-ls-dired nil)
  '(electric-pair-mode t)
  '(elfeed-feeds
-   '(("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://aftermath.site/feed" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://redstrate.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://www.girlonthenet.com/feed/" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://basicappleguy.com/basicappleblog?format=rss" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
+   '(("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://aftermath.site/feed" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://basicappleguy.com/basicappleblog?format=rss" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
  '(elfeed-search-filter "@1-month-ago +unread")
  '(fill-column 9999)
  '(frame-resize-pixelwise t)
@@ -240,6 +264,7 @@
  '(ls-lisp-dirs-first t)
  '(ls-lisp-ignore-case t)
  '(ls-lisp-use-insert-directory-program nil)
+ '(ls-lisp-use-localized-time-format t)
  '(lsp-dired-mode t)
  '(make-backup-files nil)
  '(markdown-enable-wiki-links t)

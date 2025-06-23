@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Media"
+(("Downloads"
+ (filename . "~/Downloads/")
+ (front-context-string . ".cache\n  drwxr-x")
+ (rear-context-string . "96 Mar 29 10:33 ")
+ (position . 175)
+ (last-modified 26711 3905 749927 0))
+("Media"
  (filename . "/Volumes/Media/")
  (front-context-string . ".DocumentRevisio")
  (rear-context-string . "88 May  2 22:39 ")
@@ -14,10 +20,6 @@
  (rear-context-string . "12 Apr 12 15:05 ")
  (position . 71)
  (last-modified 26620 19922 519430 0))
-("Elfeed"
- (location . "@1-month-ago +unread")
- (tags "unread")
- (handler . elfeed-search-bookmark-handler))
 ("Obsidian"
  (filename . "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Home.md")
  (front-context-string . "[[School]]\n[[Lan")

@@ -80,6 +80,11 @@ defaults delete com.apple.dock wvous-br-modifier
 #################
 defaults write com.apple.WindowManager "EnableTilingByEdgeDrag" -int "0"
 defaults write com.apple.WindowManager EnableTiledWindowMargins -bool false
+###############
+# Lock Screen #
+###############
+defaults write com.apple.loginwindow ClockFontIdentifier -string "slab"
+defaults write com.apple.loginwindow ClockFontWeight -float "800"
 #############
 # App Store #
 #############
@@ -163,6 +168,10 @@ defaults write com.apple.mail "NumberOfSnippetLines" -int "0"
 defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
 # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
 defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
+###########
+# noTunes #
+###########
+defaults write digital.twisted.noTunes replacement '/System/Applications/iPhone Mirroring.app'
 ########
 # IINA #
 ########

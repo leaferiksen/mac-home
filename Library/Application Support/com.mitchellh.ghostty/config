@@ -8,6 +8,8 @@ font-size = 14
 theme = light:flexoki-light, dark:flexoki-dark
 background-opacity = .8
 background-blur = true
+window-width = 999
+window-height = 999
 # keybind = global:opt+grave_accent=toggle_quick_terminal
 # focus-follows-mouse = true
 # macos-non-native-fullscreen = visible-menu
