@@ -3,36 +3,61 @@
 ;; by Leaf Eriksen
 ;;; Code:
 (defalias 'yes-or-no-p 'y-or-n-p)
-;; Disable text rescaling
-(global-set-key (kbd "<pinch>") 'ignore)
-(global-set-key (kbd "<C-wheel-up>") 'ignore)
-(global-set-key (kbd "<C-wheel-down>") 'ignore)
-(global-set-key (kbd "<C-M-wheel-up>") 'ignore)
-(global-set-key (kbd "<C-M-wheel-down>") 'ignore)
-;; My custom keybinds
-(global-set-key (kbd "s-w")   'kill-current-buffer)
-(global-unset-key (kbd "s-z"))
-(global-set-key (kbd "s-z")   'undo-fu-only-undo)
-(global-set-key (kbd "s-Z") 'undo-fu-only-redo)
-(global-set-key (kbd "C-c b") 'bookmark-jump)
-(global-set-key (kbd "C-c g") 'ghostty)
-(global-set-key (kbd "C-c e") 'elfeed)
-(global-set-key (kbd "C-c j") 'obsidian-daily-note)
-(global-set-key (kbd "C-c ;") 'comment-box)
-(global-set-key (kbd "C-c y") 'yt-dlp)
-(global-set-key (kbd "s-<up>") 'beginning-of-buffer)
-(global-set-key (kbd "s-<down>") 'end-of-buffer)
-(global-set-key (kbd "M-<up>") 'completion-preview-prev-candidate)
-(global-set-key (kbd "M-<down>") 'completion-preview-next-candidate)
-(global-set-key (kbd "s-1")
-				`(lambda () "Simulates the `C-x' key-press" (interactive)
-				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-x")))))
-(global-set-key (kbd "s-2")
-				`(lambda () "Simulates the `C-c' key-press" (interactive)
-				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-c")))))
-(global-set-key (kbd "s-3")
-				`(lambda () "Simulates the `C-c' key-press" (interactive)
-				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-h")))))
+;; Unmap default bindings and text rescaling
+(keymap-global-set "<pinch>" 'ignore)
+(keymap-global-set "C-<wheel-up>" 'ignore)
+(keymap-global-set "C-<wheel-down>" 'ignore)
+(keymap-global-set "C-M-<wheel-up>" 'ignore)
+(keymap-global-set "C-M-<wheel-down>" 'ignore)
+(keymap-global-unset "C-p")
+(keymap-global-unset "C-M-p")
+(keymap-global-unset "C-n")
+(keymap-global-unset "C-M-n")
+(keymap-global-unset "C-f")
+(keymap-global-unset "M-f")
+(keymap-global-unset "C-M-f")
+(keymap-global-unset "C-b")
+(keymap-global-unset "M-b")
+(keymap-global-unset "C-M-b")
+(keymap-global-unset "C-d")
+(keymap-global-unset "M-d")
+(keymap-global-unset "C-w")
+(keymap-global-unset "M-w")
+;; Personal bindings
+(keymap-global-set "C-d" 'dired)
+(keymap-global-set "C-t" 'ghostty)
+(keymap-global-set "C-e" 'elfeed)
+(keymap-global-set "C-j" 'obsidian-daily-note)
+(keymap-global-set "C-;" 'comment-box)
+(keymap-global-set "C-y" 'yt-dlp)
+(keymap-global-set "C-p" project-prefix-map)
+(keymap-global-set "C-b" 'bookmark-jump)
+(keymap-global-set "C-d" 'bookmark-delete)
+;; macOS keybinds
+(keymap-global-set "C-<up>" 'beginning-of-buffer)
+(keymap-global-set "C-<down>" 'end-of-buffer)
+(keymap-global-set "C-<left>" 'move-beginning-of-line)
+(keymap-global-set "C-<right>" 'move-end-of-line)
+(keymap-global-set "C-z" 'undo-fu-only-undo)
+(keymap-global-set "C-S-z" 'undo-fu-only-redo)
+(keymap-global-set "C-," 'customize)
+(keymap-global-set "C-w" 'kill-current-buffer)
+(keymap-global-set "C-q" 'kill-emacs)
+(keymap-global-set "C-c q" 'quoted-insert)
+(keymap-global-set "C-o" 'find-file)
+(keymap-global-set "C-a" 'mark-whole-buffer)
+(keymap-global-set "C-f" 'isearch-forward)
+(keymap-global-set "C-s" 'save-buffer)
+(keymap-global-set "C-S-s" 'write-file)
+;; Colemak extend bindings
+(keymap-global-set "M-<up>" 'backward-up-list)
+(keymap-global-set "M-<down>" 'down-list)
+(keymap-global-set "M-<left>" 'backward-sexp)
+(keymap-global-set "M-<right>" 'forward-sexp)
+(keymap-global-set "<home>" 'move-beginning-of-line)
+(keymap-global-set "<end>" 'move-end-of-line)
+(keymap-global-set "M-<home>" 'completion-preview-prev-candidate)
+(keymap-global-set "M-<end>" 'completion-preview-next-candidate)
 ;; Escape hatch
 (define-key esc-map	[escape] 'keyboard-quit)
 (define-key ctl-x-map [escape] 'keyboard-quit)
@@ -68,11 +93,15 @@
 (require 'ls-lisp)
 (use-package dired
   :bind
-  ("C-c d" . 'dired-finder-path)
   (:map dired-mode-map
 		("<mouse-2>" . dired-mouse-find-file)
 		("SPC" . 'quicklook)
-		("o" . 'macopen)))
+		("C-f" . 'dired-finder-path)
+		("o" . 'macopen)
+		("<up>" . 'dired-previous-line)
+		("<down>" . 'dired-next-line)
+		("<right>" . 'dired-find-file)
+		("<left>" . 'dired-up-directory)))
 (defun quicklook ()
   "QuickLook the currently selected file in Dired."
   (interactive)
@@ -113,9 +142,8 @@
   (eglot-autoshutdown t)
   :config
   (add-to-list 'eglot-server-programs
-			   '(markdown-mode . ("harper-ls" "--stdio"))
 			   '(swift-mode . ("xcrun" "sourcekit-lsp")))
-  :hook (markdown-mode html-mode css-mode js-mode typescript-mode swift-mode) . 'eglot-ensure)
+  :hook (html-mode css-mode js-mode typescript-mode swift-mode) . 'eglot-ensure)
 (use-package swift-mode
   :mode "\\.swift\\'"
   :interpreter "swift")
@@ -139,10 +167,10 @@
   (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   :bind
   (:map obsidian-mode-map
-		("s-i" . markdown-insert-italic)
-		("s-b" . markdown-insert-bold)
-		("s-<return>" . obsidian-follow-link-at-point)
-		("s-S-<return>" . obsidian-backlink-jump)))
+		;; ("C-i" . markdown-insert-italic)
+		;; ("C-b" . markdown-insert-bold)
+		("C-<return>" . obsidian-follow-link-at-point)
+		("C-S-<return>" . obsidian-backlink-jump)))
 ;; https://github.com/minad/jinx
 (use-package jinx
   :hook markdown-mode
@@ -195,11 +223,6 @@
 					(lambda ()
 					  (face-remap-add-relative 'default :height 200))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Midnight automations
-(defun backup-obsidian ()
-  "Run the zsh script to backup Obsidian and send a message."
-  (call-process-shell-command "cd \"$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes\" && zip -r \"$HOME/Git/Obsidian Backups/$(date +%Y-%m-%d_%H%M).zip\" ."))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Various functions
 (defun ghostty ()
   "Open current directory in Ghostty."
@@ -239,13 +262,13 @@
  '(apheleia-global-mode t)
  '(auto-package-update-delete-old-versions t)
  '(backward-delete-char-untabify-method nil)
+ '(cua-mode t)
  '(cursor-type 'bar)
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(dired-kill-when-opening-new-dired-buffer t)
  '(dired-listing-switches "-alh")
- '(dired-mode-hook
-   '(dired-hide-details-mode nerd-icons-dired-mode dired-omit-mode))
+ '(dired-mode-hook '(nerd-icons-dired-mode dired-omit-mode))
  '(dired-omit-files
    "\\`[.]?#\\|\\.DS_Store\\|\\`\\._\\|\\.CFUserTextEncoding\\|\\.Trash")
  '(electric-pair-mode t)
@@ -261,20 +284,23 @@
  '(global-prettify-symbols-mode t)
  '(global-visual-line-mode t)
  '(inhibit-startup-screen t)
+ '(initial-buffer-choice "~/Documents/")
+ '(isearch-lazy-count t)
+ '(lazy-count-prefix-format nil)
+ '(lazy-count-suffix-format "   (%s/%s)")
  '(ls-lisp-dirs-first t)
  '(ls-lisp-ignore-case t)
  '(ls-lisp-use-insert-directory-program nil)
  '(ls-lisp-use-localized-time-format t)
+ '(ls-lisp-verbosity nil)
  '(lsp-dired-mode t)
  '(make-backup-files nil)
  '(markdown-enable-wiki-links t)
  '(markdown-header-scaling t)
  '(markdown-hide-markup nil)
  '(markdown-wiki-link-alias-first nil)
- '(midnight-delay 7200)
- '(midnight-hook '(update-homebrew backup-obsidian))
- '(midnight-mode t)
  '(mouse-wheel-progressive-speed nil)
+ '(ns-command-modifier 'control)
  '(ns-pop-up-frames nil)
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
@@ -284,6 +310,7 @@
  '(prog-mode-hook
    '(flymake-mode display-line-numbers-mode completion-preview-mode))
  '(project-mode-line t)
+ '(repeat-mode t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
  '(sentence-end-double-space nil)

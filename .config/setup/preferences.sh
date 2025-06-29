@@ -160,14 +160,14 @@ defaults write com.apple.assistant.support "Search Queries Data Sharing Status" 
 ########
 # Mail #
 ########
-# https://useplaintext.email/
-defaults write com.apple.mail "SendFormat" -string "Plain"
-defaults write com.apple.mail "AutoReplyFormat" -bool "true"
-defaults write com.apple.mail "NumberOfSnippetLines" -int "0"
-# Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
-defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
-# Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
-defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
+# # https://useplaintext.email/
+# defaults write com.apple.mail "SendFormat" -string "Plain"
+# defaults write com.apple.mail "AutoReplyFormat" -bool "true"
+# defaults write com.apple.mail "NumberOfSnippetLines" -int "0"
+# # Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
+# defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
+# # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
+# defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
 ###########
 # noTunes #
 ###########
@@ -177,6 +177,7 @@ defaults write digital.twisted.noTunes replacement '/System/Applications/iPhone 
 ########
 defaults write com.colliderli.iina "currentInputConfigName" -string "Movist Default"
 defaults write com.colliderli.iina "actionAfterLaunch" -int "1"
+defaults write com.colliderli.iina "alwaysFloatOnTop" -bool "true"
 # defaults write com.colliderli.iina "useLegacyFullScreen" -bool "true"
 defaults write com.colliderli.iina "fullScreenWhenOpen" -bool "true"
 defaults write com.colliderli.iina "oscPosition" -int "2"

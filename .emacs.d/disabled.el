@@ -2,9 +2,30 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
-(global-set-key (kbd "C-q") 'kill-emacs)
-(global-set-key (kbd "C-c q") 'quoted-insert)
-(global-set-key (kbd "C-,") 'customize)
+(keymap-global-set "C-x" 'kill-region)
+(keymap-global-set "C-c" 'ns-copy-including-secondary)
+(keymap-global-set "C-v" 'yank)
+(keymap-global-set "C-w" 'kill-current-buffer)
+(keymap-global-set "C-f" 'isearch-forward)
+(keymap-set isearch-mode-map "C-f" 'isearch-forward)
+(keymap-global-set "C-S-f" 'isearch-backward)
+(keymap-global-set "C-M-f" 'isearch-forward-regexp)
+(keymap-global-set "C-M-S-f" 'isearch-backward-regexp)
+(keymap-global-set "C-s" 'save-buffer)
+(keymap-global-set "C-1" ctl-x-map)
+(keymap-global-set "C-2" mode-specific-map)
+(keymap-global-set "C-<up>" 'completion-preview-prev-candidate)
+(keymap-global-set "C-<down>" 'completion-preview-next-candidate)
+;; A dumb hack
+(global-set-key (kbd "s-3")
+				`(lambda () "Simulates the `C-x' key-press" (interactive)
+				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-x")))))
+(global-set-key (kbd "s-2")
+				`(lambda () "Simulates the `C-c' key-press" (interactive)
+				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-c")))))
+(global-set-key (kbd "s-1")
+				`(lambda () "Simulates the `C-h' key-press" (interactive)
+				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-h")))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tab bar
 (use-package tab-line
