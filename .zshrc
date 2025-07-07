@@ -16,14 +16,10 @@ export EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
 export VISUAL="emacsclient -r -a emacs"         # $VISUAL opens in GUI mode
 export LESSHISTFILE=-
 
-# brew
-export PATH=/Users/leaf/bin:/opt/homebrew/sbin:/opt/homebrew/bin:\ /usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin
-export HOMEBREW_CASK_OPTS="--appdir=~/Applications --no-quarantine"
-
 # named directories
 export ic="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
 export sd="/Volumes/Leafs Media"
-export sf="${HOME}/Documents/College/Spring 25"
+export sf="${HOME}/Documents/College/Fall 25"
 ## ssh-add --apple-use-keychain ~/.ssh/id_ed25519 &> /dev/null
 
 # My fun tools

@@ -168,8 +168,6 @@
   (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   :bind
   (:map obsidian-mode-map
-		;; ("C-i" . markdown-insert-italic)
-		;; ("C-b" . markdown-insert-bold)
 		("C-<return>" . obsidian-follow-link-at-point)
 		("C-S-<return>" . obsidian-backlink-jump)))
 ;; https://github.com/minad/jinx
@@ -211,11 +209,20 @@
 					  (setq-local shr-max-image-proportion 0.5)
 					  (setq-local shr-inhibit-images t)))
   :bind
+  (:map elfeed-search-mode-map
+		("u" . previous-line)
+		("e" . next-line)
+		("n" . elfeed-search-fetch)
+		("i" . elfeed-search-show-entry))
   (:map elfeed-show-mode-map
 		("<mouse-1>" . elfeed-show-next)
 		("<mouse-3>" . elfeed-show-prev)
 		("<return>" . elfeed-show-next)
-		("S-<return>" . elfeed-show-prev)))
+		("S-<return>" . elfeed-show-prev)
+		("u" . elfeed-show-prev)
+		("e" . elfeed-show-next)
+		("n" . elfeed-kill-buffer)
+		("i" . elfeed-show-visit)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Minesweeper
 (use-package minesweeper
