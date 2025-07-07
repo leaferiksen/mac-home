@@ -24,13 +24,11 @@
 (keymap-global-unset "C-w")
 (keymap-global-unset "M-w")
 ;; Personal bindings
-(keymap-global-set "C-d" 'dired)
 (keymap-global-set "C-t" 'ghostty)
 (keymap-global-set "C-e" 'elfeed)
 (keymap-global-set "C-j" 'obsidian-daily-note)
 (keymap-global-set "C-;" 'comment-box)
 (keymap-global-set "C-y" 'yt-dlp)
-(keymap-global-set "C-p" project-prefix-map)
 (keymap-global-set "C-b" 'bookmark-jump)
 (keymap-global-set "C-d" 'bookmark-delete)
 ;; macOS keybinds
@@ -134,7 +132,10 @@
   (global-treesit-auto-mode))
 ;; (add-hook 'after-init-hook #'global-prettier-mode)
 (use-package prettier
-  :hook after-init)
+  :hook after-init
+  :bind
+  ("C-p" . 'prettier-prettify)
+  ("C-S-p" . 'prettier-prettify-region))
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 (use-package eglot
