@@ -3,50 +3,48 @@
 ;; by Leaf Eriksen
 ;;; Code:
 (defalias 'yes-or-no-p 'y-or-n-p)
-;; Unmap default bindings and text rescaling
-(keymap-global-set "<pinch>" 'ignore)
-(keymap-global-set "C-<wheel-up>" 'ignore)
-(keymap-global-set "C-<wheel-down>" 'ignore)
-(keymap-global-set "C-M-<wheel-up>" 'ignore)
-(keymap-global-set "C-M-<wheel-down>" 'ignore)
+;; Unmap default navigation bindings and text rescaling
+(keymap-global-unset "<pinch>")
+(keymap-global-unset "C-<wheel-up>")
+(keymap-global-unset "C-<wheel-down>")
+(keymap-global-unset "M-<wheel-up>")
+(keymap-global-unset "M-<wheel-down>")
+(keymap-global-unset "C-M-<wheel-up>")
+(keymap-global-unset "C-M-<wheel-down>")
 (keymap-global-unset "C-p")
-(keymap-global-unset "C-M-p")
 (keymap-global-unset "C-n")
-(keymap-global-unset "C-M-n")
 (keymap-global-unset "C-f")
 (keymap-global-unset "M-f")
-(keymap-global-unset "C-M-f")
 (keymap-global-unset "C-b")
 (keymap-global-unset "M-b")
+(keymap-global-unset "C-M-p")
+(keymap-global-unset "C-M-n")
+(keymap-global-unset "C-M-f")
 (keymap-global-unset "C-M-b")
 (keymap-global-unset "C-d")
 (keymap-global-unset "M-d")
 (keymap-global-unset "C-w")
 (keymap-global-unset "M-w")
-;; Personal bindings
-(keymap-global-set "C-t" 'ghostty)
-(keymap-global-set "C-e" 'elfeed)
-(keymap-global-set "C-j" 'obsidian-daily-note)
-(keymap-global-set "C-;" 'comment-box)
-(keymap-global-set "C-y" 'yt-dlp)
-(keymap-global-set "C-b" 'bookmark-jump)
-(keymap-global-set "C-d" 'bookmark-delete)
-;; macOS keybinds
-(keymap-global-set "C-<up>" 'beginning-of-buffer)
-(keymap-global-set "C-<down>" 'end-of-buffer)
-(keymap-global-set "C-<left>" 'move-beginning-of-line)
-(keymap-global-set "C-<right>" 'move-end-of-line)
-(keymap-global-set "C-z" 'undo-fu-only-undo)
-(keymap-global-set "C-S-z" 'undo-fu-only-redo)
-(keymap-global-set "C-," 'customize)
-(keymap-global-set "C-w" 'kill-current-buffer)
-(keymap-global-set "C-q" 'kill-emacs)
-(keymap-global-set "C-c q" 'quoted-insert)
-(keymap-global-set "C-o" 'find-file)
-(keymap-global-set "C-a" 'mark-whole-buffer)
-(keymap-global-set "C-f" 'isearch-forward)
-(keymap-global-set "C-s" 'save-buffer)
-(keymap-global-set "C-S-s" 'write-file)
+;; Command key bindings
+(global-set-key (kbd "s-1")
+				`(lambda () "Simulates the `C-h' key-press" (interactive)
+				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-h")))))
+(global-set-key (kbd "s-2")
+				`(lambda () "Simulates the `C-x' key-press" (interactive)
+				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-x")))))
+(global-set-key (kbd "s-3")
+				`(lambda () "Simulates the `C-c' key-press" (interactive)
+				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-c")))))
+(keymap-global-set "s-z" 'undo-fu-only-undo)
+(keymap-global-set "s-Z" 'undo-fu-only-redo)
+(keymap-global-set "s-o" 'find-file)
+(keymap-global-set "s-t" 'ghostty)
+(keymap-global-set "s-e" 'elfeed)
+(keymap-global-set "s-j" 'obsidian-daily-note)
+(keymap-global-set "s-;" 'comment-box)
+(keymap-global-set "s-y" 'yt-dlp)
+(keymap-global-set "s-b" 'bookmark-jump)
+(keymap-global-set "s-d" 'bookmark-delete)
 ;; Colemak extend bindings
 (keymap-global-set "M-<up>" 'backward-up-list)
 (keymap-global-set "M-<down>" 'down-list)
@@ -66,17 +64,13 @@
 (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/meedstrom/massmapper
+(massmapper-mode)
 (add-hook 'massmapper-keymap-found-hook #'massmapper-homogenize -50)
-(setq massmapper-homogenizing-winners
-	  '(("C-c C-c")
-		(find-file)
-		("C-x C-f" . global-map)
-		("C-x C-s" . global-map)
-		("C-x C-;" . global-map)
-		("C-h C-g" . global-map)))
-;; Hide any key sequence involving more than one chord.  We have no reason to
-;; see them after using `massmapper-homogenize'.
-(with-eval-after-load 'which-key
+(use-package which-key
+  :after massmapper-mode
+  :config
   (cl-pushnew '((" .-." . nil) . t) which-key-replacement-alist
               :test #'equal))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -168,6 +162,7 @@
   :hook
   (markdown-mode . visual-fill-column-mode)
   (markdown-mode . variable-pitch-mode)
+  (markdown-mode . jinx-mode)
   (markdown-mode .
 				 (lambda
 				   ()
@@ -181,13 +176,10 @@
   (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   :bind
   (:map obsidian-mode-map
+		("s-i" . markdown-insert-italic)
+		("s-b" . markdown-insert-bold)
 		("C-<return>" . obsidian-follow-link-at-point)
 		("C-S-<return>" . obsidian-backlink-jump)))
-;; https://github.com/minad/jinx
-(use-package jinx
-  :hook markdown-mode
-  :bind
-  ("C-c c" . jinx-correct))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://depp.brause.cc/nov.el/
 (use-package nov
@@ -283,7 +275,6 @@
  '(apheleia-global-mode t)
  '(auto-package-update-delete-old-versions t)
  '(backward-delete-char-untabify-method nil)
- '(cua-mode t)
  '(cursor-type 'bar)
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
@@ -321,7 +312,6 @@
  '(markdown-hide-markup nil)
  '(markdown-wiki-link-alias-first nil)
  '(mouse-wheel-progressive-speed nil)
- '(ns-command-modifier 'control)
  '(ns-pop-up-frames nil)
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")

@@ -2,30 +2,27 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
-(keymap-global-set "C-x" 'kill-region)
-(keymap-global-set "C-c" 'ns-copy-including-secondary)
-(keymap-global-set "C-v" 'yank)
+(keymap-global-set "C-<up>" 'beginning-of-buffer)
+(keymap-global-set "C-<down>" 'end-of-buffer)
+(keymap-global-set "C-<left>" 'move-beginning-of-line)
+(keymap-global-set "C-<right>" 'move-end-of-line)
+;; macOS keybinds
+(keymap-global-set "C-z" 'undo-fu-only-undo)
+(keymap-global-set "C-S-z" 'undo-fu-only-redo)
+(keymap-global-set "C-," 'customize)
 (keymap-global-set "C-w" 'kill-current-buffer)
+(keymap-global-set "C-q" 'kill-emacs)
+(keymap-global-set "C-o" 'find-file)
+(keymap-global-set "C-a" 'mark-whole-buffer)
+(keymap-global-set "C-s" 'save-buffer)
+(keymap-global-set "C-S-s" 'write-file)
 (keymap-global-set "C-f" 'isearch-forward)
 (keymap-set isearch-mode-map "C-f" 'isearch-forward)
 (keymap-global-set "C-S-f" 'isearch-backward)
 (keymap-global-set "C-M-f" 'isearch-forward-regexp)
 (keymap-global-set "C-M-S-f" 'isearch-backward-regexp)
-(keymap-global-set "C-s" 'save-buffer)
-(keymap-global-set "C-1" ctl-x-map)
-(keymap-global-set "C-2" mode-specific-map)
 (keymap-global-set "C-<up>" 'completion-preview-prev-candidate)
 (keymap-global-set "C-<down>" 'completion-preview-next-candidate)
-;; A dumb hack
-(global-set-key (kbd "s-3")
-				`(lambda () "Simulates the `C-x' key-press" (interactive)
-				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-x")))))
-(global-set-key (kbd "s-2")
-				`(lambda () "Simulates the `C-c' key-press" (interactive)
-				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-c")))))
-(global-set-key (kbd "s-1")
-				`(lambda () "Simulates the `C-h' key-press" (interactive)
-				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-h")))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tab bar
 (use-package tab-line
