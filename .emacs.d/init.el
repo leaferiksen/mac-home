@@ -66,8 +66,11 @@
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/meedstrom/massmapper
-(massmapper-mode)
-(add-hook 'massmapper-keymap-found-hook #'massmapper-homogenize -50)
+(use-package massmapper
+  :init
+  (add-hook 'massmapper-keymap-found-hook #'massmapper-homogenize -50)
+  :config
+  (massmapper-mode 1))
 (use-package which-key
   :after massmapper-mode
   :config
