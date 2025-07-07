@@ -66,6 +66,19 @@
 (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(add-hook 'massmapper-keymap-found-hook #'massmapper-homogenize -50)
+(setq massmapper-homogenizing-winners
+	  '(("C-c C-c")
+		(find-file)
+		("C-x C-f" . global-map)
+		("C-x C-s" . global-map)
+		("C-x C-;" . global-map)
+		("C-h C-g" . global-map)))
+;; Hide any key sequence involving more than one chord.  We have no reason to
+;; see them after using `massmapper-homogenize'.
+(with-eval-after-load 'which-key
+  (cl-pushnew '((" .-." . nil) . t) which-key-replacement-alist
+              :test #'equal))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Load theme, taking current system APPEARANCE into consideration
 ;; https://codeberg.org/crmsnbleyd/flexoki-emacs-theme
@@ -313,7 +326,9 @@
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
-   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes flymake-eslint jinx minesweeper minions nerd-icons-dired nov obsidian prettier swift-mode treesit-auto undo-fu visual-fill-column))
+   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes flymake-eslint jinx massmapper minesweeper minions nerd-icons-dired nov obsidian prettier swift-mode treesit-auto undo-fu visual-fill-column))
+ '(package-vc-selected-packages
+   '((massmapper :url "https://github.com/meedstrom/massmapper")))
  '(pixel-scroll-precision-mode t)
  '(prog-mode-hook
    '(flymake-mode display-line-numbers-mode completion-preview-mode))
