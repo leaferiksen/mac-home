@@ -26,18 +26,20 @@
 (keymap-global-unset "C-w")
 (keymap-global-unset "M-w")
 ;; Command key bindings
-(global-set-key (kbd "s-1")
-				`(lambda () "Simulates the `C-h' key-press" (interactive)
-				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-h")))))
+(keymap-global-set "s-1" 'execute-extended-command)
 (global-set-key (kbd "s-2")
 				`(lambda () "Simulates the `C-x' key-press" (interactive)
 				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-x")))))
 (global-set-key (kbd "s-3")
 				`(lambda () "Simulates the `C-c' key-press" (interactive)
 				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-c")))))
+(global-set-key (kbd "s-4")
+				`(lambda () "Simulates the `C-h' key-press" (interactive)
+				   (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-h")))))
 (keymap-global-set "s-z" 'undo-fu-only-undo)
 (keymap-global-set "s-Z" 'undo-fu-only-redo)
 (keymap-global-set "s-o" 'find-file)
+(keymap-global-set "s-w" 'kill-current-buffer)
 (keymap-global-set "s-t" 'ghostty)
 (keymap-global-set "s-e" 'elfeed)
 (keymap-global-set "s-j" 'obsidian-daily-note)
@@ -181,8 +183,8 @@
   (:map obsidian-mode-map
 		("s-i" . markdown-insert-italic)
 		("s-b" . markdown-insert-bold)
-		("C-<return>" . obsidian-follow-link-at-point)
-		("C-S-<return>" . obsidian-backlink-jump)))
+		("s-<return>" . obsidian-follow-link-at-point)
+		("s-S-<return>" . obsidian-backlink-jump)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://depp.brause.cc/nov.el/
 (use-package nov
@@ -326,7 +328,6 @@
  '(prog-mode-hook
    '(flymake-mode display-line-numbers-mode completion-preview-mode))
  '(project-mode-line t)
- '(repeat-mode t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
  '(sentence-end-double-space nil)
