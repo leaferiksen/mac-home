@@ -75,7 +75,7 @@
   (massmapper-mode 1))
 (use-package which-key
   :after massmapper-mode
-  :config
+  :init
   (cl-pushnew '((" .-." . nil) . t) which-key-replacement-alist
               :test #'equal))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

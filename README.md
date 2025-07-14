@@ -55,8 +55,10 @@ Settings that I haven't (yet) bothered to automate:
 - Battery, Music Recognition, Keyboard Brightness **Only Show in control center**
 - Weather **▼ Show in Menu Bar**
 
-`Block search of private files`
-- \+ → **Bluetooth File Exchange.app**, **Image Playground.app**, **Stocks.app**, **Tips.app**
+`Spotlight`
+- Results from Apps → **☒ Mail**
+- Results from system → **☒  iPhone Apps**
+- Search Privacy… → **Bluetooth File Exchange.app**, **Image Playground.app**, **Stocks.app**, **Tips.app**, **Mail.app**, **Karabiner-EventViewer.app**
 
 `Spoken Content`
 - System Voice ⓘ → Voice → **↖ Matilda (Premium) 💾**

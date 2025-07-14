@@ -24,6 +24,9 @@
 (keymap-global-set "C-<up>" 'completion-preview-prev-candidate)
 (keymap-global-set "C-<down>" 'completion-preview-next-candidate)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require '~/.emacs.d/elpa/terminal-here/terminal-here.el)
+(setq terminal-here-mac-terminal-command '("open" "-n" "-a" "Ghostty" "--args" "--working-directory="))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tab bar
 (use-package tab-line
   :bind

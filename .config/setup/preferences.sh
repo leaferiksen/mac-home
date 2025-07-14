@@ -24,6 +24,8 @@ defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
 defaults write com.apple.universalaccess "differentiateWithoutColor" -bool "true"
+defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
+defaults write com.apple.universalaccess "mouseDriverCursorSize" -float "1.5"
 ########################
 # fuck .DS_Store files #
 ########################
@@ -219,7 +221,6 @@ defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
 # Disabled features #
 #####################
 # defaults write com.apple.Accessibility "ReduceMotionEnabled" -int "1"
-# defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
 # defaults write -g NSScrollViewRubberbanding -int 0
 # defaults write com.apple.universalaccess "virtualKeyboardOnOff" -bool "true"
 # defaults write com.apple.universalaccess "virtualKeyboardCornerActionType" '{

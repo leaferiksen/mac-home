@@ -1,16 +1,17 @@
-shell-integration = zsh
+# focus-follows-mouse = true
+# fullscreen = true
+# keybind = global:opt+grave_accent=toggle_quick_terminal
+# macos-non-native-fullscreen = visible-menu
 auto-update = off
+background-blur = true
+background-opacity = .8
+font-size = 14
 macos-icon = chalkboard
 macos-option-as-alt = true
-mouse-hide-while-typing = true
 macos-titlebar-style = tabs
-font-size = 14
+mouse-hide-while-typing = true
+shell-integration = zsh
+shell-integration-features = true
 theme = light:flexoki-light, dark:flexoki-dark
-background-opacity = .8
-background-blur = true
-window-width = 999
 window-height = 999
-# keybind = global:opt+grave_accent=toggle_quick_terminal
-# focus-follows-mouse = true
-# macos-non-native-fullscreen = visible-menu
-# fullscreen = true
+window-width = 999

@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Downloads"
+(("pi"
+ (filename . "/ssh:pi@100.110.202.44:~/")
+ (front-context-string . ".cache\n  drwx   ")
+ (rear-context-string . "4k May 29 12:19 ")
+ (position . 125)
+ (last-modified 26740 24260 633107 0))
+("Downloads"
  (filename . "~/Downloads/")
  (front-context-string . ".cache\n  drwxr-x")
  (rear-context-string . "96 Mar 29 10:33 ")
