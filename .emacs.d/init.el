@@ -104,22 +104,26 @@
 (use-package dired
   :bind
   (:map dired-mode-map
+		("<mouse-1>" . dired-mouse-find-file)
 		("<mouse-2>" . dired-mouse-find-file)
 		("SPC" . 'quicklook)
-		("C-f" . 'dired-finder-path)
-		("o" . 'macopen)
 		("<up>" . 'dired-previous-line)
 		("<down>" . 'dired-next-line)
 		("<right>" . 'dired-find-file)
-		("<left>" . 'dired-up-directory)))
+		("<left>" . 'dired-up-directory)
+		("u" . 'dired-previous-line)
+		("e" . 'dired-next-line)
+		("i" . 'dired-find-file)
+		("p" . nil)
+		("n" . 'dired-up-directory)
+		("f" . dired-finder-path)
+		("v" . nil)
+		("o" . 'dired-do-open)
+		("s-m" . dired-unmark)))
 (defun quicklook ()
   "QuickLook the currently selected file in Dired."
   (interactive)
   (let ((filename (dired-get-file-for-visit))) (shell-command (format "qlmanage -p '%s'" filename))))
-(defun macopen ()
-  "QuickLook the currently selected file in Dired."
-  (interactive)
-  (let ((filename (dired-get-file-for-visit))) (shell-command (format "open '%s'" filename))))
 (defun dired-finder-path ()
   "Open Dired in the frontmost Finder window path, if available."
   (interactive)
@@ -336,6 +340,7 @@
  '(tab-line-new-button-show nil)
  '(tab-width 4)
  '(tool-bar-mode nil)
+ '(tooltip-mode nil)
  '(trash-directory "~/.Trash")
  '(use-dialog-box nil)
  '(use-package-always-ensure t)

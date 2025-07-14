@@ -26,6 +26,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require '~/.emacs.d/elpa/terminal-here/terminal-here.el)
 (setq terminal-here-mac-terminal-command '("open" "-n" "-a" "Ghostty" "--args" "--working-directory="))
+(defun macopen ()
+  "QuickLook the currently selected file in Dired."
+  (interactive)
+  (let ((filename (dired-get-file-for-visit))) (shell-command (format "open '%s'" filename))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tab bar
 (use-package tab-line
