@@ -2,6 +2,33 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Note-taking
+;; https://jblevins.org/projects/markdown-mode/
+(use-package markdown
+  :hook
+  (markdown-mode . visual-fill-column-mode)
+  (markdown-mode . variable-pitch-mode)
+  (markdown-mode . jinx-mode)
+  (markdown-mode .
+				 (lambda
+				   ()
+				   (setq-local fill-column 90)
+				   (setq-local line-spacing 12))))
+;; https://github.com/licht1stein/obsidian.el
+(use-package obsidian
+  :hook markdown-mode
+  :config
+  (global-obsidian-mode t)
+  :custom
+  (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
+  :bind
+  (:map obsidian-mode-map
+		("s-i" . markdown-insert-italic)
+		("s-b" . markdown-insert-bold)
+		("s-<return>" . obsidian-follow-link-at-point)
+		("s-S-<return>" . obsidian-backlink-jump)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (keymap-global-set "C-<up>" 'beginning-of-buffer)
 (keymap-global-set "C-<down>" 'end-of-buffer)
 (keymap-global-set "C-<left>" 'move-beginning-of-line)

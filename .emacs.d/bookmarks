@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("pi"
+(("25-26 Autumn"
+ (filename . "~/Documents/College/25-26 Autumn/")
+ (front-context-string . "The Lord Of The ")
+ (rear-context-string . "8M Apr 12 17:46 ")
+ (position . 235)
+ (last-modified 26771 43354 675265 0))
+("pi"
  (filename . "/ssh:pi@100.110.202.44:~/")
  (front-context-string . ".cache\n  drwx   ")
  (rear-context-string . "4k May 29 12:19 ")
@@ -26,12 +32,6 @@
  (rear-context-string . "12 Apr 12 15:05 ")
  (position . 71)
  (last-modified 26620 19922 519430 0))
-("Home"
- (filename . "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Home.md")
- (front-context-string . "[[School]]\n[[Lan")
- (rear-context-string)
- (position . 1)
- (last-modified 26732 21556 906821 0))
 ("skhdrc"
  (filename . "~/.config/skhd/skhdrc")
  (front-context-string . "# keywords https")

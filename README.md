@@ -85,3 +85,6 @@ Settings that I haven't (yet) bothered to automate:
 mkdir /Users/leaf/Library/Preferences/Adobe\ Photoshop\ $(date +%Y)\ Settings/
 ln -s /Users/leaf/Documents/Drawing/Photoshop/New\ Doc\ Sizes.json /Users/leaf/Library/Preferences/Adobe\ Photoshop\ $(date +%Y)\ Settings/New\ Doc\ Sizes.json
 ```
+
+`Ryujinx`
+`ln -s /Users/leaf/Documents/Games/Ryujinx\ \(Application\ Support\) /Users/leaf/Library/Application\ Support/Ryujinx`

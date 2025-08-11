@@ -1,6 +1,8 @@
 #!/bin/sh
 
 osascript -e 'tell application "System Preferences" to quit'
+# set emacs as default folder handler
+defaults write -g "NSFileViewer" -string "org.gnu.Emacs"
 # fix scroll direction
 defaults write -g "com.apple.swipescrolldirection" -bool "false"
 # show scroll bars
@@ -20,6 +22,8 @@ defaults write -g "PMPrintingExpandedStateForPrint" -bool "true"
 #################
 # accent colors #
 #################
+defaults write -g "AppleIconAppearanceTheme" -string "TintedAutomatic"
+defaults write -g "NSTableViewDefaultSizeMode" -int "3"
 defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
@@ -149,8 +153,8 @@ defaults write com.apple.finder "ShowPreviewPane" -bool "true"
 /usr/libexec/PlistBuddy -c \
 						"add 'PreviewPaneSettings':public.html:showQuickActions bool false" \
 						/Users/leaf/Library/Preferences/com.apple.finder.plist
-# defaults write com.apple.finder "CreateDesktop" -bool "false"
-# defaults write com.apple.finder "QuitMenuItem" -bool "true"
+defaults write com.apple.finder "CreateDesktop" -bool "false"
+defaults write com.apple.finder "QuitMenuItem" -bool "true"
 # Disable Notifications
 launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
 # soft restart
@@ -178,6 +182,7 @@ defaults write digital.twisted.noTunes replacement '/System/Applications/iPhone 
 # IINA #
 ########
 defaults write com.colliderli.iina "currentInputConfigName" -string "Movist Default"
+defaults write com.colliderli.iina "initialWindowSizePosition" -string "-0+0"
 defaults write com.colliderli.iina "actionAfterLaunch" -int "1"
 defaults write com.colliderli.iina "alwaysFloatOnTop" -bool "true"
 # defaults write com.colliderli.iina "useLegacyFullScreen" -bool "true"

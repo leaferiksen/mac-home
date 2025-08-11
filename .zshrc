@@ -30,6 +30,7 @@ alias tw='npx @tailwindcss/cli -i app.css -o dist.css --watch'
 ## https://eclecticlight.co/2023/10/11/launchservices-problems-in-sonoma-14-0/
 ## https://lapcatsoftware.com/articles/2023/10/4.html
 alias resetLaunchServices='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -r -v -apps u'
+function xinstall() {xcodes install --experimental-unxip --directory "~/Applications" "$@" --no-superuser true}
 ## copy() {osascript -e "set the clipboard to (POSIX file \"$PWD/$1\")"}
 ## 'brew update; brew upgrade --formulae --no-quarantine $(brew list --formulae); brew upgrade --cask --no-quarantine --greedy $(brew list --cask | grep --invert-match --regexp=thunderbird --regexp=font-red-hat-mono)'
 

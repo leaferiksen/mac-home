@@ -11,5 +11,5 @@
 ;; Maximize with no frame
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 ;; Optimize for PaperWM.spoon
-;; (add-to-list 'default-frame-alist '(undecorated-round . t))
+(add-to-list 'default-frame-alist '(undecorated-round . t))
 ;;; early-init.el ends here

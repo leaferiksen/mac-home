@@ -99,13 +99,19 @@
 			   (load-theme 'flexoki-themes-dark t)
 			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#fffcf0")))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Tab bar
+(use-package tab-line
+  :bind
+  ("M-S-<tab>" . tab-line-switch-to-prev-tab)
+  ("M-<tab>" . tab-line-switch-to-next-tab))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired
 (require 'ls-lisp)
 (use-package dired
   :bind
   (:map dired-mode-map
-		("<mouse-1>" . dired-mouse-find-file)
-		("<mouse-2>" . dired-mouse-find-file)
+		("<mouse-1>" . nil)
+		("<mouse-2>" . nil)
 		("SPC" . 'quicklook)
 		("<up>" . 'dired-previous-line)
 		("<down>" . 'dired-next-line)
@@ -114,12 +120,14 @@
 		("u" . 'dired-previous-line)
 		("e" . 'dired-next-line)
 		("i" . 'dired-find-file)
-		("p" . nil)
 		("n" . 'dired-up-directory)
+		("M" . 'dired-unmark)
+		("p" . nil)
 		("f" . dired-finder-path)
 		("v" . nil)
 		("o" . 'dired-do-open)
-		("s-m" . dired-unmark)))
+		("s-m" . dired-unmark)
+		("a" . 'afinfo)))
 (defun quicklook ()
   "QuickLook the currently selected file in Dired."
   (interactive)
@@ -129,6 +137,10 @@
   (interactive)
   (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
 	(if path (dired (string-trim path)) (message "No Finder window found."))))
+(defun afinfo ()
+  "Get metadata for focused file."
+  (interactive)
+  (let ((filename (dired-get-file-for-visit))) (async-shell-command (format "afinfo --info '%s'" filename))))
 (defun yt-dlp (url)
   "Download the audio, video, or video with subs from a given URL."
   (interactive "sEnter URL to download: ")
@@ -164,31 +176,6 @@
 (use-package swift-mode
   :mode "\\.swift\\'"
   :interpreter "swift")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Note-taking
-;; https://jblevins.org/projects/markdown-mode/
-(use-package markdown
-  :hook
-  (markdown-mode . visual-fill-column-mode)
-  (markdown-mode . variable-pitch-mode)
-  (markdown-mode . jinx-mode)
-  (markdown-mode .
-				 (lambda
-				   ()
-				   (setq-local fill-column 90)
-				   (setq-local line-spacing 12))))
-;; https://github.com/licht1stein/obsidian.el
-(use-package obsidian
-  :config
-  (global-obsidian-mode t)
-  :custom
-  (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
-  :bind
-  (:map obsidian-mode-map
-		("s-i" . markdown-insert-italic)
-		("s-b" . markdown-insert-bold)
-		("s-<return>" . obsidian-follow-link-at-point)
-		("s-S-<return>" . obsidian-backlink-jump)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://depp.brause.cc/nov.el/
 (use-package nov
@@ -284,17 +271,18 @@
  '(apheleia-global-mode t)
  '(auto-package-update-delete-old-versions t)
  '(backward-delete-char-untabify-method nil)
+ '(context-menu-mode t)
  '(cursor-type 'bar)
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
- '(dired-kill-when-opening-new-dired-buffer t)
+ '(dired-kill-when-opening-new-dired-buffer nil)
  '(dired-listing-switches "-alh")
  '(dired-mode-hook '(nerd-icons-dired-mode dired-omit-mode))
  '(dired-omit-files
-   "\\`[.]?#\\|\\.DS_Store\\|\\`\\._\\|\\.CFUserTextEncoding\\|\\.Trash")
+   "^~\\$[^\/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.Trash\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
  '(electric-pair-mode t)
  '(elfeed-feeds
-   '(("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://aftermath.site/feed" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://basicappleguy.com/basicappleblog?format=rss" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
+   '(("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
  '(elfeed-search-filter "@1-month-ago +unread")
  '(fill-column 9999)
  '(frame-resize-pixelwise t)
@@ -302,7 +290,9 @@
  '(global-auto-revert-mode t)
  '(global-auto-revert-non-file-buffers t)
  '(global-flycheck-mode t)
+ '(global-hl-line-mode t)
  '(global-prettify-symbols-mode t)
+ '(global-tab-line-mode t)
  '(global-visual-line-mode t)
  '(inhibit-startup-screen t)
  '(initial-buffer-choice "~/Documents/")
