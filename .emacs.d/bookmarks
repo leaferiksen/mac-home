@@ -2,7 +2,43 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("25-26 Autumn"
+(("init.el"
+ (filename . "~/.emacs.d/init.el")
+ (front-context-string . ";;; init.el --- ")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 26791 35172 481086 0))
+("Design Drive"
+ (filename . "/Volumes/Leaf Eriksen's Design Drive/")
+ (front-context-string . "Design + Me Zine")
+ (rear-context-string . "44 May  2 15:13 ")
+ (position . 130)
+ (last-modified 26790 28974 844496 0))
+("Movies"
+ (filename . "~/Movies/")
+ (front-context-string . ".\n  drwx    1.4k")
+ (rear-context-string . "28 Dec 13  2024 ")
+ (position . 51)
+ (last-modified 26777 19134 660794 0))
+("Games"
+ (filename . "~/Games/")
+ (front-context-string . "Cyberpunk\n  drwx")
+ (rear-context-string . "88 Jul 24 15:06 ")
+ (position . 111)
+ (last-modified 26777 18693 883381 0))
+("Git"
+ (filename . "~/Git/")
+ (front-context-string . "GlassIcons\n  drw")
+ (rear-context-string . "92 Jun 29 17:56 ")
+ (position . 109)
+ (last-modified 26777 18684 906121 0))
+("Komga"
+ (filename . "~/Komga/")
+ (front-context-string . ".stfolder\n  drwx")
+ (rear-context-string . "96 Jun  2 15:42 ")
+ (position . 111)
+ (last-modified 26777 18677 349572 0))
+("25-26 Autumn"
  (filename . "~/Documents/College/25-26 Autumn/")
  (front-context-string . "The Lord Of The ")
  (rear-context-string . "8M Apr 12 17:46 ")

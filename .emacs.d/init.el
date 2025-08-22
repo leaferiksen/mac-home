@@ -67,18 +67,6 @@
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://github.com/meedstrom/massmapper
-(use-package massmapper
-  :init
-  (add-hook 'massmapper-keymap-found-hook #'massmapper-homogenize -50)
-  :config
-  (massmapper-mode 1))
-(use-package which-key
-  :after massmapper-mode
-  :init
-  (cl-pushnew '((" .-." . nil) . t) which-key-replacement-alist
-              :test #'equal))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Load theme, taking current system APPEARANCE into consideration
 ;; https://codeberg.org/crmsnbleyd/flexoki-emacs-theme
 (use-package flexoki-themes
@@ -92,12 +80,8 @@
 			(appearance)
 			(mapc #'disable-theme custom-enabled-themes)
 			(pcase appearance
-			  ('light
-			   (load-theme 'flexoki-themes-light t)
-			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#100f0f"))
-			  ('dark
-			   (load-theme 'flexoki-themes-dark t)
-			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#fffcf0")))))
+			  ('light (load-theme 'flexoki-themes-light t))
+			  ('dark (load-theme 'flexoki-themes-dark t)))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tab bar
 (use-package tab-line
@@ -162,20 +146,28 @@
 (use-package prettier
   :hook after-init
   :bind
-  ("C-p" . 'prettier-prettify)
-  ("C-S-p" . 'prettier-prettify-region))
+  ("s-p" . 'prettier-prettify)
+  ("s-S-p" . 'prettier-prettify-region))
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
-(use-package eglot
-  :custom
-  (eglot-autoshutdown t)
-  :config
-  (add-to-list 'eglot-server-programs
-			   '(swift-mode . ("xcrun" "sourcekit-lsp")))
-  :hook (html-mode css-mode js-mode typescript-mode swift-mode) . 'eglot-ensure)
-(use-package swift-mode
-  :mode "\\.swift\\'"
-  :interpreter "swift")
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "s-l")
+  :hook
+  ((html-mode . lsp)
+   (css-mode . lsp)
+   (js-mode . lsp)
+   (typescript-mode . lsp)
+   (tsx-mode . lsp)
+   (lsp-mode . lsp-enable-which-key-integration))
+  :init
+  (setq lsp-tailwindcss-add-on-mode t)
+  (setq lsp-tailwindcss-skip-config-check t)
+  (setq lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")
+  :commands lsp)
+(use-package lsp-tailwindcss
+  :after lsp-mode)
+(add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://depp.brause.cc/nov.el/
 (use-package nov
@@ -216,8 +208,6 @@
 		("n" . elfeed-search-fetch)
 		("i" . elfeed-search-show-entry))
   (:map elfeed-show-mode-map
-		("<mouse-1>" . elfeed-show-next)
-		("<mouse-3>" . elfeed-show-prev)
 		("<return>" . elfeed-show-next)
 		("S-<return>" . elfeed-show-prev)
 		("u" . elfeed-show-prev)
@@ -244,7 +234,7 @@
 (defun fix-node ()
   "Unlink and relink node binaries."
   (interactive)
-  (async-shell-command "/opt/homebrew/bin/brew unlink node && /opt/homebrew/bin/brew link node"))
+  (async-shell-command "/opt/homebrew/bin/brew unlink node && /opt/homebrew/bin/brew link --overwrite node"))
 (defun vc-amend ()
   "Amend the previous commit title."
   (interactive)
@@ -278,11 +268,12 @@
  '(dired-kill-when-opening-new-dired-buffer nil)
  '(dired-listing-switches "-alh")
  '(dired-mode-hook '(nerd-icons-dired-mode dired-omit-mode))
+ '(dired-mouse-drag-files t)
  '(dired-omit-files
-   "^~\\$[^\/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.Trash\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
+   "^~\\$[^/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.Trash\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
  '(electric-pair-mode t)
  '(elfeed-feeds
-   '(("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
+   '(("https://buttondown.com/monteiro/rss" design) ("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
  '(elfeed-search-filter "@1-month-ago +unread")
  '(fill-column 9999)
  '(frame-resize-pixelwise t)
@@ -304,7 +295,7 @@
  '(ls-lisp-use-insert-directory-program nil)
  '(ls-lisp-use-localized-time-format t)
  '(ls-lisp-verbosity nil)
- '(lsp-dired-mode t)
+ '(lsp-dired-mode t nil (lsp-dired))
  '(make-backup-files nil)
  '(markdown-enable-wiki-links t)
  '(markdown-header-scaling t)
@@ -315,7 +306,7 @@
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
-   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes flymake-eslint jinx massmapper minesweeper minions nerd-icons-dired nov obsidian prettier swift-mode treesit-auto undo-fu visual-fill-column))
+   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lsp-mode lsp-tailwindcss massmapper minesweeper minions nerd-icons-dired nov obsidian prettier swift-mode treesit-auto undo-fu visual-fill-column))
  '(package-vc-selected-packages
    '((massmapper :url "https://github.com/meedstrom/massmapper")))
  '(pixel-scroll-precision-mode t)
@@ -351,7 +342,22 @@
 (package-initialize)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
+(package-refresh-contents)
 (package-install-selected-packages)
 (package-autoremove)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/meedstrom/massmapper
+(use-package massmapper
+  :init
+  (add-hook 'massmapper-keymap-found-hook #'massmapper-homogenize -50)
+  :config
+  (massmapper-mode 1))
+(use-package which-key
+  :after massmapper-mode)
+;; Hide any key sequence involving more than one chord.  We have no reason to
+;; see them after using `massmapper-homogenize'.
+(with-eval-after-load 'which-key
+  (cl-pushnew '((" .-." . nil) . t) which-key-replacement-alist
+              :test #'equal))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init.el ends here

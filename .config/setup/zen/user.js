@@ -4,9 +4,9 @@ user_pref("browser.toolbars.bookmarks.visibility", "always");
 user_pref("browser.search.separatePrivateDefault", false);
 user_pref("browser.tabs.allowTabDetach", false);
 user_pref("zen.tabs.show-newtab-vertical", false);
+user_pref("permissions.default.desktop-notification", 2);
 
 // user_pref("zen.tabs.vertical.right-side", true);
-
 // user_pref("browser.bookmarks.openInTabClosesMenu", false);
 // user_pref("permissions.default.shortcuts", 2);
 // user_pref("browser.tabs.loadDivertedInBackground", true);

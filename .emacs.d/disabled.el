@@ -3,6 +3,17 @@
 ;; by Leaf Eriksen
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Swift
+(use-package eglot
+  :custom
+  (eglot-autoshutdown t)
+  :config
+  (add-to-list 'eglot-server-programs
+			   '(swift-mode . ("xcrun" "sourcekit-lsp")))
+  :hook (swift-mode) . 'eglot-ensure)
+(use-package swift-mode
+  :mode "\\.swift\\'"
+  :interpreter "swift")
 ;; Note-taking
 ;; https://jblevins.org/projects/markdown-mode/
 (use-package markdown
@@ -28,6 +39,18 @@
 		("s-b" . markdown-insert-bold)
 		("s-<return>" . obsidian-follow-link-at-point)
 		("s-S-<return>" . obsidian-backlink-jump)))
+;; https://github.com/d12frosted/homebrew-emacs-plus
+(add-hook 'ns-system-appearance-change-functions
+		  (lambda
+			(appearance)
+			(mapc #'disable-theme custom-enabled-themes)
+			(pcase appearance
+			  ('light
+			   (load-theme 'flexoki-themes-light t)
+			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#100f0f"))
+			  ('dark
+			   (load-theme 'flexoki-themes-dark t)
+			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#fffcf0")))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (keymap-global-set "C-<up>" 'beginning-of-buffer)
 (keymap-global-set "C-<down>" 'end-of-buffer)
@@ -193,3 +216,5 @@
   (modalka-define-kbd "Z" "M-z")
   :bind
   (("<f13>" . modalka-mode)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; disabled.el ends here

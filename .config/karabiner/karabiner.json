@@ -292,10 +292,6 @@
                             {
                                 "conditions": [
                                     {
-                                        "identifiers": [{ "vendor_id": 1452 }],
-                                        "type": "device_if"
-                                    },
-                                    {
                                         "name": "qwerty",
                                         "type": "variable_if",
                                         "value": 0
