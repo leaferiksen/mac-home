@@ -11,6 +11,8 @@ defaults write -g "AppleShowScrollBars" -string "Always"
 defaults write -g "NSZoomButtonShowMenu" -bool "false"
 # disable controller launchpad
 defaults write com.apple.GameController "bluetoothPrefsMenuLongPressAction" -int "0"
+# use analogue clock
+defaults write com.apple.menuextra.clock "IsAnalog" -bool "true"
 ##################################################
 # Expanded Save/Print Modals and file extensions #
 ##################################################
@@ -74,13 +76,13 @@ defaults write com.apple.dock "mru-spaces" -bool "false"
 # 11: Launchpad
 # 13: Lock Screen
 # 12: Notification Center
-defaults delete com.apple.dock wvous-br-corner
+defaults write com.apple.dock "wvous-br-corner" -int "1"
 # 0: No Modifier
 # 131072: Shift Key
 # 262144: Control Key
 # 524288: Option Key
 # 1048576: Command Key
-defaults delete com.apple.dock wvous-br-modifier
+# defaults write com.apple.dock wvous-br-modifier -int "0"
 #################
 # window tiling #
 #################

@@ -80,14 +80,12 @@
 			(appearance)
 			(mapc #'disable-theme custom-enabled-themes)
 			(pcase appearance
-			  ('light (load-theme 'flexoki-themes-light t))
-			  ('dark (load-theme 'flexoki-themes-dark t)))))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Tab bar
-(use-package tab-line
-  :bind
-  ("M-S-<tab>" . tab-line-switch-to-prev-tab)
-  ("M-<tab>" . tab-line-switch-to-next-tab))
+			  ('light
+			   (load-theme 'flexoki-themes-light t)
+			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#100f0f"))
+			  ('dark
+			   (load-theme 'flexoki-themes-dark t)
+			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#fffcf0")))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired
 (require 'ls-lisp)
@@ -110,12 +108,12 @@
 		("f" . dired-finder-path)
 		("v" . nil)
 		("o" . 'dired-do-open)
-		("s-m" . dired-unmark)
 		("a" . 'afinfo)))
 (defun quicklook ()
   "QuickLook the currently selected file in Dired."
   (interactive)
-  (let ((filename (dired-get-file-for-visit))) (shell-command (format "qlmanage -p '%s'" filename))))
+  (let ((filename (dired-get-file-for-visit))) (shell-command (concat (format "qlmanage -p '%s'" filename) " > /dev/null 2>&1"))))
+;; (let ((filename (dired-get-file-for-visit))) (shell-command (format "qlmanage -p '%s'" filename))))
 (defun dired-finder-path ()
   "Open Dired in the frontmost Finder window path, if available."
   (interactive)
@@ -215,6 +213,30 @@
 		("n" . elfeed-kill-buffer)
 		("i" . elfeed-show-visit)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Note-taking
+;; https://jblevins.org/projects/markdown-mode/
+(use-package markdown
+  :hook
+  (markdown-mode . visual-fill-column-mode)
+  (markdown-mode . jinx-mode)
+  (markdown-mode .
+				 (lambda
+				   ()
+				   (setq-local fill-column 90)
+				   (setq-local line-spacing 12)
+				   (face-remap-add-relative 'default :family "Old Timey Code" :height 180))))
+;; https://github.com/licht1stein/obsidian.el
+(use-package obsidian
+  :hook markdown-mode
+  :config
+  (global-obsidian-mode t)
+  :custom
+  (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
+  :bind
+  (:map obsidian-mode-map
+		("s-<return>" . obsidian-follow-link-at-point)
+		("s-S-<return>" . obsidian-backlink-jump)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Minesweeper
 (use-package minesweeper
   :hook
@@ -226,7 +248,7 @@
 (defun ghostty ()
   "Open current directory in Ghostty."
   (interactive)
-  (shell-command (concat "open -a Ghostty --args --working-directory=" (expand-file-name default-directory))))
+  (shell-command (concat "open -a Ghostty --args --working-directory=" "\""(expand-file-name default-directory)"\"")))
 (defun insert-date ()
   "Insert today's date in iso format."
   (interactive)
@@ -265,12 +287,15 @@
  '(cursor-type 'bar)
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
- '(dired-kill-when-opening-new-dired-buffer nil)
- '(dired-listing-switches "-alh")
+ '(dired-clean-confirm-killing-deleted-buffers nil)
+ '(dired-create-destination-dirs 'ask)
+ '(dired-kill-when-opening-new-dired-buffer t)
+ '(dired-listing-switches "-Alh")
  '(dired-mode-hook '(nerd-icons-dired-mode dired-omit-mode))
  '(dired-mouse-drag-files t)
  '(dired-omit-files
    "^~\\$[^/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.Trash\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
+ '(dired-recursive-copies 'always)
  '(electric-pair-mode t)
  '(elfeed-feeds
    '(("https://buttondown.com/monteiro/rss" design) ("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
@@ -281,9 +306,7 @@
  '(global-auto-revert-mode t)
  '(global-auto-revert-non-file-buffers t)
  '(global-flycheck-mode t)
- '(global-hl-line-mode t)
  '(global-prettify-symbols-mode t)
- '(global-tab-line-mode t)
  '(global-visual-line-mode t)
  '(inhibit-startup-screen t)
  '(initial-buffer-choice "~/Documents/")
@@ -306,7 +329,7 @@
  '(obsidian-directory
    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
-   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lsp-mode lsp-tailwindcss massmapper minesweeper minions nerd-icons-dired nov obsidian prettier swift-mode treesit-auto undo-fu visual-fill-column))
+   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lsp-mode lsp-tailwindcss massmapper minesweeper minions nerd-icons-dired nov obsidian prettier spacious-padding swift-mode treesit-auto undo-fu visual-fill-column))
  '(package-vc-selected-packages
    '((massmapper :url "https://github.com/meedstrom/massmapper")))
  '(pixel-scroll-precision-mode t)
@@ -316,9 +339,9 @@
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
  '(sentence-end-double-space nil)
+ '(spacious-padding-mode t)
  '(split-height-threshold 0)
  '(split-width-threshold nil)
- '(tab-line-new-button-show nil)
  '(tab-width 4)
  '(tool-bar-mode nil)
  '(tooltip-mode nil)
@@ -336,15 +359,17 @@
  '(markdown-code-face ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
  '(variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal)))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Install selected packages
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
-(package-refresh-contents)
-(package-install-selected-packages)
-(package-autoremove)
+(defun setup ()
+  "Install selected packages."
+  (interactive)
+  (package-refresh-contents)
+  (package-install-selected-packages)
+  (package-autoremove))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/meedstrom/massmapper
 (use-package massmapper

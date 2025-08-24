@@ -278,6 +278,7 @@
                     },
                     {
                         "description": "Caps Lock → Apps.app",
+                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": { "key_code": "caps_lock" },

@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("init.el"
+(("Home.md"
+ (filename . "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Home.md")
+ (front-context-string . "[[Education]]\n[[")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 26792 40765 547199 0))
+("init.el"
  (filename . "~/.emacs.d/init.el")
  (front-context-string . ";;; init.el --- ")
  (rear-context-string)
