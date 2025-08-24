@@ -132,6 +132,22 @@
 	 ((string-equal choice "video with subtitles") (async-shell-command (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url)))
 	 ((string-equal choice "audio") (async-shell-command (format "yt-dlp -S \"ext\" -x --embed-thumbnail \"%s\"" url))))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package vc-dir
+  :bind
+  (:map vc-dir-mode-map
+		("u" . 'vc-dir-previous-line)
+		("e" . 'vc-dir-next-line)
+		("i" . 'vc-dir-find-file)
+		("n" . nil)
+		("p" . nil)))
+(use-package flymake
+  :bind
+  (:map flymake-diagnostics-buffer-mode-map
+		("u" . 'previous-line)
+		("e" . 'next-line)
+		("n" . nil)
+		("p" . nil)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Coding
 ;; https://github.com/renzmann/treesit-auto
 (use-package treesit-auto
