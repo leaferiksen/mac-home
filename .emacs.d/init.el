@@ -42,7 +42,6 @@
 (keymap-global-set "s-w" 'kill-current-buffer)
 (keymap-global-set "s-t" 'ghostty)
 (keymap-global-set "s-e" 'elfeed)
-(keymap-global-set "s-j" 'obsidian-daily-note)
 (keymap-global-set "s-;" 'comment-box)
 (keymap-global-set "s-y" 'yt-dlp)
 (keymap-global-set "s-b" 'bookmark-jump)
@@ -242,17 +241,6 @@
 				   (setq-local fill-column 85)
 				   (setq-local line-spacing 12)
 				   (face-remap-add-relative 'default :family "Old Timey Code" :height 180))))
-;; https://github.com/licht1stein/obsidian.el
-(use-package obsidian
-  :hook markdown-mode
-  :config
-  (global-obsidian-mode t)
-  :custom
-  (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
-  :bind
-  (:map obsidian-mode-map
-		("s-<return>" . obsidian-follow-link-at-point)
-		("s-S-<return>" . obsidian-backlink-jump)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Minesweeper
 (use-package minesweeper
@@ -343,10 +331,8 @@
  '(markdown-wiki-link-alias-first nil)
  '(mouse-wheel-progressive-speed nil)
  '(ns-pop-up-frames nil)
- '(obsidian-directory
-   "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes" nil nil "Customized with use-package obsidian")
  '(package-selected-packages
-   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lsp-mode lsp-tailwindcss massmapper minesweeper minions nerd-icons-dired nov obsidian prettier spacious-padding swift-mode treesit-auto undo-fu visual-fill-column))
+   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lsp-mode lsp-tailwindcss massmapper minesweeper minions nerd-icons-dired nov prettier spacious-padding swift-mode treesit-auto undo-fu visual-fill-column))
  '(package-vc-selected-packages
    '((massmapper :url "https://github.com/meedstrom/massmapper")))
  '(pixel-scroll-precision-mode t)

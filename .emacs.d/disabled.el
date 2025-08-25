@@ -15,6 +15,18 @@
   :mode "\\.swift\\'"
   :interpreter "swift")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/licht1stein/obsidian.el
+(use-package obsidian
+  :hook markdown-mode
+  :config
+  (global-obsidian-mode t)
+  :custom
+  (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
+  :bind
+  (:map obsidian-mode-map
+		("s-<return>" . obsidian-follow-link-at-point)
+		("s-S-<return>" . obsidian-backlink-jump)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tab bar
 (use-package tab-line
   :bind
