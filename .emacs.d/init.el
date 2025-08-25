@@ -103,7 +103,7 @@
 		("e" . 'dired-next-line)
 		("i" . 'dired-find-file)
 		("n" . 'dired-up-directory)
-		("M" . 'dired-unmark)
+		("k" . 'dired-unmark)
 		("p" . nil)
 		("f" . dired-finder-path)
 		("v" . nil)
@@ -112,7 +112,7 @@
 (defun quicklook ()
   "QuickLook the currently selected file in Dired."
   (interactive)
-  (let ((filename (dired-get-file-for-visit))) (shell-command (concat (format "qlmanage -p '%s'" filename) " > /dev/null 2>&1"))))
+  (let ((filename (dired-get-file-for-visit))) (shell-command (concat "qlmanage -p \"" filename "\" > /dev/null 2>&1"))))
 ;; (let ((filename (dired-get-file-for-visit))) (shell-command (format "qlmanage -p '%s'" filename))))
 (defun dired-finder-path ()
   "Open Dired in the frontmost Finder window path, if available."
@@ -139,7 +139,8 @@
 		("e" . 'vc-dir-next-line)
 		("i" . 'vc-dir-find-file)
 		("n" . nil)
-		("p" . nil)))
+		("p" . nil)
+		("k" . 'vc-dir-unmark)))
 (use-package flymake
   :bind
   (:map flymake-diagnostics-buffer-mode-map
@@ -238,7 +239,7 @@
   (markdown-mode .
 				 (lambda
 				   ()
-				   (setq-local fill-column 90)
+				   (setq-local fill-column 85)
 				   (setq-local line-spacing 12)
 				   (face-remap-add-relative 'default :family "Old Timey Code" :height 180))))
 ;; https://github.com/licht1stein/obsidian.el
