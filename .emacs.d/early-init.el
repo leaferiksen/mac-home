@@ -5,7 +5,7 @@
 ;; Speed up lsp-mode
 (setenv "LSP_USE_PLISTS" "true")
 ;; title present but transparent
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 ;; rounded with no title (optimize for PaperWM.spoon)
 ;; (add-to-list 'default-frame-alist '(undecorated-round . t))
 ;; the t parameter apends to the hook, instead of prepending

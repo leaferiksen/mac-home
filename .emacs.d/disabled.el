@@ -2,6 +2,25 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
+(keymap-global-set "M-<home>" 'completion-preview-prev-candidate)
+(keymap-global-set "M-<end>" 'completion-preview-next-candidate)
+'(prog-mode-hook
+  '(completion-preview-mode))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+'(package-vc-selected-packages
+  '((copilot :vc-backend Git :url "https://github.com/copilot-emacs/copilot.el")))
+'(package-selected-packages
+  '(copilot))
+(use-package copilot
+  :config
+  (add-to-list 'copilot-indentation-alist '(prog-mode 2)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (add-hook 'after-init-hook #'global-prettier-mode)
+(use-package prettier
+  :hook after-init
+  :bind
+  ("s-p" . 'prettier-prettify)
+  ("s-S-p" . 'prettier-prettify-region))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Swift
 (use-package eglot

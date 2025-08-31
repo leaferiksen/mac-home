@@ -25,7 +25,7 @@ export sf="${HOME}/Documents/College/Fall 25"
 # My fun tools
 alias q='qlmanage -p'
 alias fix='xattr -dr com.apple.quarantine'
-alias upb='brew update && brew upgrade'
+alias upb='brew update && brew upgrade --greedy'
 alias upn='ncu -u && npm install'
 alias tw='npx @tailwindcss/cli -i app.css -o dist.css --watch'
 ## https://eclecticlight.co/2023/10/11/launchservices-problems-in-sonoma-14-0/

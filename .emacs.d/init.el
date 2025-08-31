@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
+(add-to-list 'load-path "~/.emacs.d/elpa/nerd-icons.el")
+(require 'nerd-icons)
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;; Unmap default navigation bindings and text rescaling
 (keymap-global-unset "<pinch>")
@@ -42,6 +44,7 @@
 (keymap-global-set "s-w" 'kill-current-buffer)
 (keymap-global-set "s-t" 'ghostty)
 (keymap-global-set "s-e" 'elfeed)
+(keymap-global-set "s-j" 'obsidian-daily-note)
 (keymap-global-set "s-;" 'comment-box)
 (keymap-global-set "s-y" 'yt-dlp)
 (keymap-global-set "s-b" 'bookmark-jump)
@@ -53,8 +56,6 @@
 (keymap-global-set "M-<right>" 'forward-sexp)
 (keymap-global-set "<home>" 'move-beginning-of-line)
 (keymap-global-set "<end>" 'move-end-of-line)
-(keymap-global-set "M-<home>" 'completion-preview-prev-candidate)
-(keymap-global-set "M-<end>" 'completion-preview-next-candidate)
 ;; Escape hatch
 (define-key esc-map	[escape] 'keyboard-quit)
 (define-key ctl-x-map [escape] 'keyboard-quit)
@@ -74,17 +75,29 @@
   (flexoki-themes-use-bold-builtins t)
   (flexoki-themes-use-italic-comments t))
 ;; https://github.com/d12frosted/homebrew-emacs-plus
+(require 'markdown-mode)
 (add-hook 'ns-system-appearance-change-functions
-		  (lambda
-			(appearance)
+		  (lambda (appearance)
 			(mapc #'disable-theme custom-enabled-themes)
 			(pcase appearance
-			  ('light
-			   (load-theme 'flexoki-themes-light t)
-			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#100f0f"))
-			  ('dark
-			   (load-theme 'flexoki-themes-dark t)
-			   (set-face-attribute 'markdown-italic-face nil :slant 'italic :foreground "#fffcf0")))))
+			  ('light (load-theme 'flexoki-themes-light t)
+					  (custom-set-faces
+					   '(markdown-italic-face ((t (:foreground "#100f0f" :slant italic))))
+					   '(outline-1 ((t (:inherit 'default :foreground "#AF3029" :weight semi-bold))))
+					   '(outline-2 ((t (:weight semi-bold :foreground "#BC5215" :inherit 'default))))
+					   '(outline-3 ((t (:weight semi-bold :foreground "#AD8301" :inherit 'default))))
+					   '(outline-4 ((t (:weight semi-bold :foreground "#66800B" :inherit 'default))))
+					   '(outline-5 ((t (:weight semi-bold :foreground "#24837B" :inherit 'default))))
+					   '(outline-6 ((t (:weight semi-bold :foreground "#205EA6" :inherit 'default))))))
+			  ('dark (load-theme 'flexoki-themes-dark t)
+					 (custom-set-faces
+					  '(markdown-italic-face ((t (:foreground "#CECDC3" :slant italic))))
+					  '(outline-1 ((t (:inherit 'default :foreground "#D14D41" :weight semi-bold))))
+					  '(outline-2 ((t (:weight semi-bold :foreground "#DA702C" :inherit 'default))))
+					  '(outline-3 ((t (:weight semi-bold :foreground "#D0A215" :inherit 'default))))
+					  '(outline-4 ((t (:weight semi-bold :foreground "#879A39" :inherit 'default))))
+					  '(outline-5 ((t (:weight semi-bold :foreground "#3AA99F" :inherit 'default))))
+					  '(outline-6 ((t (:weight semi-bold :foreground "#4385BE" :inherit 'default)))))))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired
 (require 'ls-lisp)
@@ -112,12 +125,11 @@
   "QuickLook the currently selected file in Dired."
   (interactive)
   (let ((filename (dired-get-file-for-visit))) (shell-command (concat "qlmanage -p \"" filename "\" > /dev/null 2>&1"))))
-;; (let ((filename (dired-get-file-for-visit))) (shell-command (format "qlmanage -p '%s'" filename))))
 (defun dired-finder-path ()
   "Open Dired in the frontmost Finder window path, if available."
   (interactive)
   (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
-	(if path (dired (string-trim path)) (message "No Finder window found."))))
+    (if path (dired (string-trim path)) (message "No Finder window found."))))
 (defun afinfo ()
   "Get metadata for focused file."
   (interactive)
@@ -126,10 +138,10 @@
   "Download the audio, video, or video with subs from a given URL."
   (interactive "sEnter URL to download: ")
   (let ((choice	(completing-read "Choose download option: " '("video" "video with subtitles" "audio"))))
-	(cond
-	 ((string-equal choice "video") (async-shell-command (format "yt-dlp -S \"ext\" \"%s\"" url)))
-	 ((string-equal choice "video with subtitles") (async-shell-command (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url)))
-	 ((string-equal choice "audio") (async-shell-command (format "yt-dlp -S \"ext\" -x --embed-thumbnail \"%s\"" url))))))
+    (cond
+     ((string-equal choice "video") (async-shell-command (format "yt-dlp -S \"ext\" \"%s\"" url)))
+     ((string-equal choice "video with subtitles") (async-shell-command (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url)))
+     ((string-equal choice "audio") (async-shell-command (format "yt-dlp -S \"ext\" -x --embed-thumbnail \"%s\"" url))))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package vc-dir
   :bind
@@ -156,17 +168,12 @@
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
-;; (add-hook 'after-init-hook #'global-prettier-mode)
-(use-package prettier
-  :hook after-init
-  :bind
-  ("s-p" . 'prettier-prettify)
-  ("s-S-p" . 'prettier-prettify-region))
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 (use-package lsp-mode
-  :init
-  (setq lsp-keymap-prefix "s-l")
+  :custom
+  (lsp-keymap-prefix "s-l")
+  (lsp-copilot-enabled t)
   :hook
   ((html-mode . lsp)
    (css-mode . lsp)
@@ -174,14 +181,22 @@
    (typescript-mode . lsp)
    (tsx-mode . lsp)
    (lsp-mode . lsp-enable-which-key-integration))
-  :init
-  (setq lsp-tailwindcss-add-on-mode t)
-  (setq lsp-tailwindcss-skip-config-check t)
-  (setq lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")
   :commands lsp)
 (use-package lsp-tailwindcss
-  :after lsp-mode)
-(add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save)
+  :after lsp-mode
+  :custom
+  (lsp-tailwindcss-add-on-mode t)
+  (lsp-tailwindcss-skip-config-check t)
+  (lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server"))
+(defun http-server ()
+  "Start a local server at ./index.html, avoiding port conflicts."
+  (interactive)
+  (unless (boundp 'http-port-offset)
+    (setq http-port-offset 0))
+  (setq http-port (- 9999 http-port-offset))
+  (setq http-port-offset (1+ http-port-offset))
+  (let ((filename (concat "http-server@" (prin1-to-string http-port) "<" (file-name-nondirectory (directory-file-name (file-name-directory default-directory))) ">")))
+    (start-process filename filename "npx" "http-server" "-o" "-p" (number-to-string http-port))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://depp.brause.cc/nov.el/
 (use-package nov
@@ -210,11 +225,7 @@
   (elfeed-show-mode . visual-fill-column-mode)
   (elfeed-show-mode .
 					(lambda ()
-					  (setq-local line-spacing 12)
-					  (setq-local fill-column 90)
-					  (setq-local shr-width 85)
-					  (setq-local shr-max-image-proportion 0.5)
-					  (setq-local shr-inhibit-images t)))
+					  (setq-local line-spacing 12)))
   :bind
   (:map elfeed-search-mode-map
 		("u" . previous-line)
@@ -232,15 +243,33 @@
 ;; Note-taking
 ;; https://jblevins.org/projects/markdown-mode/
 (use-package markdown
+  ;; :init
+  ;; (add-to-list 'auto-mode-alist
+  ;; 			   '("\\.txt\\'" . markdown-mode))
+  :custom
+  (markdown-enable-wiki-links t)
   :hook
+  ;; (markdown-mode . obsidian-mode)
   (markdown-mode . visual-fill-column-mode)
   (markdown-mode . jinx-mode)
   (markdown-mode .
 				 (lambda
 				   ()
-				   (setq-local fill-column 85)
+				   ;; (setq-local font-lock-mode -1)
+				   ;; (setq-local fill-column 85)
 				   (setq-local line-spacing 12)
-				   (face-remap-add-relative 'default :family "Old Timey Code" :height 180))))
+				   (face-remap-add-relative 'default :family "Old Timey Code" :height 180)))
+  :bind
+  (:map markdown-mode-map
+		("s-i" . markdown-insert-italic)))
+(use-package obsidian
+  :config
+  (global-obsidian-mode t)
+  :custom
+  (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
+  :bind
+  ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point))
+;; ("s-<return>" . obsidian-follow-link-at-point)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Minesweeper
 (use-package minesweeper
@@ -272,7 +301,7 @@
   (interactive "sMessage to send: ")
   (let ((message
 		 (or message "")))	; Ensure message isn't nil
-	(shell-command (format "osascript -e 'tell application \"Messages\" to send \"%s\" to buddy \"leaferiksen@gmail.com\"'" (shell-quote-argument message)))))
+    (shell-command (format "osascript -e 'tell application \"Messages\" to send \"%s\" to buddy \"leaferiksen@gmail.com\"'" (shell-quote-argument message)))))
 (defun wrap-urls-with-parentheses (start end)
   "Wrap quoted URLs with parentheses from START to END."
   (interactive "r")
@@ -280,6 +309,7 @@
 				  (while (re-search-forward "\"\\(https?://[^\"]+\\)\"" end t) (replace-match "(\"\\1\")"))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GUI Settings
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -299,20 +329,20 @@
  '(dired-mode-hook '(nerd-icons-dired-mode dired-omit-mode))
  '(dired-mouse-drag-files t)
  '(dired-omit-files
-   "^~\\$[^/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.Trash\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
+   "^~\\$[^/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
  '(dired-recursive-copies 'always)
+ '(editorconfig-mode t)
  '(electric-pair-mode t)
  '(elfeed-feeds
    '(("https://buttondown.com/monteiro/rss" design) ("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
  '(elfeed-search-filter "@1-month-ago +unread")
- '(fill-column 9999)
+ ;; '(fill-column 9999)
  '(frame-resize-pixelwise t)
  '(gc-cons-threshold 100000000)
  '(global-auto-revert-mode t)
  '(global-auto-revert-non-file-buffers t)
- '(global-flycheck-mode t)
- '(global-prettify-symbols-mode t)
  '(global-visual-line-mode t)
+ '(html-mode-hook '(lsp))
  '(inhibit-startup-screen t)
  '(initial-buffer-choice "~/Documents/")
  '(isearch-lazy-count t)
@@ -323,25 +353,24 @@
  '(ls-lisp-use-insert-directory-program nil)
  '(ls-lisp-use-localized-time-format t)
  '(ls-lisp-verbosity nil)
- '(lsp-dired-mode t nil (lsp-dired))
  '(make-backup-files nil)
- '(markdown-enable-wiki-links t)
- '(markdown-header-scaling t)
- '(markdown-hide-markup nil)
- '(markdown-wiki-link-alias-first nil)
  '(mouse-wheel-progressive-speed nil)
  '(ns-pop-up-frames nil)
  '(package-selected-packages
-   '(apheleia eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lsp-mode lsp-tailwindcss massmapper minesweeper minions nerd-icons-dired nov prettier spacious-padding swift-mode treesit-auto undo-fu visual-fill-column))
+   '(apheleia company eglot elfeed elfeed-protocol esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lsp-mode lsp-tailwindcss massmapper minesweeper minions nerd-icons-dired nov obsidian snow spacious-padding swift-mode treesit-auto undo-fu visual-fill-column yasnippet))
  '(package-vc-selected-packages
    '((massmapper :url "https://github.com/meedstrom/massmapper")))
  '(pixel-scroll-precision-mode t)
  '(prog-mode-hook
-   '(flymake-mode display-line-numbers-mode completion-preview-mode))
+   '(company-mode prettify-symbols-mode flymake-mode display-line-numbers-mode))
  '(project-mode-line t)
+ '(read-buffer-completion-ignore-case t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
  '(sentence-end-double-space nil)
+ '(shr-fill-text nil)
+ '(shr-inhibit-images t)
+ '(snow-pile-factor 1)
  '(spacious-padding-mode t)
  '(split-height-threshold 0)
  '(split-width-threshold nil)
@@ -352,6 +381,7 @@
  '(use-dialog-box nil)
  '(use-package-always-ensure t)
  '(visual-fill-column-center-text t)
+ '(visual-fill-column-width 85)
  '(which-key-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -360,6 +390,13 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
  '(markdown-code-face ((t (:family "Red Hat Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
+ '(markdown-italic-face ((t (:foreground "#CECDC3" :slant italic))))
+ '(outline-1 ((t (:inherit 'default :foreground "#D14D41" :weight semi-bold))))
+ '(outline-2 ((t (:weight semi-bold :foreground "#DA702C" :inherit 'default))))
+ '(outline-3 ((t (:weight semi-bold :foreground "#D0A215" :inherit 'default))))
+ '(outline-4 ((t (:weight semi-bold :foreground "#879A39" :inherit 'default))))
+ '(outline-5 ((t (:weight semi-bold :foreground "#3AA99F" :inherit 'default))))
+ '(outline-6 ((t (:weight semi-bold :foreground "#4385BE" :inherit 'default))))
  '(variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal)))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'package)
@@ -386,6 +423,6 @@
 ;; see them after using `massmapper-homogenize'.
 (with-eval-after-load 'which-key
   (cl-pushnew '((" .-." . nil) . t) which-key-replacement-alist
-              :test #'equal))
+			  :test #'equal))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init.el ends here
