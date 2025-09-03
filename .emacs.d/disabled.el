@@ -4,8 +4,7 @@
 ;;; Code:
 (keymap-global-set "M-<home>" 'completion-preview-prev-candidate)
 (keymap-global-set "M-<end>" 'completion-preview-next-candidate)
-'(prog-mode-hook
-  '(completion-preview-mode))
+("C-p" . nil) ("C-n" . nil) ("C-f" . nil) ("M-f" . nil) ("C-b" . nil) ("M-b" . nil) ("C-M-p" . nil) ("C-M-n" . nil) ("C-M-f" . nil) ("C-M-b" . nil) ("C-d" . nil) ("M-d" . nil) ("C-w" . nil) ("M-w" . nil) ("C-v" . nil) ("M-v" . nil) ("C-M-v" . nil) ("C-M-S-v" . nil)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 '(package-vc-selected-packages
   '((copilot :vc-backend Git :url "https://github.com/copilot-emacs/copilot.el")))

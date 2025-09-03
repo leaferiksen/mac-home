@@ -121,6 +121,7 @@
                     },
                     {
                         "description": "B → extend",
+                        "enabled": false,
                         "manipulators": [
                             {
                                 "conditions": [
@@ -289,16 +290,12 @@
                     },
                     {
                         "description": "space → left shift if held and space pressed alone",
+                        "enabled": false,
                         "manipulators": [
                             {
                                 "conditions": [
                                     {
                                         "name": "qwerty",
-                                        "type": "variable_if",
-                                        "value": 0
-                                    },
-                                    {
-                                        "name": "extend",
                                         "type": "variable_if",
                                         "value": 0
                                     }
@@ -383,6 +380,7 @@
                     },
                     {
                         "description": "ANSI Fat Z for Colemak CAWS Extend",
+                        "enabled": false,
                         "manipulators": [
                             {
                                 "conditions": [

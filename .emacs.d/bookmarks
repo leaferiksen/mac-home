@@ -2,7 +2,19 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Home.md"
+(("Typography"
+ (filename . "~/Documents/College/25-26 Autumn/Typography/")
+ (front-context-string . "20-08\n  drwx    ")
+ (rear-context-string . "60 Aug 20 12:07 ")
+ (position . 86)
+ (last-modified 26803 48742 541817 0))
+("Design for the Web"
+ (filename . "~/Documents/College/25-26 Autumn/Design for the Web/")
+ (front-context-string . "Intro to CSS\n  d")
+ (rear-context-string . "60 Aug 28 10:04 ")
+ (position . 94)
+ (last-modified 26803 48726 961025 0))
+("Home.md"
  (filename . "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Home.md")
  (front-context-string . "[[Education]]\n[[")
  (rear-context-string)
