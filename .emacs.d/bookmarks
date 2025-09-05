@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Typography"
+(("the-feed"
+ (filename . "~/Git/leaferiksen.net/art272/the-feed/")
+ (front-context-string . "img\n  -rw-     6")
+ (rear-context-string . "12 Sep  2 10:43 ")
+ (position . 80)
+ (last-modified 26808 48860 399960 0))
+("Typography"
  (filename . "~/Documents/College/25-26 Autumn/Typography/")
  (front-context-string . "20-08\n  drwx    ")
  (rear-context-string . "60 Aug 20 12:07 ")
@@ -26,12 +32,12 @@
  (rear-context-string)
  (position . 1)
  (last-modified 26791 35172 481086 0))
-("Design Drive"
+("My Drive"
  (filename . "/Volumes/Leaf Eriksen's Design Drive/")
  (front-context-string . "Design + Me Zine")
  (rear-context-string . "44 May  2 15:13 ")
  (position . 130)
- (last-modified 26790 28974 844496 0))
+ (last-modified 26810 860 355207 0))
 ("Movies"
  (filename . "~/Movies/")
  (front-context-string . ".\n  drwx    1.4k")
@@ -56,12 +62,6 @@
  (rear-context-string . "96 Jun  2 15:42 ")
  (position . 111)
  (last-modified 26777 18677 349572 0))
-("25-26 Autumn"
- (filename . "~/Documents/College/25-26 Autumn/")
- (front-context-string . "The Lord Of The ")
- (rear-context-string . "8M Apr 12 17:46 ")
- (position . 235)
- (last-modified 26771 43354 675265 0))
 ("pi"
  (filename . "/ssh:pi@100.110.202.44:~/")
  (front-context-string . ".cache\n  drwx   ")
