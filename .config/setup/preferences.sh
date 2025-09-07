@@ -91,10 +91,6 @@ defaults write com.apple.WindowManager "EnableTilingByEdgeDrag" -bool "false"
 defaults write com.apple.WindowManager "EnableTopTilingByEdgeDrag" -bool "false"
 defaults write com.apple.WindowManager "EnableTiledWindowMargins" -bool "false"
 ###############
-# Hammerspoon #
-###############
-defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
-###############
 # Lock Screen #
 ###############
 defaults write com.apple.loginwindow ClockFontIdentifier -string "slab"
@@ -167,6 +163,10 @@ defaults write com.apple.finder "QuitMenuItem" -bool "true"
 launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
 # soft restart
 killall Finder Dock NotificationCenter
+#####################
+# Spotlight Privacy #
+#####################
+defaults write com.apple.assistant.support "Search Queries Data Sharing Status" -int "2"
 ###########
 # Taskbar #
 ###########
@@ -181,10 +181,23 @@ defaults write com.fpfxtknjju.wbgcdolfev "scrollDownHidesForNow" -string "false"
 defaults write com.fpfxtknjju.wbgcdolfev "showLaunchpadButton" -string "false"
 defaults write com.fpfxtknjju.wbgcdolfev "showMenubarIcon" -string "false"
 defaults write com.fpfxtknjju.wbgcdolfev "updatePolicy" -string "1"
-#####################
-# Spotlight Privacy #
-#####################
-defaults write com.apple.assistant.support "Search Queries Data Sharing Status" -int "2"
+##############
+# Pure Paste #
+##############
+defaults write com.sindresorhus.Pure-Paste "NSStatusItem Visible Item-0" -bool "false"
+defaults write com.sindresorhus.Pure-Paste "hideMenuBarIcon" -bool "true"
+########
+# Loop #
+########
+defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
+defaults write com.MrKai77.Loop "restoreWindowFrameOnDrag" -bool "true"
+defaults write com.MrKai77.Loop "enablePadding" -bool "true"
+defaults write com.MrKai77.Loop "padding" -string "{\"bottom\":55,\"configureScreenPadding\":true,\"externalBar\":0,\"left\":15,\"right\":15,\"top\":15,\"window\":15}"
+# defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
+# /usr/libexec/PlistBuddy -c  "delete :trigger: array '0'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+# /usr/libexec/PlistBuddy -c "add :trigger: integer '59'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+# /usr/libexec/PlistBuddy -c "add :trigger: integer '58'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+# /usr/libexec/PlistBuddy -c "add :trigger: integer '56'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 ###########
 # noTunes #
 ###########
@@ -214,25 +227,6 @@ defaults write app.zen-browser.zen "DisableAppUpdate" -bool "true"
 # Chromium #
 ############
 defaults write org.chromium.Chromium ExtensionManifestV2Availability -int 2
-#########
-# Hazel #
-#########
-defaults write com.noodlesoft.Hazel "ShowStatusInMenuBar" -bool "false"
-defaults write com.noodlesoft.Hazel "TrashUninstallApps" -bool "true"
-defaults write com.noodlesoft.Hazel "SUEnableAutomaticChecks" -bool "false"
-##############
-# Pure Paste #
-##############
-defaults write com.sindresorhus.Pure-Paste "NSStatusItem Visible Item-0" -bool "false"
-defaults write com.sindresorhus.Pure-Paste "hideMenuBarIcon" -bool "true"
-#########
-# Maccy #
-#########
-defaults write org.p0deje.Maccy "showInStatusBar" -bool "false"
-defaults write org.p0deje.Maccy "popupPosition" -string "center"
-defaults write org.p0deje.Maccy "historySize" -int "10"
-defaults write org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonModifiers\":768,\"carbonKeyCode\":9}"
-defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
 #####################
 # Disabled features #
 #####################
@@ -300,15 +294,6 @@ defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
 # defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
 # # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
 # defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
-########
-# Loop #
-########
-# defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
-# defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
-# /usr/libexec/PlistBuddy -c  "delete :trigger: array '0'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-# /usr/libexec/PlistBuddy -c "add :trigger: integer '59'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-# /usr/libexec/PlistBuddy -c "add :trigger: integer '58'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-# /usr/libexec/PlistBuddy -c "add :trigger: integer '56'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 #####################
 # Lickable Menu Bar #
 #####################
@@ -330,3 +315,21 @@ defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
 # Lunar #
 #########
 # defaults write fyi.lunar.Lunar "hideMenuBarIcon" -bool "true"
+#########
+# Hazel #
+#########
+# defaults write com.noodlesoft.Hazel "ShowStatusInMenuBar" -bool "false"
+# defaults write com.noodlesoft.Hazel "TrashUninstallApps" -bool "true"
+# defaults write com.noodlesoft.Hazel "SUEnableAutomaticChecks" -bool "false"
+#########
+# Maccy #
+#########
+# defaults write org.p0deje.Maccy "showInStatusBar" -bool "false"
+# defaults write org.p0deje.Maccy "popupPosition" -string "center"
+# defaults write org.p0deje.Maccy "historySize" -int "10"
+# defaults write org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonModifiers\":768,\"carbonKeyCode\":9}"
+# defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
+###############
+# Hammerspoon #
+###############
+# defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
