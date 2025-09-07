@@ -13,5 +13,5 @@ mouse-hide-while-typing = true
 shell-integration = zsh
 shell-integration-features = true
 theme = light:flexoki-light, dark:flexoki-dark
-window-height = 999
-window-width = 999
+# window-height = 999
+# window-width = 999

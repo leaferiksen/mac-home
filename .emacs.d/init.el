@@ -5,44 +5,35 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Various functions
 (use-package emacs
   :hook (ns-system-appearance-change-functions . auto-theme)
-  :bind (("s-z" . undo-fu-only-undo) ("s-Z" . undo-fu-only-redo)
+  :bind (("C-x 2" . split-and-follow-horizontally) ("C-x 3" . split-and-follow-vertically)
+		 ("s-z" . undo-fu-only-undo) ("s-Z" . undo-fu-only-redo)
 		 ("s-o" . find-file) ("s-b" . bookmark-jump)
-		 ("s-t" . ghostty) ("s-y" . yt-dlp)
+		 ("s-," . config) ("s-t" . ghostty) ("s-y" . yt-dlp)
 		 ("M-<up>" . backward-up-list) ("M-<down>" . down-list) ("M-<left>" . backward-sexp) ("M-<right>" . forward-sexp) ("<home>" . move-beginning-of-line) ("<end>" . move-end-of-line) ;; Colemak extend bindings
 		 ("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil) ;; Unmap default navigation bindings and text rescaling
 		 ([escape] . keyboard-quit) (:map esc-map ([escape] . keyboard-quit)) (:map ctl-x-map ([escape] . keyboard-quit)) (:map help-map ([escape] . keyboard-quit)) (:map goto-map ([escape] . keyboard-quit)) (:map minibuffer-mode-map ([escape] . minibuffer-keyboard-quit)))
-  :custom-face (default ((t (:family "Maple Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
-  (variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal))))
+  :custom-face (default ((t (:family "Maple Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal)))) (variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal))))
   :custom ((auto-package-update-delete-old-versions t)
 		   (backward-delete-char-untabify-method nil)
 		   (completion-ignore-case t t)
 		   (context-menu-mode t)
 		   (cursor-type 'bar)
 		   (custom-file (expand-file-name "/dev/null"))
-		   (delete-by-moving-to-trash t)
 		   (delete-selection-mode t)
-		   (dired-mode-hook '(nerd-icons-dired-mode dired-omit-mode))
 		   (editorconfig-mode t)
 		   (electric-pair-mode t)
 		   (fill-column 9999)
-		   (flexoki-themes-use-bold-keywords t)
-		   (flexoki-themes-use-bold-builtins t)
-		   (flexoki-themes-use-italic-comments t)
+		   (flexoki-themes-use-bold-keywords t) (flexoki-themes-use-bold-builtins t) (flexoki-themes-use-italic-comments t)
 		   (frame-resize-pixelwise t)
 		   (gc-cons-threshold 100000000)
-		   (global-auto-revert-mode t)
-		   (global-auto-revert-non-file-buffers t)
-		   (global-devil-mode t)
-		   (global-visual-line-mode t)
-		   (inhibit-startup-screen t)
-		   (initial-buffer-choice "~/Documents/")
+		   (global-auto-revert-mode t) (global-devil-mode t) (global-visual-line-mode t)
+		   (inhibit-startup-screen t) (initial-buffer-choice "~/Documents/")
 		   (isearch-lazy-count t)
 		   (lazy-count-prefix-format nil)
 		   (lazy-count-suffix-format "   (%s/%s)")
+		   (line-spacing 0.1)
 		   (make-backup-files nil)
 		   (mouse-wheel-progressive-speed nil)
 		   (ns-pop-up-frames nil)
@@ -50,15 +41,12 @@
 		   (package-vc-selected-packages (:vc-backend Git :url "https://github.com/emacs-tree-sitter/treesit-langs"))
 		   (pixel-scroll-precision-mode t)
 		   (prog-mode-hook '(apheleia-mode company-mode prettify-symbols-mode flymake-mode display-line-numbers-mode))
-		   (project-mode-line t)
-		   (project-vc-extra-root-markers '("project"))
+		   (project-mode-line t) (project-vc-extra-root-markers '("project"))
 		   (read-buffer-completion-ignore-case t)
 		   (read-process-output-max (* 1024 1024))
 		   (ring-bell-function 'ignore)
 		   (scroll-bar-mode nil)
-		   (sentence-end-double-space nil)
-		   (shr-fill-text nil)
-		   (shr-inhibit-images t)
+		   (shr-fill-text nil) (shr-inhibit-images t)
 		   (snow-pile-factor 1)
 		   (spacious-padding-mode t)
 		   (split-height-threshold 0)
@@ -70,8 +58,6 @@
 		   (use-package-always-ensure t)
 		   (visual-fill-column-width 85)
 		   (warning-minimum-level :error)))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Dired
 (use-package ls-lisp
   :custom ((ls-lisp-dirs-first t)
 		   (ls-lisp-ignore-case t)
@@ -93,7 +79,8 @@
 							  ("v" . nil)
 							  ("o" . 'dired-do-open)
 							  ("a" . 'afinfo)))
-  :custom ((trash-directory "~/.Trash")
+  :custom ((global-auto-revert-non-file-buffers t)
+		   (dired-mode-hook '(nerd-icons-dired-mode dired-omit-mode))
 		   (dired-clean-confirm-killing-deleted-buffers nil)
 		   (dired-create-destination-dirs 'ask)
 		   (dired-kill-when-opening-new-dired-buffer t)
@@ -101,7 +88,9 @@
 		   (dired-mouse-drag-files t)
 		   (dired-omit-files
 			"^~\\$[^/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
-		   (dired-recursive-copies 'always)))
+		   (dired-recursive-copies 'always)
+		   (delete-by-moving-to-trash t)
+		   (trash-directory "~/.Trash")))
 (use-package vc-dir
   :bind (:map vc-dir-mode-map
 			  ("u" . 'vc-dir-previous-line)
@@ -112,35 +101,33 @@
 			  ("k" . 'vc-dir-unmark)))
 (use-package nerd-icons
   :load-path "elpa/nerd-icons.el")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; text-mode
-(use-package markdown
-  :mode ("README\\.md\\'" . gfm-mode)
-  :custom ((markdown-enable-wiki-links t)
-		   (markdown-hide-urls t)
-		   (markdown-hide-markup t))
-  :hook ((markdown-mode . visual-fill-column-mode)
-		 (markdown-mode . jinx-mode)
-		 (markdown-mode . (lambda ()
-							(setq-local line-spacing 12)
-							(face-remap-add-relative 'default :family "Old Timey Code" :height 180))))
-  :custom-face (markdown-code-face ((t (:family "Maple Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal)))))
-(use-package obsidian
+(use-package text-mode
+  :custom (sentence-end-double-space nil)
   :preface (global-obsidian-mode t)
-  :custom (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
-  :bind (("s-d" . obsidian-daily-note)
-		 (:map obsidian-mode-map ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point))))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; prog-mode
+  (use-package markdown
+	:mode ("README\\.md\\'" . gfm-mode)
+	:custom ((markdown-enable-wiki-links t)
+			 (markdown-hide-urls t)
+			 (markdown-hide-markup t))
+	:hook ((markdown-mode . visual-fill-column-mode)
+		   (markdown-mode . jinx-mode)
+		   (markdown-mode . variable-pitch-mode)))
+  (use-package obsidian
+	:custom (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
+	:custom-face (markdown-code-face ((t (:family "Maple Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
+	:bind (("s-d" . obsidian-daily-note)
+		   (:map obsidian-mode-map ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point)))))
 (use-package prog-mode
-  :custom (major-mode-remap-alist
-		   '((css-mode . css-ts-mode)
-			 (dockerfile-mode . dockerfile-ts-mode)
-			 (mhtml-mode . html-ts-mode)
-			 (javascript-mode . js-ts-mode)
-			 (json-mode . json-ts-mode)
-			 (typescript-mode . typescript-ts-mode)
-			 (yaml-mode . yaml-ts-mode)))
+  :custom (major-mode-remap-alist '((css-mode . css-ts-mode)
+									(dockerfile-mode . dockerfile-ts-mode)
+									(mhtml-mode . html-ts-mode)
+									(javascript-mode . js-ts-mode)
+									(json-mode . json-ts-mode)
+									(typescript-mode . typescript-ts-mode)
+									(yaml-mode . yaml-ts-mode)))
+  
+  (use-package html-ts
+	:custom (html-ts-mode-indent-offset 4))
   (use-package company-mode
 	:custom ((company-minimum-prefix-length 1)
 			 (company-idle-delay 0.0))
@@ -149,9 +136,7 @@
 	:bind (:map flymake-diagnostics-buffer-mode-map (("u" . 'previous-line)
 													 ("e" . 'next-line)
 													 ("n" . nil)
-													 ("p" . nil))))
-  (use-package html-ts
-	:custom (html-ts-mode-indent-offset 4)))
+													 ("p" . nil)))))
 (use-package lsp-mode
   :hook ((html-mode . lsp)
 		 (css-mode . lsp)
@@ -164,8 +149,6 @@
   :custom ((lsp-tailwindcss-add-on-mode t)
 		   (lsp-tailwindcss-skip-config-check t)
 		   (lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://depp.brause.cc/nov.el/
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode)
   :hook ((nov-mode . visual-line-mode)
@@ -176,8 +159,6 @@
 					   (face-remap-add-relative 'variable-pitch :family "kermit" :height 240))))
   :custom ((nov-text-width t)
 		   (visual-fill-column-center-text t)))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://github.com/skeeto/elfeed
 (use-package elfeed
   :hook ((elfeed-show-mode . variable-pitch-mode)
 		 (elfeed-show-mode . visual-line-mode)
@@ -200,13 +181,9 @@
 			   ("i" . elfeed-show-visit)))
   :custom ((elfeed-feeds '(("https://buttondown.com/monteiro/rss" design) ("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
 		   (elfeed-search-filter "@1-month-ago +unread")))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Minesweeper
 (use-package minesweeper
   :hook (minesweeper-mode .	(lambda ()
 							  (face-remap-add-relative 'default :height 200))))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://codeberg.org/crmsnbleyd/flexoki-emacs-theme
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -215,6 +192,19 @@
 	   (package-refresh-contents)
 	   (package-install-selected-packages)
 	   (package-autoremove))
+(defun config () "Open init.el."
+	   (interactive)
+	   (find-file "~/.emacs.d/init.el"))
+(defun split-and-follow-horizontally () "Move cursor to new window in horizontal split."
+	   (interactive)
+	   (split-window-below)
+	   (balance-windows)
+	   (other-window 1))
+(defun split-and-follow-vertically () "Move cursor to new window in vertical split."
+	   (interactive)
+	   (split-window-right)
+	   (balance-windows)
+	   (other-window 1))
 (defun auto-theme (appearance) "Load theme, taking current system APPEARANCE into consideration."
 	   (mapc #'disable-theme custom-enabled-themes)
 	   (pcase appearance
@@ -286,5 +276,4 @@
 		 (cond ((string-equal choice "video") (async-shell-command (format "yt-dlp -S \"ext\" \"%s\"" url)))
 			   ((string-equal choice "video with subtitles") (async-shell-command (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url)))
 			   ((string-equal choice "audio") (async-shell-command (format "yt-dlp -S \"ext\" -x --embed-thumbnail \"%s\"" url))))))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init.el ends here

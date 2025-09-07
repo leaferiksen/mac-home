@@ -11,7 +11,7 @@
 ;; the t parameter apends to the hook, instead of prepending
 ;; this means it'd be run after other hooks that might fiddle
 ;; with the frame size
-(add-hook 'window-setup-hook 'toggle-frame-maximized t)
+;; (add-hook 'window-setup-hook 'toggle-frame-maximized t)
 ;; Maximize with no frame
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 ;;; early-init.el ends here

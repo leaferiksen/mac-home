@@ -26,12 +26,6 @@
  (rear-context-string)
  (position . 1)
  (last-modified 26792 40765 547199 0))
-("init.el"
- (filename . "~/.emacs.d/init.el")
- (front-context-string . ";;; init.el --- ")
- (rear-context-string)
- (position . 1)
- (last-modified 26791 35172 481086 0))
 ("My Drive"
  (filename . "/Volumes/Leaf Eriksen's Design Drive/")
  (front-context-string . "Design + Me Zine")
@@ -86,12 +80,6 @@
  (rear-context-string . "12 Apr 12 15:05 ")
  (position . 71)
  (last-modified 26620 19922 519430 0))
-("skhdrc"
- (filename . "~/.config/skhd/skhdrc")
- (front-context-string . "# keywords https")
- (rear-context-string)
- (position . 1)
- (last-modified 26583 30818 490335 0))
 ("setup"
  (filename . "~/.config/setup/")
  (front-context-string . "brew.sh\n  -rwxr-")

@@ -25,7 +25,7 @@ defaults write -g "PMPrintingExpandedStateForPrint" -bool "true"
 # accent colors #
 #################
 defaults write -g "AppleIconAppearanceTheme" -string "TintedAutomatic"
-defaults write -g "NSTableViewDefaultSizeMode" -int "3"
+# defaults write -g "NSTableViewDefaultSizeMode" -int "3"
 defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
@@ -86,8 +86,14 @@ defaults write com.apple.dock "wvous-br-corner" -int "1"
 #################
 # window tiling #
 #################
-defaults write com.apple.WindowManager "EnableTilingByEdgeDrag" -int "0"
-defaults write com.apple.WindowManager EnableTiledWindowMargins -bool false
+defaults write -g "AppleActionOnDoubleClick" -string "None"
+defaults write com.apple.WindowManager "EnableTilingByEdgeDrag" -bool "false"
+defaults write com.apple.WindowManager "EnableTopTilingByEdgeDrag" -bool "false"
+defaults write com.apple.WindowManager "EnableTiledWindowMargins" -bool "false"
+###############
+# Hammerspoon #
+###############
+defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
 ###############
 # Lock Screen #
 ###############
@@ -161,21 +167,24 @@ defaults write com.apple.finder "QuitMenuItem" -bool "true"
 launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
 # soft restart
 killall Finder Dock NotificationCenter
+###########
+# Taskbar #
+###########
+defaults write com.fpfxtknjju.wbgcdolfev "NSStatusItem VisibleCC Item-0" -bool "false"
+defaults write com.fpfxtknjju.wbgcdolfev "SUEnableAutomaticChecks" -bool "false"
+defaults write com.fpfxtknjju.wbgcdolfev "size" -string "130"
+defaults write com.fpfxtknjju.wbgcdolfev "centerTasksAndButtons" -string "false"
+defaults write com.fpfxtknjju.wbgcdolfev "taskViewMaxWidth" -string "400"
+defaults write com.fpfxtknjju.wbgcdolfev "clickingFocusedTaskHidesItsApp" -string "true"
+defaults write com.fpfxtknjju.wbgcdolfev "pinList" -string "[]"
+defaults write com.fpfxtknjju.wbgcdolfev "scrollDownHidesForNow" -string "false"
+defaults write com.fpfxtknjju.wbgcdolfev "showLaunchpadButton" -string "false"
+defaults write com.fpfxtknjju.wbgcdolfev "showMenubarIcon" -string "false"
+defaults write com.fpfxtknjju.wbgcdolfev "updatePolicy" -string "1"
 #####################
 # Spotlight Privacy #
 #####################
 defaults write com.apple.assistant.support "Search Queries Data Sharing Status" -int "2"
-########
-# Mail #
-########
-# # https://useplaintext.email/
-# defaults write com.apple.mail "SendFormat" -string "Plain"
-# defaults write com.apple.mail "AutoReplyFormat" -bool "true"
-# defaults write com.apple.mail "NumberOfSnippetLines" -int "0"
-# # Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
-# defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
-# # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
-# defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
 ###########
 # noTunes #
 ###########
@@ -281,6 +290,17 @@ defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
 # disable tracking backdoor
 # defaults write com.apple.safari "WebKitPreferences.privateClickMeasurementEnabled" -bool "false"
 ########
+# Mail #
+########
+# # https://useplaintext.email/
+# defaults write com.apple.mail "SendFormat" -string "Plain"
+# defaults write com.apple.mail "AutoReplyFormat" -bool "true"
+# defaults write com.apple.mail "NumberOfSnippetLines" -int "0"
+# # Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
+# defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
+# # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
+# defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
+########
 # Loop #
 ########
 # defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
@@ -289,10 +309,6 @@ defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
 # /usr/libexec/PlistBuddy -c "add :trigger: integer '59'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 # /usr/libexec/PlistBuddy -c "add :trigger: integer '58'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 # /usr/libexec/PlistBuddy -c "add :trigger: integer '56'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-###############
-# Hammerspoon #
-###############
-# defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
 #####################
 # Lickable Menu Bar #
 #####################
