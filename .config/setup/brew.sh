@@ -2,7 +2,7 @@
 brew install --formula aria2 d12frosted/emacs-plus/emacs-plus@30 duti enchant eza ffmpeg mas node tealdeer yt-dlp zsh-autosuggestions zsh-syntax-highlighting xcodesorg/made/xcodes
 
 brew tap homielab/mountmate https://github.com/homielab/mountmate
-brew install --cask anki anybar calibre chromium font-atkinson-hyperlegible-mono font-atkinson-hyperlegible-next font-maple-mono font-red-hat-mono ghostty iina itch kanriapp/cask/kanri knockknock loop node notunes obsidian osu qlmarkdown qlvideo soulver steam syncthing zen-browser zotero
+brew install --cask anki anybar calibre chromium font-atkinson-hyperlegible-next font-maple-mono ghostty iina itch kanriapp/cask/kanri knockknock loop mountmate node notunes obsidian osu qlmarkdown qlvideo soulver steam syncthing zen-browser zotero
 
 npm install -g npm-check-updates eslint http-server @tailwindcss/language-server prettier rustywind typescript typescript-language-server vscode-langservers-extracted
 

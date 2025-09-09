@@ -37,8 +37,8 @@
 		   (make-backup-files nil)
 		   (mouse-wheel-progressive-speed nil)
 		   (ns-pop-up-frames nil)
-		   (package-selected-packages '(apheleia captain company devil eglot elfeed esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lorem-ipsum lsp-mode lsp-tailwindcss minesweeper minions nerd-icons-dired nov obsidian snow spacious-padding swift-mode treesit-langs undo-fu visual-fill-column yasnippet))
-		   (package-vc-selected-packages (:vc-backend Git :url "https://github.com/emacs-tree-sitter/treesit-langs"))
+		   (package-selected-packages '(apheleia captain company devil eglot elfeed esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lorem-ipsum lsp-mode lsp-tailwindcss minesweeper minions nerd-icons-dired nov obsidian snow spacious-padding swift-mode treesit-langs undo-fu valign visual-fill-column yasnippet))
+		   (package-vc-selected-packages '(treesit-langs :url "https://github.com/emacs-tree-sitter/treesit-langs"))
 		   (pixel-scroll-precision-mode t)
 		   (prog-mode-hook '(apheleia-mode company-mode prettify-symbols-mode flymake-mode display-line-numbers-mode))
 		   (project-mode-line t) (project-vc-extra-root-markers '("project"))
@@ -46,6 +46,7 @@
 		   (read-process-output-max (* 1024 1024))
 		   (ring-bell-function 'ignore)
 		   (scroll-bar-mode nil)
+		   (sentence-end-double-space nil)
 		   (shr-fill-text nil) (shr-inhibit-images t)
 		   (snow-pile-factor 1)
 		   (spacious-padding-mode t)
@@ -101,22 +102,31 @@
 			  ("k" . 'vc-dir-unmark)))
 (use-package nerd-icons
   :load-path "elpa/nerd-icons.el")
-(use-package text-mode
-  :custom (sentence-end-double-space nil)
+;; (require 'org-table)
+(use-package org-table
+  :config (advice-add 'org-table-align :after 'markdown-org-table-align-advice))
+(use-package valign
+  :custom (valign-fancy-bar t))
+(use-package markdown-mode
+  :mode ("README\\.md\\'" . gfm-mode)
+  :custom ((markdown-enable-wiki-links t)
+		   (markdown-hide-urls t))
+  :hook ((markdown-mode . orgtbl-mode)
+		 (markdown-mode . valign-mode)
+		 (markdown-mode . variable-pitch-mode)
+		 (markdown-mode . visual-fill-column-mode)
+		 (markdown-mode . jinx-mode)
+		 (markdown-mode .
+						(lambda ()
+						  (setq-local line-spacing 11))))
+  :custom-face (markdown-table-face ((t (:inherit 'variable-pitch))))
+  (markdown-code-face ((t (:family "Maple Mono"))))
+  :bind (:map markdown-mode-map ("C-c h" . insert-title)))
+(use-package obsidian
   :preface (global-obsidian-mode t)
-  (use-package markdown
-	:mode ("README\\.md\\'" . gfm-mode)
-	:custom ((markdown-enable-wiki-links t)
-			 (markdown-hide-urls t)
-			 (markdown-hide-markup t))
-	:hook ((markdown-mode . visual-fill-column-mode)
-		   (markdown-mode . jinx-mode)
-		   (markdown-mode . variable-pitch-mode)))
-  (use-package obsidian
-	:custom (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
-	:custom-face (markdown-code-face ((t (:family "Maple Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal))))
-	:bind (("s-d" . obsidian-daily-note)
-		   (:map obsidian-mode-map ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point)))))
+  :custom (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
+  :bind (("s-d" . obsidian-daily-note)
+		 (:map obsidian-mode-map ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point))))
 (use-package prog-mode
   :custom (major-mode-remap-alist '((css-mode . css-ts-mode)
 									(dockerfile-mode . dockerfile-ts-mode)
@@ -154,7 +164,7 @@
   :hook ((nov-mode . visual-line-mode)
 		 (nov-mode . visual-fill-column-mode)
 		 (nov-mode . (lambda ()
-					   (setq-local line-spacing 15)
+					   ;; (setq-local line-spacing 15)
 					   (setq-local fill-column 90)
 					   (face-remap-add-relative 'variable-pitch :family "kermit" :height 240))))
   :custom ((nov-text-width t)
@@ -162,10 +172,7 @@
 (use-package elfeed
   :hook ((elfeed-show-mode . variable-pitch-mode)
 		 (elfeed-show-mode . visual-line-mode)
-		 (elfeed-show-mode . visual-fill-column-mode)
-		 (elfeed-show-mode .
-						   (lambda ()
-							 (setq-local line-spacing 12))))
+		 (elfeed-show-mode . visual-fill-column-mode))
   :bind (("s-e" . elfeed)
 		 (:map elfeed-search-mode-map
 			   ("u" . previous-line)
@@ -230,9 +237,21 @@
 	   (interactive)
 	   (vc-checkin nil 'git)
 	   (vc-git-log-edit-toggle-amend))
+(defun insert-title () "Insert an atx heading with the name of the file."
+	   (interactive)
+	   (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) " #\n"))
 (defun insert-date () "Insert today's date in iso format."
 	   (interactive)
 	   (insert (format-time-string "%Y-%m-%d")))
+(defun markdown-org-table-align-advice ()
+  "Replace \"+\" sign with \"|\" in tables."
+  (when (member major-mode '(markdown-mode gfm-mode))
+    (save-excursion
+      (save-restriction
+        (narrow-to-region (org-table-begin) (org-table-end))
+        (goto-char (point-min))
+        (while (search-forward "-+-" nil t)
+          (replace-match "-|-"))))))
 (defun ghostty () "Open current directory in Ghostty."
 	   (interactive)
 	   (shell-command (concat "open -a Ghostty --args --working-directory=" "\""(expand-file-name default-directory)"\"")))
