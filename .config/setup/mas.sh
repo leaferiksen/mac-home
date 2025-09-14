@@ -6,7 +6,7 @@ mas install 1616831348  # Affinity Designer 2
 mas install 1606941598  # Affinity Publisher 2
 mas install 6475957299  # Upsies
 mas install 1573769710  # Macarte
-# mas install 937984704	  # Amphetamine
+mas install 937984704	  # Amphetamine
 # mas install 899247664   # TestFlight
 # mas install 497799835   # Xcode
 # mas install 6454431289  # CrystalFetch ISO Downloader

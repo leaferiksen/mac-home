@@ -84,8 +84,25 @@
                         "enabled": false,
                         "manipulators": [
                             {
-                                "from": { "key_code": "caps_lock" },
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
+                                },
                                 "to": [{ "shell_command": "open -a Apps" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Caps Lock to Escape",
+                        "enabled": false,
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "escape" }],
                                 "type": "basic"
                             }
                         ]
@@ -213,11 +230,19 @@
                         ]
                     },
                     {
-                        "description": "Caps Lock to Escape",
                         "manipulators": [
                             {
-                                "from": { "key_code": "caps_lock" },
-                                "to": [{ "key_code": "escape" }],
+                                "description": "Caps Lock to Meh",
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": ["left_control", "left_option"]
+                                    }
+                                ],
                                 "type": "basic"
                             }
                         ]

@@ -15,7 +15,8 @@
 		 ("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil) ;; Unmap default navigation bindings and text rescaling
 		 ([escape] . keyboard-quit) (:map esc-map ([escape] . keyboard-quit)) (:map ctl-x-map ([escape] . keyboard-quit)) (:map help-map ([escape] . keyboard-quit)) (:map goto-map ([escape] . keyboard-quit)) (:map minibuffer-mode-map ([escape] . minibuffer-keyboard-quit)))
   :custom-face (default ((t (:family "Maple Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal)))) (variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal))))
-  :custom ((auto-package-update-delete-old-versions t)
+  :custom ((apheleia-global-mode t)
+		   (auto-package-update-delete-old-versions t)
 		   (backward-delete-char-untabify-method nil)
 		   (completion-ignore-case t t)
 		   (context-menu-mode t)
@@ -118,10 +119,11 @@
 		 (markdown-mode . jinx-mode)
 		 (markdown-mode .
 						(lambda ()
-						  (setq-local line-spacing 11))))
+						  (setq-local line-spacing 10))))
   :custom-face (markdown-table-face ((t (:inherit 'variable-pitch))))
   (markdown-code-face ((t (:family "Maple Mono"))))
-  :bind (:map markdown-mode-map ("C-c h" . insert-title)))
+  :bind (:map markdown-mode-map ("C-c h" . insert-title)
+			  ("C-c d" . insert-date)))
 (use-package obsidian
   :preface (global-obsidian-mode t)
   :custom (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
@@ -138,6 +140,8 @@
   
   (use-package html-ts
 	:custom (html-ts-mode-indent-offset 4))
+  (use-package sgml-mode
+	:custom (sgml-basic-offset 4))
   (use-package company-mode
 	:custom ((company-minimum-prefix-length 1)
 			 (company-idle-delay 0.0))
@@ -242,7 +246,7 @@
 	   (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) " #\n"))
 (defun insert-date () "Insert today's date in iso format."
 	   (interactive)
-	   (insert (format-time-string "%Y-%m-%d")))
+	   (insert "## " (format-time-string "%Y-%m-%d") " ##\n"))
 (defun markdown-org-table-align-advice ()
   "Replace \"+\" sign with \"|\" in tables."
   (when (member major-mode '(markdown-mode gfm-mode))

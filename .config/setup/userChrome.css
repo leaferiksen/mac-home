@@ -1,11 +1,14 @@
-*|*:root {
-    --list-item-min-height: 18px !important;
-}
+/**|*:root {
+	--list-item-min-height: 18px !important;
+}*/
 #folderTree [title="Starred"],
 [title="Spam"],
 [title="Junk"],
 [title="Archive"],
-[title="All Mail"],
-[title="Important"] {
-    display: none !important;
+[title*="All Mail"],
+[title="Notes"] {
+	display: none !important;
+}
+.header-buttons-container {
+	display: none !important;
 }

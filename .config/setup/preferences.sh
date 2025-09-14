@@ -44,8 +44,8 @@ defaults write com.apple.AppleMultitouchTrackpad "TrackpadThreeFingerDrag" -bool
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadThreeFingerDrag" -bool "true"
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadTwoFingerFromRightEdgeSwipeGesture" -int "0"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadTwoFingerFromRightEdgeSwipeGesture" -int "0"
-defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerVertSwipeGesture" -int "0"
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerVertSwipeGesture" -int "0"
+defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerVertSwipeGesture" -int "2"
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerVertSwipeGesture" -int "2"
 # disable swiping between desktops
 # defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
 # defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
@@ -89,7 +89,7 @@ defaults write com.apple.dock "wvous-br-corner" -int "1"
 defaults write -g "AppleActionOnDoubleClick" -string "None"
 defaults write com.apple.WindowManager "EnableTilingByEdgeDrag" -bool "false"
 defaults write com.apple.WindowManager "EnableTopTilingByEdgeDrag" -bool "false"
-defaults write com.apple.WindowManager "EnableTiledWindowMargins" -bool "false"
+# defaults write com.apple.WindowManager "EnableTiledWindowMargins" -bool "false"
 ###############
 # Lock Screen #
 ###############
@@ -191,8 +191,10 @@ defaults write com.sindresorhus.Pure-Paste "hideMenuBarIcon" -bool "true"
 ########
 defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
 defaults write com.MrKai77.Loop "restoreWindowFrameOnDrag" -bool "true"
+# defaults write com.MrKai77.Loop "windowSnapping" -bool "false"
 defaults write com.MrKai77.Loop "enablePadding" -bool "true"
-defaults write com.MrKai77.Loop "padding" -string "{\"bottom\":55,\"configureScreenPadding\":true,\"externalBar\":0,\"left\":15,\"right\":15,\"top\":15,\"window\":15}"
+defaults write com.MrKai77.Loop "padding" -string "{\"bottom\":15,\"configureScreenPadding\":true,\"externalBar\":0,\"left\":15,\"right\":15,\"top\":10,\"window\":15}"
+# \"bottom\": 55
 # defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
 # /usr/libexec/PlistBuddy -c  "delete :trigger: array '0'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 # /usr/libexec/PlistBuddy -c "add :trigger: integer '59'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
