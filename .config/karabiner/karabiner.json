@@ -4,6 +4,28 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "space → left shift if held and space pressed alone",
+                        "enabled": false,
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "qwerty",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "spacebar",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "left_shift" }],
+                                "to_if_alone": [{ "key_code": "spacebar" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "ANSI Fat Z for Colemak CAWS Extend",
                         "enabled": false,
                         "manipulators": [
@@ -58,28 +80,6 @@
                         ]
                     },
                     {
-                        "description": "space → left shift if held and space pressed alone",
-                        "enabled": false,
-                        "manipulators": [
-                            {
-                                "conditions": [
-                                    {
-                                        "name": "qwerty",
-                                        "type": "variable_if",
-                                        "value": 0
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "spacebar",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [{ "key_code": "left_shift" }],
-                                "to_if_alone": [{ "key_code": "spacebar" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Caps Lock → Apps.app",
                         "enabled": false,
                         "manipulators": [
@@ -103,6 +103,149 @@
                                     "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [{ "key_code": "escape" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "enabled": false,
+                        "manipulators": [
+                            {
+                                "description": "Caps Lock to Meh",
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": ["left_control", "left_option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Caps Lock and Right ⌘ to Extend toggle",
+                        "enabled": false,
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "extend",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": {
+                                        "mandatory": [],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [
+                                    { "shell_command": "bash -c 'echo -n \"hollow\" > /dev/udp/localhost/1738'" },
+                                    {
+                                        "set_variable": {
+                                            "name": "extend",
+                                            "value": 1
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "extend",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": {
+                                        "mandatory": [],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [
+                                    { "shell_command": "bash -c 'echo -n \"filled\" > /dev/udp/localhost/1738'" },
+                                    {
+                                        "set_variable": {
+                                            "name": "extend",
+                                            "value": 0
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "extend",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": { "key_code": "right_command" },
+                                "to": [
+                                    { "shell_command": "bash -c 'echo -n \"hollow\" > /dev/udp/localhost/1738'" },
+                                    {
+                                        "set_variable": {
+                                            "name": "extend",
+                                            "value": 1
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "extend",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": { "key_code": "right_command" },
+                                "to": [
+                                    { "shell_command": "bash -c 'echo -n \"filled\" > /dev/udp/localhost/1738'" },
+                                    {
+                                        "set_variable": {
+                                            "name": "extend",
+                                            "value": 0
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "extend",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "description": "spacebar to meh if held and space pressed alone",
+                                "from": {
+                                    "key_code": "spacebar",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": ["left_control", "left_option"]
+                                    }
+                                ],
+                                "to_if_alone": [{ "key_code": "spacebar" }],
                                 "type": "basic"
                             }
                         ]
@@ -225,133 +368,6 @@
                                     "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [{ "shell_command": "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "manipulators": [
-                            {
-                                "description": "Caps Lock to Meh",
-                                "from": {
-                                    "key_code": "caps_lock",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_shift",
-                                        "modifiers": ["left_control", "left_option"]
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Caps Lock and Right ⌘ to Extend toggle",
-                        "manipulators": [
-                            {
-                                "conditions": [
-                                    {
-                                        "name": "extend",
-                                        "type": "variable_if",
-                                        "value": 0
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "caps_lock",
-                                    "modifiers": {
-                                        "mandatory": [],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [
-                                    { "shell_command": "bash -c 'echo -n \"hollow\" > /dev/udp/localhost/1738'" },
-                                    {
-                                        "set_variable": {
-                                            "name": "extend",
-                                            "value": 1
-                                        }
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "name": "extend",
-                                        "type": "variable_if",
-                                        "value": 1
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "caps_lock",
-                                    "modifiers": {
-                                        "mandatory": [],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [
-                                    { "shell_command": "bash -c 'echo -n \"filled\" > /dev/udp/localhost/1738'" },
-                                    {
-                                        "set_variable": {
-                                            "name": "extend",
-                                            "value": 0
-                                        }
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "name": "extend",
-                                        "type": "variable_if",
-                                        "value": 0
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "right_command",
-                                    "modifiers": {
-                                        "mandatory": [],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [
-                                    { "shell_command": "bash -c 'echo -n \"hollow\" > /dev/udp/localhost/1738'" },
-                                    {
-                                        "set_variable": {
-                                            "name": "extend",
-                                            "value": 1
-                                        }
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "name": "extend",
-                                        "type": "variable_if",
-                                        "value": 1
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "right_command",
-                                    "modifiers": {
-                                        "mandatory": [],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [
-                                    { "shell_command": "bash -c 'echo -n \"filled\" > /dev/udp/localhost/1738'" },
-                                    {
-                                        "set_variable": {
-                                            "name": "extend",
-                                            "value": 0
-                                        }
-                                    }
-                                ],
                                 "type": "basic"
                             }
                         ]

@@ -4,13 +4,14 @@
 # fullscreen = true
 # keybind = global:opt+grave_accent=toggle_quick_terminal
 # macos-non-native-fullscreen = visible-menu
-# macos-titlebar-style = tabs
 # window-height = 999
 # window-width = 999
 auto-update = off
+font-family = "Maple Mono NF CN"
 font-size = 14
 macos-icon = chalkboard
 macos-option-as-alt = true
+macos-titlebar-style = hidden
 mouse-hide-while-typing = true
 shell-integration = zsh
 shell-integration-features = true

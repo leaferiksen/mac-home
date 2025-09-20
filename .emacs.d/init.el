@@ -11,10 +11,13 @@
 		 ("s-z" . undo-fu-only-undo) ("s-Z" . undo-fu-only-redo)
 		 ("s-o" . find-file) ("s-b" . bookmark-jump)
 		 ("s-," . config) ("s-t" . ghostty) ("s-y" . yt-dlp)
-		 ("M-<up>" . backward-up-list) ("M-<down>" . down-list) ("M-<left>" . backward-sexp) ("M-<right>" . forward-sexp) ("<home>" . move-beginning-of-line) ("<end>" . move-end-of-line) ;; Colemak extend bindings
-		 ("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil) ;; Unmap default navigation bindings and text rescaling
+		 ;; Colemak extend bindings
+		 ("s-<up>" . backward-up-list) ("s-<down>" . down-list) ("s-<left>" . backward-sexp) ("s-<right>" . forward-sexp)
+		 ("<home>" . move-beginning-of-line) ("<end>" . move-end-of-line) ("M-<delete>" . kill-word)
+		 ;; Unmap default navigation bindings and text rescaling
+		 ("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil) 
 		 ([escape] . keyboard-quit) (:map esc-map ([escape] . keyboard-quit)) (:map ctl-x-map ([escape] . keyboard-quit)) (:map help-map ([escape] . keyboard-quit)) (:map goto-map ([escape] . keyboard-quit)) (:map minibuffer-mode-map ([escape] . minibuffer-keyboard-quit)))
-  :custom-face (default ((t (:family "Maple Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal)))) (variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal))))
+  :custom-face (default ((t (:family "Maple Mono NF CN" :foundry "nil" :slant normal :weight regular :height 160 :width normal)))) (variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal))))
   :custom ((apheleia-global-mode t)
 		   (auto-package-update-delete-old-versions t)
 		   (backward-delete-char-untabify-method nil)
@@ -32,13 +35,14 @@
 		   (global-auto-revert-mode t) (global-devil-mode t) (global-visual-line-mode t)
 		   (inhibit-startup-screen t) (initial-buffer-choice "~/Documents/")
 		   (isearch-lazy-count t)
+		   (large-file-warning-threshold 100000000)
 		   (lazy-count-prefix-format nil)
 		   (lazy-count-suffix-format "   (%s/%s)")
 		   (line-spacing 0.1)
 		   (make-backup-files nil)
 		   (mouse-wheel-progressive-speed nil)
 		   (ns-pop-up-frames nil)
-		   (package-selected-packages '(apheleia captain company devil eglot elfeed esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lorem-ipsum lsp-mode lsp-tailwindcss minesweeper minions nerd-icons-dired nov obsidian snow spacious-padding swift-mode treesit-langs undo-fu valign visual-fill-column yasnippet))
+		   (package-selected-packages '(apheleia captain company devil eglot elfeed esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lorem-ipsum lsp-mode lsp-tailwindcss mastodon minesweeper minions nerd-icons-dired nov obsidian snow spacious-padding swift-mode treesit-langs undo-fu valign visual-fill-column yasnippet))
 		   (package-vc-selected-packages '(treesit-langs :url "https://github.com/emacs-tree-sitter/treesit-langs"))
 		   (pixel-scroll-precision-mode t)
 		   (prog-mode-hook '(apheleia-mode company-mode prettify-symbols-mode flymake-mode display-line-numbers-mode))
@@ -51,8 +55,6 @@
 		   (shr-fill-text nil) (shr-inhibit-images t)
 		   (snow-pile-factor 1)
 		   (spacious-padding-mode t)
-		   (split-height-threshold 0)
-		   (split-width-threshold nil)
 		   (tab-width 4)
 		   (tool-bar-mode nil)
 		   (tooltip-mode nil)
@@ -75,9 +77,9 @@
 							  ("e" . 'dired-next-line)
 							  ("i" . 'dired-find-file)
 							  ("n" . 'dired-up-directory)
-							  ("k" . 'dired-unmark)
 							  ("p" . nil)
 							  ("f" . dired-finder-path)
+							  ("k" . 'dired-unmark)
 							  ("v" . nil)
 							  ("o" . 'dired-do-open)
 							  ("a" . 'afinfo)))
@@ -93,6 +95,14 @@
 		   (dired-recursive-copies 'always)
 		   (delete-by-moving-to-trash t)
 		   (trash-directory "~/.Trash")))
+(use-package arc-mode
+  :bind (:map archive-mode-map (("u" . 'archive-previous-line)
+								("e" . 'archive-next-line)
+								("i" . 'archive-extract)
+								("n" . 'quit-window)
+								("p" . nil)
+								("f" . nil)
+								("k" . 'archive-unflag))))
 (use-package vc-dir
   :bind (:map vc-dir-mode-map
 			  ("u" . 'vc-dir-previous-line)
@@ -100,21 +110,15 @@
 			  ("i" . 'vc-dir-find-file)
 			  ("n" . nil)
 			  ("p" . nil)
+			  ("f" . nil)
 			  ("k" . 'vc-dir-unmark)))
 (use-package nerd-icons
   :load-path "elpa/nerd-icons.el")
-;; (require 'org-table)
-(use-package org-table
-  :config (advice-add 'org-table-align :after 'markdown-org-table-align-advice))
-(use-package valign
-  :custom (valign-fancy-bar t))
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
   :custom ((markdown-enable-wiki-links t)
 		   (markdown-hide-urls t))
-  :hook ((markdown-mode . orgtbl-mode)
-		 (markdown-mode . valign-mode)
-		 (markdown-mode . variable-pitch-mode)
+  :hook ((markdown-mode . variable-pitch-mode)
 		 (markdown-mode . visual-fill-column-mode)
 		 (markdown-mode . jinx-mode)
 		 (markdown-mode .
@@ -165,18 +169,30 @@
 		   (lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")))
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode)
-  :hook ((nov-mode . visual-line-mode)
-		 (nov-mode . visual-fill-column-mode)
+  :hook ((nov-mode . visual-fill-column-mode)
 		 (nov-mode . (lambda ()
 					   ;; (setq-local line-spacing 15)
 					   (setq-local fill-column 90)
 					   (face-remap-add-relative 'variable-pitch :family "kermit" :height 240))))
   :custom ((nov-text-width t)
 		   (visual-fill-column-center-text t)))
+(use-package mastodon
+  :bind ("s-`" . mastodon)
+  (:map mastodon-mode-map
+		("u" . 'mastodon-tl-goto-prev-item)
+		("e" . 'mastodon-tl-goto-next-item)
+		("n" . nil)
+		("p" . nil))
+  :hook ((mastodon-mode . visual-fill-column-mode)
+		 (mastodon-mode . variable-pitch-mode))
+  :custom ((mastodon-instance-url "https://mastodon.social")
+		   (mastodon-active-user "leaferiksen")))
 (use-package elfeed
   :hook ((elfeed-show-mode . variable-pitch-mode)
-		 (elfeed-show-mode . visual-line-mode)
-		 (elfeed-show-mode . visual-fill-column-mode))
+		 (elfeed-show-mode . visual-fill-column-mode)
+		 (elfeed-show-mode .
+						   (lambda ()
+							 (setq-local line-spacing 10))))
   :bind (("s-e" . elfeed)
 		 (:map elfeed-search-mode-map
 			   ("u" . previous-line)

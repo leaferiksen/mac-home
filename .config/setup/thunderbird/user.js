@@ -2,7 +2,7 @@
 // user_pref("browser.display.foreground_color", "# fcfcfc");
 // user_pref("mailnews.default_sort_order", 2);
 user_pref("app.update.auto", false);
-user_pref("calendar.view.visiblehours", 12);
+user_pref("calendar.view.visiblehours", 16);
 user_pref("calendar.weeks.inview", 3);
 user_pref("extensions.ui.locale.hidden", true);
 user_pref("font.name.monospace.x-western", "Atkinson Hyperlegible Next");

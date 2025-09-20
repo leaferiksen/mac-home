@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
+(split-height-threshold 0)
+(split-width-threshold nil)
 (set-frame-position (selected-frame) 0 0)
 (set-frame-size (selected-frame) 1465 845 t)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16,6 +18,13 @@
 (use-package copilot
   :config
   (add-to-list 'copilot-indentation-alist '(prog-mode 2)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package org-table
+  :config (advice-add 'org-table-align :after 'markdown-org-table-align-advice))
+(use-package valign
+  :custom (valign-fancy-bar t))
+:hook ((markdown-mode . orgtbl-mode)
+	   (markdown-mode . valign-mode))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package treesit-auto
   :custom
@@ -94,12 +103,6 @@
   :bind
   ("M-S-<tab>" . tab-line-switch-to-prev-tab)
   ("M-<tab>" . tab-line-switch-to-next-tab))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://codeberg.org/martianh/mastodon.el
-(use-package mastodon
-  :custom
-  (mastodon-instance-url "https://mastodon.social")
-  (mastodon-active-user "leaferiksen"))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/lorniu/go-translate
 (use-package go-translate
