@@ -12,15 +12,16 @@ export SHELL_SESSIONS_DISABLE=1
 
 # editor 
 export ALTERNATE_EDITOR=""
-export EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
-export VISUAL="emacsclient -r -a emacs"         # $VISUAL opens in GUI mode
+export EDITOR="nano"
+export VISUAL="nano"
 export LESSHISTFILE=-
 
 # named directories
 export ic="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
 export sd="/Volumes/Leafs Media"
 export sf="${HOME}/Documents/College/Fall 25"
-## ssh-add --apple-use-keychain ~/.ssh/id_ed25519 &> /dev/null
+export PATH=/Users/leaf/bin:/opt/homebrew/sbin:/opt/homebrew/bin:$PATH
+export HOMEBREW_CASK_OPTS="--appdir=~/Applications --no-quarantine"
 
 # My fun tools
 alias q='qlmanage -p'

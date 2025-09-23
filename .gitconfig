@@ -2,11 +2,16 @@
 [user]
 	name = Leaf Eriksen
 	email = leaferiksen@gmail.com
+	signingkey = 50AE3EB872027C3D
 [pull]
 	ff = only
 [merge]
 	conflictStyle = zdiff3
 [rerere]
 	enabled = true
-[url "git@github.com:"]
-    insteadOf = "https://github.com/"
+[commit]
+	gpgsign = true
+[tag]
+	gpgSign = true
+[gpg]
+	program = /usr/local/MacGPG2/bin/gpg2
