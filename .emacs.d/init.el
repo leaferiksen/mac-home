@@ -15,12 +15,14 @@
 		 ("s-<up>" . backward-up-list) ("s-<down>" . down-list) ("s-<left>" . backward-sexp) ("s-<right>" . forward-sexp)
 		 ("<home>" . move-beginning-of-line) ("<end>" . move-end-of-line) ("M-<delete>" . kill-word)
 		 ;; Unmap default navigation bindings and text rescaling
-		 ("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil) 
-		 ([escape] . keyboard-quit) (:map esc-map ([escape] . keyboard-quit)) (:map ctl-x-map ([escape] . keyboard-quit)) (:map help-map ([escape] . keyboard-quit)) (:map goto-map ([escape] . keyboard-quit)) (:map minibuffer-mode-map ([escape] . minibuffer-keyboard-quit)))
+		 ("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil))
   :custom-face (default ((t (:family "Maple Mono NF CN" :foundry "nil" :slant normal :weight regular :height 160 :width normal)))) (variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal))))
   :custom ((apheleia-global-mode t)
+		   (auth-sources "~/.authinfo.gpg")
 		   (auto-package-update-delete-old-versions t)
 		   (backward-delete-char-untabify-method nil)
+		   (browse-url-mailto-function 'browse-url-generic)
+		   (browse-url-generic-program "open")
 		   (completion-ignore-case t t)
 		   (context-menu-mode t)
 		   (cursor-type 'bar)
@@ -28,11 +30,12 @@
 		   (delete-selection-mode t)
 		   (editorconfig-mode t)
 		   (electric-pair-mode t)
+		   (epg-pinentry-mode 'loopback)
 		   (fill-column 9999)
 		   (flexoki-themes-use-bold-keywords t) (flexoki-themes-use-bold-builtins t) (flexoki-themes-use-italic-comments t)
 		   (frame-resize-pixelwise t)
 		   (gc-cons-threshold 100000000)
-		   (global-auto-revert-mode t) (global-devil-mode t) (global-visual-line-mode t)
+		   (global-auto-revert-mode t) (global-devil-mode t) (global-visual-line-mode t) ;; (global-tab-line-mode t)
 		   (inhibit-startup-screen t) (initial-buffer-choice "~/Documents/")
 		   (isearch-lazy-count t)
 		   (large-file-warning-threshold 100000000)
@@ -40,9 +43,10 @@
 		   (lazy-count-suffix-format "   (%s/%s)")
 		   (line-spacing 0.1)
 		   (make-backup-files nil)
+		   (mode-line-collapse-minor-modes t)
 		   (mouse-wheel-progressive-speed nil)
 		   (ns-pop-up-frames nil)
-		   (package-selected-packages '(apheleia captain company devil eglot elfeed esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lorem-ipsum lsp-mode lsp-tailwindcss mastodon minesweeper minions nerd-icons-dired nov obsidian snow spacious-padding swift-mode treesit-langs undo-fu valign visual-fill-column yasnippet))
+		   (package-selected-packages '(apheleia captain company devil eglot elfeed emmet-mode emojify esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lorem-ipsum lsp-mode lsp-tailwindcss lua-mode mastodon minesweeper minions mpv nerd-icons-dired nov obsidian snow spacious-padding swift-mode treesit-langs undo-fu valign visual-fill-column yasnippet))
 		   (package-vc-selected-packages '(treesit-langs :url "https://github.com/emacs-tree-sitter/treesit-langs"))
 		   (pixel-scroll-precision-mode t)
 		   (prog-mode-hook '(apheleia-mode company-mode prettify-symbols-mode flymake-mode display-line-numbers-mode))
@@ -62,6 +66,11 @@
 		   (use-package-always-ensure t)
 		   (visual-fill-column-width 85)
 		   (warning-minimum-level :error)))
+(use-package help-mode
+  :bind (:map help-mode-map (("u" . help-goto-previous-page)
+							 ("e" . help-goto-next-page)
+							 ("n" . nil)
+							 ("p" . nil))))
 (use-package ls-lisp
   :custom ((ls-lisp-dirs-first t)
 		   (ls-lisp-ignore-case t)
@@ -99,19 +108,18 @@
   :bind (:map archive-mode-map (("u" . 'archive-previous-line)
 								("e" . 'archive-next-line)
 								("i" . 'archive-extract)
-								("n" . 'quit-window)
+								("n" . 'arc-open-parent-folder-and-quit)
 								("p" . nil)
 								("f" . nil)
 								("k" . 'archive-unflag))))
 (use-package vc-dir
-  :bind (:map vc-dir-mode-map
-			  ("u" . 'vc-dir-previous-line)
-			  ("e" . 'vc-dir-next-line)
-			  ("i" . 'vc-dir-find-file)
-			  ("n" . nil)
-			  ("p" . nil)
-			  ("f" . nil)
-			  ("k" . 'vc-dir-unmark)))
+  :bind (:map vc-dir-mode-map (("u" . 'vc-dir-previous-line)
+							   ("e" . 'vc-dir-next-line)
+							   ("i" . 'vc-dir-find-file)
+							   ("n" . nil)
+							   ("p" . nil)
+							   ("f" . nil)
+							   ("k" . 'vc-dir-unmark))))
 (use-package nerd-icons
   :load-path "elpa/nerd-icons.el")
 (use-package markdown-mode
@@ -141,11 +149,6 @@
 									(json-mode . json-ts-mode)
 									(typescript-mode . typescript-ts-mode)
 									(yaml-mode . yaml-ts-mode)))
-  
-  (use-package html-ts
-	:custom (html-ts-mode-indent-offset 4))
-  (use-package sgml-mode
-	:custom (sgml-basic-offset 4))
   (use-package company-mode
 	:custom ((company-minimum-prefix-length 1)
 			 (company-idle-delay 0.0))
@@ -155,12 +158,15 @@
 													 ("e" . 'next-line)
 													 ("n" . nil)
 													 ("p" . nil)))))
+(use-package emmet-mode
+  :hook ((html-mode css-mode) . emmet-mode))
 (use-package lsp-mode
   :hook ((html-mode . lsp)
 		 (css-mode . lsp)
 		 (js-mode . lsp)
 		 (typescript-mode . lsp)
 		 (tsx-mode . lsp))
+  :custom (lsp-enable-indentation nil)
   :commands lsp)
 (use-package lsp-tailwindcss
   :after lsp-mode
@@ -177,35 +183,36 @@
   :custom ((nov-text-width t)
 		   (visual-fill-column-center-text t)))
 (use-package mastodon
-  :bind ("s-`" . mastodon)
-  (:map mastodon-mode-map
-		("u" . 'mastodon-tl-goto-prev-item)
-		("e" . 'mastodon-tl-goto-next-item)
-		("n" . nil)
-		("p" . nil))
+  :bind (:map mastodon-mode-map (("u" . 'mastodon-tl-goto-prev-item)
+								 ("e" . 'mastodon-tl-goto-next-item)
+								 ("n" . nil)
+								 ("p" . nil)))
   :hook ((mastodon-mode . visual-fill-column-mode)
-		 (mastodon-mode . variable-pitch-mode))
+		 (mastodon-toot-mode . visual-fill-column-mode))
   :custom ((mastodon-instance-url "https://mastodon.social")
-		   (mastodon-active-user "leaferiksen")))
+		   (mastodon-active-user "leaferiksen")
+		   (mastodon-auth-use-auth-source nil)
+		   (mastodon-tl--display-media-p nil)
+		   (mastodon-tl--highlight-current-toot t)
+		   (mastodon-auth-use-auth-source t)))
+(use-package mpv
+  :custom (mpv-executable "iina"))
 (use-package elfeed
   :hook ((elfeed-show-mode . variable-pitch-mode)
 		 (elfeed-show-mode . visual-fill-column-mode)
 		 (elfeed-show-mode .
 						   (lambda ()
 							 (setq-local line-spacing 10))))
-  :bind (("s-e" . elfeed)
-		 (:map elfeed-search-mode-map
-			   ("u" . previous-line)
-			   ("e" . next-line)
-			   ("n" . elfeed-search-fetch)
-			   ("i" . elfeed-search-show-entry))
-		 (:map elfeed-show-mode-map
-			   ("<return>" . elfeed-show-next)
-			   ("S-<return>" . elfeed-show-prev)
-			   ("u" . elfeed-show-prev)
-			   ("e" . elfeed-show-next)
-			   ("n" . elfeed-kill-buffer)
-			   ("i" . elfeed-show-visit)))
+  :bind ((:map elfeed-search-mode-map (("u" . previous-line)
+									   ("e" . next-line)
+									   ("n" . elfeed-search-fetch)
+									   ("i" . elfeed-search-show-entry)))
+		 (:map elfeed-show-mode-map (("<return>" . elfeed-show-next)
+									 ("S-<return>" . elfeed-show-prev)
+									 ("u" . elfeed-show-prev)
+									 ("e" . elfeed-show-next)
+									 ("n" . elfeed-kill-buffer)
+									 ("i" . elfeed-show-visit))))
   :custom ((elfeed-feeds '(("https://buttondown.com/monteiro/rss" design) ("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals)))
 		   (elfeed-search-filter "@1-month-ago +unread")))
 (use-package minesweeper
@@ -253,6 +260,11 @@
 				 '(outline-4 ((t (:height 1.1 :weight semi-bold :foreground "#879A39" :inherit 'default))))
 				 '(outline-5 ((t (:height 1.0 :weight semi-bold :foreground "#3AA99F" :inherit 'default))))
 				 '(outline-6 ((t (:height 1.0 :weight semi-bold :foreground "#4385BE" :inherit 'default))))))))
+(defun arc-open-parent-folder-and-quit () "Open the parent folder of the current arc-mode buffer and quit the arc-mode window."
+	   (interactive)
+	   (let ((parent-dir (expand-file-name default-directory)))
+		 (quit-window)
+		 (dired parent-dir)))
 (defun vc-amend () "Amend the previous commit title."
 	   (interactive)
 	   (vc-checkin nil 'git)
@@ -267,11 +279,11 @@
   "Replace \"+\" sign with \"|\" in tables."
   (when (member major-mode '(markdown-mode gfm-mode))
     (save-excursion
-      (save-restriction
+	  (save-restriction
         (narrow-to-region (org-table-begin) (org-table-end))
         (goto-char (point-min))
         (while (search-forward "-+-" nil t)
-          (replace-match "-|-"))))))
+		  (replace-match "-|-"))))))
 (defun ghostty () "Open current directory in Ghostty."
 	   (interactive)
 	   (shell-command (concat "open -a Ghostty --args --working-directory=" "\""(expand-file-name default-directory)"\"")))

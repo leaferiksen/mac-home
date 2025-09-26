@@ -2,12 +2,10 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("the-feed"
- (filename . "~/Git/leaferiksen.net/art272/the-feed/")
- (front-context-string . "img\n  -rw-     6")
- (rear-context-string . "12 Sep  2 10:43 ")
- (position . 80)
- (last-modified 26808 48860 399960 0))
+(("Elfeed"
+ (location . "@1-month-ago +unread")
+ (tags "unread")
+ (handler . elfeed-search-bookmark-handler))
 ("Typography"
  (filename . "~/Documents/College/25-26 Autumn/Typography/")
  (front-context-string . "20-08\n  drwx    ")

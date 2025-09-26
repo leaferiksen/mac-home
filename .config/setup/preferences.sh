@@ -167,39 +167,15 @@ killall Finder Dock NotificationCenter
 # Spotlight Privacy #
 #####################
 defaults write com.apple.assistant.support "Search Queries Data Sharing Status" -int "2"
-###########
-# Taskbar #
-###########
-defaults write com.fpfxtknjju.wbgcdolfev "NSStatusItem VisibleCC Item-0" -bool "false"
-defaults write com.fpfxtknjju.wbgcdolfev "SUEnableAutomaticChecks" -bool "false"
-defaults write com.fpfxtknjju.wbgcdolfev "size" -string "130"
-# defaults write com.fpfxtknjju.wbgcdolfev "centerTasksAndButtons" -string "true"
-defaults write com.fpfxtknjju.wbgcdolfev "taskViewMaxWidth" -string "300"
-defaults write com.fpfxtknjju.wbgcdolfev "clickingFocusedTaskHidesItsApp" -string "true"
-defaults write com.fpfxtknjju.wbgcdolfev "pinList" -string "[]"
-defaults write com.fpfxtknjju.wbgcdolfev "scrollDownHidesForNow" -string "false"
-defaults write com.fpfxtknjju.wbgcdolfev "showLaunchpadButton" -string "false"
-defaults write com.fpfxtknjju.wbgcdolfev "showMenubarIcon" -string "false"
-defaults write com.fpfxtknjju.wbgcdolfev "updatePolicy" -string "1"
+######################
+# GnuPG and PinEntry #
+######################
+defaults write org.gpgtools.common "UseKeychain" -bool "true"
 ##############
 # Pure Paste #
 ##############
 defaults write com.sindresorhus.Pure-Paste "NSStatusItem Visible Item-0" -bool "false"
 defaults write com.sindresorhus.Pure-Paste "hideMenuBarIcon" -bool "true"
-########
-# Loop #
-########
-defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
-defaults write com.MrKai77.Loop "restoreWindowFrameOnDrag" -bool "true"
-# defaults write com.MrKai77.Loop "windowSnapping" -bool "false"
-defaults write com.MrKai77.Loop "enablePadding" -bool "true"
-defaults write com.MrKai77.Loop "padding" -string "{\"bottom\":15,\"configureScreenPadding\":true,\"externalBar\":0,\"left\":15,\"right\":15,\"top\":10,\"window\":15}"
-# \"bottom\": 55
-# defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
-# /usr/libexec/PlistBuddy -c  "delete :trigger: array '0'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-# /usr/libexec/PlistBuddy -c "add :trigger: integer '59'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-# /usr/libexec/PlistBuddy -c "add :trigger: integer '58'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-# /usr/libexec/PlistBuddy -c "add :trigger: integer '56'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 ###########
 # noTunes #
 ###########
@@ -296,6 +272,34 @@ defaults write org.chromium.Chromium ExtensionManifestV2Availability -int 2
 # defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
 # # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
 # defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
+###########
+# Taskbar #
+###########
+# defaults write com.fpfxtknjju.wbgcdolfev "NSStatusItem VisibleCC Item-0" -bool "false"
+# defaults write com.fpfxtknjju.wbgcdolfev "SUEnableAutomaticChecks" -bool "false"
+# defaults write com.fpfxtknjju.wbgcdolfev "size" -string "130"
+# # defaults write com.fpfxtknjju.wbgcdolfev "centerTasksAndButtons" -string "true"
+# defaults write com.fpfxtknjju.wbgcdolfev "taskViewMaxWidth" -string "300"
+# defaults write com.fpfxtknjju.wbgcdolfev "clickingFocusedTaskHidesItsApp" -string "true"
+# defaults write com.fpfxtknjju.wbgcdolfev "pinList" -string "[]"
+# defaults write com.fpfxtknjju.wbgcdolfev "scrollDownHidesForNow" -string "false"
+# defaults write com.fpfxtknjju.wbgcdolfev "showLaunchpadButton" -string "false"
+# defaults write com.fpfxtknjju.wbgcdolfev "showMenubarIcon" -string "false"
+# defaults write com.fpfxtknjju.wbgcdolfev "updatePolicy" -string "1"
+########
+# Loop #
+########
+# defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
+# defaults write com.MrKai77.Loop "restoreWindowFrameOnDrag" -bool "true"
+# # defaults write com.MrKai77.Loop "windowSnapping" -bool "false"
+# defaults write com.MrKai77.Loop "enablePadding" -bool "true"
+# defaults write com.MrKai77.Loop "padding" -string "{\"bottom\":15,\"configureScreenPadding\":true,\"externalBar\":0,\"left\":15,\"right\":15,\"top\":10,\"window\":15}"
+# \"bottom\": 55
+# defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
+# /usr/libexec/PlistBuddy -c  "delete :trigger: array '0'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+# /usr/libexec/PlistBuddy -c "add :trigger: integer '59'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+# /usr/libexec/PlistBuddy -c "add :trigger: integer '58'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
+# /usr/libexec/PlistBuddy -c "add :trigger: integer '56'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
 #####################
 # Lickable Menu Bar #
 #####################

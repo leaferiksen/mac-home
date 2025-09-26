@@ -21,6 +21,11 @@ git remote add origin git@github.com:leaferiksen/mac-home.git && \
 git fetch && \
 git checkout -f main
 ```
+if ssh isn't properly configured with the keychain, try the following before trying again
+``` bash
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519 &> /dev/null
+```
+
 To install Homebrew elevate session to `admin` and run
 ```bash
 su - admin

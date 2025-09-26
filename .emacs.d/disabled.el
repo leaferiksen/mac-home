@@ -2,6 +2,13 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
+(use-package diff-mode
+  :bind (:map diff-mode-read-only (("u" . 'diff-hunk-prev)
+								   ("e" . 'diff-hunk-next)
+								   ("U" . 'diff-file-prev)
+								   ("E" . 'diff-file-next)
+								   ("n" . nil)
+								   ("p" . nil))))
 (split-height-threshold 0)
 (split-width-threshold nil)
 (set-frame-position (selected-frame) 0 0)
@@ -10,6 +17,7 @@
 (keymap-global-set "M-<home>" 'completion-preview-prev-candidate)
 (keymap-global-set "M-<end>" 'completion-preview-next-candidate)
 ("C-p" . nil) ("C-n" . nil) ("C-f" . nil) ("M-f" . nil) ("C-b" . nil) ("M-b" . nil) ("C-M-p" . nil) ("C-M-n" . nil) ("C-M-f" . nil) ("C-M-b" . nil) ("C-d" . nil) ("M-d" . nil) ("C-w" . nil) ("M-w" . nil) ("C-v" . nil) ("M-v" . nil) ("C-M-v" . nil) ("C-M-S-v" . nil)
+([escape] . keyboard-quit) (:map esc-map ([escape] . keyboard-quit)) (:map ctl-x-map ([escape] . keyboard-quit)) (:map help-map ([escape] . keyboard-quit)) (:map goto-map ([escape] . keyboard-quit)) (:map minibuffer-mode-map ([escape] . minibuffer-keyboard-quit)) (:map devil-mode-map ([escape] . keyboard-quit))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 '(package-vc-selected-packages
   '((copilot :vc-backend Git :url "https://github.com/copilot-emacs/copilot.el")))
