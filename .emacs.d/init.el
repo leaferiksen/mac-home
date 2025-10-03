@@ -12,11 +12,11 @@
 		 ("s-o" . find-file) ("s-b" . bookmark-jump)
 		 ("s-," . config) ("s-t" . ghostty) ("s-y" . yt-dlp)
 		 ;; Colemak extend bindings
-		 ("s-<up>" . backward-up-list) ("s-<down>" . down-list) ("s-<left>" . backward-sexp) ("s-<right>" . forward-sexp)
-		 ("<home>" . move-beginning-of-line) ("<end>" . move-end-of-line) ("M-<delete>" . kill-word)
+		 ("s-<up>" . backward-up-list) ("s-<down>" . down-list) ("s-<left>" . backward-sexp) ("s-<right>" . forward-sexp) 
+		 ("<home>" . beginning-of-visual-line) ("<end>" . end-of-visual-line) ("M-<delete>" . kill-word)
 		 ;; Unmap default navigation bindings and text rescaling
 		 ("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil))
-  :custom-face (default ((t (:family "Maple Mono NF CN" :foundry "nil" :slant normal :weight regular :height 160 :width normal)))) (variable-pitch ((t (:family "Atkinson Hyperlegible Next" :foundry "nil" :slant normal :weight regular :height 200 :width normal))))
+  :custom-face (default ((t (:family "Maple Mono NF CN" :height 160)))) (variable-pitch ((t (:family "New York" :height 200))))
   :custom ((apheleia-global-mode t)
 		   (auth-sources "~/.authinfo.gpg")
 		   (auto-package-update-delete-old-versions t)
@@ -32,11 +32,16 @@
 		   (electric-pair-mode t)
 		   (epg-pinentry-mode 'loopback)
 		   (fill-column 9999)
-		   (flexoki-themes-use-bold-keywords t) (flexoki-themes-use-bold-builtins t) (flexoki-themes-use-italic-comments t)
+		   (flexoki-themes-use-bold-keywords t)
+		   (flexoki-themes-use-bold-builtins t)
+		   (flexoki-themes-use-italic-comments t)
 		   (frame-resize-pixelwise t)
 		   (gc-cons-threshold 100000000)
-		   (global-auto-revert-mode t) (global-devil-mode t) (global-visual-line-mode t) ;; (global-tab-line-mode t)
-		   (inhibit-startup-screen t) (initial-buffer-choice "~/Documents/")
+		   (global-auto-revert-mode t)
+		   (global-devil-mode t)
+		   (global-visual-line-mode t)
+		   (inhibit-startup-screen t)
+		   (initial-buffer-choice "~/Documents/")
 		   (isearch-lazy-count t)
 		   (large-file-warning-threshold 100000000)
 		   (lazy-count-prefix-format nil)
@@ -46,11 +51,12 @@
 		   (mode-line-collapse-minor-modes t)
 		   (mouse-wheel-progressive-speed nil)
 		   (ns-pop-up-frames nil)
-		   (package-selected-packages '(apheleia captain company devil eglot elfeed emmet-mode emojify esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lorem-ipsum lsp-mode lsp-tailwindcss lua-mode mastodon minesweeper minions mpv nerd-icons-dired nov obsidian snow spacious-padding swift-mode treesit-langs undo-fu valign visual-fill-column yasnippet))
-		   (package-vc-selected-packages '(treesit-langs :url "https://github.com/emacs-tree-sitter/treesit-langs"))
+		   (package-selected-packages '(apheleia captain devil eglot elfeed emmet-mode emojify esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lorem-ipsum lsp-mode lsp-tailwindcss lua-mode mastodon minesweeper minions mpv nerd-icons-dired nov obsidian snow spacious-padding swift-mode treesit-langs undo-fu valign visual-fill-column yasnippet))
+		   (package-vc-selected-packages '((treesit-langs :url "https://github.com/emacs-tree-sitter/treesit-langs")))
 		   (pixel-scroll-precision-mode t)
-		   (prog-mode-hook '(apheleia-mode company-mode prettify-symbols-mode flymake-mode display-line-numbers-mode))
-		   (project-mode-line t) (project-vc-extra-root-markers '("project"))
+		   (prog-mode-hook '(apheleia-mode completion-preview-mode prettify-symbols-mode flymake-mode display-line-numbers-mode))
+		   (project-mode-line t)
+		   (project-vc-extra-root-markers '("project"))
 		   (read-buffer-completion-ignore-case t)
 		   (read-process-output-max (* 1024 1024))
 		   (ring-bell-function 'ignore)
@@ -63,9 +69,13 @@
 		   (tool-bar-mode nil)
 		   (tooltip-mode nil)
 		   (use-dialog-box nil)
-		   (use-package-always-ensure t)
+		   (visual-fill-column-center-text t)
 		   (visual-fill-column-width 85)
 		   (warning-minimum-level :error)))
+(use-package visual-fill-column
+  :hook (visual-fill-column-mode .
+								 (lambda ()
+								   (setq-local line-spacing 0.4))))
 (use-package help-mode
   :bind (:map help-mode-map (("u" . help-goto-previous-page)
 							 ("e" . help-goto-next-page)
@@ -122,25 +132,26 @@
 							   ("k" . 'vc-dir-unmark))))
 (use-package nerd-icons
   :load-path "elpa/nerd-icons.el")
-(use-package markdown-mode
-  :mode ("README\\.md\\'" . gfm-mode)
-  :custom ((markdown-enable-wiki-links t)
-		   (markdown-hide-urls t))
-  :hook ((markdown-mode . variable-pitch-mode)
-		 (markdown-mode . visual-fill-column-mode)
-		 (markdown-mode . jinx-mode)
-		 (markdown-mode .
-						(lambda ()
-						  (setq-local line-spacing 10))))
-  :custom-face (markdown-table-face ((t (:inherit 'variable-pitch))))
-  (markdown-code-face ((t (:family "Maple Mono"))))
-  :bind (:map markdown-mode-map ("C-c h" . insert-title)
-			  ("C-c d" . insert-date)))
 (use-package obsidian
   :preface (global-obsidian-mode t)
   :custom (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   :bind (("s-d" . obsidian-daily-note)
 		 (:map obsidian-mode-map ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point))))
+(use-package markdown-mode
+  :mode ("README\\.md\\'" . gfm-mode)
+  :custom ((markdown-enable-wiki-links t)
+		   (markdown-hide-urls t)
+		   (markdown-hide-markup t)
+		   (markdown-asymmetric-header t))
+  :hook ((markdown-mode . variable-pitch-mode)
+		 (markdown-mode . visual-fill-column-mode)
+		 (markdown-mode . jinx-mode)
+		 (markdown-mode . valign-mode))
+  :custom-face (markdown-link-face ((t (:underline nil)))) (markdown-code-face ((t (:family "Maple Mono NF CN")))) (markdown-table-face ((t (:inherit 'variable-pitch))))
+  :bind (:map markdown-mode-map (("C-c h" . insert-title)
+								 ("C-c d" . insert-date))))
+(use-package valign
+  :custom (valign-fancy-bar t))
 (use-package prog-mode
   :custom (major-mode-remap-alist '((css-mode . css-ts-mode)
 									(dockerfile-mode . dockerfile-ts-mode)
@@ -149,10 +160,9 @@
 									(json-mode . json-ts-mode)
 									(typescript-mode . typescript-ts-mode)
 									(yaml-mode . yaml-ts-mode)))
-  (use-package company-mode
-	:custom ((company-minimum-prefix-length 1)
-			 (company-idle-delay 0.0))
-	:bind (:map company-active-map ([escape] . company-abort)))
+  (use-package completion-preview
+	:bind (:map completion-preview-active-mode-map (("M-<up>" . completion-preview-next-candidate)
+													("M-<down>" . completion-preview-prev-candidate))))
   (use-package flymake-mode
 	:bind (:map flymake-diagnostics-buffer-mode-map (("u" . 'previous-line)
 													 ("e" . 'next-line)
@@ -175,13 +185,9 @@
 		   (lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")))
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode)
-  :hook ((nov-mode . visual-fill-column-mode)
-		 (nov-mode . (lambda ()
-					   ;; (setq-local line-spacing 15)
-					   (setq-local fill-column 90)
-					   (face-remap-add-relative 'variable-pitch :family "kermit" :height 240))))
-  :custom ((nov-text-width t)
-		   (visual-fill-column-center-text t)))
+  :hook ((nov-mode . variable-pitch-mode)
+		 (nov-mode . visual-fill-column-mode))
+  :custom (nov-text-width t))
 (use-package mastodon
   :bind (:map mastodon-mode-map (("u" . 'mastodon-tl-goto-prev-item)
 								 ("e" . 'mastodon-tl-goto-next-item)
@@ -199,10 +205,7 @@
   :custom (mpv-executable "iina"))
 (use-package elfeed
   :hook ((elfeed-show-mode . variable-pitch-mode)
-		 (elfeed-show-mode . visual-fill-column-mode)
-		 (elfeed-show-mode .
-						   (lambda ()
-							 (setq-local line-spacing 10))))
+		 (elfeed-show-mode . visual-fill-column-mode))
   :bind ((:map elfeed-search-mode-map (("u" . previous-line)
 									   ("e" . next-line)
 									   ("n" . elfeed-search-fetch)
@@ -225,6 +228,7 @@
 	   (interactive)
 	   (package-refresh-contents)
 	   (package-install-selected-packages)
+	   (package-vc-install-selected-packages)
 	   (package-autoremove))
 (defun config () "Open init.el."
 	   (interactive)
@@ -271,19 +275,10 @@
 	   (vc-git-log-edit-toggle-amend))
 (defun insert-title () "Insert an atx heading with the name of the file."
 	   (interactive)
-	   (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) " #\n"))
-(defun insert-date () "Insert today's date in iso format."
+	   (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
+(defun insert-date () "Insert an atx heading with today's date in iso format."
 	   (interactive)
-	   (insert "## " (format-time-string "%Y-%m-%d") " ##\n"))
-(defun markdown-org-table-align-advice ()
-  "Replace \"+\" sign with \"|\" in tables."
-  (when (member major-mode '(markdown-mode gfm-mode))
-    (save-excursion
-	  (save-restriction
-        (narrow-to-region (org-table-begin) (org-table-end))
-        (goto-char (point-min))
-        (while (search-forward "-+-" nil t)
-		  (replace-match "-|-"))))))
+	   (insert "## " (format-time-string "%Y-%m-%d") "\n"))
 (defun ghostty () "Open current directory in Ghostty."
 	   (interactive)
 	   (shell-command (concat "open -a Ghostty --args --working-directory=" "\""(expand-file-name default-directory)"\"")))

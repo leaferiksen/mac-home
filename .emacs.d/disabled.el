@@ -2,6 +2,41 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Terminal Interface Emacs ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Hide the menu bar when it can't integrate with the global bar
+(when (not (display-graphic-p))
+  (menu-bar-mode -1))
+(setq frame-background-mode 'dark)
+;; (debug-on-variable-change 'frame-background-mode)
+(mapc 'frame-set-background-mode (frame-list))
+(use-package kkp
+  :ensure t
+  :config
+  ;; (setq kkp-alt-modifier 'alt) ;; use this if you want to map the Alt keyboard modifier to Alt in Emacs (and not to Meta)
+  (global-kkp-mode +1))
+;; Equivalent bindings
+("C-u" . previous-line) ("C-e" . next-line) ("C-n" . backward-char) ;; ("C-i" . forward-char)
+("C-p" . nil) ("C-b" . nil) ("C-f" . nil) ;; ("C-n" . nil)
+("C-l" . beginning-of-visual-line) ("C-y" . end-of-visual-line)
+("C-a" . nil) ; ("C-e" . nil)
+("C-j" . scroll-up-command) ;; ("C-m" . scroll-down-command)
+("C-v" . nil) ("M-v" . nil)
+("M-n" . backward-word) ("M-i" . forward-word)
+("M-b" . nil) ("M-f" . nil)
+("C-'" . delete-forward-char) ("C-o" . delete-backward-char) ("M-'" . kill-word) ("M-o" . backward-kill-word)
+(massmapper :url "https://github.com/meedstrom/massmapper")
+(use-package massmapper
+  :config (massmapper-conserve-ret-and-tab)
+  :custom (massmapper-Cm-Ci-override '(("C-i" . forward-char)
+									   ("C-m" . scroll-down-command))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(nov-mode . (lambda ()
+			  ;; (setq-local line-spacing 15)
+			  (setq-local fill-column 90)
+			  (face-remap-add-relative 'variable-pitch :family "kermit" :height 240)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package diff-mode
   :bind (:map diff-mode-read-only (("u" . 'diff-hunk-prev)
 								   ("e" . 'diff-hunk-next)
@@ -29,10 +64,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package org-table
   :config (advice-add 'org-table-align :after 'markdown-org-table-align-advice))
-(use-package valign
-  :custom (valign-fancy-bar t))
-:hook ((markdown-mode . orgtbl-mode)
-	   (markdown-mode . valign-mode))
+(defun markdown-org-table-align-advice ()
+  "Replace \"+\" sign with \"|\" in tables."
+  (when (member major-mode '(markdown-mode gfm-mode))
+    (save-excursion
+	  (save-restriction
+        (narrow-to-region (org-table-begin) (org-table-end))
+        (goto-char (point-min))
+        (while (search-forward "-+-" nil t)
+		  (replace-match "-|-"))))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package treesit-auto
   :custom

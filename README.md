@@ -43,7 +43,6 @@ chmod -R +w /opt/homebrew && \
 skhd --start-service && \
 ./.config/setup/mas.sh && \
 ./.config/setup/preferences.sh && \
-./.config/setup/duti.sh && \
 ./.config/setup/login.sh
 ```
 Spotlight → Full Disk Access → remove Terminal

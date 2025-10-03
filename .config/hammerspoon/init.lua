@@ -19,7 +19,7 @@ spoon.SpoonInstall:andUse("PaperWM", {
 		window_gap  =  { top = 20, bottom = 20, left = 20, right = 20 },
 		-- bottom = 60
 		window_ratios = { 1/3, 1/2, 2/3 },
-		rejectApp = {"Facetime", "LuLu", "IINA", "java"},
+		rejectApp = {"Facetime", "Stickies", "LuLu", "IINA", "java"},
 		swipe_fingers = 4,
 		swipe_gain = 2
 		-- ,
