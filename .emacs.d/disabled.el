@@ -2,6 +2,22 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
+(mode-line ((t (:inherit 'variable-pitch))))
+(defvar my/font "New York"
+  "Main font")
+
+(defvar my/font-ja "Hiragino Mincho ProN"
+  "Japanese font")
+
+(defun my/use-font (&optional frame)
+  (when frame
+    (select-frame frame))
+
+  (set-face-attribute 'variable-pitch nil :font my/font)
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font) charset
+                      (font-spec :family my/font-ja))))
+(my/use-font)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminal Interface Emacs ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

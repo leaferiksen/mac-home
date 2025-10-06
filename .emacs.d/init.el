@@ -16,7 +16,7 @@
 		 ("<home>" . beginning-of-visual-line) ("<end>" . end-of-visual-line) ("M-<delete>" . kill-word)
 		 ;; Unmap default navigation bindings and text rescaling
 		 ("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil))
-  :custom-face (default ((t (:family "Maple Mono NF CN" :height 160)))) (variable-pitch ((t (:family "New York" :height 200))))
+  :custom-face (default ((t (:family "New York" :height 180)))) (fixed-pitch ((t (:family "Maple Mono NF CN" :height 160))))
   :custom ((apheleia-global-mode t)
 		   (auth-sources "~/.authinfo.gpg")
 		   (auto-package-update-delete-old-versions t)
@@ -26,7 +26,7 @@
 		   (completion-ignore-case t t)
 		   (context-menu-mode t)
 		   (cursor-type 'bar)
-		   (custom-file (expand-file-name "/dev/null"))
+		   (custom-file (expand-file-name "custom.el")) ;; /dev/null
 		   (delete-selection-mode t)
 		   (editorconfig-mode t)
 		   (electric-pair-mode t)
@@ -48,13 +48,12 @@
 		   (lazy-count-suffix-format "   (%s/%s)")
 		   (line-spacing 0.1)
 		   (make-backup-files nil)
-		   (mode-line-collapse-minor-modes t)
+		   (mode-line-collapse-minor-modes '(not lsp-mode))
 		   (mouse-wheel-progressive-speed nil)
 		   (ns-pop-up-frames nil)
-		   (package-selected-packages '(apheleia captain devil eglot elfeed emmet-mode emojify esxml exec-path-from-shell flexoki-themes flymake-eslint jinx lorem-ipsum lsp-mode lsp-tailwindcss lua-mode mastodon minesweeper minions mpv nerd-icons-dired nov obsidian snow spacious-padding swift-mode treesit-langs undo-fu valign visual-fill-column yasnippet))
+		   (package-selected-packages '(apheleia captain devil eglot elfeed emmet-mode emojify esxml exec-path-from-shell fixed-pitch flexoki-themes flymake-eslint jinx lorem-ipsum lsp-mode lsp-tailwindcss lua-mode mastodon minesweeper minions mpv nerd-icons-dired nov obsidian snow spacious-padding swift-mode treesit-langs undo-fu valign visual-fill-column yasnippet))
 		   (package-vc-selected-packages '((treesit-langs :url "https://github.com/emacs-tree-sitter/treesit-langs")))
 		   (pixel-scroll-precision-mode t)
-		   (prog-mode-hook '(apheleia-mode completion-preview-mode prettify-symbols-mode flymake-mode display-line-numbers-mode))
 		   (project-mode-line t)
 		   (project-vc-extra-root-markers '("project"))
 		   (read-buffer-completion-ignore-case t)
@@ -65,6 +64,7 @@
 		   (shr-fill-text nil) (shr-inhibit-images t)
 		   (snow-pile-factor 1)
 		   (spacious-padding-mode t)
+		   (spacious-padding-subtle-mode-line t)
 		   (tab-width 4)
 		   (tool-bar-mode nil)
 		   (tooltip-mode nil)
@@ -72,10 +72,13 @@
 		   (visual-fill-column-center-text t)
 		   (visual-fill-column-width 85)
 		   (warning-minimum-level :error)))
-(use-package visual-fill-column
-  :hook (visual-fill-column-mode .
-								 (lambda ()
-								   (setq-local line-spacing 0.4))))
+(dolist (charset '(kana han symbol cjk-misc bopomofo))
+  (set-fontset-font (frame-parameter nil 'font) charset
+                    (font-spec :family "Hiragino Mincho ProN")))
+(require 'fixed-pitch)
+(use-package fixed-pitch
+  :vc (:url "https://github.com/cstby/fixed-pitch-mode")
+  :custom (fixed-pitch-dont-change-cursor t))
 (use-package help-mode
   :bind (:map help-mode-map (("u" . help-goto-previous-page)
 							 ("e" . help-goto-next-page)
@@ -88,6 +91,7 @@
 		   (ls-lisp-use-localized-time-format t)
 		   (ls-lisp-verbosity nil)))
 (use-package dired
+  :hook (dired-mode . fixed-pitch-mode)
   :after ls-lisp
   :bind (:map dired-mode-map (("<mouse-1>" . nil)
 							  ("<mouse-2>" . nil)
@@ -115,6 +119,7 @@
 		   (delete-by-moving-to-trash t)
 		   (trash-directory "~/.Trash")))
 (use-package arc-mode
+  :hook (archive-mode . fixed-pitch-mode)
   :bind (:map archive-mode-map (("u" . 'archive-previous-line)
 								("e" . 'archive-next-line)
 								("i" . 'archive-extract)
@@ -122,7 +127,10 @@
 								("p" . nil)
 								("f" . nil)
 								("k" . 'archive-unflag))))
+(use-package diff-mode
+  :hook (diff-mode . fixed-pitch-mode))
 (use-package vc-dir
+  :hook (vc-dir-mode . fixed-pitch-mode)
   :bind (:map vc-dir-mode-map (("u" . 'vc-dir-previous-line)
 							   ("e" . 'vc-dir-next-line)
 							   ("i" . 'vc-dir-find-file)
@@ -143,16 +151,22 @@
 		   (markdown-hide-urls t)
 		   (markdown-hide-markup t)
 		   (markdown-asymmetric-header t))
-  :hook ((markdown-mode . variable-pitch-mode)
+  :hook ((markdown-mode .
+						(lambda ()
+						  (setq-local line-spacing 0.4)))
 		 (markdown-mode . visual-fill-column-mode)
 		 (markdown-mode . jinx-mode)
 		 (markdown-mode . valign-mode))
-  :custom-face (markdown-link-face ((t (:underline nil)))) (markdown-code-face ((t (:family "Maple Mono NF CN")))) (markdown-table-face ((t (:inherit 'variable-pitch))))
+  :custom-face (markdown-code-face ((t (:inherit 'fixed-pitch)))) (markdown-table-face ((t (:inherit 'default))))
   :bind (:map markdown-mode-map (("C-c h" . insert-title)
 								 ("C-c d" . insert-date))))
 (use-package valign
   :custom (valign-fancy-bar t))
 (use-package prog-mode
+  :hook ((prog-mode . fixed-pitch-mode)
+		 (prog-mode . completion-preview-mode)
+		 (prog-mode . flymake-mode)
+		 (prog-mode . display-line-numbers-mode))
   :custom (major-mode-remap-alist '((css-mode . css-ts-mode)
 									(dockerfile-mode . dockerfile-ts-mode)
 									(mhtml-mode . html-ts-mode)
@@ -168,6 +182,11 @@
 													 ("e" . 'next-line)
 													 ("n" . nil)
 													 ("p" . nil)))))
+(use-package html-mode
+  :hook ((html-mode . fixed-pitch-mode)
+		 (html-mode . completion-preview-mode)
+		 (html-mode . flymake-mode)
+		 (html-mode . display-line-numbers-mode)))
 (use-package emmet-mode
   :hook ((html-mode css-mode) . emmet-mode))
 (use-package lsp-mode
@@ -185,7 +204,9 @@
 		   (lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")))
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode)
-  :hook ((nov-mode . variable-pitch-mode)
+  :hook ((nov-mode .
+				   (lambda ()
+					 (setq-local line-spacing 0.4)))
 		 (nov-mode . visual-fill-column-mode))
   :custom (nov-text-width t))
 (use-package mastodon
@@ -204,7 +225,10 @@
 (use-package mpv
   :custom (mpv-executable "iina"))
 (use-package elfeed
-  :hook ((elfeed-show-mode . variable-pitch-mode)
+  :hook ((elfeed-search-mode . fixed-pitch-mode)
+		 (elfeed-show-mode .
+						   (lambda ()
+							 (setq-local line-spacing 0.4)))
 		 (elfeed-show-mode . visual-fill-column-mode))
   :bind ((:map elfeed-search-mode-map (("u" . previous-line)
 									   ("e" . next-line)
