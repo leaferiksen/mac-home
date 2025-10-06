@@ -39,9 +39,7 @@ Spotlight → Full Disk Access → /System/Applications/Utilities/Terminal.app, 
 ```bash
 softwareupdate --install-rosetta --agree-to-license && \
 chmod -R +w /opt/homebrew && \
-./.config/setup/brew.sh && \
-skhd --start-service && \
-./.config/setup/mas.sh && \
+./.config/setup/apps.sh && \
 ./.config/setup/preferences.sh && \
 ./.config/setup/login.sh
 ```

@@ -16,7 +16,7 @@
 		 ("<home>" . beginning-of-visual-line) ("<end>" . end-of-visual-line) ("M-<delete>" . kill-word)
 		 ;; Unmap default navigation bindings and text rescaling
 		 ("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil))
-  :custom-face (default ((t (:family "New York" :height 180)))) (fixed-pitch ((t (:family "Maple Mono NF CN" :height 160))))
+  :custom-face (default ((t (:family "New York" :height 160)))) (fixed-pitch ((t (:family "Maple Mono NF CN" :height 160))))
   :custom ((apheleia-global-mode t)
 		   (auth-sources "~/.authinfo.gpg")
 		   (auto-package-update-delete-old-versions t)
@@ -26,7 +26,7 @@
 		   (completion-ignore-case t t)
 		   (context-menu-mode t)
 		   (cursor-type 'bar)
-		   (custom-file (expand-file-name "custom.el")) ;; /dev/null
+		   (custom-file (expand-file-name "/dev/null"))
 		   (delete-selection-mode t)
 		   (editorconfig-mode t)
 		   (electric-pair-mode t)
@@ -153,7 +153,8 @@
 		   (markdown-asymmetric-header t))
   :hook ((markdown-mode .
 						(lambda ()
-						  (setq-local line-spacing 0.4)))
+						  (setq-local line-spacing 0.4)
+						  (face-remap-add-relative 'default :height 200)))
 		 (markdown-mode . visual-fill-column-mode)
 		 (markdown-mode . jinx-mode)
 		 (markdown-mode . valign-mode))
@@ -206,9 +207,11 @@
   :mode ("\\.epub\\'" . nov-mode)
   :hook ((nov-mode .
 				   (lambda ()
-					 (setq-local line-spacing 0.4)))
+					 (setq-local line-spacing 0.4)
+					 (face-remap-add-relative 'default :height 200)))
 		 (nov-mode . visual-fill-column-mode))
-  :custom (nov-text-width t))
+  :custom ((nov-text-width t)
+		   (nov-variable-pitch nil)))
 (use-package mastodon
   :bind (:map mastodon-mode-map (("u" . 'mastodon-tl-goto-prev-item)
 								 ("e" . 'mastodon-tl-goto-next-item)

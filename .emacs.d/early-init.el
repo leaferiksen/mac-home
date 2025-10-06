@@ -8,7 +8,7 @@
 ;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 ;; rounded with no title (optimize for PaperWM.spoon)
 (add-to-list 'default-frame-alist '(undecorated-round . t))
-;; (add-hook 'window-setup-hook 'toggle-frame-maximized t)
+(add-hook 'window-setup-hook 'toggle-frame-maximized t)
 ;; Maximize with no frame
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 ;;; early-init.el ends here
