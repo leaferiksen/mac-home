@@ -183,19 +183,23 @@ defaults write digital.twisted.noTunes replacement '/System/Applications/iPhone 
 ########
 # IINA #
 ########
-defaults write com.colliderli.iina "currentInputConfigName" -string "Movist Default"
-defaults write com.colliderli.iina "initialWindowSizePosition" -string "-0+0"
+# defaults write com.colliderli.iina "useLegacyFullScreen" -bool "true"
+defaults write com.colliderli.iina "SUEnableAutomaticChecks" -bool "false"
 defaults write com.colliderli.iina "actionAfterLaunch" -int "1"
 defaults write com.colliderli.iina "alwaysFloatOnTop" -bool "true"
-# defaults write com.colliderli.iina "useLegacyFullScreen" -bool "true"
-defaults write com.colliderli.iina "fullScreenWhenOpen" -bool "true"
-defaults write com.colliderli.iina "oscPosition" -int "2"
 defaults write com.colliderli.iina "arrowBtnAction" -int "1"
-defaults write com.colliderli.iina "themeMaterial" -int "4"
+defaults write com.colliderli.iina "currentInputConfigName" -string "mpv Default"
+defaults write com.colliderli.iina "disablePlaySliderScrolling" -bool "true"
+defaults write com.colliderli.iina "disableVolumeSliderScrolling" -bool "true"
+defaults write com.colliderli.iina "fullScreenWhenOpen" -bool "true"
+defaults write com.colliderli.iina "initialWindowSizePosition" -string "-0+0"
+defaults write com.colliderli.iina "oscPosition" -int "2"
 defaults write com.colliderli.iina "playlistAutoPlayNext" -bool "false"
+defaults write com.colliderli.iina "scaleRemainingTime" -bool "true"
+defaults write com.colliderli.iina "showChapterPos" -bool "true"
+defaults write com.colliderli.iina "themeMaterial" -int "4"
 defaults write com.colliderli.iina "windowBehaviorWhenPip" -int "1"
 defaults write com.colliderli.iina "ytdlSearchPath" -string "/opt/homebrew/opt/"
-defaults write com.colliderli.iina "SUEnableAutomaticChecks" -bool "false"
 #########################################################
 # our lord and savior, Jesus enterprise policies Christ #
 #########################################################

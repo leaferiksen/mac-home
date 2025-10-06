@@ -1,5 +1,5 @@
 #!/bin/sh
-brew install --formula aria2 d12frosted/emacs-plus/emacs-plus@30 enchant eza ffmpeg mas node tealdeer yt-dlp zsh-autosuggestions zsh-syntax-highlighting xcodesorg/made/xcodes
+brew install --formula aria2 d12frosted/emacs-plus/emacs-plus@31 enchant eza ffmpeg mas node tealdeer yt-dlp zsh-autosuggestions zsh-syntax-highlighting xcodesorg/made/xcodes
 
 brew tap homielab/mountmate https://github.com/homielab/mountmate
 brew install --cask anki anybar calibre chromium cursorcerer font-atkinson-hyperlegible-next font-maple-mono-nf-cn ghostty hammerspoon iina itch kanriapp/cask/kanri knockknock loop mountmate node notunes obsidian osu qlmarkdown qlvideo soulver steam syncthing zen-browser zotero
