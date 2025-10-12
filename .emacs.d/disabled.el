@@ -48,18 +48,6 @@
   :custom (massmapper-Cm-Ci-override '(("C-i" . forward-char)
 									   ("C-m" . scroll-down-command))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(nov-mode . (lambda ()
-			  ;; (setq-local line-spacing 15)
-			  (setq-local fill-column 90)
-			  (face-remap-add-relative 'variable-pitch :family "kermit" :height 240)))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package diff-mode
-  :bind (:map diff-mode-read-only (("u" . 'diff-hunk-prev)
-								   ("e" . 'diff-hunk-next)
-								   ("U" . 'diff-file-prev)
-								   ("E" . 'diff-file-next)
-								   ("n" . nil)
-								   ("p" . nil))))
 (split-height-threshold 0)
 (split-width-threshold nil)
 (set-frame-position (selected-frame) 0 0)
@@ -77,6 +65,20 @@
 (use-package copilot
   :config
   (add-to-list 'copilot-indentation-alist '(prog-mode 2)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package mastodon
+  :bind (:map mastodon-mode-map (("u" . 'mastodon-tl-goto-prev-item)
+								 ("e" . 'mastodon-tl-goto-next-item)
+								 ("n" . nil)
+								 ("p" . nil)))
+  :hook ((mastodon-mode . visual-fill-column-mode)
+		 (mastodon-toot-mode . visual-fill-column-mode))
+  :custom ((mastodon-instance-url "https://mastodon.social")
+		   (mastodon-active-user "leaferiksen")
+		   (mastodon-auth-use-auth-source nil)
+		   (mastodon-tl--display-media-p nil)
+		   (mastodon-tl--highlight-current-toot t)
+		   (mastodon-auth-use-auth-source t)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package org-table
   :config (advice-add 'org-table-align :after 'markdown-org-table-align-advice))
@@ -157,16 +159,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require '~/.emacs.d/elpa/terminal-here/terminal-here.el)
 (setq terminal-here-mac-terminal-command '("open" "-n" "-a" "Ghostty" "--args" "--working-directory="))
-(defun macopen ()
-  "QuickLook the currently selected file in Dired."
-  (interactive)
-  (let ((filename (dired-get-file-for-visit))) (shell-command (format "open '%s'" filename))))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Tab bar
-(use-package tab-line
-  :bind
-  ("M-S-<tab>" . tab-line-switch-to-prev-tab)
-  ("M-<tab>" . tab-line-switch-to-next-tab))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/lorniu/go-translate
 (use-package go-translate

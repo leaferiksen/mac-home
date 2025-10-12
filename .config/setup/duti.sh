@@ -1,3 +1,4 @@
+duti -s com.colliderli.iina .m4b all
 duti -s org.gnu.Emacs public.json all
 duti -s org.gnu.Emacs public.plain-text all
 duti -s org.gnu.Emacs public.python-script all

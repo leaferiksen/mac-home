@@ -2,7 +2,7 @@
 
 osascript -e 'tell application "System Preferences" to quit'
 # set emacs as default folder handler
-defaults write -g "NSFileViewer" -string "org.gnu.Emacs"
+# defaults write -g "NSFileViewer" -string "org.gnu.Emacs"
 # fix scroll direction
 defaults write -g "com.apple.swipescrolldirection" -bool "false"
 # show scroll bars
@@ -47,8 +47,8 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadTwoFi
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerVertSwipeGesture" -int "2"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerVertSwipeGesture" -int "2"
 # disable swiping between desktops
-defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
+# defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
+# defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
 # keyboard navigation
 defaults write -g "AppleKeyboardUIMode" -int "2"
 ########################################################
@@ -158,9 +158,7 @@ defaults write com.apple.finder "ShowPreviewPane" -bool "true"
 						"add 'PreviewPaneSettings':public.html:showQuickActions bool false" \
 						/Users/leaf/Library/Preferences/com.apple.finder.plist
 defaults write com.apple.finder "CreateDesktop" -bool "false"
-defaults write com.apple.finder "QuitMenuItem" -bool "true"
-# Disable Notifications
-launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
+# defaults write com.apple.finder "QuitMenuItem" -bool "true"
 # soft restart
 killall Finder Dock NotificationCenter
 #####################
@@ -171,6 +169,17 @@ defaults write com.apple.assistant.support "Search Queries Data Sharing Status" 
 # GnuPG and PinEntry #
 ######################
 defaults write org.gpgtools.common "UseKeychain" -bool "true"
+###########
+# Homerow #
+###########
+defaults write com.superultra.Homerow "check-for-updates-automatically" -bool "false"
+defaults write com.superultra.Homerow "is-scroll-shortcuts-enabled" -bool "false"
+defaults write com.superultra.Homerow "label-characters" -string "arstgmneio"
+defaults write com.superultra.Homerow "label-font-size" -float "12"
+defaults write com.superultra.Homerow "non-search-shortcut" -string "F13"
+defaults write com.superultra.Homerow "scroll-keys" -string "bnfp"
+defaults write com.superultra.Homerow "scroll-shortcut" -string "F14"
+defaults write com.superultra.Homerow "search-shortcut" -string ""
 ##############
 # Pure Paste #
 ##############
@@ -183,7 +192,9 @@ defaults write digital.twisted.noTunes replacement '/System/Applications/iPhone 
 ########
 # IINA #
 ########
+# defaults write com.colliderli.iina "fullScreenWhenOpen" -bool "true"
 # defaults write com.colliderli.iina "useLegacyFullScreen" -bool "true"
+# defaults write com.colliderli.iina "windowBehaviorWhenPip" -int "1"
 defaults write com.colliderli.iina "SUEnableAutomaticChecks" -bool "false"
 defaults write com.colliderli.iina "actionAfterLaunch" -int "1"
 defaults write com.colliderli.iina "alwaysFloatOnTop" -bool "true"
@@ -191,15 +202,12 @@ defaults write com.colliderli.iina "arrowBtnAction" -int "1"
 defaults write com.colliderli.iina "currentInputConfigName" -string "mpv Default"
 defaults write com.colliderli.iina "disablePlaySliderScrolling" -bool "true"
 defaults write com.colliderli.iina "disableVolumeSliderScrolling" -bool "true"
-defaults write com.colliderli.iina "fullScreenWhenOpen" -bool "true"
 defaults write com.colliderli.iina "initialWindowSizePosition" -string "-0+0"
 defaults write com.colliderli.iina "oscPosition" -int "2"
 defaults write com.colliderli.iina "playlistAutoPlayNext" -bool "false"
 defaults write com.colliderli.iina "scaleRemainingTime" -bool "true"
 defaults write com.colliderli.iina "showChapterPos" -bool "true"
 defaults write com.colliderli.iina "themeMaterial" -int "4"
-defaults write com.colliderli.iina "windowBehaviorWhenPip" -int "1"
-defaults write com.colliderli.iina "ytdlSearchPath" -string "/opt/homebrew/opt/"
 #########################################################
 # our lord and savior, Jesus enterprise policies Christ #
 #########################################################
