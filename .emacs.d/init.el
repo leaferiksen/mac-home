@@ -139,9 +139,6 @@
 		 (cond ((string-equal choice "audio") (async-shell-command (format "yt-dlp -S \"ext\" -x \"%s\"" url)))
 			   ((string-equal choice "video") (async-shell-command (format "yt-dlp -S \"ext\" \"%s\"" url)))
 			   ((string-equal choice "subtitled video") (async-shell-command (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url))))))
-(dolist (charset '(kana han symbol cjk-misc bopomofo))
-  (set-fontset-font (frame-parameter nil 'font) charset
-                    (font-spec :family "Hiragino Mincho ProN")))
 (use-package completion-preview
   :hook (html-mode prog-mode)
   :bind (:map completion-preview-active-mode-map (("M-n" . completion-preview-next-candidate)
@@ -167,17 +164,12 @@
 (use-package elfeed
   :preface (run-at-time nil (* 8 60 60) #'elfeed-update)
   :bind ("C-c e" . elfeed)
-  :hook (elfeed-show-mode . (lambda ()
-							  (setq-local line-spacing 0.4)))
   :custom ((elfeed-feeds '(("https://buttondown.com/monteiro/rss" design) ("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals webkit) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals) ("https://indi.ca/rss/" journals)))
 		   (elfeed-search-filter "@1-month-ago +unread")))
 (use-package elfeed-webkit
   :after elfeed
   :demand ;; !
-  :init
-  (setq elfeed-webkit-auto-enable-tags '(webkit comics))
-  :config
-  (elfeed-webkit-auto-toggle-by-tag)
+  :config (elfeed-webkit-enable)
   :bind (:map elfeed-show-mode-map
               ("t" . elfeed-webkit-toggle)))
 (use-package emacs
@@ -225,7 +217,7 @@
 									 (typescript-mode . typescript-ts-mode)
 									 (yaml-mode . yaml-ts-mode)))
 		   (make-backup-files nil)
-		   (mode-line-collapse-minor-modes '(not lsp-mode))
+		   (mode-line-collapse-minor-modes '(not lsp-mode flymake-mode))
 		   (mouse-wheel-progressive-speed nil)
 		   (ns-pop-up-frames nil)
 		   (package-selected-packages '(apheleia dwim-shell-command eglot elfeed elfeed-webkit emmet-mode emojify esxml exec-path-from-shell fixed-pitch flexoki-themes flymake-eslint jinx lorem-ipsum lsp-mode lsp-tailwindcss lua-mode minesweeper minions moody mpv nerd-icons-dired nov obsidian snow spacious-padding swift-mode treesit-langs undo-fu valign visual-fill-column yasnippet))
@@ -268,7 +260,8 @@
 		 (js-mode . lsp)
 		 (typescript-mode . lsp)
 		 (tsx-mode . lsp))
-  :custom (lsp-enable-indentation nil)
+  :custom ((lsp-completion-provider :none)
+		   (lsp-enable-indentation nil))
   :commands lsp)
 (use-package lsp-tailwindcss
   :after lsp-mode
@@ -281,11 +274,7 @@
 		   (markdown-hide-urls t)
 		   (markdown-hide-markup t)
 		   (markdown-asymmetric-header t))
-  :hook ((markdown-mode . (lambda ()
-							(setq-local line-spacing 0.2)
-							(setq-local visual-fill-column-center-text t)
-							(face-remap-add-relative 'default :height 220))))
-  :custom-face (markdown-code-face ((t (:inherit 'fixed-pitch)))) (markdown-table-face ((t (:inherit 'default))))
+  :custom-face (markdown-code-face ((t (:family "Maple Mono NF CN")))) (markdown-table-face ((t (:inherit 'variable-pitch))))
   :bind (:map markdown-mode-map (("C-c h" . insert-title)
 								 ("C-c d" . insert-date))))
 (use-package moody
@@ -296,10 +285,6 @@
   :hook (dired-mode))
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode)
-  :hook (nov-mode . (lambda ()
-					  (setq-local line-spacing 0.4)
-					  (setq-local visual-fill-column-center-text t)
-					  (face-remap-add-relative 'default :height 220)))
   :custom (nov-text-width t))
 (use-package obsidian
   :preface (global-obsidian-mode t)
@@ -310,10 +295,13 @@
   :custom (valign-fancy-bar t)
   :hook (markdown-mode))
 (use-package variable-pitch
-  :hook (elfeed-show-mode markdown-mode nov-mode))
+  :hook ((markdown-mode nov-mode)
+		 (variable-pitch-mode . (lambda ()
+								  (setq-local line-spacing 0.4)))))
 (use-package visual-fill-column
-  :custom (visual-fill-column-width 80)
-  :hook (markdown-mode elfeed-show-mode nov-mode))
+  :custom ((visual-fill-column-center-text t)
+		   (visual-fill-column-width 80))
+  :hook (markdown-mode nov-mode))
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 ;;; init.el ends here

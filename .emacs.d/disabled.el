@@ -26,7 +26,9 @@
   :vc (:url "https://github.com/cstby/fixed-pitch-mode")
   :custom (fixed-pitch-dont-change-cursor t)
   :hook ((archive-mode diff-mode elfeed-search-mode html-mode prog-mode vc-dir-mode) . fixed-pitch-mode))
-
+(dolist (charset '(kana han symbol cjk-misc bopomofo))
+  (set-fontset-font (frame-parameter nil 'font) charset
+                    (font-spec :family "Hiragino Mincho ProN")))
 ;;;;;;;;;;;;;;;
 ;; Mode-line ;;
 ;;;;;;;;;;;;;;;
