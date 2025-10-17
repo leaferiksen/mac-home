@@ -2,6 +2,34 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
+;;;;;;;;;;;;;;;;
+;; Early-init ;;
+;;;;;;;;;;;;;;;;
+(add-to-list 'default-frame-alist '(undecorated-round . t)) ;; rounded with no title
+(add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
+(use-package spacious-padding
+  :custom ((spacious-padding-mode t)
+		   (spacious-padding-subtle-mode-line t)
+		   (spacious-padding-widths	'( :internal-border-width 15
+									   :header-line-width 4
+									   :mode-line-width 8
+									   :tab-width 4
+									   :right-divider-width 30
+									   :scroll-bar-width 8
+									   :fringe-width 0))))
+(defun arc-open-parent-folder-and-quit () "Open the parent folder of the current arc-mode buffer and quit the arc-mode window."
+	   (interactive)
+	   (let ((parent-dir (expand-file-name default-directory)))
+		 (quit-window)
+		 (dired parent-dir)))
+(use-package fixed-pitch
+  :vc (:url "https://github.com/cstby/fixed-pitch-mode")
+  :custom (fixed-pitch-dont-change-cursor t)
+  :hook ((archive-mode diff-mode elfeed-search-mode html-mode prog-mode vc-dir-mode) . fixed-pitch-mode))
+
+;;;;;;;;;;;;;;;
+;; Mode-line ;;
+;;;;;;;;;;;;;;;
 (mode-line ((t (:inherit 'variable-pitch))))
 (defvar my/font "New York"
   "Main font")

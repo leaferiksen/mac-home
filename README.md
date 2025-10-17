@@ -1,4 +1,5 @@
-Initial user setup
+## Initial user setup
+
 - Accessibility → Vision →
   - Zoom: **☑ Turn on Zoom**
   - Appearance: **↖ Auto**
@@ -6,12 +7,15 @@ Initial user setup
 - Screen Time: **↖ Set Up Later**
 - Siri: **☒ Enable Ask Siri**
 
-For virtual machines only
+### For virtual machines only
+
 ```bash
 defaults write com.apple.dock "persistent-apps" -array && killall Dock && spctl --global-disable && softwareupdate --install-rosetta --agree-to-license
 ```
 
-To sync home with this repo, open Terminal as user `leaf` and run
+## Sync home with this repo
+
+open Terminal as user `leaf` and run
 ```bash
 xcode-select --install
 ```
@@ -48,46 +52,55 @@ Spotlight → Full Disk Access → remove Terminal
 
 Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html) and [LM Studio](https://lmstudio.ai) from their websites
 
-Settings that I haven't (yet) bothered to automate:
+## Settings that I haven't (yet) bothered to automate:
 
-`Night Shift options`
+### Night Shift options
+
 - Schedule **▼ Sunrise to Sunset**
 
-`Control Center`
+### Control Center
+
 - Wi-Fi **▼ Don't Show in Menu Bar**
 - Battery, Music Recognition, Keyboard Brightness **Only Show in control center**
 - Weather **▼ Show in Menu Bar**
 
-`Spotlight`
+### Spotlight
+
 - Results from Apps → **☒ Mail**
 - Results from system → **☒  iPhone Apps**
 - Search Privacy… → **Bluetooth File Exchange.app**, **Image Playground.app**, **Stocks.app**, **Tips.app**, **Mail.app**, **Karabiner-EventViewer.app**
 
-`Spoken Content`
+### Spoken Content
+
 - System Voice ⓘ → Voice → **↖ Matilda (Premium) 💾**
 - System Voice **▼ Matilda (Premium)**
 
-`Language input methods`
+### Language input methods
+
 - \+ → **↖ Japanese - Romaji**
 
-`Keyboard Shortcuts`
-- Mission Control: **☒ Mission Control** & **☒ Application windows**
-- Input Sources: **☒ Next & Previous**
-- Modifier Keys: **Caps Lock (⇪) key ▼ No Action**
+### Keyboard Shortcuts
 
-`Wacom Tablet`
+- Mission Control: **☒ All Desktops**
+- Input Sources: **☒ Next & Previous**
+
+### Wacom Tablet
+
 - Options... → **☒ Show wireless tablet battery status in menu bar**
 
-`Wacom Center`
+### Wacom Center
+
 - Mapping → **☑ Show advanced options**
 - Mapping → Tablet area → Use custom area... → **11784 by 18144** (6 * screen resolution)
 - Osu! custom area → **2700 by 4320** (a fifth of the tablet resolution)
 
-`Adobe Photoshop`
+### Ryujinx
+
+`ln -s /Users/leaf/Documents/Games/Ryujinx\ \(Application\ Support\) /Users/leaf/Library/Application\ Support/Ryujinx`
+
+### Adobe Photoshop
+
 ```
 mkdir /Users/leaf/Library/Preferences/Adobe\ Photoshop\ $(date +%Y)\ Settings/
 ln -s /Users/leaf/Documents/Drawing/Photoshop/New\ Doc\ Sizes.json /Users/leaf/Library/Preferences/Adobe\ Photoshop\ $(date +%Y)\ Settings/New\ Doc\ Sizes.json
 ```
-
-`Ryujinx`
-`ln -s /Users/leaf/Documents/Games/Ryujinx\ \(Application\ Support\) /Users/leaf/Library/Application\ Support/Ryujinx`

@@ -24,14 +24,14 @@ defaults write -g "PMPrintingExpandedStateForPrint" -bool "true"
 #################
 # accent colors #
 #################
-defaults write -g "AppleIconAppearanceTheme" -string "TintedAutomatic"
 # defaults write -g "NSTableViewDefaultSizeMode" -int "3"
+defaults write -g "AppleIconAppearanceTheme" -string "TintedAutomatic"
 defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
-defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
 defaults write com.apple.universalaccess "differentiateWithoutColor" -bool "true"
-defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
 defaults write com.apple.universalaccess "mouseDriverCursorSize" -float "1.5"
+defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
+defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
 ########################
 # fuck .DS_Store files #
 ########################
@@ -56,13 +56,13 @@ defaults write -g "AppleKeyboardUIMode" -int "2"
 ########################################################
 defaults write com.apple.dock "autohide" -bool "true"
 defaults write com.apple.dock "autohide-delay" -float "1000"
+defaults write com.apple.dock "enable-spring-load-actions-on-all-items" -bool "true"
 defaults write com.apple.dock "no-bouncing" -bool "true"
 defaults write com.apple.dock "persistent-apps" -array
+defaults write com.apple.dock "show-recents" -bool "false"
+defaults write com.apple.dock "showhidden" -bool "true"
 defaults write com.apple.dock "static-only" -bool "true"
 defaults write com.apple.dock "tilesize" -int "48"
-defaults write com.apple.dock "showhidden" -bool "true"
-defaults write com.apple.dock "show-recents" -bool "false"
-defaults write com.apple.dock "enable-spring-load-actions-on-all-items" -bool "true"
 # don't automatically rearrange Spaces based on most recent use
 defaults write com.apple.dock "mru-spaces" -bool "false"
 # 0: No Option
@@ -158,7 +158,6 @@ defaults write com.apple.finder "ShowPreviewPane" -bool "true"
 						"add 'PreviewPaneSettings':public.html:showQuickActions bool false" \
 						/Users/leaf/Library/Preferences/com.apple.finder.plist
 defaults write com.apple.finder "CreateDesktop" -bool "false"
-# defaults write com.apple.finder "QuitMenuItem" -bool "true"
 # soft restart
 killall Finder Dock NotificationCenter
 #####################
@@ -207,6 +206,7 @@ defaults write com.colliderli.iina "oscPosition" -int "2"
 defaults write com.colliderli.iina "playlistAutoPlayNext" -bool "false"
 defaults write com.colliderli.iina "scaleRemainingTime" -bool "true"
 defaults write com.colliderli.iina "showChapterPos" -bool "true"
+defaults write com.colliderli.iina "showRemainingTime" -bool "true"
 defaults write com.colliderli.iina "themeMaterial" -int "4"
 #########################################################
 # our lord and savior, Jesus enterprise policies Christ #

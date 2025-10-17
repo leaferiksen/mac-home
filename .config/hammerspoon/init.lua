@@ -1,4 +1,5 @@
-hotkey = {"cmd", "control"}
+hs.window.animationDuration = 0
+shortcut = {"alt", "ctrl"}
 hs.loadSpoon("SpoonInstall")
 Install = spoon.SpoonInstall
 Install.repos.Caffeine = {
@@ -21,6 +22,8 @@ Install:andUse("PaperWM", {
 					 window_ratios = { 1/3, 1/2, 2/3, 1 }
 				  },
 				  fn = function(spoon)
+					 spoon.window_filter:rejectApp("Finder")
+					 spoon.window_filter:rejectApp("Shortcuts")
 					 spoon.window_filter:rejectApp("Messages")
 					 spoon.window_filter:rejectApp("Facetime")
 					 spoon.window_filter:rejectApp("Stickies")
@@ -31,26 +34,26 @@ Install:andUse("PaperWM", {
 				  start = true,
 				  hotkeys = {
 					 -- switch to a new focused window in tiled grid
-					 focus_left = {hotkey, "p"},
-					 focus_right = {hotkey, "n"},
+					 focus_left = {shortcut, "left"},
+					 focus_right = {shortcut, "right"},
 					 -- Switch to a new focused window in tiled grid
-					 swap_left = {hotkey, "b"},
-					 swap_right = {hotkey, "f"},
+					 swap_left = {shortcut, "`"},
+					 swap_right = {shortcut, "tab"},
 					 -- position and resize focused window
-					 center_window = {hotkey, "c"},
-					 cycle_width = {hotkey, "r"},
+					 center_window = {shortcut, "c"},
+					 cycle_width = {shortcut, "r"},
 					 -- move the focused window into / out of the tiling layer
-					 toggle_floating = {hotkey, "escape"},
-					 -- move focused window to a new space and tile
-					 move_window_1 = {hotkey, "1"},
-					 move_window_2 = {hotkey, "2"},
-					 move_window_3 = {hotkey, "3"},
-					 move_window_4 = {hotkey, "4"},
-					 move_window_5 = {hotkey, "5"},
-					 move_window_6 = {hotkey, "6"},
-					 move_window_7 = {hotkey, "7"},
-					 move_window_8 = {hotkey, "8"},
-					 move_window_9 = {hotkey, "9"}
+					 toggle_floating = {shortcut, "escape"},
+					 -- focus the first / second / etc window in the current space
+					 focus_window_1 = {shortcut, "1"},
+					 focus_window_2 = {shortcut, "2"},
+					 focus_window_3 = {shortcut, "3"},
+					 focus_window_4 = {shortcut, "4"},
+					 focus_window_5 = {shortcut, "5"},
+					 focus_window_6 = {shortcut, "6"},
+					 focus_window_7 = {shortcut, "7"},
+					 focus_window_8 = {shortcut, "8"},
+					 focus_window_9 = {shortcut, "9"},
 				  }
 })
-Install:asyncUpdateAllRepos()
+-- Install:asyncUpdateAllRepos()

@@ -4,11 +4,9 @@
 ;;; Code:
 ;; Speed up lsp-mode
 (setenv "LSP_USE_PLISTS" "true")
-;; title present but transparent
-;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-;; rounded with no title (optimize for PaperWM.spoon)
-(add-to-list 'default-frame-alist '(undecorated-round . t))
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)) ;; title present but transparent
 (add-hook 'window-setup-hook 'toggle-frame-maximized t)
-;; Maximize with no frame
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
 ;;; early-init.el ends here
