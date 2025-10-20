@@ -29,6 +29,15 @@
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font) charset
                     (font-spec :family "Hiragino Mincho ProN")))
+(use-package exec-path-from-shell
+  :preface (when (memq window-system '(mac ns x))
+			 (exec-path-from-shell-initialize)))
+(defun setup () "Install selected packages."
+	   (interactive)
+	   (package-refresh-contents)
+	   (package-install-selected-packages)
+	   (package-vc-install-selected-packages)
+	   (package-autoremove))
 ;;;;;;;;;;;;;;;
 ;; Mode-line ;;
 ;;;;;;;;;;;;;;;
@@ -109,6 +118,8 @@
 		   (mastodon-tl--display-media-p nil)
 		   (mastodon-tl--highlight-current-toot t)
 		   (mastodon-auth-use-auth-source t)))
+(use-package mpv
+  :custom (mpv-executable "iina"))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package org-table
   :config (advice-add 'org-table-align :after 'markdown-org-table-align-advice))
@@ -122,12 +133,6 @@
         (while (search-forward "-+-" nil t)
 		  (replace-match "-|-"))))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
 ;; (add-hook 'after-init-hook #'global-prettier-mode)
 (use-package prettier
   :hook after-init
@@ -146,18 +151,6 @@
 (use-package swift-mode
   :mode "\\.swift\\'"
   :interpreter "swift")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://github.com/licht1stein/obsidian.el
-(use-package obsidian
-  :hook markdown-mode
-  :config
-  (global-obsidian-mode t)
-  :custom
-  (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
-  :bind
-  (:map obsidian-mode-map
-		("s-<return>" . obsidian-follow-link-at-point)
-		("s-S-<return>" . obsidian-backlink-jump)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tab bar
 (use-package tab-line

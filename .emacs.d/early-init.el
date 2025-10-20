@@ -6,7 +6,11 @@
 (setenv "LSP_USE_PLISTS" "true")
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)) ;; title present but transparent
 (add-hook 'window-setup-hook 'toggle-frame-maximized t)
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
+;; Fix for Native Comp (AOT) linker errors on macOS GUI launch;
+(let ((brew-prefix "/opt/homebrew/bin"))
+  (when (file-directory-p brew-prefix)
+    (setenv "PATH" (concat brew-prefix ":" (getenv "PATH")))
+    (add-to-list 'exec-path brew-prefix)))
+(setq native-comp-deferred-compilation nil
+	  native-comp-jit-compilation nil)
 ;;; early-init.el ends here
