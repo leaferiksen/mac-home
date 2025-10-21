@@ -17,6 +17,15 @@
 									   :right-divider-width 30
 									   :scroll-bar-width 8
 									   :fringe-width 0))))
+:after ls-lisp
+:preface (require 'ls-lisp)
+
+(use-package ls-lisp
+  :custom ((ls-lisp-dirs-first t)
+		   (ls-lisp-ignore-case t)
+		   (ls-lisp-use-insert-directory-program nil)
+		   (ls-lisp-use-localized-time-format t)))
+
 (defun arc-open-parent-folder-and-quit () "Open the parent folder of the current arc-mode buffer and quit the arc-mode window."
 	   (interactive)
 	   (let ((parent-dir (expand-file-name default-directory)))
