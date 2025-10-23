@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("init.el"
+(("Git"
+  (filename . "~/Git/")
+  (front-context-string . "Aseprite\n  drwxr")
+  (rear-context-string . "60 Aug 31 12:55 ")
+  (position . 65)
+  (last-modified 26873 20777 285898 0))
+("init.el"
  (filename . "~/.emacs.d/init.el")
  (front-context-string . ";;; init.el --- ")
  (rear-context-string)
@@ -44,12 +50,6 @@
  (rear-context-string . "88 Jul 24 15:06 ")
  (position . 111)
  (last-modified 26777 18693 883381 0))
-("Git"
- (filename . "~/Git/")
- (front-context-string . "GlassIcons\n  drw")
- (rear-context-string . "92 Jun 29 17:56 ")
- (position . 109)
- (last-modified 26777 18684 906121 0))
 ("Komga"
  (filename . "~/Komga/")
  (front-context-string . ".stfolder\n  drwx")

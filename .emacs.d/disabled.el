@@ -5,7 +5,7 @@
 ;;;;;;;;;;;;;;;;
 ;; Early-init ;;
 ;;;;;;;;;;;;;;;;
-(add-to-list 'default-frame-alist '(undecorated-round . t)) ;; rounded with no title
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)) ;; title present but transparent
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
 (use-package spacious-padding
   :custom ((spacious-padding-mode t)
@@ -47,6 +47,11 @@
 	   (package-install-selected-packages)
 	   (package-vc-install-selected-packages)
 	   (package-autoremove))
+(use-package flexoki-themes
+  :vc (:url "https://codeberg.org/crmsnbleyd/flexoki-emacs-theme")
+  :custom ((flexoki-themes-use-bold-builtins t)
+		   (flexoki-themes-use-bold-keywords t)
+		   (flexoki-themes-use-italic-comments t)))
 ;;;;;;;;;;;;;;;
 ;; Mode-line ;;
 ;;;;;;;;;;;;;;;
@@ -160,12 +165,6 @@
 (use-package swift-mode
   :mode "\\.swift\\'"
   :interpreter "swift")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Tab bar
-(use-package tab-line
-  :bind
-  ("M-S-<tab>" . tab-line-switch-to-prev-tab)
-  ("M-<tab>" . tab-line-switch-to-next-tab))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (keymap-global-set "C-<up>" 'beginning-of-buffer)
 (keymap-global-set "C-<down>" 'end-of-buffer)

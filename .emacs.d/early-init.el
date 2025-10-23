@@ -4,7 +4,7 @@
 ;;; Code:
 ;; Speed up lsp-mode
 (setenv "LSP_USE_PLISTS" "true")
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)) ;; title present but transparent
+(add-to-list 'default-frame-alist '(undecorated-round . t)) ;; rounded with no title
 (add-hook 'window-setup-hook 'toggle-frame-maximized t)
 ;; Fix for Native Comp (AOT) linker errors on macOS GUI launch;
 (let ((brew-prefix "/opt/homebrew/bin"))
