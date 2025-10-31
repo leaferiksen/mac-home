@@ -10,23 +10,20 @@ compinit
 # disable macOS's Zsh session saving
 export SHELL_SESSIONS_DISABLE=1
 
-# editor 
-export ALTERNATE_EDITOR=""
-export EDITOR="nano"
+# environment variables
 export VISUAL="nano"
 export LESSHISTFILE=-
+export PATH=/Users/leaf/bin:/opt/homebrew/sbin:/opt/homebrew/bin:$PATH
 
 # named directories
-export ic="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
+export ic="${HOME}/Library/Mobile Documents/com~apple~CloudDocs/"
 export sd="/Volumes/Leafs Media"
-export sf="${HOME}/Documents/College/Fall 25"
-export PATH=/Users/leaf/bin:/opt/homebrew/sbin:/opt/homebrew/bin:$PATH
-export HOMEBREW_CASK_OPTS="--appdir=~/Applications --no-quarantine"
+export sf="${HOME}/Documents/College/"
 
 # My fun tools
 alias q='qlmanage -p'
 alias fix='xattr -dr com.apple.quarantine'
-# alias emacs='${HOME}/Applications/Emacs.app/Contents/MacOS/Emacs'
+alias emacs='${HOME}/Applications/Emacs.app/Contents/MacOS/Emacs'
 alias upb='brew update && brew upgrade --greedy'
 alias upn='ncu -u && npm install'
 alias tw='npx @tailwindcss/cli -i app.css -o dist.css --watch'

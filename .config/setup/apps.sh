@@ -1,9 +1,8 @@
 #!/bin/sh
-brew install --formula aria2 d12frosted/emacs-plus/emacs-plus@31 duti enchant eza ffmpeg mas media-info node tealdeer yt-dlp zsh-autosuggestions zsh-syntax-highlighting xcodesorg/made/xcodes
-brew tap homielab/mountmate https://github.com/homielab/mountmate
-brew install --cask anki calibre chromium cursorcerer font-maple-mono-nf-cn ghostty hammerspoon handbrake-app homerow iina itch knockknock mountmate node notunes osu qlmarkdown qlvideo soulver steam syncthing virtualbuddy zen-browser zotero
 
-npm install -g npm-check-updates eslint http-server @tailwindcss/language-server prettier rustywind typescript typescript-language-server vscode-langservers-extracted
+brew install --formula aria2 d12frosted/emacs-plus/emacs-plus@31 duti enchant eslint eza ffmpeg gemini-cli http-server mas media-info node pandoc prettier rustywind tailwindcss-language-server tealdeer typescript typescript-language-server typst vscode-langservers-extracted xcodesorg/made/xcodes yt-dlp zsh-autosuggestions zsh-syntax-highlighting
+
+brew install --cask anki calibre chromium cursorcerer font-maple-mono-nf-cn ghostty hammerspoon handbrake-app homerow iina itch knockknock node notunes osu qlmarkdown qlvideo soulver steam syncthing virtualbuddy zen-browser zotero
 
 mas install 409201541   # Pages
 mas install 409183694   # Keynote

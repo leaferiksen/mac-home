@@ -5,27 +5,39 @@
 ;;;;;;;;;;;;;;;;
 ;; Early-init ;;
 ;;;;;;;;;;;;;;;;
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)) ;; title present but transparent
+(let ((brew-prefix "/opt/homebrew/bin"))
+  (when (file-directory-p brew-prefix)
+    (setenv "PATH" (concat brew-prefix ":" (getenv "PATH")))
+    (add-to-list 'exec-path brew-prefix)))
+;; Fix for Native Comp (AOT) linker errors on macOS GUI launch;
+(add-to-list 'default-frame-alist '(undecorated-round . t)) ;; rounded with no title
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
-(use-package spacious-padding
-  :custom ((spacious-padding-mode t)
-		   (spacious-padding-subtle-mode-line t)
-		   (spacious-padding-widths	'( :internal-border-width 15
-									   :header-line-width 4
-									   :mode-line-width 8
-									   :tab-width 4
-									   :right-divider-width 30
-									   :scroll-bar-width 8
-									   :fringe-width 0))))
-:after ls-lisp
-:preface (require 'ls-lisp)
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(mouse-wheel-progressive-speed nil)
+(use-package esxml ;; nov-mode dependency
+  :vc (:url "https://github.com/tali713/esxml"))
+(use-package nov
+  ;; :vc (:url "https://depp.brause.cc/nov.el.git")
+  :mode ("\\.epub\\'" . nov-mode)
+  :custom (nov-text-width t))
+(use-package tab-line
+  :custom ((global-tab-line-mode t)
+		   (tab-line-new-button-show nil)
+		   (tab-line-close-button-show nil))
+  :custom-face
+  (tab-bar ((t (:inherit mode-line))))
+  :bind (("C-<tab>" . tab-line-switch-to-next-tab)
+		 ("C-M-<tab>" . tab-line-switch-to-prev-tab)))
+(use-package dired
+  :after ls-lisp
+  :preface (require 'ls-lisp))
 (use-package ls-lisp
   :custom ((ls-lisp-dirs-first t)
 		   (ls-lisp-ignore-case t)
 		   (ls-lisp-use-insert-directory-program nil)
 		   (ls-lisp-use-localized-time-format t)))
-
+(use-package display-line-numbers
+  :hook (fundamental-mode html-mode prog-mode))
 (defun arc-open-parent-folder-and-quit () "Open the parent folder of the current arc-mode buffer and quit the arc-mode window."
 	   (interactive)
 	   (let ((parent-dir (expand-file-name default-directory)))
@@ -38,15 +50,6 @@
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font) charset
                     (font-spec :family "Hiragino Mincho ProN")))
-(use-package exec-path-from-shell
-  :preface (when (memq window-system '(mac ns x))
-			 (exec-path-from-shell-initialize)))
-(defun setup () "Install selected packages."
-	   (interactive)
-	   (package-refresh-contents)
-	   (package-install-selected-packages)
-	   (package-vc-install-selected-packages)
-	   (package-autoremove))
 (use-package flexoki-themes
   :vc (:url "https://codeberg.org/crmsnbleyd/flexoki-emacs-theme")
   :custom ((flexoki-themes-use-bold-builtins t)
@@ -110,14 +113,6 @@
 (keymap-global-set "M-<end>" 'completion-preview-next-candidate)
 ("C-p" . nil) ("C-n" . nil) ("C-f" . nil) ("M-f" . nil) ("C-b" . nil) ("M-b" . nil) ("C-M-p" . nil) ("C-M-n" . nil) ("C-M-f" . nil) ("C-M-b" . nil) ("C-d" . nil) ("M-d" . nil) ("C-w" . nil) ("M-w" . nil) ("C-v" . nil) ("M-v" . nil) ("C-M-v" . nil) ("C-M-S-v" . nil)
 ([escape] . keyboard-quit) (:map esc-map ([escape] . keyboard-quit)) (:map ctl-x-map ([escape] . keyboard-quit)) (:map help-map ([escape] . keyboard-quit)) (:map goto-map ([escape] . keyboard-quit)) (:map minibuffer-mode-map ([escape] . minibuffer-keyboard-quit)) (:map devil-mode-map ([escape] . keyboard-quit))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-'(package-vc-selected-packages
-  '((copilot :vc-backend Git :url "https://github.com/copilot-emacs/copilot.el")))
-'(package-selected-packages
-  '(copilot))
-(use-package copilot
-  :config
-  (add-to-list 'copilot-indentation-alist '(prog-mode 2)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package mastodon
   :bind (:map mastodon-mode-map (("u" . 'mastodon-tl-goto-prev-item)
