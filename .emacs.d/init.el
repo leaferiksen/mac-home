@@ -4,120 +4,12 @@
 ;;; Code:
 ;; test
 (defalias 'yes-or-no-p 'y-or-n-p)
-(defun afinfo ()
-  "Get metadata for focused file."
-  (interactive)
-  (let ((filename (dired-get-file-for-visit))) (async-shell-command (format "afinfo --info '%s'" filename))))
-(defun auto-theme (appearance)
-  "Load theme, taking current system APPEARANCE into consideration."
-  (mapc #'disable-theme custom-enabled-themes)
-  (pcase appearance ('light (load-theme 'modus-operandi-tinted t)) ('dark (load-theme 'modus-vivendi-tinted t))))
-(defun csv-highlight ()
-  "Highlight CSV/TSV files."
-  (interactive)
-  (font-lock-mode 1)
-  (let* ((separator (cond ((string-equal (file-name-extension (buffer-file-name)) "tsv") ?\t) (t ?\,)))
-         (n (count-matches (string separator) (point-at-bol) (point-at-eol)))
-         (available-colors '("#848286" nil))
-         (colors (cl-loop for i from 0 below n collect (nth (mod i (length available-colors)) available-colors))))
-    (cl-loop for i from 1 to (1+ n) by 1
-             for c in colors
-             for r = (format "^\\([^%c\n]+%c\\)\\{%d\\}" separator separator i)
-             do (font-lock-add-keywords nil `((,r (1 '(face (:foreground ,c)))))))))
-(defun dired-finder-path ()
-  "Open Dired in the frontmost Finder window path, if available."
-  (interactive)
-  (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
-	(if path (dired (string-trim path)) (message "No Finder window found."))))
-(defun fix-node ()
-  "Unlink and relink node binaries."
-  (interactive)
-  (async-shell-command "/opt/homebrew/bin/brew unlink node && /opt/homebrew/bin/brew link --overwrite node"))
-(defun ghostty ()
-  "Open current directory in Ghostty."
-  (interactive)
-  (shell-command (concat "open -a Ghostty --args --working-directory=" "\""(expand-file-name default-directory)"\"")))
-(defun http-server ()
-  "Start a local server at ./index.html, avoiding port conflicts."
-  (interactive)
-  (let* ((http-port-offset (if (boundp 'http-port-offset) (1+ http-port-offset) 0)) (http-port (- 9999 http-port-offset)) (filename (concat "http-server@" (prin1-to-string http-port) "<" (file-name-nondirectory (directory-file-name (file-name-directory default-directory))) ">")))
-	(start-process filename filename "/opt/homebrew/bin/npx" "http-server" "-o" "-p" (number-to-string http-port))))
-(defun insert-date ()
-  "Insert an atx heading with today's date in iso format."
-  (interactive)
-  (insert "## " (format-time-string "%Y-%m-%d") "\n"))
-(defun insert-title ()
-  "Insert an atx heading with the name of the file."
-  (interactive)
-  (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
-(defun quicklook ()
-  "QuickLook the currently selected file in Dired."
-  (interactive)
-  (let ((filename (dired-get-file-for-visit))) (shell-command (concat "qlmanage -p \"" filename "\" > /dev/null 2>&1"))))
-(defun send-to-self	(message)
-  "Send a MESSAGE to myself."
-  (interactive "sMessage to send: ")
-  (let ((message (or message ""))) (shell-command (format "osascript -e 'tell application \"Messages\" to send \"%s\" to buddy \"leaferiksen@gmail.com\"'" (shell-quote-argument message)))))
-(defun split-and-follow-horizontally ()
-  "Move cursor to new window in horizontal split."
-  (interactive)
-  (split-window-below) (balance-windows) (other-window 1))
-(defun split-and-follow-vertically ()
-  "Move cursor to new window in vertical split."
-  (interactive)
-  (split-window-right) (balance-windows) (other-window 1))
-(defun tailwind-server ()
-  "Start a tailwind in the current directory, sourcing app.css."
-  (interactive)
-  (let ((filename (concat "tailwind-server@ <" (file-name-nondirectory (directory-file-name (file-name-directory default-directory))) ">")))
-	(start-process filename filename "/opt/homebrew/bin/npx" "@tailwindcss/cli" "-i" "app.css" "-o" "dist.css" "--watch")))
-(defun unpackaged/sort-sexps (beg end)
-  "Sort sexps from BEG to END. Comments stay with the code below."
-  (interactive "r")
-  (cl-flet ((skip-whitespace () (while (looking-at (rx (1+ (or space "\n"))))
-                                  (goto-char (match-end 0))))
-            (skip-both () (while (cond ((or (nth 4 (syntax-ppss))
-                                            (ignore-errors
-                                              (save-excursion
-                                                (forward-char 1)
-                                                (nth 4 (syntax-ppss)))))
-                                        (forward-line 1))
-                                       ((looking-at (rx (1+ (or space "\n"))))
-                                        (goto-char (match-end 0)))))))
-    (save-excursion
-      (save-restriction
-        (narrow-to-region beg end)
-        (goto-char beg)
-        (skip-both)
-        (cl-destructuring-bind (sexps markers)
-            (cl-loop do (skip-whitespace)
-                     for start = (point-marker)
-                     for sexp = (ignore-errors
-                                  (read (current-buffer)))
-                     for end = (point-marker)
-                     while sexp
-                     ;; Collect the real string, then one used for sorting.
-                     collect (cons (buffer-substring (marker-position start) (marker-position end))
-                                   (save-excursion
-                                     (goto-char (marker-position start))
-                                     (skip-both)
-                                     (buffer-substring (point) (marker-position end))))
-                     into sexps
-                     collect (cons start end)
-                     into markers
-                     finally return (list sexps markers))
-          (setq sexps (sort sexps (lambda (a b)
-                                    (string< (cdr a) (cdr b)))))
-          (cl-loop for (real . sort) in sexps
-                   for (start . end) in markers
-                   do (progn
-                        (goto-char (marker-position start))
-                        (insert-before-markers real)
-                        (delete-region (point) (marker-position end)))))))))
-(defun vc-amend ()
-  "Amend the previous commit title."
-  (interactive)
-  (vc-checkin nil 'git) (vc-git-log-edit-toggle-amend))
+(use-package vc
+  :config
+  (defun vc-amend ()
+	"Amend the previous commit title."
+	(interactive)
+	(vc-checkin nil 'git) (vc-git-log-edit-toggle-amend)))
 (defun wrap-urls-with-parentheses
 	(start end)
   "Wrap quoted URLs with parentheses from START to END."
@@ -154,12 +46,39 @@
   :custom (csv-align-padding 2) (csv-align-max-width 60))
 (use-package csv-mode
   :ensure t :vc (:url "https://github.com/emacsmirror/csv-mode")
-  :hook (csv-mode . csv-highlight))
+  :hook (csv-mode . csv-highlight)
+  :config
+  (defun csv-highlight ()
+	"Highlight CSV/TSV files."
+	(interactive)
+	(font-lock-mode 1)
+	(let* ((separator (cond ((string-equal (file-name-extension (buffer-file-name)) "tsv") ?\t) (t ?\,)))
+           (n (count-matches (string separator) (point-at-bol) (point-at-eol)))
+           (available-colors '("#848286" nil))
+           (colors (cl-loop for i from 0 below n collect (nth (mod i (length available-colors)) available-colors))))
+      (cl-loop for i from 1 to (1+ n) by 1
+               for c in colors
+               for r = (format "^\\([^%c\n]+%c\\)\\{%d\\}" separator separator i)
+               do (font-lock-add-keywords nil `((,r (1 '(face (:foreground ,c))))))))))
 (use-package delsel
   :custom (delete-selection-mode t))
 (use-package dired
   :bind (:map dired-mode-map (("<mouse-1>" . nil) ("<mouse-2>" . nil) ("SPC" . 'quicklook) ("C-c p" . 'dwim-shell-commands-md-pdf)))
   :custom (dired-clean-confirm-killing-deleted-buffers nil) (dired-create-destination-dirs 'ask) (dired-listing-switches "-alh --group-directories-first") (dired-mouse-drag-files t) (dired-recursive-copies 'always)
+  :config
+  (defun afinfo ()
+	"Get metadata for focused file."
+	(interactive)
+	(let ((filename (dired-get-file-for-visit))) (async-shell-command (format "afinfo --info '%s'" filename))))
+  (defun dired-finder-path ()
+	"Open Dired in the frontmost Finder window path, if available."
+	(interactive)
+	(let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
+	  (if path (dired (string-trim path)) (message "No Finder window found."))))
+  (defun quicklook ()
+	"QuickLook the currently selected file in Dired."
+	(interactive)
+	(let ((filename (dired-get-file-for-visit))) (shell-command (concat "qlmanage -p \"" filename "\" > /dev/null 2>&1"))))
   :bind (:map dired-mode-map ("C-c f" . dired-finder-path) ("C-c c" . dwim-shell-command-pbcopy)))
 (use-package dired-hide-details
   :hook (dired-mode))
@@ -229,7 +148,66 @@
 		   (sentence-end-double-space nil)
 		   (tab-width 4)
 		   (tool-bar-mode nil)
-		   (use-dialog-box nil)))
+		   (use-dialog-box nil))
+  :config
+  (defun auto-theme (appearance)
+	"Load theme, taking current system APPEARANCE into consideration."
+	(mapc #'disable-theme custom-enabled-themes)
+	(pcase appearance ('light (load-theme 'modus-operandi-tinted t)) ('dark (load-theme 'modus-vivendi-tinted t))))
+  (defun fix-node ()
+	"Unlink and relink node binaries."
+	(interactive)
+	(async-shell-command "/opt/homebrew/bin/brew unlink node && /opt/homebrew/bin/brew link --overwrite node"))
+  (defun ghostty ()
+	"Open current directory in Ghostty."
+	(interactive)
+	(shell-command (concat "open -a Ghostty --args --working-directory=" "\""(expand-file-name default-directory)"\"")))
+  (defun send-to-self	(message)
+	"Send a MESSAGE to myself."
+	(interactive "sMessage to send: ")
+	(let ((message (or message ""))) (shell-command (format "osascript -e 'tell application \"Messages\" to send \"%s\" to buddy \"leaferiksen@gmail.com\"'" (shell-quote-argument message)))))
+  (defun split-and-follow-horizontally ()
+	"Move cursor to new window in horizontal split."
+	(interactive)
+	(split-window-below) (balance-windows) (other-window 1))
+  (defun split-and-follow-vertically ()
+	"Move cursor to new window in vertical split."
+	(interactive)
+	(split-window-right) (balance-windows) (other-window 1))
+  (defun unpackaged/sort-sexps (beg end)
+	"Sort sexps from BEG to END. Comments stay with the code below."
+	(interactive "r")
+	(cl-flet ((skip-whitespace () (while (looking-at (rx (1+ (or space "\n")))) (goto-char (match-end 0))))
+              (skip-both ()
+				(while (cond ((or (nth 4 (syntax-ppss))
+                                  (ignore-errors (save-excursion (forward-char 1) (nth 4 (syntax-ppss)))))
+                              (forward-line 1))
+							 ((looking-at (rx (1+ (or space "\n")))) (goto-char (match-end 0)))))))
+      (save-excursion
+		(save-restriction (narrow-to-region beg end) (goto-char beg) (skip-both)
+						  (cl-destructuring-bind (sexps markers)
+							  (cl-loop do (skip-whitespace)
+									   for start = (point-marker)
+									   for sexp = (ignore-errors (read (current-buffer)))
+									   for end = (point-marker)
+									   while sexp
+									   ;; Collect the real string, then one used for sorting.
+									   collect (cons (buffer-substring (marker-position start) (marker-position end))
+													 (save-excursion
+													   (goto-char (marker-position start))
+													   (skip-both)
+													   (buffer-substring (point) (marker-position end))))
+									   into sexps
+									   collect (cons start end)
+									   into markers
+									   finally return (list sexps markers))
+							(setq sexps (sort sexps (lambda (a b) (string< (cdr a) (cdr b)))))
+							(cl-loop for sexp-pair in sexps
+									 for marker-pair in markers
+									 do (let* ((real (car sexp-pair)) (start (car marker-pair)) (end (cdr marker-pair)))
+										  (goto-char (marker-position start))
+										  (insert-before-markers real)
+										  (delete-region (point) (marker-position end))))))))))
 (use-package emmet-mode
   :ensure t :vc (:url "https://github.com/smihica/emmet-mode/")
   :hook (html-mode css-mode)
@@ -251,13 +229,29 @@
   :hook (emacs-lisp-mode))
 (use-package ht ;; lsp-mode dependency
   :ensure t :vc (:url "https://github.com/Wilfred/ht.el"))
+(use-package html-ts-mode
+  :config
+  (defun http-server ()
+	"Start a local server at ./index.html, avoiding port conflicts."
+	(interactive)
+	(let* ((http-port-offset (if (boundp 'http-port-offset) (1+ http-port-offset) 0)) (http-port (- 9999 http-port-offset)) (filename (concat "http-server@" (prin1-to-string http-port) "<" (file-name-nondirectory (directory-file-name (file-name-directory default-directory))) ">")))
+	  (start-process filename filename "/opt/homebrew/bin/npx" "http-server" "-o" "-p" (number-to-string http-port)))))
 (use-package isearch
   :custom (isearch-lazy-count t) (lazy-count-prefix-format nil) (lazy-count-suffix-format "   (%s/%s)"))
 (use-package jinx
   :ensure t :vc (:url "https://github.com/minad/jinx")
   :hook (markdown-mode)
   :bind (:map jinx-mode-map ("C-c c" . jinx-correct))
-  :custom (jinx-languages "en_US ja-JP"))
+  :custom (jinx-languages "en_US ja-JP")
+  :config
+  (defun insert-date ()
+	"Insert an atx heading with today's date in iso format."
+	(interactive)
+	(insert "## " (format-time-string "%Y-%m-%d") "\n"))
+  (defun insert-title ()
+	"Insert an atx heading with the name of the file."
+	(interactive)
+	(insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n")))
 (use-package lorem-ipsum
   :ensure t :vc (:url "https://github.com/jschaf/emacs-lorem-ipsum"))
 (use-package lsp-completion
@@ -270,7 +264,13 @@
 (use-package lsp-tailwindcss
   :ensure t :vc (:url "https://github.com/merrickluo/lsp-tailwindcss")
   :after lsp-mode
-  :custom (lsp-tailwindcss-add-on-mode t) (lsp-tailwindcss-skip-config-check t) (lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server"))
+  :custom (lsp-tailwindcss-add-on-mode t) (lsp-tailwindcss-skip-config-check t) (lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")
+  :config
+  (defun tailwind-server ()
+	"Start a tailwind in the current directory, sourcing app.css."
+	(interactive)
+	(let ((filename (concat "tailwind-server@ <" (file-name-nondirectory (directory-file-name (file-name-directory default-directory))) ">")))
+	  (start-process filename filename "/opt/homebrew/bin/npx" "@tailwindcss/cli" "-i" "app.css" "-o" "dist.css" "--watch"))))
 (use-package lua-mode
   :ensure t :vc (:url "https://github.com/immerrr/lua-mode"))
 (use-package markdown-mode
