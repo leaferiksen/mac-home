@@ -13,14 +13,14 @@
   (mapc #'disable-theme custom-enabled-themes)
   (pcase appearance ('light (load-theme 'modus-operandi-tinted t)) ('dark (load-theme 'modus-vivendi-tinted t))))
 (defun csv-highlight ()
-  "Highlight CSV/TSV files based on their extension."
+  "Highlight CSV/TSV files."
   (interactive)
   (font-lock-mode 1)
   (let* ((separator (cond ((string-equal (file-name-extension (buffer-file-name)) "tsv") ?\t) (t ?\,)))
-         (n (count-matches (string separator) (pos-bol) (pos-eol)))
-         (colors (cl-loop for i from 0 to 1.0 by (/ 2.0 n)
-                          collect (apply #'color-rgb-to-hex (color-hsl-to-rgb i 0.3 0.5)))))
-    (cl-loop for i from 2 to n by 2 
+         (n (count-matches (string separator) (point-at-bol) (point-at-eol)))
+         (available-colors '("#848286" nil))
+         (colors (cl-loop for i from 0 below n collect (nth (mod i (length available-colors)) available-colors))))
+    (cl-loop for i from 1 to (1+ n) by 1
              for c in colors
              for r = (format "^\\([^%c\n]+%c\\)\\{%d\\}" separator separator i)
              do (font-lock-add-keywords nil `((,r (1 '(face (:foreground ,c)))))))))
@@ -160,7 +160,7 @@
 (use-package dired
   :bind (:map dired-mode-map (("<mouse-1>" . nil) ("<mouse-2>" . nil) ("SPC" . 'quicklook) ("C-c p" . 'dwim-shell-commands-md-pdf)))
   :custom (dired-clean-confirm-killing-deleted-buffers nil) (dired-create-destination-dirs 'ask) (dired-listing-switches "-alh --group-directories-first") (dired-mouse-drag-files t) (dired-recursive-copies 'always)
-  :bind (:map dired-mode-map ("C-c f" . dired-finder-path)))
+  :bind (:map dired-mode-map ("C-c f" . dired-finder-path) ("C-c c" . dwim-shell-command-pbcopy)))
 (use-package dired-hide-details
   :hook (dired-mode))
 (use-package dired-omit-mode
@@ -170,10 +170,18 @@
 (use-package dwim-shell-command
   :ensure t :vc (:url "https://github.com/xenodium/dwim-shell-command")
   :config
+  (defun dwim-shell-command-pbcopy ()
+	"Copy file to macOS system clipboard (via pbcopy)."
+	(interactive)
+	(dwim-shell-command-on-marked-files
+	 "pbcopy file"
+	 "pbcopy < '<<f>>'"
+	 :silent-success t))
   (defun dwim-shell-commands-md-pdf ()
 	"Convert md(s) to pdf (via pandoc and typst)."
 	(interactive)
 	(dwim-shell-command-on-marked-files
+	 "Convert md to pdf"
 	 "pandoc --pdf-engine=typst '<<f>>' -o '<<fne>>.pdf'"
 	 :extensions "md")))
 (use-package editorconfig
@@ -198,7 +206,7 @@
 (use-package emacs ;;core c variables, startup, modus and paragraph
   :hook (ns-system-appearance-change-functions . auto-theme)
   :bind (("C-x 2" . split-and-follow-horizontally) ("C-x 3" . split-and-follow-vertically)
-		 ("s-t" . ghostty) ("s-y" . yt-dlp) ("s-p" . backward-paragraph) ("s-n" . forward-paragraph)
+		 ("C-c t" . ghostty) ("C-c y" . yt-dlp) ("C-c p" . backward-paragraph) ("C-c n" . forward-paragraph)
 		 ("C-z" . nil)("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil)) ;; Unmap default text rescaling
   :custom-face (default ((t (:family "Maple Mono NF CN" :height 160)))) (fixed-pitch ((t (:family "Maple Mono NF CN" :height 160)))) (variable-pitch ((t (:family "New York" :height 200))))
   :custom ((completion-ignore-case t t)
@@ -248,7 +256,7 @@
 (use-package jinx
   :ensure t :vc (:url "https://github.com/minad/jinx")
   :hook (markdown-mode)
-  :bind ("C-c c" . jinx-correct)
+  :bind (:map jinx-mode-map ("C-c c" . jinx-correct))
   :custom (jinx-languages "en_US ja-JP"))
 (use-package lorem-ipsum
   :ensure t :vc (:url "https://github.com/jschaf/emacs-lorem-ipsum"))
@@ -282,11 +290,11 @@
 (use-package obsidian
   :ensure t :vc (:url "https://github.com/licht1stein/obsidian.el")
   :custom (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
-  :bind (("s-d" . obsidian-daily-note)
+  :bind (("C-c d" . obsidian-daily-note)
 		 (:map markdown-mode-map ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point))))
 (use-package osawm
   :vc (:url "https://github.com/andykuszyk/osawm.el")
-  :config (global-osawm-mode)
+  ;; :config (global-osawm-mode)
   :bind ("C-c w" . (lambda () (interactive) (osawm-launch-chrome "" "Google Chrome" 'normal))))
 (use-package pixel-scroll
   :custom (pixel-scroll-precision-mode t))
@@ -305,7 +313,7 @@
 (use-package shr
   :custom (shr-fill-text nil) (shr-inhibit-images t))
 (use-package simple
-  :custom (backward-delete-char-untabify-method nil) (column-number-mode t))
+  :custom (backward-delete-char-untabify-method nil) (column-number-mode t) (global-visual-line-mode t))
 (use-package snow
   :ensure t :vc (:url "https://github.com/alphapapa/snow.el")
   :custom (snow-pile-factor 1))
