@@ -17,4 +17,4 @@ macos-option-as-alt = true
 mouse-hide-while-typing = true
 shell-integration = zsh
 shell-integration-features = true
-theme = Apple System Colors
+theme = light:Apple System Colors Light, dark:Apple System Colors

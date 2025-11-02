@@ -68,7 +68,7 @@ Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](http
 
 - Results from Apps → **☒ Mail**
 - Results from system → **☒  iPhone Apps**
-- Search Privacy… → **Bluetooth File Exchange.app**, **Image Playground.app**, **Stocks.app**, **Tips.app**, **Mail.app**, **Karabiner-EventViewer.app**
+- Search Privacy… → **Bluetooth File Exchange**, **Image Playground**, **Stocks**, **Tips**, **Mail**, **Karabiner-EventViewer, Podcasts, Maps**
 
 ### Spoken Content
 

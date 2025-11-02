@@ -38,12 +38,6 @@
  (rear-context-string . "44 May  2 15:13 ")
  (position . 130)
  (last-modified 26810 860 355207 0))
-("Movies"
- (filename . "~/Movies/")
- (front-context-string . ".\n  drwx    1.4k")
- (rear-context-string . "28 Dec 13  2024 ")
- (position . 51)
- (last-modified 26777 19134 660794 0))
 ("Games"
  (filename . "~/Games/")
  (front-context-string . "Cyberpunk\n  drwx")

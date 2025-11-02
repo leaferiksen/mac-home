@@ -86,7 +86,7 @@ defaults write com.apple.dock "wvous-br-corner" -int "1"
 #################
 # window tiling #
 #################
-defaults write -g "AppleActionOnDoubleClick" -string "None"
+defaults write -g "AppleActionOnDoubleClick" -string "Fill"
 defaults write com.apple.WindowManager "EnableTilingByEdgeDrag" -bool "false"
 defaults write com.apple.WindowManager "EnableTopTilingByEdgeDrag" -bool "false"
 # defaults write com.apple.WindowManager "EnableTiledWindowMargins" -bool "false"

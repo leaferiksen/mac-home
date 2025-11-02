@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;; by Leaf Eriksen
 ;;; Code:
+;; test
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defun afinfo ()
   "Get metadata for focused file."
@@ -11,6 +12,18 @@
   "Load theme, taking current system APPEARANCE into consideration."
   (mapc #'disable-theme custom-enabled-themes)
   (pcase appearance ('light (load-theme 'modus-operandi-tinted t)) ('dark (load-theme 'modus-vivendi-tinted t))))
+(defun csv-highlight ()
+  "Highlight CSV/TSV files based on their extension."
+  (interactive)
+  (font-lock-mode 1)
+  (let* ((separator (cond ((string-equal (file-name-extension (buffer-file-name)) "tsv") ?\t) (t ?\,)))
+         (n (count-matches (string separator) (pos-bol) (pos-eol)))
+         (colors (cl-loop for i from 0 to 1.0 by (/ 2.0 n)
+                          collect (apply #'color-rgb-to-hex (color-hsl-to-rgb i 0.3 0.5)))))
+    (cl-loop for i from 2 to n by 2 
+             for c in colors
+             for r = (format "^\\([^%c\n]+%c\\)\\{%d\\}" separator separator i)
+             do (font-lock-add-keywords nil `((,r (1 '(face (:foreground ,c)))))))))
 (defun dired-finder-path ()
   "Open Dired in the frontmost Finder window path, if available."
   (interactive)
@@ -27,10 +40,8 @@
 (defun http-server ()
   "Start a local server at ./index.html, avoiding port conflicts."
   (interactive)
-  (let* ((http-port-offset (if (boundp 'http-port-offset) (1+ http-port-offset) 0))
-         (http-port (- 9999 http-port-offset))
-         (filename (concat "http-server@" (prin1-to-string http-port) "<" (file-name-nondirectory (directory-file-name (file-name-directory default-directory))) ">")))
-    (start-process filename filename "/opt/homebrew/bin/npx" "http-server" "-o" "-p" (number-to-string http-port))))
+  (let* ((http-port-offset (if (boundp 'http-port-offset) (1+ http-port-offset) 0)) (http-port (- 9999 http-port-offset)) (filename (concat "http-server@" (prin1-to-string http-port) "<" (file-name-nondirectory (directory-file-name (file-name-directory default-directory))) ">")))
+	(start-process filename filename "/opt/homebrew/bin/npx" "http-server" "-o" "-p" (number-to-string http-port))))
 (defun insert-date ()
   "Insert an atx heading with today's date in iso format."
   (interactive)
@@ -46,21 +57,15 @@
 (defun send-to-self	(message)
   "Send a MESSAGE to myself."
   (interactive "sMessage to send: ")
-  (let ((message
-		 (or message "")))
-	(shell-command (format "osascript -e 'tell application \"Messages\" to send \"%s\" to buddy \"leaferiksen@gmail.com\"'" (shell-quote-argument message)))))
+  (let ((message (or message ""))) (shell-command (format "osascript -e 'tell application \"Messages\" to send \"%s\" to buddy \"leaferiksen@gmail.com\"'" (shell-quote-argument message)))))
 (defun split-and-follow-horizontally ()
   "Move cursor to new window in horizontal split."
   (interactive)
-  (split-window-below)
-  (balance-windows)
-  (other-window 1))
+  (split-window-below) (balance-windows) (other-window 1))
 (defun split-and-follow-vertically ()
   "Move cursor to new window in vertical split."
   (interactive)
-  (split-window-right)
-  (balance-windows)
-  (other-window 1))
+  (split-window-right) (balance-windows) (other-window 1))
 (defun tailwind-server ()
   "Start a tailwind in the current directory, sourcing app.css."
   (interactive)
@@ -112,62 +117,50 @@
 (defun vc-amend ()
   "Amend the previous commit title."
   (interactive)
-  (vc-checkin nil 'git)
-  (vc-git-log-edit-toggle-amend))
-
+  (vc-checkin nil 'git) (vc-git-log-edit-toggle-amend))
 (defun wrap-urls-with-parentheses
 	(start end)
   "Wrap quoted URLs with parentheses from START to END."
   (interactive "r")
-  (save-excursion
-	(goto-char start)
-	(while
-		(re-search-forward "\"\\(https?://[^\"]+\\)\"" end t)
-	  (replace-match "(\"\\1\")"))))
+  (save-excursion (goto-char start)
+				  (while (re-search-forward "\"\\(https?://[^\"]+\\)\"" end t) (replace-match "(\"\\1\")"))))
 (defun yt-dlp (url)
   "Download the audio, video, or video with subs from a given URL."
   (interactive "sEnter media source URL: ")
   (let ((choice (completing-read "Download (audio/video/subtitled video ) " '("audio" "video" "subtitled video"))))
-	(cond ((string-equal choice "audio") (async-shell-command (format "yt-dlp -S \"ext\" -x \"%s\"" url)))
-		  ((string-equal choice "video") (async-shell-command (format "yt-dlp -S \"ext\" \"%s\"" url)))
-		  ((string-equal choice "subtitled video") (async-shell-command (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url))))))
+	(cond ((string-equal choice "audio") (async-shell-command (format "yt-dlp -S \"ext\" -x \"%s\"" url))) ((string-equal choice "video") (async-shell-command (format "yt-dlp -S \"ext\" \"%s\"" url))) ((string-equal choice "subtitled video") (async-shell-command (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url))))))
 (use-package acp
   :ensure t :vc (:url "https://github.com/xenodium/acp.el"))
 (use-package agent-shell
   :ensure t :vc (:url "https://github.com/xenodium/agent-shell")
   :custom (agent-shell-google-authentication (agent-shell-google-make-authentication :vertex-ai t))
-  :bind (("C-c g" . agent-shell-google-start-gemini)
-		 ("C-c a" . agent-shell-add-region)))
+  :bind ("C-c g" . agent-shell-google-start-gemini) ("C-c a" . agent-shell-add-region))
 (use-package apheleia
   :ensure t :vc (:url "https://github.com/radian-software/apheleia")
   :custom (apheleia-global-mode t))
 (use-package auth-source
   :custom (auth-sources "~/.authinfo.gpg"))
 (use-package autorevert
-  :custom ((global-auto-revert-mode t)
-		   (global-auto-revert-non-file-buffers t)))
+  :custom (global-auto-revert-mode t) (global-auto-revert-non-file-buffers t))
 (use-package bookmark
   :bind ("s-b" . bookmark-jump))
 (use-package browse-url
-  :custom ((browse-url-generic-program "open")
-		   (browse-url-mailto-function 'browse-url-generic)))
+  :custom (browse-url-generic-program "open") (browse-url-mailto-function 'browse-url-generic))
 (use-package completion-preview
   :hook (html-mode prog-mode)
-  :bind (:map completion-preview-active-mode-map (("M-n" . completion-preview-next-candidate)
-												  ("M-p" . completion-preview-prev-candidate))))
+  :bind (:map completion-preview-active-mode-map (("M-n" . completion-preview-next-candidate) ("M-p" . completion-preview-prev-candidate))))
+(use-package csv-align-mode
+  :hook (csv-mode)
+  :custom (csv-align-padding 2) (csv-align-max-width 60))
+(use-package csv-mode
+  :ensure t :vc (:url "https://github.com/emacsmirror/csv-mode")
+  :hook (csv-mode . csv-highlight))
 (use-package delsel
   :custom (delete-selection-mode t))
 (use-package dired
-  :bind (:map dired-mode-map (("<mouse-1>" . nil)
-							  ("<mouse-2>" . nil)
-							  ("SPC" . 'quicklook)
-							  ("C-c p" . 'dwim-shell-commands-md-pdf)))
-  :custom ((dired-clean-confirm-killing-deleted-buffers nil)
-		   (dired-create-destination-dirs 'ask)
-		   (dired-listing-switches "-alh --group-directories-first")
-		   (dired-mouse-drag-files t)
-		   
-		   (dired-recursive-copies 'always)))
+  :bind (:map dired-mode-map (("<mouse-1>" . nil) ("<mouse-2>" . nil) ("SPC" . 'quicklook) ("C-c p" . 'dwim-shell-commands-md-pdf)))
+  :custom (dired-clean-confirm-killing-deleted-buffers nil) (dired-create-destination-dirs 'ask) (dired-listing-switches "-alh --group-directories-first") (dired-mouse-drag-files t) (dired-recursive-copies 'always)
+  :bind (:map dired-mode-map ("C-c f" . dired-finder-path)))
 (use-package dired-hide-details
   :hook (dired-mode))
 (use-package dired-omit-mode
@@ -181,7 +174,6 @@
 	"Convert md(s) to pdf (via pandoc and typst)."
 	(interactive)
 	(dwim-shell-command-on-marked-files
-	 "Convert to PDF"
 	 "pandoc --pdf-engine=typst '<<f>>' -o '<<fne>>.pdf'"
 	 :extensions "md")))
 (use-package editorconfig
@@ -193,20 +185,22 @@
   :preface (run-at-time nil (* 8 60 60) #'elfeed-update)
   :bind (("C-c r" . elfeed)
 		 (:map elfeed-search-mode-map ("m" . elfeed-search-show-entry)))
-  :custom ((elfeed-feeds '(("https://buttondown.com/monteiro/rss" design) ("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals) ("https://indi.ca/rss/" journals)))
-		   (elfeed-search-filter "@1-month-ago +unread")))
+  :custom (elfeed-search-filter "@1-month-ago +unread") (elfeed-feeds '(("https://buttondown.com/monteiro/rss" design) ("https://www.kosatenmag.com/home?format=rss" anime) ("https://www.smbc-comics.com/comic/rss" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://catandgirl.com/feed/" comics) ("https://thesecretknots.com/feed/" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://modmagazine.net/feed.xml" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://enikofox.com/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://acidiclight.dev/rss.xml" linux) ("https://blog.xfce.org/feed" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://carlschwan.eu/index.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://blogs.kde.org/index.xml" linux) ("https://thelibre.news/rss/" linux) ("https://css-tricks.com/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://rachelandrew.co.uk/feed/" design) ("https://piccalil.li/feed.xml" design) ("http://danluu.com/atom.xml" design) ("https://localghost.dev/feed.xml" design) ("https://www.tinylogger.com/90koil/rss" journals) ("https://anhvn.com/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://daverupert.com/atom.xml" journals) ("https://carsonellis.substack.com/feed" journals) ("https://wokescientist.substack.com/feed" journals) ("https://hypercritical.co/feeds/main" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://www.wordsbywes.ink/feed.xml" journals) ("https://blogsystem5.substack.com/feed" journals) ("https://indi.ca/rss/" journals))))
 (use-package elfeed-webkit
   :ensure t :vc (:url "https://github.com/fritzgrabo/elfeed-webkit")
   :demand ;; !
   :config (elfeed-webkit-enable)
-  :bind (:map elfeed-show-mode-map
-              ("%" . elfeed-webkit-toggle)))
+  :bind (:map elfeed-show-mode-map ("%" . elfeed-webkit-toggle)))
 (use-package elgrep ;; obsidian dependency
   :ensure t :vc (:url "https://github.com/TobiasZawada/elgrep"))
+(use-package elisp-mode
+  :bind (:map lisp-mode-shared-map ("C-c e" . (lambda () (interactive) (eval-buffer)))))
 (use-package emacs ;;core c variables, startup, modus and paragraph
   :hook (ns-system-appearance-change-functions . auto-theme)
-  :bind (("C-x 2" . split-and-follow-horizontally) ("C-x 3" . split-and-follow-vertically) ("s-t" . ghostty) ("s-y" . yt-dlp)  ("C-z" . nil)("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil)) ;; Unmap default text rescaling
-  :custom-face (default ((t (:family "Maple Mono NF CN" :height 160)))) (variable-pitch ((t (:family "New York" :height 200))))
+  :bind (("C-x 2" . split-and-follow-horizontally) ("C-x 3" . split-and-follow-vertically)
+		 ("s-t" . ghostty) ("s-y" . yt-dlp) ("s-p" . backward-paragraph) ("s-n" . forward-paragraph)
+		 ("C-z" . nil)("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil)) ;; Unmap default text rescaling
+  :custom-face (default ((t (:family "Maple Mono NF CN" :height 160)))) (fixed-pitch ((t (:family "Maple Mono NF CN" :height 160)))) (variable-pitch ((t (:family "New York" :height 200))))
   :custom ((completion-ignore-case t t)
 		   (cursor-type 'bar)
 		   (delete-by-moving-to-trash t)
@@ -220,6 +214,7 @@
 		   (modus-themes-common-palette-overrides '((fringe unspecified) (border-mode-line-active unspecified) (border-mode-line-inactive unspecified) (bg-tab-bar bg-main) (bg-tab-current bg-active) (bg-tab-other bg-dim) (fg-heading-1 green-intense) (fg-heading-2 green) (fg-heading-3 green-faint) (fg-heading-4 fg-sage) (fg-heading-5 fg-sage) (fg-heading-6 fg-sage)))
 		   (modus-themes-headings '((1 . (1.8)) (2 . (1.6)) (3 . (1.4)) (4 . (1.2))))
 		   (modus-themes-italic-constructs t)
+		   (modus-themes-mixed-fonts t)
 		   (read-buffer-completion-ignore-case t)
 		   (read-process-output-max (* 1024 1024))
 		   (ring-bell-function 'ignore)
@@ -230,7 +225,8 @@
 (use-package emmet-mode
   :ensure t :vc (:url "https://github.com/smihica/emmet-mode/")
   :hook (html-mode css-mode)
-  :bind (:map html-mode ("C-c e" . emmet-expand-line)) (:map css-mode ("C-c e" . emmet-expand-line)))
+  :bind ((:map html-mode ("C-c e" . emmet-expand-line))
+		 (:map css-mode ("C-c e" . emmet-expand-line))))
 (use-package epg-config
   :custom (epg-pinentry-mode 'loopback))
 (use-package f ;; lsp-mode dependency
@@ -272,8 +268,7 @@
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
   :custom (markdown-enable-wiki-links t) (markdown-hide-urls t) (markdown-hide-markup t) (markdown-asymmetric-header t)
-  :custom-face (markdown-link-face ((t (:underline nil :inherit link)))) (markdown-code-face ((t (:family "Maple Mono NF CN" :inherit default)))) (markdown-table-face ((t (:inherit default))))
-  :bind (:map markdown-mode-map (("C-c h" . insert-title) ("C-c d" . insert-date) ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point))))
+  :bind (:map markdown-mode-map (("C-c h" . insert-title) ("C-c d" . insert-date))))
 (use-package moody
   :ensure t :vc (:url "https://github.com/tarsius/moody")
   :config (moody-replace-mode-line-front-space) (moody-replace-mode-line-buffer-identification) (moody-replace-vc-mode))
@@ -287,12 +282,16 @@
 (use-package obsidian
   :ensure t :vc (:url "https://github.com/licht1stein/obsidian.el")
   :custom (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
-  :bind ("s-d" . obsidian-daily-note))
+  :bind (("s-d" . obsidian-daily-note)
+		 (:map markdown-mode-map ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point))))
+(use-package osawm
+  :vc (:url "https://github.com/andykuszyk/osawm.el")
+  :config (global-osawm-mode)
+  :bind ("C-c w" . (lambda () (interactive) (osawm-launch-chrome "" "Google Chrome" 'normal))))
 (use-package pixel-scroll
   :custom (pixel-scroll-precision-mode t))
 (use-package project
-  :custom ((project-mode-line t)
-		   (project-vc-extra-root-markers '("project"))))
+  :custom (project-mode-line t) (project-vc-extra-root-markers '("project")))
 (use-package repeat
   :custom (repeat-mode t))
 (use-package s ;; f dependency
@@ -316,7 +315,7 @@
   :ensure t :vc (:url "https://github.com/emacs-tree-sitter/treesit-langs"))
 (use-package typo
   :ensure t :vc (:url "https://github.com/jorgenschaefer/typoel")
-  :hook (text-mode))
+  :hook (markdown-mode org-mode))
 (use-package undo-fu
   :ensure t :vc (:url "https://github.com/emacsmirror/undo-fu")
   :bind ("s-z" . undo-fu-only-undo) ("s-Z" . undo-fu-only-redo))
@@ -327,11 +326,11 @@
   :custom (valign-fancy-bar t)
   :hook (markdown-mode))
 (use-package variable-pitch
-  :hook (text-mode) (variable-pitch-mode . (lambda () (setq-local line-spacing 0.4))))
+  :hook (markdown-mode org-mode) (variable-pitch-mode . (lambda () (setq-local line-spacing 0.4))))
 (use-package visual-fill-column
   :ensure t :vc (:url "https://codeberg.org/joostkremers/visual-fill-column")
   :custom (visual-fill-column-center-text t) (visual-fill-column-width 80)
-  :hook (text-mode))
+  :hook (markdown-mode org-mode))
 (use-package warnings
   :custom (warning-minimum-level :error))
 (use-package yasnippet

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-brew install --formula aria2 d12frosted/emacs-plus/emacs-plus@31 duti enchant eslint eza ffmpeg gemini-cli http-server mas media-info node pandoc prettier rustywind tailwindcss-language-server tealdeer typescript typescript-language-server typst vscode-langservers-extracted xcodesorg/made/xcodes yt-dlp zsh-autosuggestions zsh-syntax-highlighting
+brew install --formula aria2 d12frosted/emacs-plus/emacs-plus@31 duti enchant eslint eza ffmpeg gemini-cli http-server mas media-info node pandoc prettier rustywind tailwindcss-language-server tealdeer typescript typescript-language-server typst vscode-langservers-extracted yt-dlp zsh-autosuggestions zsh-syntax-highlighting
 
 brew install --cask anki calibre chromium cursorcerer font-maple-mono-nf-cn ghostty hammerspoon handbrake-app homerow iina itch knockknock node notunes osu qlmarkdown qlvideo soulver steam syncthing virtualbuddy zen-browser zotero
 

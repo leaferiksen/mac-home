@@ -27,6 +27,7 @@ Install:andUse("PaperWM", {
 					 spoon.window_filter:rejectApp("Messages")
 					 spoon.window_filter:rejectApp("Facetime")
 					 spoon.window_filter:rejectApp("Stickies")
+					 spoon.window_filter:rejectApp("Google Chrome")
 					 spoon.window_filter:rejectApp("LuLu")
 					 spoon.window_filter:rejectApp("IINA")
 					 spoon.window_filter:rejectApp("java")
