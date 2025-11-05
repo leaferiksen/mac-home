@@ -2,42 +2,42 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Git"
-  (filename . "~/Git/")
-  (front-context-string . "Aseprite\n  drwxr")
-  (rear-context-string . "60 Aug 31 12:55 ")
-  (position . 65)
-  (last-modified 26873 20777 285898 0))
-("init.el"
- (filename . "~/.emacs.d/init.el")
- (front-context-string . ";;; init.el --- ")
- (rear-context-string)
- (position . 1)
- (last-modified 26844 17373 121206 0))
-("Typography"
- (filename . "~/Documents/College/25-26 Autumn/Typography/")
- (front-context-string . "20-08\n  drwx    ")
- (rear-context-string . "60 Aug 20 12:07 ")
- (position . 86)
- (last-modified 26803 48742 541817 0))
-("Design for the Web"
- (filename . "~/Documents/College/25-26 Autumn/Design for the Web/")
- (front-context-string . "Intro to CSS\n  d")
- (rear-context-string . "60 Aug 28 10:04 ")
- (position . 94)
- (last-modified 26803 48726 961025 0))
+((".config"
+  (filename . "~/.config/")
+  (front-context-string . "borders\n  drwx--")
+  (rear-context-string . "96 Dec 13  2024 ")
+  (position . 164)
+  (last-modified 26889 43583 80297 0))
+("25-26 Autumn"
+ (filename . "~/Documents/College/25-26 Autumn/")
+ (front-context-string . "Design for the W")
+ (rear-context-string . "04 Oct 28 09:22 ")
+ (position . 187)
+ (last-modified 26888 17635 167482 0))
+("TV Shows"
+ (filename . "/Volumes/Media/TV Shows/")
+ (front-context-string . "[HorribleSubs] A")
+ (rear-context-string . "6K Feb  8  2025 ")
+ (position . 171)
+ (last-modified 26888 17304 3476 0))
+("Movies"
+ (filename . "/Volumes/Media/Movies/")
+ (front-context-string . "Gundam Trilogy\n ")
+ (rear-context-string . "56 Aug  2  2024 ")
+ (position . 166)
+ (last-modified 26888 17298 168646 0))
+("Git"
+ (filename . "~/Git/")
+ (front-context-string . "Aseprite\n  drwxr")
+ (rear-context-string . "60 Aug 31 12:55 ")
+ (position . 65)
+ (last-modified 26873 20777 285898 0))
 ("Home.md"
  (filename . "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Home.md")
  (front-context-string . "[[Education]]\n[[")
  (rear-context-string)
  (position . 1)
  (last-modified 26792 40765 547199 0))
-("My Drive"
- (filename . "/Volumes/Leaf Eriksen's Design Drive/")
- (front-context-string . "Design + Me Zine")
- (rear-context-string . "44 May  2 15:13 ")
- (position . 130)
- (last-modified 26810 860 355207 0))
 ("Games"
  (filename . "~/Games/")
  (front-context-string . "Cyberpunk\n  drwx")
@@ -62,22 +62,10 @@
  (rear-context-string . "96 Mar 29 10:33 ")
  (position . 175)
  (last-modified 26711 3905 749927 0))
-("Media"
- (filename . "/Volumes/Media/")
- (front-context-string . ".DocumentRevisio")
- (rear-context-string . "88 May  2 22:39 ")
- (position . 64)
- (last-modified 26645 44734 80693 0))
 ("Documents"
  (filename . "~/Documents/")
  (front-context-string . "Apps\n  drwx-----")
  (rear-context-string . "12 Apr 12 15:05 ")
  (position . 71)
  (last-modified 26620 19922 519430 0))
-("setup"
- (filename . "~/.config/setup/")
- (front-context-string . "brew.sh\n  -rwxr-")
- (rear-context-string . "05 Mar 14 17:34 ")
- (position . 137)
- (last-modified 26582 18631 43659 0))
 )

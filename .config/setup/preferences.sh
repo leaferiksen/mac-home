@@ -30,7 +30,6 @@ defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 defaults write com.apple.universalaccess "differentiateWithoutColor" -bool "true"
 defaults write com.apple.universalaccess "mouseDriverCursorSize" -float "1.5"
-defaults write com.apple.universalaccess "reduceTransparency" -bool "true"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
 ########################
 # fuck .DS_Store files #

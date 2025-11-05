@@ -13,11 +13,20 @@
 (add-to-list 'default-frame-alist '(undecorated-round . t)) ;; rounded with no title
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package ef-themes
+  :ensure t :vc (:url "https://github.com/protesilaos/ef-themes")
+  :custom (modus-themes-common-palette-overrides '((fringe unspecified)
+												   (bg-tab-bar bg-main)
+												   (bg-tab-current bg-active)
+												   (bg-tab-other bg-dim))))
 (mouse-wheel-progressive-speed nil)
+(use-package web-mode
+  :vc (:url "https://github.com/fxbois/web-mode")
+  :mode "\\.html\\'")
 (use-package esxml ;; nov-mode dependency
   :vc (:url "https://github.com/tali713/esxml"))
 (use-package nov
-  ;; :vc (:url "https://depp.brause.cc/nov.el.git")
+  :ensure t :vc (:url "https://depp.brause.cc/nov.el.git")
   :mode ("\\.epub\\'" . nov-mode)
   :custom (nov-text-width t))
 (use-package tab-line
@@ -49,7 +58,7 @@
   :hook ((archive-mode diff-mode elfeed-search-mode html-mode prog-mode vc-dir-mode) . fixed-pitch-mode))
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font) charset
-                    (font-spec :family "Hiragino Mincho ProN")))
+					(font-spec :family "Hiragino Mincho ProN")))
 (use-package flexoki-themes
   :vc (:url "https://codeberg.org/crmsnbleyd/flexoki-emacs-theme")
   :custom ((flexoki-themes-use-bold-builtins t)
@@ -67,12 +76,12 @@
 
 (defun my/use-font (&optional frame)
   (when frame
-    (select-frame frame))
+	(select-frame frame))
 
   (set-face-attribute 'variable-pitch nil :font my/font)
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
-    (set-fontset-font (frame-parameter nil 'font) charset
-                      (font-spec :family my/font-ja))))
+	(set-fontset-font (frame-parameter nil 'font) charset
+					  (font-spec :family my/font-ja))))
 (my/use-font)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminal Interface Emacs ;;
@@ -135,11 +144,11 @@
 (defun markdown-org-table-align-advice ()
   "Replace \"+\" sign with \"|\" in tables."
   (when (member major-mode '(markdown-mode gfm-mode))
-    (save-excursion
+	(save-excursion
 	  (save-restriction
-        (narrow-to-region (org-table-begin) (org-table-end))
-        (goto-char (point-min))
-        (while (search-forward "-+-" nil t)
+		(narrow-to-region (org-table-begin) (org-table-end))
+		(goto-char (point-min))
+		(while (search-forward "-+-" nil t)
 		  (replace-match "-|-"))))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (add-hook 'after-init-hook #'global-prettier-mode)

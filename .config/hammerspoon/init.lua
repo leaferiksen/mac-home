@@ -1,5 +1,5 @@
 hs.window.animationDuration = 0
-shortcut = {"alt", "ctrl"}
+shortcut = {"shift", "alt"}
 hs.loadSpoon("SpoonInstall")
 Install = spoon.SpoonInstall
 Install.repos.Caffeine = {
@@ -34,12 +34,9 @@ Install:andUse("PaperWM", {
 				  end,
 				  start = true,
 				  hotkeys = {
-					 -- switch to a new focused window in tiled grid
-					 focus_left = {shortcut, "left"},
-					 focus_right = {shortcut, "right"},
 					 -- Switch to a new focused window in tiled grid
-					 swap_left = {shortcut, "up"},
-					 swap_right = {shortcut, "down"},
+					 swap_left = {shortcut, "tab"},
+					 swap_right = {shortcut, "`"},
 					 -- position and resize focused window
 					 center_window = {shortcut, "c"},
 					 cycle_width = {shortcut, "r"},

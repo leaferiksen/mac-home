@@ -7,4 +7,5 @@
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)) ;; title present but transparent
 (add-hook 'window-setup-hook 'toggle-frame-maximized t)
 (setq custom-file (make-temp-file "~/.cache/emacs/custom"))
+(setq use-package-vc-prefer-newest t)
 ;;; early-init.el ends here
