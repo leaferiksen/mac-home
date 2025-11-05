@@ -26,6 +26,7 @@ defaults write -g "PMPrintingExpandedStateForPrint" -bool "true"
 #################
 # defaults write -g "NSTableViewDefaultSizeMode" -int "3"
 defaults write -g "AppleIconAppearanceTheme" -string "TintedAutomatic"
+defaults write -g "NSGlassDiffusionSetting" -bool "yes"
 defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 defaults write com.apple.universalaccess "differentiateWithoutColor" -bool "true"

@@ -193,8 +193,7 @@
 		   (initial-buffer-choice "~/Documents/")
 		   (line-spacing 0.1)
 		   (mode-line-collapse-minor-modes '(not lsp-mode flymake-mode))
-		   (mac-command-modifier 'control)
-		   (mac-right-command-modifier 'meta)
+		   (mac-command-modifier 'meta)
 		   (mac-option-modifier 'none)
 		   (read-buffer-completion-ignore-case t)
 		   (read-process-output-max (* 1024 1024))
@@ -381,7 +380,7 @@
   :hook (markdown-mode))
 (use-package undo-fu
   :vc (:url "https://github.com/emacsmirror/undo-fu")
-  :bind ("C-z" . undo-fu-only-undo) ("C-S-z" . undo-fu-only-redo))
+  :bind ("M-z" . undo-fu-only-undo) ("M-S-z" . undo-fu-only-redo))
 (use-package valign
   :ensure t :vc (:url "https://github.com/casouri/valign")
   :custom (valign-fancy-bar t)
