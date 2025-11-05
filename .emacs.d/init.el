@@ -176,7 +176,7 @@
   :bind (:map lisp-mode-shared-map ("C-c e" . (lambda () (interactive) (eval-buffer)))))
 (use-package emacs ;;core c variables, startup, modus and paragraph
   :hook (ns-system-appearance-change-functions . auto-theme)
-  :bind (("C-z" . nil) ("C-x 2" . split-and-follow-horizontally) ("C-x 3" . split-and-follow-vertically)
+  :bind (("C-z" . nil) ("M-z" . nil)("C-x 2" . split-and-follow-horizontally) ("C-x 3" . split-and-follow-vertically)
 		 ("C-c t" . ghostty) ("C-c y" . yt-dlp) ("C-c p" . backward-paragraph) ("C-c n" . forward-paragraph)
 		 ("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil))
   :custom-face
@@ -380,7 +380,7 @@
   :hook (markdown-mode))
 (use-package undo-fu
   :vc (:url "https://github.com/emacsmirror/undo-fu")
-  :bind ("M-z" . undo-fu-only-undo) ("M-S-z" . undo-fu-only-redo))
+  :bind ("M-z" . undo-fu-only-undo) ("M-Z" . undo-fu-only-redo))
 (use-package valign
   :ensure t :vc (:url "https://github.com/casouri/valign")
   :custom (valign-fancy-bar t)
