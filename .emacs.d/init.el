@@ -75,6 +75,8 @@
   :bind (:map dired-mode-map ("C-c f" . dired-finder-path) ("C-c c" . dwim-shell-command-pbcopy)))
 (use-package dired-x
   :custom (dired-omit-files	"^~\\$[^/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd"))
+(use-package display-line-numbers
+  :custom (display-line-numbers-type 'relative))
 (use-package dwim-shell-command
   :ensure t :vc (:url "https://github.com/xenodium/dwim-shell-command")
   :config
@@ -293,6 +295,10 @@
 	(interactive)
 	(let* ((http-port-offset (if (boundp 'http-port-offset) (1+ http-port-offset) 0)) (http-port (- 9999 http-port-offset)) (filename (concat "http-server@" (prin1-to-string http-port) "<" (file-name-nondirectory (directory-file-name (file-name-directory default-directory))) ">")))
 	  (start-process filename filename "/opt/homebrew/bin/npx" "http-server" "-o" "-p" (number-to-string http-port)))))
+(use-package icomplete
+  :custom ((completion-styles '(basic flex partial-completion emacs22))
+		   (completions-sort 'historical))
+  :config (fido-vertical-mode))
 (use-package isearch
   :custom (isearch-lazy-count t) (lazy-count-prefix-format nil) (lazy-count-suffix-format "   (%s/%s)"))
 (use-package jinx
@@ -346,7 +352,7 @@
 		 (:map markdown-mode-map ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point))))
 (use-package osawm
   :vc (:url "https://github.com/andykuszyk/osawm.el")
-  ;; :config (global-osawm-mode)
+  :config (global-osawm-mode)
   :bind ("C-c w" . (lambda () (interactive) (osawm-launch-chrome "" "Google Chrome" 'normal))))
 (use-package pixel-scroll
   :custom (pixel-scroll-precision-mode t))

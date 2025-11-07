@@ -19,12 +19,12 @@
 
 {:des "Colemak Curl/Angle/Extra Wide" :rules [
 
-[:##tab :q][:##q :w][:##w :f][:##e :p][:##r :b][:##t :vk_none][:##y :vk_none]
+[:##tab :q][:##q :w][:##w :f][:##e :p][:##r :b][:##t :escape][:##y :return_or_enter]
 [:##u :j][:##i :l][:##o :u][:##p :y]
 
-[:##caps_lock :a][:##a :r][:##s :s][:##d :t][:##f :g][:##g :f13][:##h :f14]
+[:##caps_lock :a][:##a :r][:##s :s][:##d :t][:##f :g][:##g :f14][:##h :f13]
 [:##j :m][:##k :n][:##l :e][:##semicolon :i][:##quote :o][:##return_or_enter :quote]
 
-[:##left_shift :z][:##z :x][:##x :c][:##c :d][:##v :v][:##b :semicolon][:##n :escape]
+[:##left_shift :z][:##z :x][:##x :c][:##c :d][:##v :v][:##b :semicolon][:##n :tab]
 [:##m :k][:##comma :h][:##period :comma][:##slash :period][:##right_shift :slash]]}
 ]}

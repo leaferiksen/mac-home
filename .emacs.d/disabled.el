@@ -20,6 +20,10 @@
 												   (bg-tab-current bg-active)
 												   (bg-tab-other bg-dim))))
 (mouse-wheel-progressive-speed nil)
+(use-package osawm
+  :vc (:url "https://github.com/andykuszyk/osawm.el")
+  :config (global-osawm-mode)
+  :bind ("C-c w" . (lambda () (interactive) (osawm-launch-chrome "" "Google Chrome" 'normal))))
 (use-package web-mode
   :vc (:url "https://github.com/fxbois/web-mode")
   :mode "\\.html\\'")
