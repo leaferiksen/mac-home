@@ -46,6 +46,9 @@
 			   do (font-lock-add-keywords nil `((,r (1 '(face (:foreground ,c))))))))))
 (use-package delsel
   :custom (delete-selection-mode t))
+(use-package devil
+  :ensure t :vc (:url "https://github.com/susam/devil")
+  :config (global-devil-mode))
 (use-package dired
   :bind (:map dired-mode-map (("<mouse-1>" . nil) ("<mouse-2>" . nil) ("SPC" . 'quicklook) ("C-c p" . 'dwim-shell-commands-md-pdf)))
   :custom (dired-clean-confirm-killing-deleted-buffers nil) (dired-create-destination-dirs 'ask) (dired-listing-switches "-alh --group-directories-first") (dired-mouse-drag-files t) (dired-recursive-copies 'always)
@@ -76,7 +79,7 @@
 (use-package dired-x
   :custom (dired-omit-files	"^~\\$[^/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd"))
 (use-package display-line-numbers
-  :custom (display-line-numbers-type 'relative))
+  :custom (global-display-line-numbers-mode t) (display-line-numbers-type 'relative))
 (use-package dwim-shell-command
   :ensure t :vc (:url "https://github.com/xenodium/dwim-shell-command")
   :config
@@ -178,8 +181,8 @@
   :bind (:map lisp-mode-shared-map ("C-c e" . (lambda () (interactive) (eval-buffer)))))
 (use-package emacs ;;core c variables, startup, modus and paragraph
   :hook (ns-system-appearance-change-functions . auto-theme)
-  :bind (("C-z" . nil) ("M-z" . nil)("C-x 2" . split-and-follow-horizontally) ("C-x 3" . split-and-follow-vertically)
-		 ("C-c t" . ghostty) ("C-c y" . yt-dlp) ("C-c p" . backward-paragraph) ("C-c n" . forward-paragraph)
+  :bind (("C-o" . find-file) ("C-x 2" . split-and-follow-horizontally) ("C-x 3" . split-and-follow-vertically)
+		 ("s-t" . ghostty) ("s-y" . yt-dlp) ("C-c p" . backward-paragraph) ("C-c n" . forward-paragraph)
 		 ("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil))
   :custom-face
   (default ((t (:family "Maple Mono NF CN" :height 140))))
@@ -195,7 +198,6 @@
 		   (initial-buffer-choice "~/Documents/")
 		   (line-spacing 0.1)
 		   (mode-line-collapse-minor-modes '(not lsp-mode flymake-mode))
-		   (mac-command-modifier 'meta)
 		   (mac-option-modifier 'none)
 		   (read-buffer-completion-ignore-case t)
 		   (read-process-output-max (* 1024 1024))
@@ -296,8 +298,7 @@
 	(let* ((http-port-offset (if (boundp 'http-port-offset) (1+ http-port-offset) 0)) (http-port (- 9999 http-port-offset)) (filename (concat "http-server@" (prin1-to-string http-port) "<" (file-name-nondirectory (directory-file-name (file-name-directory default-directory))) ">")))
 	  (start-process filename filename "/opt/homebrew/bin/npx" "http-server" "-o" "-p" (number-to-string http-port)))))
 (use-package icomplete
-  :custom ((completion-styles '(basic flex partial-completion emacs22))
-		   (completions-sort 'historical))
+  :custom (completion-auto-help nil) (completion-styles '(basic flex partial-completion emacs22)) (completions-sort 'historical)
   :config (fido-vertical-mode))
 (use-package isearch
   :custom (isearch-lazy-count t) (lazy-count-prefix-format nil) (lazy-count-suffix-format "   (%s/%s)"))
@@ -348,7 +349,7 @@
 (use-package obsidian
   :ensure t :vc (:url "https://github.com/licht1stein/obsidian.el")
   :custom (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
-  :bind (("C-c d" . obsidian-daily-note)
+  :bind (("s-d" . obsidian-daily-note)
 		 (:map markdown-mode-map ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point))))
 (use-package osawm
   :vc (:url "https://github.com/andykuszyk/osawm.el")
@@ -386,7 +387,7 @@
   :hook (markdown-mode))
 (use-package undo-fu
   :vc (:url "https://github.com/emacsmirror/undo-fu")
-  :bind ("M-z" . undo-fu-only-undo) ("M-Z" . undo-fu-only-redo))
+  :bind ("s-z" . undo-fu-only-undo) ("s-Z" . undo-fu-only-redo))
 (use-package valign
   :ensure t :vc (:url "https://github.com/casouri/valign")
   :custom (valign-fancy-bar t)

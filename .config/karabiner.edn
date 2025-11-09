@@ -1,30 +1,17 @@
-{
-:applications {:emacs ["^org\\.gnu\\.Emacs"]}
-:main [
-{:des "Adjust keyboard brightness with ⌘🔅 and ⌘🔆" :rules [ [:!C##f1 :illumination_decrement][:!C##f2 :illumination_increment]]}
+{:main [
+{:des "Adjust keyboard brightness with ⌘🔅 and ⌘🔆" :rules [ [:!CC##f1 :illumination_decrement][:!CC##f2 :illumination_increment]]}
 
 {:des "Toggle dark mode with 🌙" :rules [
 [:!F##f6 :f6][:##f6 "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
 
 {:des "iPhone Mirroring playback with ⌘⏴ ⌘⏯ ⌘⏵" :rules[
-[:!C##f7 "/bin/sh ~/.config/karabiner/iphoneBack.sh"][:!C##f8 "/bin/sh ~/.config/karabiner/iphonePlay.sh"][:!C##f9 "/bin/sh ~/.config/karabiner/iphoneForward.sh"]]}
+[:!CC##f7 "/bin/sh ~/.config/karabiner/iphoneBack.sh"][:!CC##f8 "/bin/sh ~/.config/karabiner/iphonePlay.sh"][:!CC##f9 "/bin/sh ~/.config/karabiner/iphoneForward.sh"]]}
 
-{:des "Colemak Emacs keybinds:^m to ⏎ and ^i to tab (always), ^p/n/f/b to ↑/↓/→/← (outside Emacs)" :rules[
-[:!W##j :return_or_enter][:!W##semicolon :tab]
-[:!W##e :up_arrow [:!emacs]][:!W##k :down_arrow [:!emacs]]
-[:!W##w :right_arrow [:!emacs]][:!W##r :left_arrow [:!emacs]]]}
-
-{:des "Spacebar to left shift and Left ⌘ to ⌃" :rules [
-[:##spacebar :left_shift nil {:alone :spacebar}][:##right_command :right_control]]}
+{:des "Left ⌘ to ⌃ and left ⌥ to fn" :rules [
+[:##right_command :right_shift][:##right_option :fn]]}
 
 {:des "Colemak Curl/Angle/Extra Wide" :rules [
-
-[:##tab :q][:##q :w][:##w :f][:##e :p][:##r :b][:##t :escape][:##y :return_or_enter]
-[:##u :j][:##i :l][:##o :u][:##p :y]
-
-[:##caps_lock :a][:##a :r][:##s :s][:##d :t][:##f :g][:##g :f14][:##h :f13]
-[:##j :m][:##k :n][:##l :e][:##semicolon :i][:##quote :o][:##return_or_enter :quote]
-
-[:##left_shift :z][:##z :x][:##x :c][:##c :d][:##v :v][:##b :semicolon][:##n :tab]
-[:##m :k][:##comma :h][:##period :comma][:##slash :period][:##right_shift :slash]]}
+[:##tab :q][:##q :w][:##w :f][:##e :p][:##r :b][:##t :tab][:##y :escape][:##u :j][:##i :l][:##o :u][:##p :y]
+[:##caps_lock :a][:##a :r][:##s :s][:##d :t][:##f :g][:##g :f14][:##h :f13][:##j :m][:##k :n][:##l :e][:##semicolon :i][:##quote :o]
+[:##left_shift :z][:##z :x][:##x :c][:##c :d][:##v :v][:##b :semicolon][:##n :quote][:##m :k][:##comma :h][:##period :comma][:##slash :period][:##right_shift :slash]]}
 ]}
