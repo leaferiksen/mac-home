@@ -27,7 +27,7 @@ alias ctar=tar -czvf
 alias xtar=tar -xzvf
 alias ttar=tar -tzvf
 alias diff='diff --color=always'
-alias l='gls --all --group-directories-first --color=auto'
-alias ll='gls --all --group-directories-first --color=auto -l'
+alias l='ls -a --color=auto'
+alias ll='ls -al --color=auto'
 function ml() {mkdir -p "$(pwd)/$@"; l}
 function tl() {touch "$(pwd)/$@"; l}
