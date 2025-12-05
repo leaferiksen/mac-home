@@ -44,16 +44,9 @@
   :bind (("C-<tab>" . tab-line-switch-to-next-tab)
 		 ("C-M-<tab>" . tab-line-switch-to-prev-tab)))
 (use-package dired
-  :after ls-lisp
-  :preface (require 'ls-lisp)
   :custom (dired-listing-switches "-alh --group-directories-first"))
-(use-package ls-lisp
-  :custom ((ls-lisp-dirs-first t)
-		   (ls-lisp-ignore-case t)
-		   (ls-lisp-use-insert-directory-program nil)
-		   (ls-lisp-use-localized-time-format t)))
-(use-package display-line-numbers
-  :hook (fundamental-mode html-mode prog-mode))
+(use-package files
+  :custom (insert-directory-program "gls"))
 (defun arc-open-parent-folder-and-quit () "Open the parent folder of the current arc-mode buffer and quit the arc-mode window."
 	   (interactive)
 	   (let ((parent-dir (expand-file-name default-directory)))
