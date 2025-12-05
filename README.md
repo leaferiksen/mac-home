@@ -32,7 +32,7 @@ ssh-add --apple-use-keychain ~/.ssh/id_ed25519 &> /dev/null
 
 To install Homebrew
 ```bash
-mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/main | tar xz --strip-components 1 -C homebrew
+git clone https://github.com/Homebrew/brew Homebrew
 ```
 
 Spotlight → Full Disk Access → /System/Applications/Utilities/Terminal.app, then restart Terminal and run

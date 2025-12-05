@@ -8,6 +8,9 @@ export LESSHISTFILE=-
 export SHELL_SESSIONS_DISABLE=1
 export PATH=${HOME}/bin:${HOME}/Homebrew/sbin:${HOME}/Homebrew/bin:$PATH
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications --no-quarantine"
+eval "$(brew shellenv)"
+autoload -Uz compinit
+compinit
 
 # named directories
 export ic="${HOME}/Library/Mobile Documents/com~apple~CloudDocs/"
