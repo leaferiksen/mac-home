@@ -6,10 +6,11 @@ user_pref("calendar.view.visiblehours", 16);
 user_pref("calendar.weeks.inview", 3);
 user_pref("calendar.view-minimonth.showWeekNumber", false);
 user_pref("extensions.ui.locale.hidden", true);
-user_pref("font.name.monospace.x-western", "Atkinson Hyperlegible Next");
-user_pref("font.name.sans-serif.x-western", "Atkinson Hyperlegible Next");
-user_pref("font.size.monospace.x-western", 18);
-user_pref("font.size.variable.x-western", 18);
+user_pref("font.name.monospace.x-western", "SF Pro Text");
+user_pref("font.name.sans-serif.x-western", "SF Pro Text");
+user_pref("font.name.serif.x-western", "New York");
+user_pref("font.size.monospace.x-western", 16);
+user_pref("font.size.variable.x-western", 16);
 user_pref("mail.addressDisplayFormat", 2); // Preferred address display format: Name only
 user_pref("mail.chat.enabled", false);
 user_pref("mail.html_compose", false);

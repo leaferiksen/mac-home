@@ -1,8 +1,8 @@
 #!/bin/sh
 
-brew install --formula aria2 d12frosted/emacs-plus/emacs-plus@31 duti enchant eslint eza ffmpeg gemini-cli http-server mas media-info node pandoc prettier rustywind tailwindcss-language-server tealdeer typescript typescript-language-server typst vscode-langservers-extracted yt-dlp zsh-autosuggestions zsh-syntax-highlighting
-
-brew install --cask anki calibre cursorcerer font-maple-mono-nf-cn ghostty hammerspoon homerow iina itch knockknock node notunes osu qlmarkdown qlvideo soulver steam syncthing virtualbuddy zen-browser zotero
+brew install --formula duti enchant eslint ffmpeg gemini-cli http-server mas media-info node pandoc prettier rustywind tailwindcss-language-server tealdeer typescript typescript-language-server typst vscode-langservers-extracted yt-dlp zsh-autosuggestions zsh-syntax-highlighting
+brew install --cask anki calibre cursorcerer font-maple-mono-nf-cn ghostty hammerspoon homerow iina itch jimeh/emacs-builds/emacs-app-pretest knockknock node notunes osu qlmarkdown qlvideo Sikarugir-App/sikarugir/sikarugir soulver steam syncthing virtualbuddy zen-browser zotero
+brew completions link
 
 mas install 409201541   # Pages
 mas install 409183694   # Keynote
@@ -14,6 +14,7 @@ mas install 1616822987  # Affinity Photo 2
 mas install 1616831348  # Affinity Designer 2
 mas install 1606941598  # Affinity Publisher 2
 mas install 6475957299  # Upsies
+mas install 1545870783  # System Color Picker
 # mas install 937984704   # Amphetamine
 # mas install 1601151613  # Baking Soda
 # mas install 6502835663  # Proton Pass for Safari

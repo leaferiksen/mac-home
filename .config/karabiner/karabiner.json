@@ -11,52 +11,10 @@
         "basic.to_if_held_down_threshold_milliseconds" : 500
       },
       "rules" : [ {
-        "description" : "Adjust keyboard brightness with ⌘🔅 and ⌘🔆",
+        "description" : "Toggle dark mode with 􀆹",
         "manipulators" : [ {
           "from" : {
-            "key_code" : "f1",
-            "modifiers" : {
-              "mandatory" : [ "command" ],
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "illumination_decrement"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
-            "key_code" : "f2",
-            "modifiers" : {
-              "mandatory" : [ "command" ],
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "illumination_increment"
-          } ],
-          "type" : "basic"
-        } ]
-      }, {
-        "description" : "Toggle dark mode with 🌙",
-        "manipulators" : [ {
-          "from" : {
-            "key_code" : "f6",
-            "modifiers" : {
-              "mandatory" : [ "fn" ],
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
             "key_code" : "f6"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
-            "key_code" : "f6",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
           },
           "to" : [ {
             "shell_command" : "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"
@@ -64,7 +22,7 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "iPhone Mirroring playback with ⌘⏴ ⌘⏯ ⌘⏵",
+        "description" : "iPhone Mirroring playback with 􀆔􀊉/􀊇/􀊋 or Right􀆕1/2/3",
         "manipulators" : [ {
           "from" : {
             "key_code" : "f7",
@@ -74,7 +32,7 @@
             }
           },
           "to" : [ {
-            "shell_command" : "/bin/sh ~/.config/karabiner/iphoneBack.sh"
+            "shell_command" : "sh ~/.config/karabiner/iphoneBack.sh"
           } ],
           "type" : "basic"
         }, {
@@ -86,7 +44,7 @@
             }
           },
           "to" : [ {
-            "shell_command" : "/bin/sh ~/.config/karabiner/iphonePlay.sh"
+            "shell_command" : "sh ~/.config/karabiner/iphonePlay.sh"
           } ],
           "type" : "basic"
         }, {
@@ -98,37 +56,402 @@
             }
           },
           "to" : [ {
-            "shell_command" : "/bin/sh ~/.config/karabiner/iphoneForward.sh"
+            "shell_command" : "sh ~/.config/karabiner/iphoneForward.sh"
           } ],
           "type" : "basic"
         } ]
       }, {
-        "description" : "Left ⌘ to ⌃ and left ⌥ to fn",
+        "description" : "Right􀆕X/C/D/R/S/T/W/F/P as 􀆫/􀆭/􀆹/􀊉/􀊇/􀊋/􀊣/􀊥/􀊩",
         "manipulators" : [ {
           "from" : {
-            "key_code" : "right_command",
+            "key_code" : "tab",
             "modifiers" : {
+              "mandatory" : [ "right_option" ],
               "optional" : [ "any" ]
             }
           },
           "to" : [ {
-            "key_code" : "right_shift"
+            "key_code" : "tab"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "q",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f10"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "w",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f11"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "e",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f12"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "r",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f1"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "caps_lock",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "escape"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "a",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f7"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "s",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f8"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "d",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f9"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "f",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f2"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "left_shift",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "grave_accent_and_tilde"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "z",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f4"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "x",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f5"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "c",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "shell_command" : "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "v",
+            "modifiers" : {
+              "mandatory" : [ "right_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f3"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
+        "description" : "Left􀆕O/H/,/./N/E/I/L/U/Y as 0/1/2/3/4/5/6/7/8/9",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "i",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "7"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "o",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "8"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "p",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "9"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "open_bracket",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "semicolon"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "close_bracket",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "quote"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "j",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f13"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "k",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "4"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "l",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "5"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "semicolon",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "6"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "quote",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "hyphen"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "return_or_enter",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "delete_or_backspace"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "m",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f14"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "comma",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "1"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "period",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "2"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "slash",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "3"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "right_shift",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ],
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "equal_sign"
           } ],
           "type" : "basic"
         }, {
           "from" : {
             "key_code" : "right_option",
             "modifiers" : {
+              "mandatory" : [ "left_option" ],
               "optional" : [ "any" ]
             }
           },
           "to" : [ {
-            "key_code" : "fn"
+            "key_code" : "0"
           } ],
           "type" : "basic"
         } ]
       }, {
-        "description" : "Colemak Curl/Angle/Extra Wide",
+        "description" : "Colemak Curl/Angle/Extra Wide with Left􀆔 as 􀆝",
         "manipulators" : [ {
           "from" : {
             "key_code" : "tab",
@@ -192,7 +515,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "tab"
+            "key_code" : "vk_none"
           } ],
           "type" : "basic"
         }, {
@@ -203,7 +526,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "escape"
+            "key_code" : "vk_none"
           } ],
           "type" : "basic"
         }, {
@@ -313,7 +636,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "f14"
+            "key_code" : "vk_none"
           } ],
           "type" : "basic"
         }, {
@@ -324,7 +647,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "f13"
+            "key_code" : "vk_none"
           } ],
           "type" : "basic"
         }, {
@@ -428,24 +751,13 @@
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "v",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "v"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
             "key_code" : "b",
             "modifiers" : {
               "optional" : [ "any" ]
             }
           },
           "to" : [ {
-            "key_code" : "semicolon"
+            "key_code" : "vk_none"
           } ],
           "type" : "basic"
         }, {
@@ -456,7 +768,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "quote"
+            "key_code" : "vk_none"
           } ],
           "type" : "basic"
         }, {
@@ -512,6 +824,17 @@
           },
           "to" : [ {
             "key_code" : "slash"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "right_command",
+            "modifiers" : {
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "right_shift"
           } ],
           "type" : "basic"
         } ]

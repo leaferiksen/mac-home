@@ -30,15 +30,11 @@ if ssh isn't properly configured with the keychain, try the following before try
 ssh-add --apple-use-keychain ~/.ssh/id_ed25519 &> /dev/null
 ```
 
-To install Homebrew elevate session to `admin` and run
+To install Homebrew
 ```bash
-su - admin
+mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/main | tar xz --strip-components 1 -C homebrew
 ```
-```bash
-launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist && \
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
-sudo chown -R leaf /opt/homebrew/
-```
+
 Spotlight → Full Disk Access → /System/Applications/Utilities/Terminal.app, then restart Terminal and run
 ```bash
 softwareupdate --install-rosetta --agree-to-license && \
@@ -52,7 +48,7 @@ Spotlight → Full Disk Access → remove Terminal
 
 Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html) and [LM Studio](https://lmstudio.ai) from their websites
 
-## Settings that I haven't (yet) bothered to automate:
+## Set these by hand
 
 ### Night Shift options
 

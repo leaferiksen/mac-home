@@ -9,7 +9,7 @@
 (use-package agent-shell
   :ensure t :vc (:url "https://github.com/xenodium/agent-shell")
   :custom (agent-shell-google-authentication (agent-shell-google-make-authentication :vertex-ai t))
-  :bind ("C-c a" . agent-shell-add-region) ("C-c o" . agent-shell-opencode-start-agent) ("C-c g" . agent-shell-google-start-gemini))
+  :bind ("C-c a" . agent-shell-add-region) ("C-c g" . agent-shell-google-start-gemini))
 (use-package apheleia
   :ensure t :vc (:url "https://github.com/radian-software/apheleia")
   :custom (apheleia-global-mode t))
@@ -50,8 +50,11 @@
   :ensure t :vc (:url "https://github.com/susam/devil")
   :config (global-devil-mode))
 (use-package dired
-  :bind (:map dired-mode-map (("<mouse-1>" . nil) ("<mouse-2>" . nil) ("SPC" . 'quicklook) ("C-c p" . 'dwim-shell-commands-md-pdf)))
-  :custom (dired-clean-confirm-killing-deleted-buffers nil) (dired-create-destination-dirs 'ask) (dired-listing-switches "-alh --group-directories-first") (dired-mouse-drag-files t) (dired-recursive-copies 'always)
+  :after ls-lisp
+  :preface (require 'ls-lisp)
+  :bind (:map dired-mode-map (("<mouse-1>" . nil) ("<mouse-2>" . nil) ("SPC" . 'quicklook)
+							  ("C-c p" . 'dwim-shell-commands-md-pdf) ("e" . 'dwim-shell-commands-macos-open-with)))
+  :custom (dired-clean-confirm-killing-deleted-buffers nil) (dired-create-destination-dirs 'ask) (dired-mouse-drag-files t) (dired-recursive-copies 'always)
   :config
   (use-package dired-hide-details
 	:hook (dired-mode))
@@ -60,8 +63,8 @@
   ;; (use-package nerd-icons
   ;;   :ensure t :vc (:url "https://github.com/rainstormstudio/nerd-icons.el"))
   ;; (use-package nerd-icons-dired
-  ;; :ensure t :vc (:url "https://github.com/rainstormstudio/nerd-icons-dired")
-  ;; :hook (dired-mode))
+  ;; 	:ensure t :vc (:url "https://github.com/rainstormstudio/nerd-icons-dired")
+  ;; 	:hook (dired-mode))
   (defun afinfo ()
 	"Get metadata for focused file."
 	(interactive)
@@ -181,8 +184,8 @@
   :bind (:map lisp-mode-shared-map ("C-c e" . (lambda () (interactive) (eval-buffer)))))
 (use-package emacs ;;core c variables, startup, modus and paragraph
   :hook (ns-system-appearance-change-functions . auto-theme)
-  :bind (("C-o" . find-file) ("C-x 2" . split-and-follow-horizontally) ("C-x 3" . split-and-follow-vertically)
-		 ("s-t" . ghostty) ("s-y" . yt-dlp) ("C-c p" . backward-paragraph) ("C-c n" . forward-paragraph)
+  :bind (("C-x 2" . split-and-follow-horizontally) ("C-x 3" . split-and-follow-vertically)
+		 ("s-o" . find-file) ("s-b" . bookmark-jump) ("s-y" . yt-dlp) ("s-p" . backward-paragraph) ("s-n" . forward-paragraph)
 		 ("<pinch>" . nil) ("C-<wheel-up>" . nil) ("C-<wheel-down>" . nil) ("M-<wheel-up>" . nil) ("M-<wheel-down>" . nil) ("C-M-<wheel-up>" . nil) ("C-M-<wheel-down>" . nil))
   :custom-face
   (default ((t (:family "Maple Mono NF CN" :height 140))))
@@ -196,7 +199,7 @@
 		   (gc-cons-threshold 100000000)
 		   (inhibit-startup-screen t)
 		   (initial-buffer-choice "~/Documents/")
-		   (line-spacing 0.1)
+		   (line-spacing 0.2)
 		   (mode-line-collapse-minor-modes '(not lsp-mode flymake-mode))
 		   (mac-option-modifier 'none)
 		   (read-buffer-completion-ignore-case t)
@@ -215,10 +218,6 @@
 	"Unlink and relink node binaries."
 	(interactive)
 	(async-shell-command "/opt/homebrew/bin/brew unlink node && /opt/homebrew/bin/brew link --overwrite node"))
-  (defun ghostty ()
-	"Open current directory in Ghostty."
-	(interactive)
-	(shell-command (concat "open -a Ghostty --args --working-directory=" "\""(expand-file-name default-directory)"\"")))
   (defun split-and-follow-horizontally ()
 	"Move cursor to new window in horizontal split."
 	(interactive)
@@ -268,11 +267,6 @@
 	  (cond ((string-equal choice "audio") (async-shell-command (format "yt-dlp -S \"ext\" -x \"%s\"" url)))
 			((string-equal choice "video") (async-shell-command (format "yt-dlp -S \"ext\" \"%s\"" url)))
 			((string-equal choice "subtitled video") (async-shell-command (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url)))))))
-;; (use-package emmet-mode
-;;   :ensure t :vc (:url "https://github.com/smihica/emmet-mode/")
-;;   :hook (html-mode css-mode)
-;;   :bind ((:map html-mode ("C-c e" . emmet-expand-line))
-;; 		 (:map css-mode ("C-c e" . emmet-expand-line))))
 (use-package epg-config
   :custom (epg-pinentry-mode 'loopback))
 (use-package exec-path-from-shell
@@ -318,6 +312,11 @@
 	(insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n")))
 (use-package lorem-ipsum
   :ensure t :vc (:url "https://github.com/jschaf/emacs-lorem-ipsum"))
+(use-package ls-lisp
+  :custom ((ls-lisp-dirs-first t)
+		   (ls-lisp-ignore-case t)
+		   (ls-lisp-use-insert-directory-program nil)
+		   (ls-lisp-use-localized-time-format t)))
 (use-package lsp-completion
   :custom (lsp-completion-provider :none))
 (use-package lsp-mode
@@ -334,7 +333,7 @@
 	"Start a tailwind in the current directory, sourcing app.css."
 	(interactive)
 	(let ((filename (concat "tailwind-server@ <" (file-name-nondirectory (directory-file-name (file-name-directory default-directory))) ">")))
-	  (start-process filename filename "/opt/homebrew/bin/npx" "@tailwindcss/cli" "-i" "app.css" "-o" "dist.css" "--watch"))))
+	  (start-process filename filename "npx" "@tailwindcss/cli" "-i" "app.css" "-o" "dist.css" "--watch"))))
 (use-package lua-mode
   :ensure t :vc (:url "https://github.com/immerrr/lua-mode"))
 (use-package markdown-mode
@@ -379,10 +378,13 @@
 (use-package term/ns-win
   :if (memq window-system '(ns))
   :custom (ns-pop-up-frames nil))
+(use-package terminal-here
+  :ensure t :vc (:url "https://github.com/davidshepherd7/terminal-here")
+  :bind ("s-t" . terminal-here) ("C-x p t" . terminal-here-project-launch))
 (use-package tooltip
-  :custom (tooltip-mode nil)) (use-package treesit-langs
-  :ensure t :vc (:url "https://github.com/emacs-tree-sitter/treesit-langs"))
-(use-package typo
+  :custom (tooltip-mode nil))
+(use-package treesit-langs
+  :ensure t :vc (:url "https://github.com/emacs-tree-sitter/treesit-langs")) (use-package typo
   :ensure t :vc (:url "https://github.com/jorgenschaefer/typoel")
   :hook (markdown-mode))
 (use-package undo-fu
@@ -393,7 +395,7 @@
   :custom (valign-fancy-bar t)
   :hook (markdown-mode))
 (use-package variable-pitch
-  :hook (markdown-mode) (variable-pitch-mode . (lambda () (setq-local line-spacing 0.4))))
+  :hook (markdown-mode))
 (use-package vc
   :config
   (defun vc-amend ()
@@ -412,4 +414,7 @@
   :custom (which-key-mode t))
 (use-package yasnippet
   :ensure t :vc (:url "https://github.com/joaotavora/yasnippet"))
+;; Enable rendering SF symbols on macOS.
+(when (memq system-type '(darwin))
+  (set-fontset-font t nil "SF Pro Display" nil 'append))
 ;;; init.el ends here

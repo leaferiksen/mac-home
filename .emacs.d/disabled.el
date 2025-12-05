@@ -20,6 +20,14 @@
 												   (bg-tab-current bg-active)
 												   (bg-tab-other bg-dim))))
 (mouse-wheel-progressive-speed nil)
+(use-package nov
+  :ensure t :vc (:url "https://depp.brause.cc/nov.el.git")
+  :mode ("\\.epub\\'" . nov-mode)
+  :custom (nov-text-width t))
+(use-package kv
+  :vc (:url "https://github.com/nicferrier/emacs-kv"))
+(use-package esxml ;; nov-mode dependency
+  :vc (:url "https://github.com/tali713/esxml"))
 (use-package osawm
   :vc (:url "https://github.com/andykuszyk/osawm.el")
   :config (global-osawm-mode)
@@ -27,12 +35,6 @@
 (use-package web-mode
   :vc (:url "https://github.com/fxbois/web-mode")
   :mode "\\.html\\'")
-(use-package esxml ;; nov-mode dependency
-  :vc (:url "https://github.com/tali713/esxml"))
-(use-package nov
-  :ensure t :vc (:url "https://depp.brause.cc/nov.el.git")
-  :mode ("\\.epub\\'" . nov-mode)
-  :custom (nov-text-width t))
 (use-package tab-line
   :custom ((global-tab-line-mode t)
 		   (tab-line-new-button-show nil)
@@ -43,7 +45,8 @@
 		 ("C-M-<tab>" . tab-line-switch-to-prev-tab)))
 (use-package dired
   :after ls-lisp
-  :preface (require 'ls-lisp))
+  :preface (require 'ls-lisp)
+  :custom (dired-listing-switches "-alh --group-directories-first"))
 (use-package ls-lisp
   :custom ((ls-lisp-dirs-first t)
 		   (ls-lisp-ignore-case t)

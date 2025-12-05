@@ -15,3 +15,5 @@
 	gpgSign = true
 [gpg]
 	program = /usr/local/MacGPG2/bin/gpg2
+[safe]
+	directory = /opt/homebrew

@@ -1,5 +1,5 @@
 hs.window.animationDuration = 0
-shortcut = {"shift", "alt"}
+shortcut = {"alt", "cmd"}
 hs.loadSpoon("SpoonInstall")
 Install = spoon.SpoonInstall
 Install.repos.Caffeine = {
@@ -19,29 +19,38 @@ Install:andUse("PaperWM", {
 				  repo = "PaperWM",
 				  config = {
 					 window_gap = { top = 20, bottom = 20, left = 20, right = 20 },
-					 window_ratios = { 1/3, 1/2, 2/3, 1 }
+					 window_ratios = { 1/3, 1/2, 2/3 }
 				  },
 				  fn = function(spoon)
 					 spoon.window_filter:rejectApp("Finder")
+					 spoon.window_filter:rejectApp("QuickTime Player")
 					 spoon.window_filter:rejectApp("Shortcuts")
 					 spoon.window_filter:rejectApp("Messages")
 					 spoon.window_filter:rejectApp("Facetime")
 					 spoon.window_filter:rejectApp("Stickies")
-					 spoon.window_filter:rejectApp("Google Chrome")
-					 spoon.window_filter:rejectApp("LuLu")
 					 spoon.window_filter:rejectApp("IINA")
+					 spoon.window_filter:rejectApp("Elmedia Video Player")
+					 spoon.window_filter:rejectApp("Color Picker")
+					 spoon.window_filter:rejectApp("LuLu")
 					 spoon.window_filter:rejectApp("java")
+					 spoon.window_filter:rejectApp("Keynote")
+					 spoon.window_filter:setAppFilter("Thunderbird", { rejectTitles = "Write: (no subject) - Thunderbird" })
 				  end,
 				  start = true,
 				  hotkeys = {
-					 -- Switch to a new focused window in tiled grid
-					 swap_left = {shortcut, "tab"},
-					 swap_right = {shortcut, "`"},
 					 -- position and resize focused window
 					 center_window = {shortcut, "c"},
 					 cycle_width = {shortcut, "r"},
+					 full_width = {shortcut, "f"},
 					 -- move the focused window into / out of the tiling layer
-					 toggle_floating = {shortcut, "escape"},
+					 toggle_floating = {shortcut, "t"},
+					     -- switch windows by cycling forward/backward
+					 -- (forward = down or right, backward = up or left)
+					 focus_prev = {shortcut, "left"},
+					 focus_next = {shortcut, "right"},
+					 -- Switch to a new focused window in tiled grid
+					 swap_left = {shortcut, "up"},
+					 swap_right = {shortcut, "down"},
 					 -- focus the first / second / etc window in the current space
 					 focus_window_1 = {shortcut, "1"},
 					 focus_window_2 = {shortcut, "2"},

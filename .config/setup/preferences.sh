@@ -176,7 +176,7 @@ defaults write com.superultra.Homerow "is-scroll-shortcuts-enabled" -bool "false
 defaults write com.superultra.Homerow "label-characters" -string "arstgmneio"
 defaults write com.superultra.Homerow "label-font-size" -float "12"
 defaults write com.superultra.Homerow "non-search-shortcut" -string "F13"
-defaults write com.superultra.Homerow "scroll-keys" -string "bnfp"
+defaults write com.superultra.Homerow "scroll-keys" -string "bnpf"
 defaults write com.superultra.Homerow "scroll-shortcut" -string "F14"
 defaults write com.superultra.Homerow "search-shortcut" -string ""
 ##############
@@ -220,6 +220,8 @@ defaults write org.chromium.Chromium ExtensionManifestV2Availability -int 2
 #####################
 # Disabled features #
 #####################
+# double click globe key for dictation
+# defaults write com.apple.HIToolbox "AppleFnUsageType" -int "3"
 # defaults write com.apple.Accessibility "ReduceMotionEnabled" -int "1"
 # defaults write -g NSScrollViewRubberbanding -int 0
 # defaults write com.apple.universalaccess "virtualKeyboardOnOff" -bool "true"
@@ -237,8 +239,6 @@ defaults write org.chromium.Chromium ExtensionManifestV2Availability -int 2
 # defaults write com.apple.screencapture location -string "/Users/leaf/Pictures/Screenshots"
 # # let karabiner handle media keys
 # defaults write -g "com.apple.keyboard.fnState" -bool "true"
-# # disable disable globe key,
-# defaults write com.apple.HIToolbox "AppleFnUsageType" -int "0"
 # # no iphone widgets
 # defaults write com.apple.chronod "remoteWidgetsEnabled" -bool "false"
 # # monocrome widgets
