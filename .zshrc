@@ -23,7 +23,6 @@ alias fixapp='xattr -dr com.apple.quarantine'
 alias upb='brew update && brew upgrade --greedy'
 alias upn='ncu -u && npm install'
 alias fixnode='brew unlink node && brew link --overwrite node'
-alias tw='npx @tailwindcss/cli -i app.css -o dist.css --watch'
 
 # My BSD utils
 alias ctar=tar -czvf

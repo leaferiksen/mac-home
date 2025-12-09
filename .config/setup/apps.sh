@@ -1,6 +1,6 @@
 #!/bin/sh
 
-brew install --formula duti enchant eslint ffmpeg gemini-cli http-server mas media-info node pandoc prettier rustywind tailwindcss-language-server tealdeer typescript typescript-language-server typst vscode-langservers-extracted yt-dlp zsh-autosuggestions zsh-syntax-highlighting
+brew install --formula aspell eslint ffmpeg gemini-cli http-server mas media-info node pandoc prettier rustywind tailwindcss-language-server tealdeer typescript typescript-language-server typst vscode-langservers-extracted yt-dlp zsh-autosuggestions zsh-syntax-highlighting
 brew install --cask anki calibre cursorcerer font-maple-mono-nf-cn ghostty hammerspoon homerow iina itch jimeh/emacs-builds/emacs-app-pretest knockknock node notunes osu qlmarkdown qlvideo Sikarugir-App/sikarugir/sikarugir soulver steam syncthing virtualbuddy zen zotero
 brew completions link
 

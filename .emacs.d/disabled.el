@@ -19,7 +19,35 @@
 												   (bg-tab-bar bg-main)
 												   (bg-tab-current bg-active)
 												   (bg-tab-other bg-dim))))
-(mouse-wheel-progressive-speed nil)
+(use-package valign
+  :ensure t :vc (:url "https://github.com/casouri/valign")
+  :custom (valign-fancy-bar t)
+  :hook (markdown-mode))
+(use-package devil
+  :ensure t :vc (:url "https://github.com/susam/devil")
+  :config
+  (global-devil-mode)
+  (define-key devil-mode-map (kbd ".") #'devil)
+  (add-to-list 'devil-special-keys `(". ." . ,(devil-key-executor ".")))
+  (add-to-list 'devil-special-keys `(". SPC" . ,(devil-key-executor ". SPC")))
+  (add-to-list 'devil-special-keys `(". RET" . ,(devil-key-executor ". RET")))
+  (add-to-list 'devil-special-keys `(". <return>" . ,(devil-key-executor ". <return>")))
+  :custom ((devil-translations '((", z" . "C-") (". z" . "M-") (", ," . ",") (". ." . ".") ("," . "C-") ("." . "M-")))
+		   (devil-repeatable-keys '(("%k d") ("%k k") (". ^") (", v") (". v") (", x o")
+									(". b" ". f" ". a" ". e") (", p" ", n" ", b" ", f" ", a" ", e")
+									(", . p" ", . n" ", . b" ", . f" ", . a" ", . e" ", . u" ", . d" ", . t")
+									(". , p" ". , n" ". , b" ". , f" ". , a" ". , e" ". , u" ". , d" ". , t")))))
+(use-package ispell
+  :custom (ispell-program-name "/Users/leaf/Homebrew/bin/aspell") (ispell-dictionary "en_US"))
+(use-package jinx
+  :ensure t :vc (:url "https://github.com/minad/jinx")
+  :hook (markdown-mode)
+  :bind (:map jinx-mode-map ("C-c c" . jinx-correct))
+  :custom (jinx-languages "en_US ja-JP"))
+(use-package osawm
+  :vc (:url "https://github.com/andykuszyk/osawm.el")
+  :config (global-osawm-mode)
+  :bind ("C-c w" . (lambda () (interactive) (osawm-launch-chrome "" "Google Chrome" 'normal))))
 (use-package nov
   :ensure t :vc (:url "https://depp.brause.cc/nov.el.git")
   :mode ("\\.epub\\'" . nov-mode)
