@@ -48,7 +48,10 @@
   :custom (delete-selection-mode t))
 (use-package devil
   :ensure t :vc (:url "https://github.com/susam/devil")
-  :config (global-devil-mode))
+  :config (global-devil-mode)
+  (add-to-list 'devil-repeatable-keys `("%k v"))
+  (add-to-list 'devil-repeatable-keys `("%k m v"))
+  (add-to-list 'devil-repeatable-keys `("%k m m p" "%k m m n" "%k m m b" "%k m m f" "%k m m a" "%k m m e" "%k m m u" "%k m m d" "%k m m t")))
 (use-package dired
   :after ls-lisp
   :preface (require 'ls-lisp)
@@ -107,9 +110,9 @@
   :custom ((modus-themes-common-palette-overrides
 			'((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)
 			  (border-mode-line-active unspecified) (border-mode-line-inactive unspecified)
-			  (fg-heading-1 green-intense) (fg-heading-2 green) (fg-heading-3 green-faint)
-			  (fg-heading-4 fg-sage) (fg-heading-5 fg-sage) (fg-heading-6 fg-sage)))
-		   (modus-themes-headings '((1 . (1.8)) (2 . (1.6)) (3 . (1.4)) (4 . (1.2))))
+			  (fg-heading-1 green) (fg-heading-2 green) (fg-heading-3 green)
+			  (fg-heading-4 green) (fg-heading-5 green) (fg-heading-6 green)))
+		   (modus-themes-headings '((1 . (2.0)) (2 . (1.6)) (3 . (1.2))))
 		   (modus-themes-italic-constructs t)
 		   (modus-themes-mixed-fonts t)))
 (use-package elec-pair
@@ -282,6 +285,8 @@
 		   (major-mode-remap-alist '((sh-mode . bash-ts-mode) (css-mode . css-ts-mode) (dockerfile-mode . dockerfile-ts-mode) (mhtml-mode . html-ts-mode) (javascript-mode . js-ts-mode) (json-mode . json-ts-mode) (typescript-mode . typescript-ts-mode) (yaml-mode . yaml-ts-mode)))
 		   (make-backup-files nil)
 		   (trash-directory "~/.Trash")))
+(use-package flyspell
+  :hook (markdown-mode))
 (use-package ht ;; lsp-mode dependency
   :ensure t :vc (:url "https://github.com/Wilfred/ht.el"))
 (use-package html-ts-mode
@@ -296,27 +301,10 @@
   :config (fido-vertical-mode))
 (use-package isearch
   :custom (isearch-lazy-count t) (lazy-count-prefix-format nil) (lazy-count-suffix-format "   (%s/%s)"))
-(use-package jinx
-  :ensure t :vc (:url "https://github.com/minad/jinx")
-  :hook (markdown-mode)
-  :bind (:map jinx-mode-map ("C-c c" . jinx-correct))
-  :custom (jinx-languages "en_US ja-JP")
-  :config
-  (defun insert-date ()
-	"Insert an atx heading with today's date in iso format."
-	(interactive)
-	(insert "## " (format-time-string "%Y-%m-%d") "\n"))
-  (defun insert-title ()
-	"Insert an atx heading with the name of the file."
-	(interactive)
-	(insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n")))
 (use-package lorem-ipsum
   :ensure t :vc (:url "https://github.com/jschaf/emacs-lorem-ipsum"))
 (use-package ls-lisp
-  :custom ((ls-lisp-dirs-first t)
-		   (ls-lisp-ignore-case t)
-		   (ls-lisp-use-insert-directory-program nil)
-		   (ls-lisp-use-localized-time-format t)))
+  :custom (ls-lisp-dirs-first t) (ls-lisp-ignore-case t) (ls-lisp-use-insert-directory-program nil) (ls-lisp-use-localized-time-format t))
 (use-package lsp-completion
   :custom (lsp-completion-provider :none))
 (use-package lsp-mode
@@ -338,8 +326,17 @@
   :ensure t :vc (:url "https://github.com/immerrr/lua-mode"))
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
-  :custom (markdown-enable-wiki-links t) (markdown-hide-urls t) (markdown-hide-markup t) (markdown-asymmetric-header t)
-  :bind (:map markdown-mode-map (("C-c h" . insert-title) ("C-c d" . insert-date))))
+  :custom (markdown-enable-wiki-links t) (markdown-hide-markup t) (markdown-unordered-list-item-prefix "- ") (markdown-asymmetric-header t) (markdown-fontify-code-blocks-natively t) (markdown-special-ctrl-a/e t)
+  :bind (:map markdown-mode-map (("C-c h" . insert-title) ("C-c d" . insert-date)))
+  :config
+  (defun insert-date ()
+	"Insert an atx heading with today's date in iso format."
+	(interactive)
+	(insert "## " (format-time-string "%Y-%m-%d") "\n"))
+  (defun insert-title ()
+	"Insert an atx heading with the name of the file."
+	(interactive)
+	(insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n")))
 (use-package moody
   :ensure t :vc (:url "https://github.com/tarsius/moody")
   :config (moody-replace-mode-line-front-space) (moody-replace-mode-line-buffer-identification) (moody-replace-vc-mode))
@@ -350,10 +347,6 @@
   :custom (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   :bind (("s-d" . obsidian-daily-note)
 		 (:map markdown-mode-map ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point))))
-(use-package osawm
-  :vc (:url "https://github.com/andykuszyk/osawm.el")
-  :config (global-osawm-mode)
-  :bind ("C-c w" . (lambda () (interactive) (osawm-launch-chrome "" "Google Chrome" 'normal))))
 (use-package pixel-scroll
   :custom (pixel-scroll-precision-mode t))
 (use-package project
@@ -390,10 +383,6 @@
 (use-package undo-fu
   :vc (:url "https://github.com/emacsmirror/undo-fu")
   :bind ("s-z" . undo-fu-only-undo) ("s-Z" . undo-fu-only-redo))
-(use-package valign
-  :ensure t :vc (:url "https://github.com/casouri/valign")
-  :custom (valign-fancy-bar t)
-  :hook (markdown-mode))
 (use-package variable-pitch
   :hook (markdown-mode))
 (use-package vc
@@ -404,7 +393,7 @@
 	(vc-checkin nil 'git) (vc-git-log-edit-toggle-amend)))
 (use-package visual-fill-column
   :ensure t :vc (:url "https://codeberg.org/joostkremers/visual-fill-column")
-  :custom (visual-fill-column-center-text t) (visual-fill-column-width 80)
+  :custom (visual-fill-column-center-text t) (visual-fill-column-width 100)
   :hook (markdown-mode))
 (use-package visual-line-mode
   :hook (markdown-mode html-mode prog-mode))
