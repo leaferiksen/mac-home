@@ -13,6 +13,8 @@
 (add-to-list 'default-frame-alist '(undecorated-round . t)) ;; rounded with no title
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package epg-config
+  :custom (epg-pinentry-mode 'loopback))
 (use-package ef-themes
   :ensure t :vc (:url "https://github.com/protesilaos/ef-themes")
   :custom (modus-themes-common-palette-overrides '((fringe unspecified)

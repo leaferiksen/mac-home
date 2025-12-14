@@ -272,8 +272,6 @@
 	  (cond ((string-equal choice "audio") (async-shell-command (format "yt-dlp -S \"ext\" -x \"%s\"" url)))
 			((string-equal choice "video") (async-shell-command (format "yt-dlp -S \"ext\" \"%s\"" url)))
 			((string-equal choice "subtitled video") (async-shell-command (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url)))))))
-(use-package epg-config
-  :custom (epg-pinentry-mode 'loopback))
 (use-package exec-path-from-shell
   :if (memq window-system '(ns x))
   :ensure t :vc (:url "https://github.com/purcell/exec-path-from-shell")
