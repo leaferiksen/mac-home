@@ -164,27 +164,6 @@
 		   (mastodon-tl--display-media-p nil)
 		   (mastodon-tl--highlight-current-toot t)
 		   (mastodon-auth-use-auth-source t)))
-(use-package mpv
-  :custom (mpv-executable "iina"))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package org-table
-  :config (advice-add 'org-table-align :after 'markdown-org-table-align-advice))
-(defun markdown-org-table-align-advice ()
-  "Replace \"+\" sign with \"|\" in tables."
-  (when (member major-mode '(markdown-mode gfm-mode))
-	(save-excursion
-	  (save-restriction
-		(narrow-to-region (org-table-begin) (org-table-end))
-		(goto-char (point-min))
-		(while (search-forward "-+-" nil t)
-		  (replace-match "-|-"))))))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (add-hook 'after-init-hook #'global-prettier-mode)
-(use-package prettier
-  :hook after-init
-  :bind
-  ("s-p" . 'prettier-prettify)
-  ("s-S-p" . 'prettier-prettify-region))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Swift
 (use-package eglot
@@ -219,9 +198,6 @@
 (keymap-global-set "C-M-S-f" 'isearch-backward-regexp)
 (keymap-global-set "C-<up>" 'completion-preview-prev-candidate)
 (keymap-global-set "C-<down>" 'completion-preview-next-candidate)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require '~/.emacs.d/elpa/terminal-here/terminal-here.el)
-(setq terminal-here-mac-terminal-command '("open" "-n" "-a" "Ghostty" "--args" "--working-directory="))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/lorniu/go-translate
 (use-package go-translate

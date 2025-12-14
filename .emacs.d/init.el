@@ -51,6 +51,7 @@
   :config (global-devil-mode)
   (add-to-list 'devil-repeatable-keys `("%k v"))
   (add-to-list 'devil-repeatable-keys `("%k m v"))
+  (add-to-list 'devil-repeatable-keys `("%k m d"))
   (add-to-list 'devil-repeatable-keys `("%k m m p" "%k m m n" "%k m m b" "%k m m f" "%k m m a" "%k m m e" "%k m m u" "%k m m d" "%k m m t")))
 (use-package dired
   :after ls-lisp
@@ -212,7 +213,8 @@
 		   (tab-width 4)
 		   (tool-bar-mode nil)
 		   (use-dialog-box nil))
-  :config 
+  :config
+  (save-place-mode 1)
   (defun auto-theme (appearance)
 	"Load theme, taking current system APPEARANCE into consideration."
 	(mapc #'disable-theme custom-enabled-themes)
@@ -351,6 +353,8 @@
   :custom (pixel-scroll-precision-mode t))
 (use-package project
   :custom (project-mode-line t) (project-vc-extra-root-markers '("project")))
+(use-package reader
+  :ensure t :vc (:url "https://codeberg.org/divyaranjan/emacs-reader" :make "all"))
 (use-package repeat
   :custom (repeat-mode t))
 (use-package s ;; f dependency
