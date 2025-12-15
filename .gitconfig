@@ -9,11 +9,5 @@
 	conflictStyle = zdiff3
 [rerere]
 	enabled = true
-[commit]
-	gpgsign = true
-[tag]
-	gpgSign = true
-[gpg]
-	program = /usr/local/MacGPG2/bin/gpg2
 [safe]
 	directory = /opt/homebrew
