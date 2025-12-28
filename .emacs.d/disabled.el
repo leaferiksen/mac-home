@@ -13,6 +13,10 @@
 (add-to-list 'default-frame-alist '(undecorated-round . t)) ;; rounded with no title
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(initial-buffer-choice "~/Documents/")
+(use-package terminal-here
+  :ensure t :vc (:url "https://github.com/davidshepherd7/terminal-here")
+  :bind ("s-t" . terminal-here) ("C-x p t" . terminal-here-project-launch))
 (use-package epg-config
   :custom (epg-pinentry-mode 'loopback))
 (use-package ef-themes

@@ -46,7 +46,7 @@ chmod -R +w /opt/homebrew && \
 ```
 Spotlight → Full Disk Access → remove Terminal
 
-Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [LuLu](https://objective-see.org/products/lulu.html) and [LM Studio](https://lmstudio.ai) from their websites
+Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [AlDente](https://apphousekitchen.com/aldente-overview/) and [LuLu](https://objective-see.org/products/lulu.html) manually.
 
 ## Set these by hand
 

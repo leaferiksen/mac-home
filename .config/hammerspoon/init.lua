@@ -23,11 +23,13 @@ Install:andUse("PaperWM", {
 				  },
 				  fn = function(spoon)
 					 spoon.window_filter:rejectApp("Finder")
+					 spoon.window_filter:rejectApp("Terminal")
 					 spoon.window_filter:rejectApp("QuickTime Player")
 					 spoon.window_filter:rejectApp("Shortcuts")
 					 spoon.window_filter:rejectApp("Messages")
 					 spoon.window_filter:rejectApp("Facetime")
 					 spoon.window_filter:rejectApp("Stickies")
+					 spoon.window_filter:rejectApp("Minecraft")
 					 spoon.window_filter:rejectApp("IINA")
 					 spoon.window_filter:rejectApp("Elmedia Video Player")
 					 spoon.window_filter:rejectApp("Color Picker")

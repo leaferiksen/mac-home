@@ -700,11 +700,31 @@
                     }
                 ]
             },
+            "devices": [
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "product_id": 4423,
+                        "vendor_id": 10462
+                    },
+                    "ignore": true
+                }
+            ],
             "name": "Default",
             "selected": true,
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         },
         {
+            "devices": [
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "product_id": 4423,
+                        "vendor_id": 10462
+                    },
+                    "ignore": true
+                }
+            ],
             "name": "Off",
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }

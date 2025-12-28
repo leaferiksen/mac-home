@@ -27,10 +27,10 @@
   :bind (:map completion-preview-active-mode-map (("M-n" . completion-preview-next-candidate) ("M-p" . completion-preview-prev-candidate))))
 (use-package csv-align-mode
   :hook (csv-mode)
-  :custom (csv-align-padding 2) (csv-align-max-width 60))
+  :custom (csv-align-padding 2) (csv-align-max-width 80))
 (use-package csv-mode
   :ensure t :vc (:url "https://github.com/emacsmirror/csv-mode")
-  :hook (csv-mode . csv-highlight)
+  ;; :hook (csv-mode . csv-highlight)
   :config
   (defun csv-highlight ()
 	"Highlight CSV/TSV files."
@@ -86,7 +86,8 @@
 (use-package dired-x
   :custom (dired-omit-files	"^~\\$[^/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd"))
 (use-package display-line-numbers
-  :custom (global-display-line-numbers-mode t) (display-line-numbers-type 'relative))
+  :custom (display-line-numbers-type 'relative) (vterm-timer-delay nil)
+  :hook (text-mode prog-mode dired-mode))
 (use-package dwim-shell-command
   :ensure t :vc (:url "https://github.com/xenodium/dwim-shell-command")
   :config
@@ -202,7 +203,6 @@
 		   (frame-resize-pixelwise t)
 		   (gc-cons-threshold 100000000)
 		   (inhibit-startup-screen t)
-		   (initial-buffer-choice "~/Documents/")
 		   (line-spacing 0.2)
 		   (mode-line-collapse-minor-modes '(not lsp-mode flymake-mode))
 		   (mac-option-modifier 'none)
@@ -373,13 +373,11 @@
 (use-package term/ns-win
   :if (memq window-system '(ns))
   :custom (ns-pop-up-frames nil))
-(use-package terminal-here
-  :ensure t :vc (:url "https://github.com/davidshepherd7/terminal-here")
-  :bind ("s-t" . terminal-here) ("C-x p t" . terminal-here-project-launch))
 (use-package tooltip
   :custom (tooltip-mode nil))
 (use-package treesit-langs
-  :ensure t :vc (:url "https://github.com/emacs-tree-sitter/treesit-langs")) (use-package typo
+  :ensure t :vc (:url "https://github.com/emacs-tree-sitter/treesit-langs"))
+(use-package typo
   :ensure t :vc (:url "https://github.com/jorgenschaefer/typoel")
   :hook (markdown-mode))
 (use-package undo-fu
@@ -399,6 +397,9 @@
   :hook (markdown-mode))
 (use-package visual-line-mode
   :hook (markdown-mode html-mode prog-mode))
+(use-package vterm
+  :ensure t :vc (:url "https://github.com/akermu/emacs-libvterm")
+  :bind ("s-t" . vterm))
 (use-package warnings
   :custom (warning-minimum-level :error))
 (use-package which-key

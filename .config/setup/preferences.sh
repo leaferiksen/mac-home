@@ -160,14 +160,19 @@ defaults write com.apple.finder "ShowPreviewPane" -bool "true"
 defaults write com.apple.finder "CreateDesktop" -bool "false"
 # soft restart
 killall Finder Dock NotificationCenter
+##########
+# Safari #
+##########
+# Show full URL
+defaults write com.apple.Safari "ShowFullURLInSmartSearchField" -bool "true"
 #####################
 # Spotlight Privacy #
 #####################
 defaults write com.apple.assistant.support "Search Queries Data Sharing Status" -int "2"
-######################
-# GnuPG and PinEntry #
-######################
-defaults write org.gpgtools.common "UseKeychain" -bool "true"
+###############
+# Hammerspoon #
+###############
+defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
 ###########
 # Homerow #
 ###########
@@ -192,16 +197,16 @@ defaults write digital.twisted.noTunes replacement '/System/Applications/iPhone 
 # IINA #
 ########
 # defaults write com.colliderli.iina "fullScreenWhenOpen" -bool "true"
+# defaults write com.colliderli.iina "initialWindowSizePosition" -string "-0+0"
 # defaults write com.colliderli.iina "useLegacyFullScreen" -bool "true"
 # defaults write com.colliderli.iina "windowBehaviorWhenPip" -int "1"
 defaults write com.colliderli.iina "SUEnableAutomaticChecks" -bool "false"
-defaults write com.colliderli.iina "actionAfterLaunch" -int "1"
 defaults write com.colliderli.iina "alwaysFloatOnTop" -bool "true"
 defaults write com.colliderli.iina "arrowBtnAction" -int "1"
 defaults write com.colliderli.iina "currentInputConfigName" -string "mpv Default"
 defaults write com.colliderli.iina "disablePlaySliderScrolling" -bool "true"
 defaults write com.colliderli.iina "disableVolumeSliderScrolling" -bool "true"
-defaults write com.colliderli.iina "initialWindowSizePosition" -string "-0+0"
+defaults write com.colliderli.iina "fullScreenWhenOpen" -bool "true"
 defaults write com.colliderli.iina "oscPosition" -int "2"
 defaults write com.colliderli.iina "playlistAutoPlayNext" -bool "false"
 defaults write com.colliderli.iina "scaleRemainingTime" -bool "true"
@@ -256,23 +261,6 @@ defaults write org.chromium.Chromium ExtensionManifestV2Availability -int 2
 # defaults write com.apple.WindowManager "HideDesktop" -bool "false"
 # defaults write com.apple.WindowManager "AutoHide" -bool "true"
 # defaults write com.apple.WindowManager "AutoHideDelay" -int "0"
-##########
-# Safari #
-##########
-# Disable preloading top hit in the background
-# defaults write com.apple.Safari PreloadTopHit -bool false
-# Disable Quick Website Search
-# defaults write com.apple.Safari WebsiteSpecificSearchEnabled -bool false
-# Show full URL
-# defaults write com.apple.Safari "ShowFullURLInSmartSearchField" -bool "true"
-# Enhanced Privacy
-# defaults write com.apple.safari "EnableEnhancedPrivacyInRegularBrowsing" -bool "true"
-# defaults write com.apple.safari "EnableEnhancedPrivacyInPrivateBrowsing" -bool "true"
-# Privacy: don’t send search queries to Apple
-# defaults write com.apple.Safari UniversalSearchEnabled -bool false
-# defaults write com.apple.Safari SuppressSearchSuggestions -bool true
-# disable tracking backdoor
-# defaults write com.apple.safari "WebKitPreferences.privateClickMeasurementEnabled" -bool "false"
 ########
 # Mail #
 ########
@@ -284,6 +272,10 @@ defaults write org.chromium.Chromium ExtensionManifestV2Availability -int 2
 # defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
 # # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
 # defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
+######################
+# GnuPG and PinEntry #
+######################
+# defaults write org.gpgtools.common "UseKeychain" -bool "true"
 ###########
 # Taskbar #
 ###########
@@ -347,7 +339,3 @@ defaults write org.chromium.Chromium ExtensionManifestV2Availability -int 2
 # defaults write org.p0deje.Maccy "historySize" -int "10"
 # defaults write org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonModifiers\":768,\"carbonKeyCode\":9}"
 # defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
-###############
-# Hammerspoon #
-###############
-# defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
