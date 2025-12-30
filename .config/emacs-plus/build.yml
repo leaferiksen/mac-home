@@ -1,0 +1,4 @@
+icon: liquid-glass
+
+settings:
+  no_path_injection: true

@@ -5,6 +5,8 @@
 ;;;;;;;;;;;;;;;;
 ;; Early-init ;;
 ;;;;;;;;;;;;;;;;
+(setq use-package-vc-prefer-newest t)
+(setq package-vc-allow-build-commands t)
 (let ((brew-prefix "/opt/homebrew/bin"))
   (when (file-directory-p brew-prefix)
     (setenv "PATH" (concat brew-prefix ":" (getenv "PATH")))
@@ -20,10 +22,11 @@
   :bind ("s-t" . terminal-here) ("C-x p t" . terminal-here-project-launch))
 (use-package epg-config
   :custom (epg-pinentry-mode 'loopback))
+(use-package auth-source
+  :custom (auth-sources "~/.authinfo.gpg"))
 (use-package ef-themes
   :ensure t :vc (:url "https://github.com/protesilaos/ef-themes")
-  :custom (modus-themes-common-palette-overrides '((fringe unspecified)
-												   (bg-tab-bar bg-main)
+  :custom (modus-themes-common-palette-overrides '((bg-tab-bar bg-main)
 												   (bg-tab-current bg-active)
 												   (bg-tab-other bg-dim))))
 (use-package valign
