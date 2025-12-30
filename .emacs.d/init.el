@@ -3,15 +3,10 @@
 ;; by Leaf Eriksen
 ;;; Code:
 ;; test
-(defalias 'yes-or-no-p 'y-or-n-p)
-(use-package acp
-  :ensure t :vc (:url "https://github.com/xenodium/acp.el"))
 (use-package agent-shell
-  :ensure t :vc (:url "https://github.com/xenodium/agent-shell")
   :custom (agent-shell-google-authentication (agent-shell-google-make-authentication :vertex-ai t))
   :bind ("C-c a" . agent-shell-add-region) ("C-c g" . agent-shell-google-start-gemini))
 (use-package apheleia
-  :ensure t :vc (:url "https://github.com/radian-software/apheleia")
   :custom (apheleia-global-mode t))
 (use-package auth-source
   :custom (auth-sources "~/.authinfo.gpg"))
@@ -29,8 +24,6 @@
   :hook (csv-mode)
   :custom (csv-align-padding 2) (csv-align-max-width 80))
 (use-package csv-mode
-  :ensure t :vc (:url "https://github.com/emacsmirror/csv-mode")
-  ;; :hook (csv-mode . csv-highlight)
   :config
   (defun csv-highlight ()
 	"Highlight CSV/TSV files."
@@ -47,28 +40,22 @@
 (use-package delsel
   :custom (delete-selection-mode t))
 (use-package devil
-  :ensure t :vc (:url "https://github.com/susam/devil")
   :config (global-devil-mode)
   (add-to-list 'devil-repeatable-keys `("%k v"))
   (add-to-list 'devil-repeatable-keys `("%k m v"))
   (add-to-list 'devil-repeatable-keys `("%k m d"))
   (add-to-list 'devil-repeatable-keys `("%k m m p" "%k m m n" "%k m m b" "%k m m f" "%k m m a" "%k m m e" "%k m m u" "%k m m d" "%k m m t")))
 (use-package dired
-  :after ls-lisp
-  :preface (require 'ls-lisp)
   :bind (:map dired-mode-map (("<mouse-1>" . nil) ("<mouse-2>" . nil) ("SPC" . 'quicklook)
 							  ("C-c p" . 'dwim-shell-commands-md-pdf) ("e" . 'dwim-shell-commands-macos-open-with)))
-  :custom (dired-clean-confirm-killing-deleted-buffers nil) (dired-create-destination-dirs 'ask) (dired-mouse-drag-files t) (dired-recursive-copies 'always)
+  :custom (dired-listing-switches "-alh --group-directories-first") (dired-clean-confirm-killing-deleted-buffers nil) (dired-create-destination-dirs 'ask) (dired-mouse-drag-files t) (dired-recursive-copies 'always)
   :config
   (use-package dired-hide-details
 	:hook (dired-mode))
   (use-package dired-omit-mode
 	:hook (dired-mode))
-  ;; (use-package nerd-icons
-  ;;   :ensure t :vc (:url "https://github.com/rainstormstudio/nerd-icons.el"))
-  ;; (use-package nerd-icons-dired
-  ;; 	:ensure t :vc (:url "https://github.com/rainstormstudio/nerd-icons-dired")
-  ;; 	:hook (dired-mode))
+  (use-package nerd-icons-dired
+	:hook (dired-mode))
   (defun afinfo ()
 	"Get metadata for focused file."
 	(interactive)
@@ -87,9 +74,8 @@
   :custom (dired-omit-files	"^~\\$[^/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd"))
 (use-package display-line-numbers
   :custom (display-line-numbers-type 'relative) (vterm-timer-delay nil)
-  :hook (text-mode prog-mode dired-mode))
+  :hook (fundamental-mode text-mode prog-mode dired-mode))
 (use-package dwim-shell-command
-  :ensure t :vc (:url "https://github.com/xenodium/dwim-shell-command")
   :config
   (defun dwim-shell-command-pbcopy ()
 	"Copy file to macOS system clipboard (via pbcopy)."
@@ -107,20 +93,9 @@
 	 :extensions "md")))
 (use-package editorconfig
   :custom (editorconfig-mode t))
-(use-package ef-themes
-  :ensure t :vc (:url "https://github.com/protesilaos/ef-themes")
-  :custom ((modus-themes-common-palette-overrides
-			'((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)
-			  (border-mode-line-active unspecified) (border-mode-line-inactive unspecified)
-			  (fg-heading-1 green) (fg-heading-2 green) (fg-heading-3 green)
-			  (fg-heading-4 green) (fg-heading-5 green) (fg-heading-6 green)))
-		   (modus-themes-headings '((1 . (2.0)) (2 . (1.6)) (3 . (1.2))))
-		   (modus-themes-italic-constructs t)
-		   (modus-themes-mixed-fonts t)))
 (use-package elec-pair
   :custom (electric-pair-mode t))
 (use-package elfeed
-  :ensure t :vc (:url "https://github.com/skeeto/elfeed")
   :preface (run-at-time nil (* 8 60 60) #'elfeed-update)
   :bind (("C-c r" . elfeed)
 		 (:map elfeed-search-mode-map ("m" . elfeed-search-show-entry)))
@@ -179,12 +154,9 @@
 				  ("https://www.tinylogger.com/90koil/rss" journals)
 				  ("https://www.wordsbywes.ink/feed.xml" journals))))
 (use-package elfeed-webkit
-  :ensure t :vc (:url "https://github.com/fritzgrabo/elfeed-webkit")
   :demand ;; !
   :config (elfeed-webkit-enable)
   :bind (:map elfeed-show-mode-map ("%" . elfeed-webkit-toggle)))
-(use-package elgrep ;; obsidian dependency
-  :ensure t :vc (:url "https://github.com/TobiasZawada/elgrep"))
 (use-package elisp-mode
   :bind (:map lisp-mode-shared-map ("C-c e" . (lambda () (interactive) (eval-buffer)))))
 (use-package emacs ;;core c variables, startup, modus and paragraph
@@ -206,6 +178,15 @@
 		   (line-spacing 0.2)
 		   (mode-line-collapse-minor-modes '(not lsp-mode flymake-mode))
 		   (mac-option-modifier 'none)
+		   (modus-themes-common-palette-overrides
+			'((fringe unspecified) (bg-line-number-inactive unspecified) (bg-line-number-active unspecified)
+			  (underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)
+			  (border-mode-line-active unspecified) (border-mode-line-inactive unspecified)
+			  (fg-heading-1 green) (fg-heading-2 green) (fg-heading-3 green)
+			  (fg-heading-4 green) (fg-heading-5 green) (fg-heading-6 green)))
+		   (modus-themes-headings '((1 . (2.0)) (2 . (1.6)) (3 . (1.2))))
+		   (modus-themes-italic-constructs t)
+		   (modus-themes-mixed-fonts t)
 		   (read-buffer-completion-ignore-case t)
 		   (read-process-output-max (* 1024 1024))
 		   (ring-bell-function 'ignore)
@@ -214,11 +195,12 @@
 		   (tool-bar-mode nil)
 		   (use-dialog-box nil))
   :config
+  (defalias 'yes-or-no-p 'y-or-n-p)
   (save-place-mode 1)
   (defun auto-theme (appearance)
 	"Load theme, taking current system APPEARANCE into consideration."
 	(mapc #'disable-theme custom-enabled-themes)
-	(pcase appearance ('light (load-theme 'ef-summer t)) ('dark (load-theme 'ef-winter t))))
+	(pcase appearance ('light (load-theme 'modus-operandi t)) ('dark (load-theme 'modus-vivendi t))))
   (defun fix-node ()
 	"Unlink and relink node binaries."
 	(interactive)
@@ -231,40 +213,6 @@
 	"Move cursor to new window in vertical split."
 	(interactive)
 	(split-window-right) (balance-windows) (other-window 1))
-  (defun unpackaged/sort-sexps (beg end)
-	"Sort sexps from BEG to END. Comments stay with the code below."
-	(interactive "r")
-	(cl-flet ((skip-whitespace () (while (looking-at (rx (1+ (or space "\n")))) (goto-char (match-end 0))))
-			  (skip-both ()
-				(while (cond ((or (nth 4 (syntax-ppss))
-								  (ignore-errors (save-excursion (forward-char 1) (nth 4 (syntax-ppss)))))
-							  (forward-line 1))
-							 ((looking-at (rx (1+ (or space "\n")))) (goto-char (match-end 0)))))))
-	  (save-excursion
-		(save-restriction (narrow-to-region beg end) (goto-char beg) (skip-both)
-						  (cl-destructuring-bind (sexps markers)
-							  (cl-loop do (skip-whitespace)
-									   for start = (point-marker)
-									   for sexp = (ignore-errors (read (current-buffer)))
-									   for end = (point-marker)
-									   while sexp
-									   ;; Collect the real string, then one used for sorting.
-									   collect (cons (buffer-substring (marker-position start) (marker-position end))
-													 (save-excursion
-													   (goto-char (marker-position start))
-													   (skip-both)
-													   (buffer-substring (point) (marker-position end))))
-									   into sexps
-									   collect (cons start end)
-									   into markers
-									   finally return (list sexps markers))
-							(setq sexps (sort sexps (lambda (a b) (string< (cdr a) (cdr b)))))
-							(cl-loop for sexp-pair in sexps
-									 for marker-pair in markers
-									 do (let* ((real (car sexp-pair)) (start (car marker-pair)) (end (cdr marker-pair)))
-										  (goto-char (marker-position start))
-										  (insert-before-markers real)
-										  (delete-region (point) (marker-position end)))))))))
   (defun yt-dlp (url)
 	"Download the audio, video, or video with subs from a given URL."
 	(interactive "sEnter media source URL: ")
@@ -274,21 +222,15 @@
 			((string-equal choice "subtitled video") (async-shell-command (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url)))))))
 (use-package exec-path-from-shell
   :if (memq window-system '(ns x))
-  :ensure t :vc (:url "https://github.com/purcell/exec-path-from-shell")
   :config (exec-path-from-shell-initialize))
-(use-package f ;; lsp-mode dependency
-  :ensure t :vc (:url "https://github.com/rejeep/f.el"))
 (use-package files
   :custom ((find-file-visit-truename t)
 		   (insert-directory-program "gls")
 		   (large-file-warning-threshold nil)
 		   (major-mode-remap-alist '((sh-mode . bash-ts-mode) (css-mode . css-ts-mode) (dockerfile-mode . dockerfile-ts-mode) (mhtml-mode . html-ts-mode) (javascript-mode . js-ts-mode) (json-mode . json-ts-mode) (typescript-mode . typescript-ts-mode) (yaml-mode . yaml-ts-mode)))
-		   (make-backup-files nil)
-		   (trash-directory "~/.Trash")))
+		   (make-backup-files nil)))
 (use-package flyspell
   :hook (markdown-mode))
-(use-package ht ;; lsp-mode dependency
-  :ensure t :vc (:url "https://github.com/Wilfred/ht.el"))
 (use-package html-ts-mode
   :config
   (defun http-server ()
@@ -301,19 +243,14 @@
   :config (fido-vertical-mode))
 (use-package isearch
   :custom (isearch-lazy-count t) (lazy-count-prefix-format nil) (lazy-count-suffix-format "   (%s/%s)"))
-(use-package lorem-ipsum
-  :ensure t :vc (:url "https://github.com/jschaf/emacs-lorem-ipsum"))
-(use-package ls-lisp
-  :custom (ls-lisp-dirs-first t) (ls-lisp-ignore-case t) (ls-lisp-use-insert-directory-program nil) (ls-lisp-use-localized-time-format t))
-(use-package lsp-completion
-  :custom (lsp-completion-provider :none))
+(use-package lorem-ipsum)
+;; (use-package lsp-completion
+;;   :custom (lsp-completion-provider :none))
 (use-package lsp-mode
-  :ensure t :vc (:url "https://github.com/emacs-lsp/lsp-mode")
   :hook (html-mode . lsp) (css-mode . lsp) (js-mode . lsp) (typescript-mode . lsp) (tsx-mode . lsp)
   :custom (lsp-enable-indentation nil)
   :commands lsp)
 (use-package lsp-tailwindcss
-  :ensure t :vc (:url "https://github.com/merrickluo/lsp-tailwindcss")
   :after lsp-mode
   :custom (lsp-tailwindcss-add-on-mode t) (lsp-tailwindcss-skip-config-check t) (lsp-tailwindcss-server-path "/opt/homebrew/bin/tailwindcss-language-server")
   :config
@@ -322,8 +259,7 @@
 	(interactive)
 	(let ((filename (concat "tailwind-server@ <" (file-name-nondirectory (directory-file-name (file-name-directory default-directory))) ">")))
 	  (start-process filename filename "npx" "@tailwindcss/cli" "-i" "app.css" "-o" "dist.css" "--watch"))))
-(use-package lua-mode
-  :ensure t :vc (:url "https://github.com/immerrr/lua-mode"))
+(use-package lua-mode)
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
   :custom (markdown-enable-wiki-links t) (markdown-hide-markup t) (markdown-unordered-list-item-prefix "- ") (markdown-asymmetric-header t) (markdown-fontify-code-blocks-natively t) (markdown-special-ctrl-a/e t)
@@ -338,12 +274,10 @@
 	(interactive)
 	(insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n")))
 (use-package moody
-  :ensure t :vc (:url "https://github.com/tarsius/moody")
   :config (moody-replace-mode-line-front-space) (moody-replace-mode-line-buffer-identification) (moody-replace-vc-mode))
 (use-package novice
   :custom (disabled-command-function nil))
 (use-package obsidian
-  :ensure t :vc (:url "https://github.com/licht1stein/obsidian.el")
   :custom (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
   :bind (("s-d" . obsidian-daily-note)
 		 (:map markdown-mode-map ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point))))
@@ -351,37 +285,27 @@
   :custom (pixel-scroll-precision-mode t))
 (use-package project
   :custom (project-mode-line t) (project-vc-extra-root-markers '("project")))
-(use-package reader
-  :ensure t :vc (:url "https://codeberg.org/divyaranjan/emacs-reader" :make "all"))
+(use-package reader :vc (:url "https://codeberg.org/divyaranjan/emacs-reader" :make "all"))
 (use-package repeat
   :custom (repeat-mode t))
-(use-package s ;; f dependency
-  :ensure t :vc (:url "https://github.com/magnars/s.el"))
 (use-package scroll-bar
   :custom (scroll-bar-mode nil))
 (use-package send-to
   :bind ("C-c s" . send-to))
-(use-package shell-maker
-  :ensure t :vc (:url "https://github.com/xenodium/shell-maker"))
 (use-package shr
   :custom (shr-fill-text nil) (shr-inhibit-images t))
 (use-package simple
   :custom (backward-delete-char-untabify-method nil) (column-number-mode t))
 (use-package snow
-  :ensure t :vc (:url "https://github.com/alphapapa/snow.el")
   :custom (snow-pile-factor 1))
 (use-package term/ns-win
   :if (memq window-system '(ns))
   :custom (ns-pop-up-frames nil))
 (use-package tooltip
   :custom (tooltip-mode nil))
-(use-package treesit-langs
-  :ensure t :vc (:url "https://github.com/emacs-tree-sitter/treesit-langs"))
 (use-package typo
-  :ensure t :vc (:url "https://github.com/jorgenschaefer/typoel")
   :hook (markdown-mode))
 (use-package undo-fu
-  :vc (:url "https://github.com/emacsmirror/undo-fu")
   :bind ("s-z" . undo-fu-only-undo) ("s-Z" . undo-fu-only-redo))
 (use-package variable-pitch
   :hook (markdown-mode))
@@ -392,20 +316,17 @@
 	(interactive)
 	(vc-checkin nil 'git) (vc-git-log-edit-toggle-amend)))
 (use-package visual-fill-column
-  :ensure t :vc (:url "https://codeberg.org/joostkremers/visual-fill-column")
   :custom (visual-fill-column-center-text t) (visual-fill-column-width 100)
   :hook (markdown-mode))
 (use-package visual-line-mode
   :hook (markdown-mode html-mode prog-mode))
 (use-package vterm
-  :ensure t :vc (:url "https://github.com/akermu/emacs-libvterm")
   :bind ("s-t" . vterm))
 (use-package warnings
   :custom (warning-minimum-level :error))
 (use-package which-key
   :custom (which-key-mode t))
-(use-package yasnippet
-  :ensure t :vc (:url "https://github.com/joaotavora/yasnippet"))
+(use-package yasnippet)
 ;; Enable rendering SF symbols on macOS.
 (when (memq system-type '(darwin))
   (set-fontset-font t nil "SF Pro Display" nil 'append))

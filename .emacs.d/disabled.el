@@ -14,6 +14,7 @@
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (initial-buffer-choice "~/Documents/")
+(trash-directory "~/.Trash")
 (use-package terminal-here
   :ensure t :vc (:url "https://github.com/davidshepherd7/terminal-here")
   :bind ("s-t" . terminal-here) ("C-x p t" . terminal-here-project-launch))
@@ -78,7 +79,10 @@
   :bind (("C-<tab>" . tab-line-switch-to-next-tab)
 		 ("C-M-<tab>" . tab-line-switch-to-prev-tab)))
 (use-package dired
-  :custom (dired-listing-switches "-alh --group-directories-first"))
+  :after ls-lisp
+  :preface (require 'ls-lisp))
+(use-package ls-lisp
+  :custom (ls-lisp-dirs-first t) (ls-lisp-ignore-case t) (ls-lisp-use-insert-directory-program nil) (ls-lisp-use-localized-time-format t))
 (use-package files
   :custom (insert-directory-program "gls"))
 (defun arc-open-parent-folder-and-quit () "Open the parent folder of the current arc-mode buffer and quit the arc-mode window."

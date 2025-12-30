@@ -9,4 +9,7 @@
 (setq custom-file (make-temp-file "~/.cache/emacs/custom"))
 (setq use-package-vc-prefer-newest t)
 (setq package-vc-allow-build-commands t)
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
 ;;; early-init.el ends here
