@@ -1,0 +1,65 @@
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+((".config"
+  (filename . "~/.config/")
+  (front-context-string . "borders\n  drwx--")
+  (rear-context-string . "96 Dec 13  2024 ")
+  (position . 164)
+  (last-modified 26889 43583 80297 0))
+("TV Shows"
+ (filename . "/Volumes/Media/TV Shows/")
+ (front-context-string . "[HorribleSubs] A")
+ (rear-context-string . "6K Feb  8  2025 ")
+ (position . 171)
+ (last-modified 26888 17304 3476 0))
+("Movies"
+ (filename . "/Volumes/Media/Movies/")
+ (front-context-string . "Gundam Trilogy\n ")
+ (rear-context-string . "56 Aug  2  2024 ")
+ (position . 166)
+ (last-modified 26888 17298 168646 0))
+("Git"
+ (filename . "~/Git/")
+ (front-context-string . "Aseprite\n  drwxr")
+ (rear-context-string . "60 Aug 31 12:55 ")
+ (position . 65)
+ (last-modified 26873 20777 285898 0))
+("Home.md"
+ (filename . "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Home.md")
+ (front-context-string . "[[Education]]\n[[")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 26792 40765 547199 0))
+("Games"
+ (filename . "~/Games/")
+ (front-context-string . "Cyberpunk\n  drwx")
+ (rear-context-string . "88 Jul 24 15:06 ")
+ (position . 111)
+ (last-modified 26777 18693 883381 0))
+("Komga"
+ (filename . "~/Komga/")
+ (front-context-string . ".stfolder\n  drwx")
+ (rear-context-string . "96 Jun  2 15:42 ")
+ (position . 111)
+ (last-modified 26777 18677 349572 0))
+("pi"
+ (filename . "/ssh:pi@100.110.202.44:~/")
+ (front-context-string . ".cache\n  drwx   ")
+ (rear-context-string . "4k May 29 12:19 ")
+ (position . 125)
+ (last-modified 26740 24260 633107 0))
+("Downloads"
+ (filename . "~/Downloads/")
+ (front-context-string . ".cache\n  drwxr-x")
+ (rear-context-string . "96 Mar 29 10:33 ")
+ (position . 175)
+ (last-modified 26711 3905 749927 0))
+("Documents"
+ (filename . "~/Documents/")
+ (front-context-string . "Apps\n  drwx-----")
+ (rear-context-string . "12 Apr 12 15:05 ")
+ (position . 71)
+ (last-modified 26620 19922 519430 0))
+)
