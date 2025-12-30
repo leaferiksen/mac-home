@@ -1,14 +1,13 @@
 # zsh fuzzy caps autocomplete and Plugins
 autoload -Uz compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-source /Users/leaf/Homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /Users/leaf/Homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 export VISUAL="nano"
 export LESSHISTFILE=-
 export SHELL_SESSIONS_DISABLE=1
-export PATH=/Users/leaf/Homebrew/sbin:/Users/leaf/Homebrew/bin:/Users/leaf/.local/bin:/Users/leaf/Homebrew/opt/python@3.14/libexec/bin:/Users/leaf/.docker/bin:$PATH
-export PYTHONPATH="/Users/leaf/Homebrew/opt/notmuch/lib/python3.14/site-packages/"
+export PATH=/opt/homebrew/sbin:/opt/homebrew/bin:/opt/homebrew/opt/python@3.14/libexec/bin:/Users/leaf/.docker/bin:$PATH
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications"
 eval "$(brew shellenv)"
 

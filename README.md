@@ -31,8 +31,17 @@ ssh-add --apple-use-keychain ~/.ssh/id_ed25519 &> /dev/null
 ```
 
 To install Homebrew
+
+``` bash
+su admin
+```
+
+``` bash
+sudo chown leaf /opt && exit
+```
+
 ```bash
-git clone https://github.com/Homebrew/brew Homebrew
+git clone https://github.com/Homebrew/brew /opt/homebrew
 ```
 
 Spotlight → Full Disk Access → /System/Applications/Utilities/Terminal.app, then restart Terminal and run
@@ -46,7 +55,7 @@ chmod -R +w /opt/homebrew && \
 ```
 Spotlight → Full Disk Access → remove Terminal
 
-Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [AlDente](https://apphousekitchen.com/aldente-overview/) and [LuLu](https://objective-see.org/products/lulu.html) manually.
+Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [AlDente](https://apphousekitchen.com/aldente-overview/), [LuLu](https://objective-see.org/products/lulu.html) and [Wacom Drivers](https://www.wacom.com/en-us/support/product-support/drivers) manually.
 
 ## Set these by hand
 
