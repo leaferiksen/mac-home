@@ -214,7 +214,8 @@
   (markdown-fontify-code-blocks-natively t)
   (markdown-special-ctrl-a/e t)
   (markdown-link-space-sub-char " ")
-  (markdown-mode-hook '(variable-pitch-mode visual-fill-column-mode))
+  :config
+  (setopt markdown-mode-hook '(variable-pitch-mode visual-fill-column-mode))
   :bind
   (:map markdown-mode-map
 		("C-c h" . insert-title)
