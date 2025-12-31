@@ -1,7 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 
 ;; Built in packages
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defun dired-finder-path ()
   "Open Dired in the frontmost Finder window path, if available."
@@ -23,13 +22,24 @@
 	(cond ((string-equal choice "audio") (async-shell-command (format "yt-dlp -S \"ext\" -x \"%s\"" url)))
 		  ((string-equal choice "video") (async-shell-command (format "yt-dlp -S \"ext\" \"%s\"" url)))
 		  ((string-equal choice "subtitled video") (async-shell-command (format "yt-dlp -S \"ext\" --write-subs \"%s\"" url))))))
+(defun insert-date ()
+  "Insert an atx heading with today's date in iso format."
+  (interactive)
+  (insert "## " (format-time-string "%Y-%m-%d") "\n"))
+(defun insert-title ()
+  "Insert an atx heading with the name of the file."
+  (interactive)
+  (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
 (when (memq system-type '(darwin))
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (set-fontset-font t nil "SF Pro Display" nil 'append)  ;; Enable SF symbols
-  (setq browse-url-generic-program "open")
-  (setq browse-url-mailto-function 'browse-url-generic)
-  (setq ns-pop-up-frames nil)
-  (setq mac-option-modifier 'none)
-  (setq auth-sources '(macos-keychain-internet macos-keychain-generic)))
+  (use-package emacs
+	:custom
+	(browse-url-generic-program "open")
+	(browse-url-mailto-function 'browse-url-generic)
+	(ns-pop-up-frames nil)
+	(mac-option-modifier 'none)
+	(auth-sources '(macos-keychain-generic macos-keychain-internet))))
 (use-package emacs
   :hook
   (window-setup-hook . toggle-frame-maximized)
@@ -72,6 +82,7 @@
   (gc-cons-threshold 100000000)
   (global-auto-revert-mode t)
   (global-auto-revert-non-file-buffers t)
+  (global-visual-line-mode t)
   (html-mode-hook '(eglot-ensure))
   (inhibit-startup-screen t)
   (insert-directory-program "gls")
@@ -85,7 +96,7 @@
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
   (pixel-scroll-precision-mode t)
-  (prog-mode-hook '(eglot-ensure visual-line-mode display-line-numbers-mode completion-preview-mode))
+  (prog-mode-hook '(eglot-ensure display-line-numbers-mode completion-preview-mode))
   (project-mode-line t) (project-vc-extra-root-markers '("project"))
   (read-buffer-completion-ignore-case t)
   (read-process-output-max (* 1024 1024))
@@ -95,7 +106,7 @@
   (shr-fill-text nil)
   (shr-inhibit-images t)
   (tab-width 4)
-  (text-mode-hook '(display-line-numbers-mode text-mode-hook-identify))
+  (text-mode-hook '(display-line-numbers-mode typo-mode flyspell-mode variable-pitch-mode visual-fill-column-mode text-mode-hook-identify))
   (tool-bar-mode nil)
   (tooltip-mode nil)
   (use-dialog-box nil)
@@ -166,7 +177,7 @@
   :preface
   (run-at-time nil (* 8 60 60) #'elfeed-update)
   :bind
-  ("C-c r" . elfeed)
+  ("s-r" . elfeed)
   (:map elfeed-search-mode-map
 		("m" . elfeed-search-show-entry))
   :custom
@@ -190,31 +201,18 @@
   :mode
   ("README\\.md\\'" . gfm-mode)
   :custom
-  (markdown-mode-hook '(typo-mode visual-line-mode visual-fill-column-mode variable-pitch-mode flyspell-mode))
   (markdown-enable-wiki-links t)
+  (markdown-wiki-link-retain-case t)
   (markdown-hide-markup t)
   (markdown-unordered-list-item-prefix "- ")
   (markdown-asymmetric-header t)
   (markdown-fontify-code-blocks-natively t)
   (markdown-special-ctrl-a/e t)
+  (markdown-link-space-sub-char " ")
   :bind
   (:map markdown-mode-map
 		("C-c h" . insert-title)
-		("C-c d" . insert-date))
-  :config
-  (defun insert-date ()
-	"Insert an atx heading with today's date in iso format."
-	(interactive)
-	(insert "## " (format-time-string "%Y-%m-%d") "\n"))
-  (defun insert-title ()
-	"Insert an atx heading with the name of the file."
-	(interactive)
-	(insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n")))
-(use-package obsidian
-  :custom (obsidian-directory "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes")
-  :bind
-  ("s-d" . obsidian-daily-note)
-  (:map markdown-mode-map ([remap markdown-follow-thing-at-point] . obsidian-follow-link-at-point)))
+		("C-c d" . insert-date)))
 (use-package reader
   :vc
   (:url "https://codeberg.org/divyaranjan/emacs-reader" :make "all"))
