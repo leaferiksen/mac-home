@@ -17,9 +17,22 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (initial-buffer-choice "~/Documents/")
 (trash-directory "~/.Trash")
-(use-package terminal-here
-  :ensure t :vc (:url "https://github.com/davidshepherd7/terminal-here")
-  :bind ("s-t" . terminal-here) ("C-x p t" . terminal-here-project-launch))
+;; (setenv "LSP_USE_PLISTS" "true")
+;; (use-package lsp-mode
+;;   :hook
+;;   (html-mode . lsp)
+;;   (css-mode . lsp)
+;;   (js-mode . lsp)
+;;   :custom
+;;   (lsp-enable-indentation nil)
+;;   (lsp-enable-snippet nil)
+;;   (lsp-completion-provider :none)
+;;   :commands lsp)
+;; (use-package lsp-tailwindcss
+;;   :after lsp-mode
+;;   :custom
+;;   (lsp-tailwindcss-add-on-mode t)
+;;   (lsp-tailwindcss-skip-config-check t))
 (use-package epg-config
   :custom (epg-pinentry-mode 'loopback))
 (use-package auth-source
