@@ -34,6 +34,8 @@
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (set-fontset-font t nil "SF Pro Display" nil 'append)  ;; Enable SF symbols
   (use-package emacs
+	:bind
+	("s-o" . find-file)
 	:custom
 	(browse-url-generic-program "open")
 	(browse-url-mailto-function 'browse-url-generic)
@@ -45,7 +47,6 @@
   (window-setup-hook . toggle-frame-maximized)
   (ns-system-appearance-change-functions . auto-theme)
   :bind
-  ("s-o" . find-file)
   ("C-<wheel-up>" . nil)
   ("C-<wheel-down>" . nil)
   :custom-face
@@ -83,12 +84,11 @@
   (global-auto-revert-mode t)
   (global-auto-revert-non-file-buffers t)
   (global-visual-line-mode t)
-  (html-mode-hook '(eglot-ensure))
   (inhibit-startup-screen t)
   (insert-directory-program "gls")
   (isearch-lazy-count t)
   (line-spacing 0.2)
-  (major-mode-remap-alist '((sh-mode . bash-ts-mode) (mhtml-mode . html-ts-mode) (css-mode . css-ts-mode) (javascript-mode . js-ts-mode) (typescript-mode . typescript-ts-mode) (dockerfile-mode . dockerfile-ts-mode) (json-mode . json-ts-mode) (yaml-mode . yaml-ts-mode)))
+  (major-mode-remap-alist '((sh-mode . bash-ts-mode) (mhtml-mode . html-ts-mode) (css-mode . css-ts-mode) (javascript-mode . js-ts-mode) (dockerfile-mode . dockerfile-ts-mode) (json-mode . json-ts-mode) (yaml-mode . yaml-ts-mode)))
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not lsp-mode flymake-mode))
   (modus-themes-common-palette-overrides '((fringe unspecified) (bg-line-number-inactive unspecified) (bg-line-number-active unspecified) (underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified) (border-mode-line-active unspecified) (border-mode-line-inactive unspecified) (fg-heading-1 green) (fg-heading-2 green) (fg-heading-3 green) (fg-heading-4 green) (fg-heading-5 green) (fg-heading-6 green)))
@@ -96,7 +96,7 @@
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
   (pixel-scroll-precision-mode t)
-  (prog-mode-hook '(eglot-ensure display-line-numbers-mode completion-preview-mode))
+  (prog-mode-hook '(display-line-numbers-mode completion-preview-mode))
   (project-mode-line t) (project-vc-extra-root-markers '("project"))
   (read-buffer-completion-ignore-case t)
   (read-process-output-max (* 1024 1024))
@@ -106,7 +106,7 @@
   (shr-fill-text nil)
   (shr-inhibit-images t)
   (tab-width 4)
-  (text-mode-hook '(display-line-numbers-mode typo-mode flyspell-mode variable-pitch-mode visual-fill-column-mode text-mode-hook-identify))
+  (text-mode-hook '(display-line-numbers-mode typo-mode flyspell-mode text-mode-hook-identify))
   (tool-bar-mode nil)
   (tooltip-mode nil)
   (use-dialog-box nil)
@@ -118,6 +118,11 @@
   (auto-insert-mode t)
   (define-auto-insert "\.html" "insert.html")
   (define-auto-insert "\.js" "insert.js"))
+
+;; LSP autostart
+(add-hook 'html-mode-hook 'eglot-ensure)
+(add-hook 'css-mode-hook 'eglot-ensure)
+(add-hook 'js-mode-hook 'eglot-ensure)
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs '(html-mode "tailwindcss-language-server")))
 
@@ -209,6 +214,7 @@
   (markdown-fontify-code-blocks-natively t)
   (markdown-special-ctrl-a/e t)
   (markdown-link-space-sub-char " ")
+  (markdown-mode-hook '(variable-pitch-mode visual-fill-column-mode))
   :bind
   (:map markdown-mode-map
 		("C-c h" . insert-title)
