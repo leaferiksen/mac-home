@@ -4,28 +4,24 @@
 [:f6 "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]
 ]}
 
-{:des "iPhone Mirroring playback with 􀆔􀊉/􀊇/􀊋 or Right􀆕1/2/3" :rules [
-[:!CC##f7 "sh ~/.config/karabiner/iphoneBack.sh"][:!CC##f8 "sh ~/.config/karabiner/iphonePlay.sh"][:!CC##f9 "sh ~/.config/karabiner/iphoneForward.sh"]
-]}
-
-{:des "Right􀆕X/C/D/R/S/T/W/F/P as 􀆫/􀆭/􀆹/􀊉/􀊇/􀊋/􀊣/􀊥/􀊩" :rules [
-[:!E##tab :tab][:!E##q :f10][:!E##w :f11][:!E##e :f12][:!E##r :f1]
-[:!E##caps_lock :escape][:!E##a :f7][:!E##s :f8][:!E##d :f9][:!E##f :f2]
-[:!E##left_shift :grave_accent_and_tilde][:!E##z :f4][:!E##x :f5][:!E##c "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"][:!E##v :f3]
-]}
-
-{:des "Left􀆕O/H/,/./N/E/I/L/U/Y as 0/1/2/3/4/5/6/7/8/9" :rules [
-[:!O##i :7][:!O##o :8][:!O##p :9][:!O##open_bracket :semicolon][:!O##close_bracket :quote]
-[:!O##j :f13][:!O##k :4][:!O##l :5][:!O##semicolon :6][:!O##quote :hyphen][:!O##return_or_enter :delete_or_backspace]
-[:!O##m :f14][:!O##comma :1][:!O##period :2][:!O##slash :3][:!O##right_shift :equal_sign]
-[:!O##right_option :0]
+{:des "iPhone Mirroring playback with 􀆔􀊉/􀊇/􀊋" :rules [
+[:!CC##f7 "sh ~/.config/karabiner/iphoneBack.sh"]  [:!CC##f8 "sh ~/.config/karabiner/iphonePlay.sh"]  [:!CC##f9 "sh ~/.config/karabiner/iphoneForward.sh"]
 ]}
 
 {:des "Colemak Curl/Angle/Extra Wide with Left􀆔 as 􀆝" :rules [
-[:##tab :q][:##q :w][:##w :f][:##e :p][:##r :b][:##t :vk_none][:##y :vk_none][:##u :j][:##i :l][:##o :u][:##p :y]
-[:##caps_lock :a][:##a :r][:##s :s][:##d :t][:##f :g][:##g :vk_none][:##h :vk_none][:##j :m][:##k :n][:##l :e][:##semicolon :i][:##quote :o]
-[:##left_shift :z][:##z :x][:##x :c][:##c :d][:##b :vk_none][:##n :vk_none][:##m :k][:##comma :h][:##period :comma][:##slash :period][:##right_shift :slash]
-[:##right_command :right_shift]
+[:##tab :q]  [:##q :w]  [:##w :f]  [:##e :p]  [:##r :g] [:##t :tab]
+[:##y :escape]  [:##u :j]  [:##i :l]  [:##o :u]  [:##p :y]  [:##open_bracket :quote]  [:##close_bracket :semicolon]
+
+[:##caps_lock :a]  [:##a :r]  [:##s :s]  [:##d :t]  [:##f :d]  [:##g :f13]
+[:##h :f14]  [:##j :h]  [:##k :n]  [:##l :e]  [:##semicolon :i]  [:##quote :o]  [:##return_or_enter :quote]
+
+[:##left_shift :z]  [:##z :x]  [:##x :c]  [:##c :v]  [:##v :b]  [:##b :open_bracket]
+[:##n :close_bracket]  [:##m :k]  [:##comma :m][:##period :comma][:##slash :period][:##right_shift :slash]
+
+[:##right_command :right_shift]  [:##right_option :right_control]
+
+
+
 ]}
 
 ]}
