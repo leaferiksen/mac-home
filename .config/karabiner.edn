@@ -1,27 +1,30 @@
 {:main [
-
 {:des "Toggle dark mode with 􀆹" :rules [
-[:f6 "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]
+	[:f6 "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]
 ]}
-
 {:des "iPhone Mirroring playback with 􀆔􀊉/􀊇/􀊋" :rules [
-[:!CC##f7 "sh ~/.config/karabiner/iphoneBack.sh"]  [:!CC##f8 "sh ~/.config/karabiner/iphonePlay.sh"]  [:!CC##f9 "sh ~/.config/karabiner/iphoneForward.sh"]
+	[:!CC##f7 "sh ~/.config/karabiner/iphoneBack.sh"]  [:!CC##f8 "sh ~/.config/karabiner/iphonePlay.sh"]  [:!CC##f9 "sh ~/.config/karabiner/iphoneForward.sh"]
 ]}
-
 {:des "Colemak Curl/Angle/Extra Wide with Left􀆔 as 􀆝" :rules [
-[:##tab :q]  [:##q :w]  [:##w :f]  [:##e :p]  [:##r :g] [:##t :tab]
-[:##y :escape]  [:##u :j]  [:##i :l]  [:##o :u]  [:##p :y]  [:##open_bracket :quote]  [:##close_bracket :semicolon]
-
-[:##caps_lock :a]  [:##a :r]  [:##s :s]  [:##d :t]  [:##f :d]  [:##g :f13]
-[:##h :f14]  [:##j :h]  [:##k :n]  [:##l :e]  [:##semicolon :i]  [:##quote :o]  [:##return_or_enter :quote]
-
-[:##left_shift :z]  [:##z :x]  [:##x :c]  [:##c :v]  [:##v :b]  [:##b :open_bracket]
-[:##n :close_bracket]  [:##m :k]  [:##comma :m][:##period :comma][:##slash :period][:##right_shift :slash]
-
-[:##right_command :right_shift]  [:##right_option :right_control]
-
-
-
+	;; global emacs
+	[:!TT##l :return_or_enter] [:!TT##open_bracket :tab]
+	;; left hand
+	[:##grave_accent_and_tilde :q]  [:##1 :w]  [:##2 :f]  [:##3 :p]  [:##4 :g]
+	[:##tab :a]                     [:##q :r]  [:##w :s]  [:##e :t]  [:##r :d]
+	[:##caps_lock :z]               [:##a :x]  [:##s :c]  [:##d :v]  [:##f :b]
+	;; right hand
+	[:##8 :j]  [:##9 :l]  [:##0 :u]              [:##hyphen :y]        [:##equal_sign :semicolon]
+	[:##i :h]  [:##o :n]  [:##p :e]              [:##open_bracket :i]  [:##close_bracket :o]        [:##backslash :quote]
+	[:##k :k]  [:##l :m]  [:##semicolon :comma]  [:##quote :period]    [:##return_or_enter :slash]
+	;; numpad
+	[:##5 :7]  [:##6 :8]  [:##7 :9]
+	[:##t :4]  [:##y :5]  [:##u :6]
+	[:##g :1]  [:##h :2]  [:##j :3]
+	[:##b :0]  [:##n :hyphen]  [:##m :equal_sign]
+	;; thumbs
+	[:##z :grave_accent_and_tilde]  [:##x :f13]  [:##c :f14]  [:##v :vk_none]
+	[:##comma :open_bracket]  [:##period :close_bracket]  [:##slash :backslash]
+	;; modifier keys
+	[:!O##spacebar :tab]  [:##right_command :right_shift]  [:##right_option :return_or_enter]
 ]}
-
 ]}
