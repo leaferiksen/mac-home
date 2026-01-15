@@ -18,6 +18,7 @@ export sd="/Volumes/Leafs Media"
 
 # My fun tools
 alias q='qlmanage -p'
+alias ani-cli='ani-cli -q 1080'
 alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
 alias fixapp='xattr -dr com.apple.quarantine'
 alias upb='brew update && brew upgrade --greedy'

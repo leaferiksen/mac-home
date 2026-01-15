@@ -25,7 +25,7 @@ defaults write -g "PMPrintingExpandedStateForPrint" -bool "true"
 # accent colors #
 #################
 # defaults write -g "NSTableViewDefaultSizeMode" -int "3"
-defaults write -g "AppleIconAppearanceTheme" -string "TintedAutomatic"
+defaults write -g "AppleIconAppearanceTheme" -string "RegularAutomatic"
 defaults write -g "NSGlassDiffusionSetting" -bool "yes"
 defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
 defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
@@ -160,11 +160,6 @@ defaults write com.apple.finder "ShowPreviewPane" -bool "true"
 defaults write com.apple.finder "CreateDesktop" -bool "false"
 # soft restart
 killall Finder Dock NotificationCenter
-##########
-# Safari #
-##########
-# Show full URL
-defaults write com.apple.Safari "ShowFullURLInSmartSearchField" -bool "true"
 #####################
 # Spotlight Privacy #
 #####################

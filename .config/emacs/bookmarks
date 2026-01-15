@@ -2,30 +2,18 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("init.el"
-  (filename . "~/.config/emacs/init.el")
-  (front-context-string . ";;; init.el --- ")
-  (rear-context-string)
-  (position . 1)
-  (last-modified 26963 32881 990571 0))
+(("Movies"
+  (filename . "~/Movies/")
+  (front-context-string . "Gundam Trilogy\n ")
+  (rear-context-string . "56 Aug  2  2024 ")
+  (position . 163)
+  (last-modified 26973 63307 817881 0))
 (".config"
  (filename . "~/.config/")
  (front-context-string . "borders\n  drwx--")
  (rear-context-string . "96 Dec 13  2024 ")
  (position . 164)
  (last-modified 26889 43583 80297 0))
-("TV Shows"
- (filename . "/Volumes/Media/TV Shows/")
- (front-context-string . "[HorribleSubs] A")
- (rear-context-string . "6K Feb  8  2025 ")
- (position . 171)
- (last-modified 26888 17304 3476 0))
-("Movies"
- (filename . "/Volumes/Media/Movies/")
- (front-context-string . "Gundam Trilogy\n ")
- (rear-context-string . "56 Aug  2  2024 ")
- (position . 166)
- (last-modified 26888 17298 168646 0))
 ("Git"
  (filename . "~/Git/")
  (front-context-string . "Aseprite\n  drwxr")
