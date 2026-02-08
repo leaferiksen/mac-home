@@ -42,10 +42,18 @@
   :custom (modus-themes-common-palette-overrides '((bg-tab-bar bg-main)
 												   (bg-tab-current bg-active)
 												   (bg-tab-other bg-dim))))
+(setopt markdown-hide-markup t)
 (use-package valign
   :ensure t :vc (:url "https://github.com/casouri/valign")
   :custom (valign-fancy-bar t)
   :hook (markdown-mode))
+(use-package devil
+  :config
+  (global-devil-mode)
+  (add-to-list 'devil-repeatable-keys `("%k v"))
+  (add-to-list 'devil-repeatable-keys `("%k m v"))
+  (add-to-list 'devil-repeatable-keys `("%k m d"))
+  (add-to-list 'devil-repeatable-keys `("%k m m p" "%k m m n" "%k m m b" "%k m m f" "%k m m a" "%k m m e" "%k m m u" "%k m m d" "%k m m t")))
 (use-package devil
   :ensure t :vc (:url "https://github.com/susam/devil")
   :config

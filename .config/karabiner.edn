@@ -20,11 +20,11 @@
 	[:##5 :7]  [:##6 :8]  [:##7 :9]
 	[:##t :4]  [:##y :5]  [:##u :6]
 	[:##g :1]  [:##h :2]  [:##j :3]
-	[:##b :0]  [:##n :hyphen]  [:##m :equal_sign]
-	;; thumbs
-	[:##z :grave_accent_and_tilde]  [:##x :f13]  [:##c :f14]  [:##v :vk_none]
-	[:##comma :open_bracket]  [:##period :close_bracket]  [:##slash :backslash]
-	;; modifier keys
-	[:!O##spacebar :tab]  [:##right_command :right_shift]  [:##right_option :return_or_enter]
+	[:##b :0]  [:##n :equal_sign]  [:##m :hyphen]
+	;; left thumb
+	[:##left_shift :grave_accent_and_tilde]  [:##z :f14]  [:##x :left_shift]  [:##c :f13]  [:##v :vk_none]
+	;; right thumb
+	[:##comma :right_shift]  [:##period :open_bracket]  [:##slash :close_bracket]  [:##right_shift :backslash]
+	[:##right_command :right_control]
 ]}
 ]}

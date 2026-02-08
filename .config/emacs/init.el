@@ -11,6 +11,7 @@
 	(browse-url-generic-program "open")
 	(browse-url-mailto-function 'browse-url-generic)
 	(ns-pop-up-frames nil)
+	(mac-command-modifier 'meta)
 	(mac-option-modifier 'none)
 	(auth-sources '(macos-keychain-generic macos-keychain-internet))))
 (use-package emacs
@@ -18,7 +19,8 @@
   (window-setup-hook . toggle-frame-maximized)
   (ns-system-appearance-change-functions . auto-theme)
   :bind
-  ("s-y" . yt-dlp)
+  ([remap customize] . open-init)
+  ("C-c y" . yt-dlp)
   ("C-<wheel-up>" . nil)
   ("C-<wheel-down>" . nil)
   :custom-face
@@ -55,14 +57,16 @@
   (global-auto-revert-mode t)
   (global-auto-revert-non-file-buffers t)
   (global-visual-line-mode t)
+  (imagemagick-enabled-types t)
   (inhibit-startup-screen t)
   (insert-directory-program "gls")
   (isearch-lazy-count t)
+  (large-file-warning-threshold 1000000000)
   (line-spacing 0.2)
   (major-mode-remap-alist '((sh-mode . bash-ts-mode) (mhtml-mode . html-ts-mode) (css-mode . css-ts-mode) (javascript-mode . js-ts-mode) (dockerfile-mode . dockerfile-ts-mode) (json-mode . json-ts-mode) (yaml-mode . yaml-ts-mode) (lua-mode . lua-ts-mode)))
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not lsp-mode flymake-mode))
-  (modus-themes-common-palette-overrides '((fringe unspecified) (bg-line-number-inactive unspecified) (bg-line-number-active unspecified) (underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified) (border-mode-line-active unspecified) (border-mode-line-inactive unspecified) (fg-heading-1 green) (fg-heading-2 green) (fg-heading-3 green) (fg-heading-4 green) (fg-heading-5 green) (fg-heading-6 green)))
+  (modus-themes-common-palette-overrides '((fringe unspecified) (bg-line-number-inactive unspecified) (bg-line-number-active unspecified) (underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified) (border-mode-line-active unspecified) (border-mode-line-inactive unspecified)))
   (modus-themes-headings '((1 . (2.0)) (2 . (1.6)) (3 . (1.2))))
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
@@ -100,6 +104,10 @@
 (with-eval-after-load 'completion-preview
   (keymap-set completion-preview-active-mode-map "M-n" 'completion-preview-next-candidate)
   (keymap-set completion-preview-active-mode-map "M-p" 'completion-preview-prev-candidate))
+(defun open-init ()
+  "Open ~/.config/emacs/init.el"
+  (interactive)
+  (find-file "~/.config/emacs/init.el"))
 (defun dired-finder-path ()
   "Open Dired in the frontmost Finder window path, if available."
   (interactive)
@@ -123,6 +131,7 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (use-package agent-shell
   :custom
+  (agent-shell-prefer-viewport-interaction t)
   (agent-shell-google-authentication (agent-shell-google-make-authentication :login t))
   :bind
   ("C-c a" . agent-shell-add-region)
@@ -138,13 +147,6 @@
   (use-package csv-align-mode
 	:ensure nil
 	:hook csv-mode))
-(use-package devil
-  :config
-  (global-devil-mode)
-  (add-to-list 'devil-repeatable-keys `("%k v"))
-  (add-to-list 'devil-repeatable-keys `("%k m v"))
-  (add-to-list 'devil-repeatable-keys `("%k m d"))
-  (add-to-list 'devil-repeatable-keys `("%k m m p" "%k m m n" "%k m m b" "%k m m f" "%k m m a" "%k m m e" "%k m m u" "%k m m d" "%k m m t")))
 (use-package nerd-icons-dired)
 (use-package dwim-shell-command
   :config
@@ -190,7 +192,7 @@
   :preface
   (run-at-time nil (* 8 60 60) #'elfeed-update)
   :bind
-  ("s-r" . elfeed)
+  ("C-c r" . elfeed)
   (:map elfeed-search-mode-map
 		("m" . elfeed-search-show-entry))
   :custom
@@ -214,17 +216,19 @@
 (use-package markdown-mode
   :mode
   ("README\\.md\\'" . gfm-mode)
+  :custom-face
+  (markdown-list-face ((t (:family "Maple Mono NF CN"))))
   :custom
-  (markdown-enable-wiki-links t)
-  (markdown-wiki-link-retain-case t)
-  (markdown-hide-markup t)
-  (markdown-unordered-list-item-prefix "- ")
   (markdown-asymmetric-header t)
+  (markdown-enable-wiki-links t)
   (markdown-fontify-code-blocks-natively t)
-  (markdown-special-ctrl-a/e t)
+  (markdown-hide-urls t)
   (markdown-link-space-sub-char " ")
+  (markdown-special-ctrl-a/e t)
+  (markdown-unordered-list-item-prefix "- ")
+  (markdown-wiki-link-retain-case t)
   :config
-  (setopt markdown-mode-hook '(variable-pitch-mode visual-fill-column-mode))
+  (setopt markdown-mode-hook '(variable-pitch-mode visual-fill-column-mode)) ;; adaptive-wrap-prefix-vp-mode
   (defun daily-note ()
 	"Make a new daily note in my obsidian vault"
 	(interactive)
@@ -238,19 +242,24 @@
 	(interactive)
 	(insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
   :bind
-  ("s-d" . daily-note)
+  ("C-c d" . daily-note)
   (:map markdown-mode-map
 		("C-c h" . insert-title)
 		("C-c d" . insert-date)))
 (use-package mines)
 (use-package reader
   :vc
-  (:url "https://codeberg.org/divyaranjan/emacs-reader" :make "all"))
+  (:url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
+  :config
+  (defun fix-reader ()
+	"Recompile Reader Libraries"
+	(interactive)
+	(let ((default-directory "~/.config/emacs/elpa/reader/")) (shell-command "make clean all"))))
 (use-package typo)
 (use-package undo-fu
   :bind
-  ("s-z" . undo-fu-only-undo)
-  ("s-Z" . undo-fu-only-redo))
+  ("M-z" . undo-fu-only-undo)
+  ("M-Z" . undo-fu-only-redo))
 (use-package vterm
   :bind
-  ("s-t" . vterm))
+  ("C-c t" . vterm))
