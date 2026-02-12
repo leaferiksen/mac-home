@@ -1,3 +1,32 @@
+-- Define the remapping from one key to another
+local key_maps = {
+  m = "return",
+  i = "tab",
+}
+-- Define the set of modifiers that will be paired with the 'ctrl' key
+local optional_modifiers = {
+  {},
+  {"cmd"},
+  {"alt"},
+  {"shift"},
+  {"cmd", "alt"},
+  {"cmd", "shift"},
+  {"alt", "shift"},
+  {"cmd", "alt", "shift"},
+}
+-- Create the hotkey bindings dynamically
+for original_key, target_key in pairs(key_maps) do
+  for _, mods in ipairs(optional_modifiers) do
+    -- The trigger hotkey always includes 'ctrl'
+    local trigger_mods = hs.fnutils.copy(mods)
+    table.insert(trigger_mods, "ctrl")
+    -- The resulting keystroke uses only the original optional modifiers
+    hs.hotkey.bind(trigger_mods, original_key, function()
+      hs.eventtap.keyStroke(mods, target_key)
+    end)
+  end
+end
+
 hs.loadSpoon("SpoonInstall")
 Install = spoon.SpoonInstall
 Install.repos.Caffeine = {
@@ -37,31 +66,27 @@ Install:andUse("PaperWM", {
 		spoon.window_filter:rejectApp("java")
 		spoon.window_filter:rejectApp("Keynote")
 		-- list of screens to tile (use % to escape string match characters, like -)
-		-- spoon.window_filter:setScreens({ "Built%-in Retina Display" })
+		spoon.window_filter:setScreens({ "Built%-in Retina Display" })
 	end,
 	start = true,
 	hotkeys = {
 		-- position and resize focused window
 		cycle_width = {"alt", "c"},
+		reverse_cycle_width = {"alt", "x"},
+		-- move focused window into / out of a column
+		slurp_in = {"alt", "i"},
+		barf_out = {"alt", "o"},
 		-- move the focused window into / out of the tiling layer
-		toggle_floating = { "alt", "t" },
-		focus_floating = { "alt", "r" },
+		toggle_floating = {"alt", "t"},
+		focus_floating = {"alt", "s"},
 		-- switch windows by cycling forward/backward
 		-- (forward = down or right, backward = up or left)
-		focus_prev = {"alt", "p"},
-		focus_next = {"alt", "n"},
+		focus_prev = {"alt", "a"},
+		focus_next = {"alt", "e"},
 		-- Switch to a new focused window in tiled grid
 		swap_left = {"alt", "b"},
 		swap_right = {"alt", "f"},
-		-- focus the first / second / etc window in the current space
-		focus_window_1 = {"alt", "1"},
-		focus_window_2 = {"alt", "2"},
-		focus_window_3 = {"alt", "3"},
-		focus_window_4 = {"alt", "4"},
-		focus_window_5 = {"alt", "5"},
-		focus_window_6 = {"alt", "6"},
-		focus_window_7 = {"alt", "7"},
-		focus_window_8 = {"alt", "8"},
-		focus_window_9 = {"alt", "9"},
+		swap_up = {"alt", "p"},
+		swap_down = {"alt", "n"},
 	}
 })

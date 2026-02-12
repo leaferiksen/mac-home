@@ -61,30 +61,6 @@
         "description" : "Colemak Curl/Angle/Extra Wide with Left􀆔 as 􀆝",
         "manipulators" : [ {
           "from" : {
-            "key_code" : "l",
-            "modifiers" : {
-              "mandatory" : [ "control" ],
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "return_or_enter"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
-            "key_code" : "open_bracket",
-            "modifiers" : {
-              "mandatory" : [ "control" ],
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "tab"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
             "key_code" : "grave_accent_and_tilde",
             "modifiers" : {
               "optional" : [ "any" ]
@@ -558,7 +534,7 @@
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "left_shift",
+            "key_code" : "z",
             "modifiers" : {
               "optional" : [ "any" ]
             }
@@ -569,24 +545,13 @@
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "z",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "f14"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
             "key_code" : "x",
             "modifiers" : {
               "optional" : [ "any" ]
             }
           },
           "to" : [ {
-            "key_code" : "left_shift"
+            "key_code" : "f13"
           } ],
           "type" : "basic"
         }, {
@@ -597,7 +562,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "f13"
+            "key_code" : "f14"
           } ],
           "type" : "basic"
         }, {
@@ -619,7 +584,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "right_shift"
+            "key_code" : "open_bracket"
           } ],
           "type" : "basic"
         }, {
@@ -630,23 +595,12 @@
             }
           },
           "to" : [ {
-            "key_code" : "open_bracket"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
-            "key_code" : "slash",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
             "key_code" : "close_bracket"
           } ],
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "right_shift",
+            "key_code" : "slash",
             "modifiers" : {
               "optional" : [ "any" ]
             }
@@ -664,6 +618,17 @@
           },
           "to" : [ {
             "key_code" : "right_control"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "right_option",
+            "modifiers" : {
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "right_shift"
           } ],
           "type" : "basic"
         } ]

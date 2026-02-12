@@ -6,7 +6,7 @@
   (set-fontset-font t nil "SF Pro Display" nil 'append)  ;; Enable SF symbols
   (use-package emacs
 	:bind
-	("s-o" . find-file)
+	("M-o" . find-file)
 	:custom
 	(browse-url-generic-program "open")
 	(browse-url-mailto-function 'browse-url-generic)
@@ -91,6 +91,7 @@
   (visual-fill-column-width 100)
   (which-key-mode t))
 (defalias 'yes-or-no-p 'y-or-n-p)
+(repeat-mode)
 (fido-vertical-mode)
 (auto-insert-mode t)
 (define-auto-insert "\.html" "insert.html")
@@ -184,15 +185,18 @@
 	 "Convert to pdf"
 	 "pandoc --pdf-engine=typst '<<f>>' -o '<<fne>>.pdf'"
 	 :utils ("pandoc" "typst")))
-  (with-eval-after-load 'dired
-	(keymap-set dired-mode-map "e" 'dwim-shell-commands-macos-open-with)
-	(keymap-set dired-mode-map "C-c t" 'dwim-macos-move-to-trash)
-	(keymap-set dired-mode-map "C-c p" 'dwim-convert-to-pdf)))
+  (use-package dired
+	:ensure nil
+	:bind
+	(:map dired-mode-map
+		  ("e" . dwim-shell-commands-macos-open-with)
+		  ("d" . dwim-macos-move-to-trash)
+		  ("x" . dwim-convert-to-pdf))))
 (use-package elfeed
   :preface
   (run-at-time nil (* 8 60 60) #'elfeed-update)
   :bind
-  ("C-c r" . elfeed)
+  ("C-c f" . elfeed)
   (:map elfeed-search-mode-map
 		("m" . elfeed-search-show-entry))
   :custom
@@ -233,19 +237,19 @@
 	"Make a new daily note in my obsidian vault"
 	(interactive)
 	(find-file (concat "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/" (format-time-string "%Y-%m-%d") ".md")))
-  (defun insert-date ()
-	"Insert an atx heading with today's date in iso format."
-	(interactive)
-	(insert "## " (format-time-string "%Y-%m-%d") "\n"))
-  (defun insert-title ()
-	"Insert an atx heading with the name of the file."
+  (defun h1-title ()
+	"Insert an atx level 1 heading with the name of the file."
 	(interactive)
 	(insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
+  (defun h2-today ()
+	"Insert an atx level 2 heading with today's date in iso format."
+	(interactive)
+	(insert "## " (format-time-string "%Y-%m-%d") "\n"))
   :bind
   ("C-c d" . daily-note)
   (:map markdown-mode-map
-		("C-c h" . insert-title)
-		("C-c d" . insert-date)))
+		("C-c h" . h1-title)
+		("C-c d" . h2-date)))
 (use-package mines)
 (use-package reader
   :vc
@@ -262,4 +266,4 @@
   ("M-Z" . undo-fu-only-redo))
 (use-package vterm
   :bind
-  ("C-c t" . vterm))
+  ("C-c v" . vterm))

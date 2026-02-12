@@ -2,5 +2,6 @@
 -o "%(title)s.%(ext)s"
 
 # General
+--write-thumbnail
 --embed-metadata
 --sub-langs "en.*,ja"
