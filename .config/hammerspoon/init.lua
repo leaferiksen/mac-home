@@ -2,6 +2,7 @@
 local key_maps = {
   m = "return",
   i = "tab",
+  h = "delete"
 }
 -- Define the set of modifiers that will be paired with the 'ctrl' key
 local optional_modifiers = {
@@ -66,7 +67,7 @@ Install:andUse("PaperWM", {
 		spoon.window_filter:rejectApp("java")
 		spoon.window_filter:rejectApp("Keynote")
 		-- list of screens to tile (use % to escape string match characters, like -)
-		spoon.window_filter:setScreens({ "Built%-in Retina Display" })
+		-- spoon.window_filter:setScreens({ "Built%-in Retina Display" })
 	end,
 	start = true,
 	hotkeys = {

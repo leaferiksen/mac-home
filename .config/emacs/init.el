@@ -58,6 +58,7 @@
   (global-auto-revert-non-file-buffers t)
   (global-visual-line-mode t)
   (imagemagick-enabled-types t)
+  (ispell-personal-dictionary "~/.config/emacs/ispell-wordbook")
   (inhibit-startup-screen t)
   (insert-directory-program "gls")
   (isearch-lazy-count t)
@@ -82,7 +83,7 @@
   (shr-fill-text nil)
   (shr-inhibit-images t)
   (tab-width 4)
-  (text-mode-hook '(display-line-numbers-mode typo-mode flyspell-mode text-mode-hook-identify))
+  (text-mode-hook '(abbrev-mode display-line-numbers-mode typo-mode flyspell-mode text-mode-hook-identify))
   (tool-bar-mode nil)
   (tooltip-mode nil)
   (use-dialog-box nil)
@@ -158,7 +159,6 @@
       (dwim-shell-command-on-marked-files
        "Move marked files to macOS trash"
        "trash '<<f>>'"
-	   :utils "trash"
        :silent-success t)))
   (defun dwim-npx-http-server ()
 	"npx HTTP serve current directory."
@@ -166,7 +166,6 @@
 	(dwim-shell-command-on-marked-files
 	 "HTTP serve current dir"
 	 "npx http-server -o -p 9999"
-	 :utils "npx"
 	 :focus-now t
 	 :no-progress t))
   (defun dwim-tailwindcss ()
@@ -175,16 +174,15 @@
 	(dwim-shell-command-on-marked-files
 	 "Tailwindcss in current dir"
 	 "npx @tailwindcss/cli -i app.css -o dist.css --watch"
-	 :utils "npx"
 	 :focus-now t
 	 :no-progress t))
   (defun dwim-convert-to-pdf ()
-	"Convert file to pdf via pandoc and typst."
+	"Convert file to pdf via pandoc and typst.
+fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wght].ttf' wght=400"
 	(interactive)
 	(dwim-shell-command-on-marked-files
 	 "Convert to pdf"
-	 "pandoc --pdf-engine=typst '<<f>>' -o '<<fne>>.pdf'"
-	 :utils ("pandoc" "typst")))
+	 "pandoc --pdf-engine=typst --template=/Users/leaf/.config/template.typ '<<f>>' -o '<<fne>>.pdf'"))
   (use-package dired
 	:ensure nil
 	:bind
@@ -260,10 +258,18 @@
 	(interactive)
 	(let ((default-directory "~/.config/emacs/elpa/reader/")) (shell-command "make clean all"))))
 (use-package typo)
+(use-package typst-ts-mode
+  ;; (typst-ts-mc-install-grammar)
+  :vc
+  (:url "https://codeberg.org/meow_king/typst-ts-mode.git")o
+  :mode
+  ("\\.typ\\'" . typst-ts-mode))
 (use-package undo-fu
   :bind
   ("M-z" . undo-fu-only-undo)
   ("M-Z" . undo-fu-only-redo))
 (use-package vterm
   :bind
-  ("C-c v" . vterm))
+  ("C-c v" . vterm)
+  (:map vterm-mode-map
+		("C-q" . vterm-send-next-key)))

@@ -34,7 +34,10 @@ alias l='ls -a --color=auto'
 alias ll='ls -al --color=auto'
 function ml() {mkdir -p "$(pwd)/$@"; l}
 function tl() {touch "$(pwd)/$@"; l}
-
+function uptyp() {
+	cp ~/.config/typst/config.typ ~/.config/typst/template.typ
+	pandoc --print-default-template=typst >> ~/.config/typst/template.typ
+}
 vterm_printf() {
     if [ -n "$TMUX" ] \
         && { [ "${TERM%%-*}" = "tmux" ] \

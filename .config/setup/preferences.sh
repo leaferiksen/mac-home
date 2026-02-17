@@ -32,6 +32,10 @@ defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 defaults write com.apple.universalaccess "differentiateWithoutColor" -bool "true"
 defaults write com.apple.universalaccess "mouseDriverCursorSize" -float "1.5"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
+defaults write com.apple.universalaccess "stickyKey" -bool "true"
+defaults write com.apple.universalaccess "stickyKeyBeepOnModifier" -bool "false"
+defaults write com.apple.universalaccess "useStickyKeysShortcutKeys" -bool "true"
+defaults write com.apple.universalaccess "stickyKeysLocation" -int "1"
 ########################
 # fuck .DS_Store files #
 ########################

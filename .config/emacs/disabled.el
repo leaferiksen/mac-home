@@ -17,22 +17,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (initial-buffer-choice "~/Documents/")
 (trash-directory "~/.Trash")
-;; (setenv "LSP_USE_PLISTS" "true")
-;; (use-package lsp-mode
-;;   :hook
-;;   (html-mode . lsp)
-;;   (css-mode . lsp)
-;;   (js-mode . lsp)
-;;   :custom
-;;   (lsp-enable-indentation nil)
-;;   (lsp-enable-snippet nil)
-;;   (lsp-completion-provider :none)
-;;   :commands lsp)
-;; (use-package lsp-tailwindcss
-;;   :after lsp-mode
-;;   :custom
-;;   (lsp-tailwindcss-add-on-mode t)
-;;   (lsp-tailwindcss-skip-config-check t))
+:config
+(add-to-list 'exec-path "/Users/leaf/.docker/bin")
+(add-to-list 'exec-path "/opt/homebrew/opt/python@3.14/libexec/bin")
+(add-to-list 'exec-path "/opt/homebrew/sbin")
+(add-to-list 'exec-path "/opt/homebrew/bin")
 (use-package epg-config
   :custom (epg-pinentry-mode 'loopback))
 (use-package auth-source
