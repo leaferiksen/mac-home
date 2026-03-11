@@ -15,6 +15,9 @@
 (add-to-list 'default-frame-alist '(undecorated-round . t)) ;; rounded with no title
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define-key key-translation-map (kbd "C-h") (kbd "DEL"))
+(define-key key-translation-map (kbd "C-M-h") (kbd "M-DEL"))
+(define-key key-translation-map (kbd "C-˙") (kbd "M-DEL"))
 (initial-buffer-choice "~/Documents/")
 (trash-directory "~/.Trash")
 :config

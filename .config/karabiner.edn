@@ -1,11 +1,26 @@
-{:main [
+{:applications {:emacs ["^org\\.gnu\\.Emacs$"]
+                :notemacs [;; you can find bundle_identifiers using command line:
+                           ;; osascript -e 'id of app "Google Chrome"'
+                           "^com\\.apple\\.Safari$"
+						   "^com\\.apple\\.Preview$"
+						   "^com\\.apple\\.mail$"
+						   "^com\\.apple\\.finder$"
+						   "^com\\.figma\\.Desktop$"
+                           "^org\\.mozilla\\.firefox$"
+                           "^org\\.mozilla\\.firefoxdeveloperedition$"
+                           "^com\\.google\\.Chrome$"]}
+:main [
 {:des "Toggle dark mode with 􀆹" :rules [
 	[:f6 "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]
 ]}
 {:des "iPhone Mirroring playback with 􀆔􀊉/􀊇/􀊋" :rules [
 	[:!CC##f7 "sh ~/.config/karabiner/iphoneBack.sh"]  [:!CC##f8 "sh ~/.config/karabiner/iphonePlay.sh"]  [:!CC##f9 "sh ~/.config/karabiner/iphoneForward.sh"]
 ]}
-{:des "Colemak Curl/Angle/Extra Wide with Left􀆔 as 􀆝" :rules [
+{:des "Colemak Curl/Angle/Extra Wide with Left􀆔 as 􀆍 and Emacs bindings globally and in the browser" :rules [
+	;; emacs global
+	[:!T##open_bracket :tab]  [:!T##l :return_or_enter]
+	[:!T##i :delete_or_backspace]  [:!Ci :!Cdelete_or_backspace :emacs]
+	[:!T##3 :up_arrow :notemacs]  [:!T##o :down_arrow :notemacs]  [:!T##2 :right_arrow :notemacs]  [:!T##f :left_arrow :notemacs]
 	;; left hand
 	[:##grave_accent_and_tilde :q]  [:##1 :w]  [:##2 :f]  [:##3 :p]  [:##4 :g]
 	[:##tab :a]                     [:##q :r]  [:##w :s]  [:##e :t]  [:##r :d]
@@ -20,9 +35,39 @@
 	[:##g :1]  [:##h :2]  [:##j :3]
 	[:##b :0]  [:##n :equal_sign]  [:##m :hyphen]
 	;; left thumb
-	[:##z :grave_accent_and_tilde]  [:##x :f13]  [:##c :f14]  [:##v :vk_none]
+	[:##z :grave_accent_and_tilde]  [:##x :f13]  [:##c :f14]  [:##v :backslash]
 	;; right thumb
-	[:##comma :open_bracket]  [:##period :close_bracket]  [:##slash :backslash]
-	[:##right_command :right_control]  [:##right_option :right_shift]
+	[:##comma :right_shift]  [:##period :open_bracket]  [:##slash :close_bracket]
+	[:##right_command :left_control]
 ]}
-]}
+]
+}
+
+;; the rule [:!Ca :!T1] means from command a to control 1
+;; :!Ca is keycode :a and prefix a with !C
+
+;; !  | means mandatory
+;; #  | means optional
+;; C  | left_command
+;; T  | left_control
+;; O  | left_option
+;; S  | left_shift
+;; F  | fn
+;; Q  | right_command
+;; W  | right_control
+;; E  | right_option
+;; R  | right_shift
+;; P  | caps_lock
+;; !! | mandatory command + control + optional + shift (hyper)
+;; ## | optional any
+
+;; !CTSequal_sign  | mandatory command control shift =
+;;                 | which is command control +
+;; !O#Sright_arrow | mandatory option optional left shift right_arrow
+
+;; karabiner definition of mandatory and optional
+;; https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/modifiers/
+
+;; rule [<from> <to>]
+;; if simplified modifier is used in <to>, optional(#) definition will be
+;; ignored.

@@ -7,6 +7,8 @@
   (use-package emacs
 	:bind
 	("M-o" . find-file)
+	("C-c h" . ns-do-hide-emacs)
+	("C-c ˙" . ns-do-hide-others)
 	:custom
 	(browse-url-generic-program "open")
 	(browse-url-mailto-function 'browse-url-generic)
@@ -20,13 +22,15 @@
   (ns-system-appearance-change-functions . auto-theme)
   :bind
   ([remap customize] . open-init)
+  ("C-c ," . open-init)
   ("C-c y" . yt-dlp)
   ("C-<wheel-up>" . nil)
   ("C-<wheel-down>" . nil)
+  ("C-c c" . ispell-word)
   :custom-face
   (default ((t (:family "Maple Mono NF CN" :height 140))))
   (fixed-pitch ((t (:family "Maple Mono NF CN" :height 140))))
-  (variable-pitch ((t (:family "New York" :height 180))))
+  (variable-pitch ((t (:family "Atkinson Hyperlegible Next" :height 180)))) ;; or New York
   :custom
   (auto-insert-directory "~/.config/emacs/templates/")
   (auto-insert-query nil)
@@ -48,6 +52,7 @@
   (dired-omit-files	"^~\\$[^/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
   (disabled-command-function nil)
   (display-line-numbers-type 'relative)
+  (display-line-numbers-width-start 3)
   (editorconfig-mode t)
   (electric-pair-mode t)
   (find-file-visit-truename t)
@@ -71,7 +76,6 @@
   (modus-themes-headings '((1 . (2.0)) (2 . (1.6)) (3 . (1.2))))
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
-  (pixel-scroll-precision-mode t)
   (prog-mode-hook '(display-line-numbers-mode completion-preview-mode))
   (project-mode-line t)
   (project-vc-extra-root-markers '("project"))
@@ -90,8 +94,11 @@
   (use-package-always-ensure t)
   (visual-fill-column-center-text t)
   (visual-fill-column-width 100)
-  (which-key-mode t))
+  (which-key-mode t)
+  (word-wrap-by-category t))
 (defalias 'yes-or-no-p 'y-or-n-p)
+(define-key key-translation-map (kbd "M-r") (kbd "C-x r"))
+(define-key key-translation-map (kbd "M-o") (kbd "C-x o"))
 (repeat-mode)
 (fido-vertical-mode)
 (auto-insert-mode t)
@@ -110,6 +117,14 @@
   "Open ~/.config/emacs/init.el"
   (interactive)
   (find-file "~/.config/emacs/init.el"))
+(defun unfill-paragraph ()
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-paragraph nil)))
+(defun unfill-region ()
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-region (region-beginning) (region-end) nil)))
 (defun dired-finder-path ()
   "Open Dired in the frontmost Finder window path, if available."
   (interactive)
@@ -135,9 +150,10 @@
   :custom
   (agent-shell-prefer-viewport-interaction t)
   (agent-shell-google-authentication (agent-shell-google-make-authentication :login t))
+  (agent-shell-anthropic-authentication (agent-shell-anthropic-make-authentication :login t))
   :bind
   ("C-c a" . agent-shell-add-region)
-  ("C-c g" . agent-shell-google-start-gemini))
+  ("C-c s" . agent-shell))
 (use-package apheleia
   :custom
   (apheleia-global-mode t))
@@ -182,7 +198,7 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
 	(interactive)
 	(dwim-shell-command-on-marked-files
 	 "Convert to pdf"
-	 "pandoc --pdf-engine=typst --template=/Users/leaf/.config/template.typ '<<f>>' -o '<<fne>>.pdf'"))
+	 "pandoc --pdf-engine=typst --template=/Users/leaf/.config/typst/template.typ '<<f>>' -o '<<fne>>.pdf'"))
   (use-package dired
 	:ensure nil
 	:bind
@@ -196,10 +212,11 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   :bind
   ("C-c f" . elfeed)
   (:map elfeed-search-mode-map
+		("f" . elfeed-search-show-entry)
 		("m" . elfeed-search-show-entry))
   :custom
   (elfeed-search-filter "@1-month-ago +unread")
-  (elfeed-feeds '(("https://www.kosatenmag.com/home?format=rss" anime) ("https://catandgirl.com/feed/" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://thesecretknots.com/feed/" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.smbc-comics.com/comic/rss" comics) ("http://danluu.com/atom.xml" design) ("https://buttondown.com/monteiro/rss" design) ("https://css-tricks.com/feed/" design) ("https://localghost.dev/feed.xml" design) ("https://piccalil.li/feed.xml" design) ("https://rachelandrew.co.uk/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://enikofox.com/feed.xml" gaming) ("https://modmagazine.net/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://acidiclight.dev/rss.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://blog.xfce.org/feed" linux) ("https://blogs.kde.org/index.xml" linux) ("https://carlschwan.eu/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://thelibre.news/rss/" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://anhvn.com/feed.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://blogsystem5.substack.com/feed" journals) ("https://carsonellis.substack.com/feed" journals) ("https://daverupert.com/atom.xml" journals) ("https://hypercritical.co/feeds/main" journals) ("https://indi.ca/rss/" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://wokescientist.substack.com/feed" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://www.tinylogger.com/90koil/rss" journals) ("https://www.wordsbywes.ink/feed.xml" journals))))
+  (elfeed-feeds '(("https://www.kosatenmag.com/home?format=rss" anime) ("https://catandgirl.com/feed/" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://thesecretknots.com/feed/" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.smbc-comics.com/comic/rss" comics) ("http://danluu.com/atom.xml" design) ("https://buttondown.com/monteiro/rss" design) ("https://css-tricks.com/feed/" design) ("https://localghost.dev/feed.xml" design) ("https://piccalil.li/feed.xml" design) ("https://rachelandrew.co.uk/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://enikofox.com/feed.xml" gaming) ("https://modmagazine.net/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://acidiclight.dev/rss.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://blog.xfce.org/feed" linux) ("https://blogs.kde.org/index.xml" linux) ("https://carlschwan.eu/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://thelibre.news/rss/" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://ladybird.org/posts.rss") ("https://anhvn.com/feed.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://blogsystem5.substack.com/feed" journals) ("https://carsonellis.substack.com/feed" journals) ("https://daverupert.com/atom.xml" journals) ("https://hypercritical.co/feeds/main" journals) ("https://indi.ca/rss/" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://wokescientist.substack.com/feed" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://www.tinylogger.com/90koil/rss" journals) ("https://www.wordsbywes.ink/feed.xml" journals))))
 (use-package elfeed-webkit
   :demand
   :config
@@ -219,13 +236,13 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   :mode
   ("README\\.md\\'" . gfm-mode)
   :custom-face
-  (markdown-list-face ((t (:family "Maple Mono NF CN"))))
+  (markdown-list-face ((t (:family "Atkinson Hyperlegible Mono"))))
   :custom
   (markdown-asymmetric-header t)
   (markdown-enable-wiki-links t)
   (markdown-fontify-code-blocks-natively t)
   (markdown-hide-urls t)
-  (markdown-link-space-sub-char " ")
+  (markdown-link-space-sub-char " ") ;; Follow link style of Obsidian
   (markdown-special-ctrl-a/e t)
   (markdown-unordered-list-item-prefix "- ")
   (markdown-wiki-link-retain-case t)
@@ -246,8 +263,10 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   :bind
   ("C-c d" . daily-note)
   (:map markdown-mode-map
-		("C-c h" . h1-title)
-		("C-c d" . h2-date)))
+        :prefix "C-c SPC"
+        :prefix-map my-markdown-map
+        ("1" . h1-title)
+		("2" . h2-today)))
 (use-package mines)
 (use-package reader
   :vc

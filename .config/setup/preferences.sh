@@ -13,17 +13,13 @@ defaults write -g "NSZoomButtonShowMenu" -bool "false"
 defaults write com.apple.GameController "bluetoothPrefsMenuLongPressAction" -int "0"
 # use analogue clock
 defaults write com.apple.menuextra.clock "IsAnalog" -bool "true"
-##################################################
-# Expanded Save/Print Modals and file extensions #
-##################################################
+# Expanded Save/Print Modals and file extensions
 defaults write -g "AppleShowAllExtensions" -bool "true"
 defaults write -g "NSDocumentSaveNewDocumentsToCloud" -bool "false"
 defaults write -g "NSNavPanelExpandedStateForSaveMode" -bool "true"
 defaults write -g "NSNavPanelExpandedStateForSaveMode2" -bool "true"
 defaults write -g "PMPrintingExpandedStateForPrint" -bool "true"
-#################
-# accent colors #
-#################
+# accent colors
 # defaults write -g "NSTableViewDefaultSizeMode" -int "3"
 defaults write -g "AppleIconAppearanceTheme" -string "RegularAutomatic"
 defaults write -g "NSGlassDiffusionSetting" -bool "yes"
@@ -32,13 +28,11 @@ defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
 defaults write com.apple.universalaccess "differentiateWithoutColor" -bool "true"
 defaults write com.apple.universalaccess "mouseDriverCursorSize" -float "1.5"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
-defaults write com.apple.universalaccess "stickyKey" -bool "true"
-defaults write com.apple.universalaccess "stickyKeyBeepOnModifier" -bool "false"
-defaults write com.apple.universalaccess "useStickyKeysShortcutKeys" -bool "true"
-defaults write com.apple.universalaccess "stickyKeysLocation" -int "1"
-########################
-# fuck .DS_Store files #
-########################
+# defaults write com.apple.universalaccess "stickyKey" -bool "true"
+# defaults write com.apple.universalaccess "stickyKeyBeepOnModifier" -bool "false"
+# defaults write com.apple.universalaccess "useStickyKeysShortcutKeys" -bool "true"
+# defaults write com.apple.universalaccess "stickyKeysLocation" -int "1"
+# less .DS_Store files
 defaults write com.apple.desktopservices "DSDontWriteUSBStores" -bool "true"
 defaults write com.apple.desktopservices "DSDontWriteNetworkStores" -bool "true"
 # trackpad cmd+ctrl+three-finger drag
@@ -55,9 +49,7 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourF
 # defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
 # keyboard navigation
 defaults write -g "AppleKeyboardUIMode" -int "2"
-########################################################
-# disable dock, screensaver hot corner and quick notes #
-########################################################
+# disable dock, screensaver hot corner and quick notes
 defaults write com.apple.dock "autohide" -bool "true"
 defaults write com.apple.dock "autohide-delay" -float "1000"
 defaults write com.apple.dock "enable-spring-load-actions-on-all-items" -bool "true"

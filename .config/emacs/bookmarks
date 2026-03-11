@@ -3,11 +3,11 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("Movies"
-  (filename . "~/Movies/")
-  (front-context-string . "Gundam Trilogy\n ")
-  (rear-context-string . "56 Aug  2  2024 ")
-  (position . 163)
-  (last-modified 26973 63307 817881 0))
+ (filename . "~/Movies/")
+ (front-context-string . "Gundam Trilogy\n ")
+ (rear-context-string . "56 Aug  2  2024 ")
+ (position . 163)
+ (last-modified 26973 63307 817881 0))
 (".config"
  (filename . "~/.config/")
  (front-context-string . "borders\n  drwx--")

@@ -1,33 +1,3 @@
--- Define the remapping from one key to another
-local key_maps = {
-  m = "return",
-  i = "tab",
-  h = "delete"
-}
--- Define the set of modifiers that will be paired with the 'ctrl' key
-local optional_modifiers = {
-  {},
-  {"cmd"},
-  {"alt"},
-  {"shift"},
-  {"cmd", "alt"},
-  {"cmd", "shift"},
-  {"alt", "shift"},
-  {"cmd", "alt", "shift"},
-}
--- Create the hotkey bindings dynamically
-for original_key, target_key in pairs(key_maps) do
-  for _, mods in ipairs(optional_modifiers) do
-    -- The trigger hotkey always includes 'ctrl'
-    local trigger_mods = hs.fnutils.copy(mods)
-    table.insert(trigger_mods, "ctrl")
-    -- The resulting keystroke uses only the original optional modifiers
-    hs.hotkey.bind(trigger_mods, original_key, function()
-      hs.eventtap.keyStroke(mods, target_key)
-    end)
-  end
-end
-
 hs.loadSpoon("SpoonInstall")
 Install = spoon.SpoonInstall
 Install.repos.Caffeine = {
@@ -57,7 +27,7 @@ Install:andUse("PaperWM", {
 		spoon.window_filter:rejectApp("iPhone Mirroring")
 		spoon.window_filter:rejectApp("Shortcuts")
 		spoon.window_filter:rejectApp("Messages")
-		spoon.window_filter:rejectApp("Facetime")
+		-- spoon.window_filter:rejectApp("Facetime")
 		spoon.window_filter:rejectApp("Stickies")
 		spoon.window_filter:rejectApp("Minecraft")
 		spoon.window_filter:rejectApp("IINA")
