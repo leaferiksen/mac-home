@@ -36,6 +36,8 @@ Install:andUse("PaperWM", {
 		spoon.window_filter:rejectApp("LuLu")
 		spoon.window_filter:rejectApp("java")
 		spoon.window_filter:rejectApp("Keynote")
+		-- ignore a specific window of an app
+		spoon.window_filter:setAppFilter("Music", { rejectTitles = "MiniPlayer" })
 		-- list of screens to tile (use % to escape string match characters, like -)
 		-- spoon.window_filter:setScreens({ "Built%-in Retina Display" })
 	end,

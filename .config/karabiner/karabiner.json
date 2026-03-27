@@ -8,6 +8,17 @@
         "basic.to_if_held_down_threshold_milliseconds" : 500
       },
       "rules" : [ {
+        "description" : "Clear F5",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "f5"
+          },
+          "to" : [ {
+            "key_code" : "f18"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
         "description" : "Toggle dark mode with 􀆹",
         "manipulators" : [ {
           "from" : {
@@ -667,7 +678,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "f13"
+            "key_code" : "f19"
           } ],
           "type" : "basic"
         }, {
@@ -678,7 +689,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "f14"
+            "key_code" : "f20"
           } ],
           "type" : "basic"
         }, {
@@ -739,14 +750,6 @@
         } ]
       } ]
     },
-    "devices" : [ {
-      "identifiers" : {
-        "is_keyboard" : true,
-        "product_id" : 4423,
-        "vendor_id" : 10462
-      },
-      "ignore" : true
-    } ],
     "name" : "Default",
     "selected" : true,
     "virtual_hid_keyboard" : {

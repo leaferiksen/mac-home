@@ -10,6 +10,9 @@
                            "^org\\.mozilla\\.firefoxdeveloperedition$"
                            "^com\\.google\\.Chrome$"]}
 :main [
+{:des "Clear F5" :rules [
+	[:f5 :f18]
+]}
 {:des "Toggle dark mode with 􀆹" :rules [
 	[:f6 "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]
 ]}
@@ -35,7 +38,7 @@
 	[:##g :1]  [:##h :2]  [:##j :3]
 	[:##b :0]  [:##n :equal_sign]  [:##m :hyphen]
 	;; left thumb
-	[:##z :grave_accent_and_tilde]  [:##x :f13]  [:##c :f14]  [:##v :backslash]
+	[:##z :grave_accent_and_tilde]  [:##x :f19]  [:##c :f20]  [:##v :backslash]
 	;; right thumb
 	[:##comma :right_shift]  [:##period :open_bracket]  [:##slash :close_bracket]
 	[:##right_command :left_control]

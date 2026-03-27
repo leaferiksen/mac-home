@@ -171,9 +171,9 @@ defaults write com.superultra.Homerow "check-for-updates-automatically" -bool "f
 defaults write com.superultra.Homerow "is-scroll-shortcuts-enabled" -bool "false"
 defaults write com.superultra.Homerow "label-characters" -string "arstgmneio"
 defaults write com.superultra.Homerow "label-font-size" -float "12"
-defaults write com.superultra.Homerow "non-search-shortcut" -string "F13"
+defaults write com.superultra.Homerow "non-search-shortcut" -string "F19"
 defaults write com.superultra.Homerow "scroll-keys" -string "bnpf"
-defaults write com.superultra.Homerow "scroll-shortcut" -string "F14"
+defaults write com.superultra.Homerow "scroll-shortcut" -string "F20"
 defaults write com.superultra.Homerow "search-shortcut" -string ""
 ##############
 # Pure Paste #

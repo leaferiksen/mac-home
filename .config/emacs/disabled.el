@@ -12,7 +12,8 @@
     (setenv "PATH" (concat brew-prefix ":" (getenv "PATH")))
     (add-to-list 'exec-path brew-prefix)))
 ;; Fix for Native Comp (AOT) linker errors on macOS GUI launch;
-(add-to-list 'default-frame-alist '(undecorated-round . t)) ;; rounded with no title
+(add-to-list 'default-frame-alist '(undecorated . t))
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define-key key-translation-map (kbd "C-h") (kbd "DEL"))
@@ -25,6 +26,10 @@
 (add-to-list 'exec-path "/opt/homebrew/opt/python@3.14/libexec/bin")
 (add-to-list 'exec-path "/opt/homebrew/sbin")
 (add-to-list 'exec-path "/opt/homebrew/bin")
+(use-package calle24
+  ;; (calle24-install)
+  :config
+  (add-to-list 'image-load-path (expand-file-name "~/.config/emacs/calle24/images/")))
 (use-package epg-config
   :custom (epg-pinentry-mode 'loopback))
 (use-package auth-source

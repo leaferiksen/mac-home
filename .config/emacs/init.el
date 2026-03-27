@@ -1,8 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 
 (when (memq system-type '(darwin))
-  ;; (add-to-list 'default-frame-alist '(undecorated . t))
-  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+  (add-to-list 'default-frame-alist '(undecorated-round . t)) ;; rounded with no title
   (set-fontset-font t nil "SF Pro Display" nil 'append)  ;; Enable SF symbols
   (use-package emacs
 	:bind
@@ -27,6 +26,8 @@
   ("C-<wheel-up>" . nil)
   ("C-<wheel-down>" . nil)
   ("C-c c" . ispell-word)
+  ("M-[" . backward-paragraph)
+  ("M-]" . forward-paragraph)
   :custom-face
   (default ((t (:family "Maple Mono NF CN" :height 140))))
   (fixed-pitch ((t (:family "Maple Mono NF CN" :height 140))))
@@ -137,7 +138,9 @@
 (defun auto-theme (appearance)
   "Load theme, taking current system APPEARANCE into consideration."
   (mapc #'disable-theme custom-enabled-themes)
-  (pcase appearance ('light (load-theme 'modus-operandi-tinted t)) ('dark (load-theme 'modus-vivendi-tinted t))))
+  (pcase appearance
+	('light (load-theme 'modus-operandi-tinted t) (calle24-refresh-appearance))
+	('dark (load-theme 'modus-vivendi-tinted t) (calle24-refresh-appearance))))
 (defun yt-dlp (url)
   "Download the audio, video, or video with subs from a given URL."
   (interactive "sEnter media source URL: ")
@@ -147,10 +150,6 @@
 		  ((string-equal choice "subtitled video") (async-shell-command (format "yt-dlp --write-subs \"%s\"" url))))))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (use-package agent-shell
-  :custom
-  (agent-shell-prefer-viewport-interaction t)
-  (agent-shell-google-authentication (agent-shell-google-make-authentication :login t))
-  (agent-shell-anthropic-authentication (agent-shell-anthropic-make-authentication :login t))
   :bind
   ("C-c a" . agent-shell-add-region)
   ("C-c s" . agent-shell))
@@ -160,7 +159,7 @@
 (use-package csv-mode
   :custom
   (csv-align-padding 2)
-  (csv-align-max-width 80)
+  (csv-align-max-width 72)
   :config
   (use-package csv-align-mode
 	:ensure nil
@@ -216,7 +215,7 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
 		("m" . elfeed-search-show-entry))
   :custom
   (elfeed-search-filter "@1-month-ago +unread")
-  (elfeed-feeds '(("https://www.kosatenmag.com/home?format=rss" anime) ("https://catandgirl.com/feed/" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://thesecretknots.com/feed/" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.smbc-comics.com/comic/rss" comics) ("http://danluu.com/atom.xml" design) ("https://buttondown.com/monteiro/rss" design) ("https://css-tricks.com/feed/" design) ("https://localghost.dev/feed.xml" design) ("https://piccalil.li/feed.xml" design) ("https://rachelandrew.co.uk/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://enikofox.com/feed.xml" gaming) ("https://modmagazine.net/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://acidiclight.dev/rss.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://blog.xfce.org/feed" linux) ("https://blogs.kde.org/index.xml" linux) ("https://carlschwan.eu/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://kde.org/index.xml" linux) ("https://lxqt-project.org/feed.xml" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://thelibre.news/rss/" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://ladybird.org/posts.rss") ("https://anhvn.com/feed.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://blogsystem5.substack.com/feed" journals) ("https://carsonellis.substack.com/feed" journals) ("https://daverupert.com/atom.xml" journals) ("https://hypercritical.co/feeds/main" journals) ("https://indi.ca/rss/" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://wokescientist.substack.com/feed" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://www.tinylogger.com/90koil/rss" journals) ("https://www.wordsbywes.ink/feed.xml" journals))))
+  (elfeed-feeds '(("https://www.kosatenmag.com/home?format=rss" anime) ("https://catandgirl.com/feed/" comics) ("https://existentialcomics.com/rss.xml" comics) ("https://feeds.feedburner.com/nerfnow/full" comics) ("https://thesecretknots.com/feed/" comics) ("https://todon.eu/@PinkWug.rss" comics) ("https://www.berkeleymews.com/feed/" comics) ("https://www.davidrevoy.com/feed/en/rss" comics) ("https://www.penny-arcade.com/feed" comics) ("https://www.smbc-comics.com/comic/rss" comics) ("http://danluu.com/atom.xml" design) ("https://buttondown.com/monteiro/rss" design) ("https://css-tricks.com/feed/" design) ("https://localghost.dev/feed.xml" design) ("https://piccalil.li/feed.xml" design) ("https://rachelandrew.co.uk/feed/" design) ("https://www.smashingmagazine.com/feed/" design) ("https://enikofox.com/feed.xml" gaming) ("https://modmagazine.net/feed.xml" gaming) ("https://panic.com/blog/feed/" gaming) ("https://remapradio.com/rss/" gaming) ("https://tomorrowcorporation.com/feed" gaming) ("https://www.codeweavers.com/blog/?rss=1" gaming) ("https://acidiclight.dev/rss.xml" linux) ("https://asahilinux.org/blog/index.xml" linux) ("https://blog.fyralabs.com/rss/" linux) ("https://blog.xfce.org/feed" linux) ("https://carlschwan.eu/index.xml" linux) ("https://coffee-and-dreams.uk/feed.xml" linux) ("https://drewdevault.com/blog/index.xml" linux) ("https://fireborn.mataroa.blog/rss/" linux) ("https://rabbitictranslator.com/blog/index.xml" linux) ("https://rosenzweig.io/feed.xml" linux) ("https://theevilskeleton.gitlab.io/feed.xml" linux) ("https://thelibre.news/rss/" linux) ("https://www.ypsidanger.com/rss/" linux) ("https://ladybird.org/posts.rss") ("https://anhvn.com/feed.xml" journals) ("https://annas-archive.li/blog/rss.xml" journals) ("https://blogsystem5.substack.com/feed" journals) ("https://carsonellis.substack.com/feed" journals) ("https://daverupert.com/atom.xml" journals) ("https://hypercritical.co/feeds/main" journals) ("https://indi.ca/rss/" journals) ("https://ryanleetaylor.com/rss.xml" journals) ("https://themkat.net/feed.xml" journals) ("https://tnywndr.cafe/index.xml" journals) ("https://wokescientist.substack.com/feed" journals) ("https://www.jessesquires.com/feed.xml" journals) ("https://www.tinylogger.com/90koil/rss" journals) ("https://www.wordsbywes.ink/feed.xml" journals))))
 (use-package elfeed-webkit
   :demand
   :config
@@ -248,6 +247,26 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   (markdown-wiki-link-retain-case t)
   :config
   (setopt markdown-mode-hook '(variable-pitch-mode visual-fill-column-mode)) ;; adaptive-wrap-prefix-vp-mode
+  ;; Handle wiki links with explicit file extensions
+  ;; e.g., [[example.mp4]] opens example.mp4 directly, not example.mp4.md
+  (advice-add 'markdown-convert-wiki-link-to-filename :around
+			  (lambda (orig-fn name)
+				"Convert NAME to filename. If NAME has explicit extension, use it directly."
+				(if (file-name-extension name)
+					(replace-regexp-in-string "[[:space:]\n]" markdown-link-space-sub-char name)
+				  (funcall orig-fn name))))
+  ;; Override markdown-follow-wiki-link to not force markdown-mode on opened files
+  ;; This allows files opened via wikilinks to use their correct major mode
+  ;; (e.g., csv-mode for .csv files, python-mode for .py files, etc.)
+  (advice-add 'markdown-follow-wiki-link :override
+			  (lambda (name &optional other)
+				"Follow the wiki link NAME, respecting buffer's major mode."
+				(unless buffer-file-name
+				  (user-error "Must be visiting a file"))
+				(when other (other-window 1))
+				(let ((default-directory (file-name-directory buffer-file-name)))
+				  (find-file (markdown-convert-wiki-link-to-filename name)))))
+  
   (defun daily-note ()
 	"Make a new daily note in my obsidian vault"
 	(interactive)
@@ -276,6 +295,19 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
 	"Recompile Reader Libraries"
 	(interactive)
 	(let ((default-directory "~/.config/emacs/elpa/reader/")) (shell-command "make clean all"))))
+(use-package spacious-padding
+  :config
+  (spacious-padding-mode)
+  :custom
+  (spacious-padding-widths
+   '( :internal-border-width 15
+      :header-line-width 4
+      :mode-line-width 4
+      :custom-button-width 3
+      :tab-width 4
+      :right-divider-width 30
+      :scroll-bar-width 8
+      :fringe-width 0)))
 (use-package typo)
 (use-package typst-ts-mode
   ;; (typst-ts-mc-install-grammar)

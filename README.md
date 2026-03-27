@@ -55,7 +55,7 @@ chmod -R +w /opt/homebrew && \
 ```
 Spotlight → Full Disk Access → remove Terminal
 
-Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [AlDente](https://apphousekitchen.com/aldente-overview/), [LuLu](https://objective-see.org/products/lulu.html) and [Wacom Drivers](https://www.wacom.com/en-us/support/product-support/drivers) manually.
+Download [Karabiner Elements](https://karabiner-elements.pqrs.org/) and [Wacom Drivers](https://www.wacom.com/en-us/support/product-support/drivers) manually.
 
 ## Set these by hand
 
@@ -98,6 +98,8 @@ Download [Karabiner Elements](https://karabiner-elements.pqrs.org/), [AlDente](h
 - Mapping → **☑ Show advanced options**
 - Mapping → Tablet area → Use custom area... → **11784 by 18144** (6 * screen resolution)
 - Osu! custom area → **2700 by 4320** (a fifth of the tablet resolution)
+
+## Commands to set up third party apps
 
 ### Ryujinx
 
