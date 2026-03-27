@@ -135,12 +135,28 @@
   "Amend the previous commit title."
   (interactive)
   (vc-checkin nil 'git) (vc-git-log-edit-toggle-amend))
+(defun block-media-file-handler (operation &rest args)
+  "Block media files before they're read."
+  (pcase operation
+    ((or 'insert-file-contents 'load)
+     (signal 'file-error (list "Media files cannot be opened in Emacs" (car args))))
+    ('file-readable-p nil)
+    (_ (let ((inhibit-file-name-handlers
+              (cons 'block-media-file-handler
+					(and (eq inhibit-file-name-operation operation)
+                         inhibit-file-name-handlers)))
+             (inhibit-file-name-operation operation))
+         (apply operation args)))))
+(mapc (lambda (ext)
+        (add-to-list 'file-name-handler-alist
+                     (cons (concat "\\." ext "\\'") 'block-media-file-handler)))
+      '("mp3" "mp4" "wav" "flac" "aac" "m4a" "opus" "mkv" "webm" "mov" "avi" "aiff" "ogg" "wma"))
 (defun auto-theme (appearance)
   "Load theme, taking current system APPEARANCE into consideration."
   (mapc #'disable-theme custom-enabled-themes)
   (pcase appearance
-	('light (load-theme 'modus-operandi-tinted t) (calle24-refresh-appearance))
-	('dark (load-theme 'modus-vivendi-tinted t) (calle24-refresh-appearance))))
+	('light (load-theme 'modus-operandi-tinted t))
+	('dark (load-theme 'modus-vivendi-tinted t))))
 (defun yt-dlp (url)
   "Download the audio, video, or video with subs from a given URL."
   (interactive "sEnter media source URL: ")
@@ -229,6 +245,13 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   :config
   (exec-path-from-shell-initialize))
 (use-package hackernews)
+(use-package html-ts-mode
+  :bind
+  (:map html-mode-map
+        :prefix "C-c SPC"
+        :prefix-map my-html-map
+        ("h" . dwim-npx-http-server)
+		("t" . dwim-tailwindcss)))
 (use-package lorem-ipsum)
 (use-package lua-mode)
 (use-package markdown-mode
@@ -312,7 +335,7 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
 (use-package typst-ts-mode
   ;; (typst-ts-mc-install-grammar)
   :vc
-  (:url "https://codeberg.org/meow_king/typst-ts-mode.git")o
+  (:url "https://codeberg.org/meow_king/typst-ts-mode.git")
   :mode
   ("\\.typ\\'" . typst-ts-mode))
 (use-package undo-fu
