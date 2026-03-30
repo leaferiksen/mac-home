@@ -26,6 +26,10 @@
 (add-to-list 'exec-path "/opt/homebrew/opt/python@3.14/libexec/bin")
 (add-to-list 'exec-path "/opt/homebrew/sbin")
 (add-to-list 'exec-path "/opt/homebrew/bin")
+(use-package vterm
+  :bind
+  (:map vterm-mode-map
+		("C-q" . vterm-send-next-key)))
 (use-package calle24
   ;; (calle24-install)
   :config

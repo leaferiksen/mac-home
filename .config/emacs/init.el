@@ -63,13 +63,11 @@
   (global-auto-revert-mode t)
   (global-auto-revert-non-file-buffers t)
   (global-visual-line-mode t)
-  (imagemagick-enabled-types t)
   (ispell-personal-dictionary "~/.config/emacs/ispell-wordbook")
   (inhibit-startup-screen t)
   (insert-directory-program "gls")
   (isearch-lazy-count t)
   (large-file-warning-threshold 1000000000)
-  (line-spacing 0.2)
   (major-mode-remap-alist '((sh-mode . bash-ts-mode) (mhtml-mode . html-ts-mode) (css-mode . css-ts-mode) (javascript-mode . js-ts-mode) (dockerfile-mode . dockerfile-ts-mode) (json-mode . json-ts-mode) (yaml-mode . yaml-ts-mode) (lua-mode . lua-ts-mode)))
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not lsp-mode flymake-mode))
@@ -103,6 +101,7 @@
 (repeat-mode)
 (fido-vertical-mode)
 (auto-insert-mode t)
+(add-to-list 'imagemagick-enabled-types 'JXL)
 (define-auto-insert "\.html" "insert.html")
 (define-auto-insert "\.js" "insert.js")
 (add-hook 'html-mode-hook 'eglot-ensure)
@@ -172,6 +171,16 @@
 (use-package apheleia
   :custom
   (apheleia-global-mode t))
+(use-package appine
+  :vc (:url "https://github.com/chaoswork/appine")
+  :defer t  
+  :custom
+  ;; enables opening URLs and files with Appine, default is nil
+  (appine-use-for-org-links t)
+  ;; bind any prefix you like
+  :bind (("C-x a a" . appine)
+         ("C-x a u" . appine-open-url)
+         ("C-x a o" . appine-open-file)))
 (use-package csv-mode
   :custom
   (csv-align-padding 2)
@@ -244,6 +253,12 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   (memq window-system '(ns x))
   :config
   (exec-path-from-shell-initialize))
+(use-package gterm
+  :vc (:url "https://github.com/rwc9u/emacs-libgterm" :branch "main")
+  :init
+  (setq gterm-always-compile-module t)
+  :bind
+  ("C-c v" . gterm))
 (use-package hackernews)
 (use-package html-ts-mode
   :bind
@@ -342,8 +357,3 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   :bind
   ("M-z" . undo-fu-only-undo)
   ("M-Z" . undo-fu-only-redo))
-(use-package vterm
-  :bind
-  ("C-c v" . vterm)
-  (:map vterm-mode-map
-		("C-q" . vterm-send-next-key)))
