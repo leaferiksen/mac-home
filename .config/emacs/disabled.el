@@ -21,7 +21,6 @@
 (define-key key-translation-map (kbd "C-˙") (kbd "M-DEL"))
 (initial-buffer-choice "~/Documents/")
 (trash-directory "~/.Trash")
-:config
 (add-to-list 'exec-path "/Users/leaf/.docker/bin")
 (add-to-list 'exec-path "/opt/homebrew/opt/python@3.14/libexec/bin")
 (add-to-list 'exec-path "/opt/homebrew/sbin")
@@ -29,7 +28,7 @@
 (use-package vterm
   :bind
   (:map vterm-mode-map
-		("C-q" . vterm-send-next-key)))
+	("C-q" . vterm-send-next-key)))
 (use-package calle24
   ;; (calle24-install)
   :config
@@ -41,8 +40,8 @@
 (use-package ef-themes
   :ensure t :vc (:url "https://github.com/protesilaos/ef-themes")
   :custom (modus-themes-common-palette-overrides '((bg-tab-bar bg-main)
-												   (bg-tab-current bg-active)
-												   (bg-tab-other bg-dim))))
+						   (bg-tab-current bg-active)
+						   (bg-tab-other bg-dim))))
 (setopt markdown-hide-markup t)
 (use-package valign
   :ensure t :vc (:url "https://github.com/casouri/valign")
@@ -65,10 +64,10 @@
   (add-to-list 'devil-special-keys `(". RET" . ,(devil-key-executor ". RET")))
   (add-to-list 'devil-special-keys `(". <return>" . ,(devil-key-executor ". <return>")))
   :custom ((devil-translations '((", z" . "C-") (". z" . "M-") (", ," . ",") (". ." . ".") ("," . "C-") ("." . "M-")))
-		   (devil-repeatable-keys '(("%k d") ("%k k") (". ^") (", v") (". v") (", x o")
-									(". b" ". f" ". a" ". e") (", p" ", n" ", b" ", f" ", a" ", e")
-									(", . p" ", . n" ", . b" ", . f" ", . a" ", . e" ", . u" ", . d" ", . t")
-									(". , p" ". , n" ". , b" ". , f" ". , a" ". , e" ". , u" ". , d" ". , t")))))
+	   (devil-repeatable-keys '(("%k d") ("%k k") (". ^") (", v") (". v") (", x o")
+				    (". b" ". f" ". a" ". e") (", p" ", n" ", b" ", f" ", a" ", e")
+				    (", . p" ", . n" ", . b" ", . f" ", . a" ", . e" ", . u" ", . d" ", . t")
+				    (". , p" ". , n" ". , b" ". , f" ". , a" ". , e" ". , u" ". , d" ". , t")))))
 (use-package ispell
   :custom (ispell-program-name "/Users/leaf/Homebrew/bin/aspell") (ispell-dictionary "en_US"))
 (use-package jinx
@@ -97,12 +96,12 @@
   :mode "\\.html\\'")
 (use-package tab-line
   :custom ((global-tab-line-mode t)
-		   (tab-line-new-button-show nil)
-		   (tab-line-close-button-show nil))
+	   (tab-line-new-button-show nil)
+	   (tab-line-close-button-show nil))
   :custom-face
   (tab-bar ((t (:inherit mode-line))))
   :bind (("C-<tab>" . tab-line-switch-to-next-tab)
-		 ("C-M-<tab>" . tab-line-switch-to-prev-tab)))
+	 ("C-M-<tab>" . tab-line-switch-to-prev-tab)))
 (use-package dired
   :after ls-lisp
   :preface (require 'ls-lisp))
@@ -111,22 +110,22 @@
 (use-package files
   :custom (insert-directory-program "gls"))
 (defun arc-open-parent-folder-and-quit () "Open the parent folder of the current arc-mode buffer and quit the arc-mode window."
-	   (interactive)
-	   (let ((parent-dir (expand-file-name default-directory)))
-		 (quit-window)
-		 (dired parent-dir)))
+       (interactive)
+       (let ((parent-dir (expand-file-name default-directory)))
+	 (quit-window)
+	 (dired parent-dir)))
 (use-package fixed-pitch
   :vc (:url "https://github.com/cstby/fixed-pitch-mode")
   :custom (fixed-pitch-dont-change-cursor t)
   :hook ((archive-mode diff-mode elfeed-search-mode html-mode prog-mode vc-dir-mode) . fixed-pitch-mode))
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font) charset
-					(font-spec :family "Hiragino Mincho ProN")))
+		    (font-spec :family "Hiragino Mincho ProN")))
 (use-package flexoki-themes
   :vc (:url "https://codeberg.org/crmsnbleyd/flexoki-emacs-theme")
   :custom ((flexoki-themes-use-bold-builtins t)
-		   (flexoki-themes-use-bold-keywords t)
-		   (flexoki-themes-use-italic-comments t)))
+	   (flexoki-themes-use-bold-keywords t)
+	   (flexoki-themes-use-italic-comments t)))
 ;;;;;;;;;;;;;;;
 ;; Mode-line ;;
 ;;;;;;;;;;;;;;;
@@ -139,12 +138,12 @@
 
 (defun my/use-font (&optional frame)
   (when frame
-	(select-frame frame))
+    (select-frame frame))
 
   (set-face-attribute 'variable-pitch nil :font my/font)
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
-	(set-fontset-font (frame-parameter nil 'font) charset
-					  (font-spec :family my/font-ja))))
+    (set-fontset-font (frame-parameter nil 'font) charset
+		      (font-spec :family my/font-ja))))
 (my/use-font)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminal Interface Emacs ;;
@@ -174,7 +173,7 @@
 (use-package massmapper
   :config (massmapper-conserve-ret-and-tab)
   :custom (massmapper-Cm-Ci-override '(("C-i" . forward-char)
-									   ("C-m" . scroll-down-command))))
+				       ("C-m" . scroll-down-command))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (split-height-threshold 0)
 (split-width-threshold nil)
@@ -188,17 +187,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package mastodon
   :bind (:map mastodon-mode-map (("u" . 'mastodon-tl-goto-prev-item)
-								 ("e" . 'mastodon-tl-goto-next-item)
-								 ("n" . nil)
-								 ("p" . nil)))
+				 ("e" . 'mastodon-tl-goto-next-item)
+				 ("n" . nil)
+				 ("p" . nil)))
   :hook ((mastodon-mode . visual-fill-column-mode)
-		 (mastodon-toot-mode . visual-fill-column-mode))
+	 (mastodon-toot-mode . visual-fill-column-mode))
   :custom ((mastodon-instance-url "https://mastodon.social")
-		   (mastodon-active-user "leaferiksen")
-		   (mastodon-auth-use-auth-source nil)
-		   (mastodon-tl--display-media-p nil)
-		   (mastodon-tl--highlight-current-toot t)
-		   (mastodon-auth-use-auth-source t)))
+	   (mastodon-active-user "leaferiksen")
+	   (mastodon-auth-use-auth-source nil)
+	   (mastodon-tl--display-media-p nil)
+	   (mastodon-tl--highlight-current-toot t)
+	   (mastodon-auth-use-auth-source t)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Swift
 (use-package eglot
@@ -206,7 +205,7 @@
   (eglot-autoshutdown t)
   :config
   (add-to-list 'eglot-server-programs
-			   '(swift-mode . ("xcrun" "sourcekit-lsp")))
+	       '(swift-mode . ("xcrun" "sourcekit-lsp")))
   :hook (swift-mode) . 'eglot-ensure)
 (use-package swift-mode
   :mode "\\.swift\\'"
@@ -241,7 +240,7 @@
    '(en jp))
   (gt-default-translator
    (gt-translator :engines
-				  (gt-google-engine))))
+		  (gt-google-engine))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Navigation and Selection mode
 ;; https://github.com/mrkkrp/modalka
@@ -303,9 +302,9 @@
   (modalka-define-kbd "a" "C-a")
   (modalka-define-kbd "b" "C-b")
   (define-key modalka-mode-map "c"
-			  `(lambda () "Simulates the `C-c' key-press" (interactive)
-				 (setq prefix-arg current-prefix-arg)
-				 (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-c"))))) ; C-c prefix
+	      `(lambda () "Simulates the `C-c' key-press" (interactive)
+		 (setq prefix-arg current-prefix-arg)
+		 (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-c"))))) ; C-c prefix
   (modalka-define-kbd "d" "C-d")
   (modalka-define-kbd "e" "C-e")
   (modalka-define-kbd "f" "C-f")
