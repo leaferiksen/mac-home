@@ -17,7 +17,7 @@ Install:andUse("PaperWM", {
 	repo = "PaperWM",
 	config = {
 		window_gap = { top = 20, bottom = 20, left = 20, right = 20 },
-		window_ratios = { 1/3, 1/2, 2/3, 1 }
+		window_ratios = { .2, .4, .6, .8, 1 }
 	},
 	fn = function(spoon)
 		-- ignore a specific app

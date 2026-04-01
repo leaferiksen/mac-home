@@ -5,13 +5,7 @@
 ;;;;;;;;;;;;;;;;
 ;; Early-init ;;
 ;;;;;;;;;;;;;;;;
-(setq use-package-vc-prefer-newest t)
 (setq package-vc-allow-build-commands t)
-(let ((brew-prefix "/opt/homebrew/bin"))
-  (when (file-directory-p brew-prefix)
-    (setenv "PATH" (concat brew-prefix ":" (getenv "PATH")))
-    (add-to-list 'exec-path brew-prefix)))
-;; Fix for Native Comp (AOT) linker errors on macOS GUI launch;
 (add-to-list 'default-frame-alist '(undecorated . t))
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
@@ -29,24 +23,20 @@
   :bind
   (:map vterm-mode-map
 	("C-q" . vterm-send-next-key)))
-(use-package calle24
-  ;; (calle24-install)
-  :config
-  (add-to-list 'image-load-path (expand-file-name "~/.config/emacs/calle24/images/")))
 (use-package epg-config
   :custom (epg-pinentry-mode 'loopback))
 (use-package auth-source
   :custom (auth-sources "~/.authinfo.gpg"))
-(use-package ef-themes
-  :ensure t :vc (:url "https://github.com/protesilaos/ef-themes")
-  :custom (modus-themes-common-palette-overrides '((bg-tab-bar bg-main)
-						   (bg-tab-current bg-active)
-						   (bg-tab-other bg-dim))))
-(setopt markdown-hide-markup t)
-(use-package valign
-  :ensure t :vc (:url "https://github.com/casouri/valign")
-  :custom (valign-fancy-bar t)
-  :hook (markdown-mode))
+(setopt modus-themes-common-palette-overrides '((fringe unspecified) (bg-tab-bar bg-main) (bg-tab-current bg-active) (bg-tab-other bg-dim) (bg-line-number-inactive unspecified) (bg-line-number-active unspecified) (border-mode-line-active unspecified) (border-mode-line-inactive unspecified)))
+(use-package mastodon
+  :ensure t :defer t
+  :hook ((mastodon-mode . visual-fill-column-mode)
+	 (mastodon-toot-mode . visual-fill-column-mode))
+  :custom ((mastodon-instance-url "https://mastodon.social")
+	   (mastodon-active-user "leaferiksen")
+	   (mastodon-auth-use-auth-source nil)
+	   ;; (mastodon-tl--display-media-p nil)
+	   (mastodon-tl--highlight-current-toot t)))
 (use-package devil
   :config
   (global-devil-mode)
@@ -68,32 +58,9 @@
 				    (". b" ". f" ". a" ". e") (", p" ", n" ", b" ", f" ", a" ", e")
 				    (", . p" ", . n" ", . b" ", . f" ", . a" ", . e" ", . u" ", . d" ", . t")
 				    (". , p" ". , n" ". , b" ". , f" ". , a" ". , e" ". , u" ". , d" ". , t")))))
-(use-package ispell
-  :custom (ispell-program-name "/Users/leaf/Homebrew/bin/aspell") (ispell-dictionary "en_US"))
-(use-package jinx
-  :ensure t :vc (:url "https://github.com/minad/jinx")
-  :hook (markdown-mode)
-  :bind (:map jinx-mode-map ("C-c c" . jinx-correct))
-  :custom (jinx-languages "en_US ja-JP"))
-(use-package osawm
-  :vc (:url "https://github.com/andykuszyk/osawm.el")
-  :config (global-osawm-mode)
-  :bind ("C-c w" . (lambda () (interactive) (osawm-launch-chrome "" "Google Chrome" 'normal))))
 (use-package nov
-  :ensure t :vc (:url "https://depp.brause.cc/nov.el.git")
   :mode ("\\.epub\\'" . nov-mode)
   :custom (nov-text-width t))
-(use-package kv
-  :vc (:url "https://github.com/nicferrier/emacs-kv"))
-(use-package esxml ;; nov-mode dependency
-  :vc (:url "https://github.com/tali713/esxml"))
-(use-package osawm
-  :vc (:url "https://github.com/andykuszyk/osawm.el")
-  :config (global-osawm-mode)
-  :bind ("C-c w" . (lambda () (interactive) (osawm-launch-chrome "" "Google Chrome" 'normal))))
-(use-package web-mode
-  :vc (:url "https://github.com/fxbois/web-mode")
-  :mode "\\.html\\'")
 (use-package tab-line
   :custom ((global-tab-line-mode t)
 	   (tab-line-new-button-show nil)
@@ -106,7 +73,11 @@
   :after ls-lisp
   :preface (require 'ls-lisp))
 (use-package ls-lisp
-  :custom (ls-lisp-dirs-first t) (ls-lisp-ignore-case t) (ls-lisp-use-insert-directory-program nil) (ls-lisp-use-localized-time-format t))
+  :custom
+  (ls-lisp-dirs-first t)
+  (ls-lisp-ignore-case t)
+  (ls-lisp-use-insert-directory-program nil)
+  (ls-lisp-use-localized-time-format t))
 (use-package files
   :custom (insert-directory-program "gls"))
 (defun arc-open-parent-folder-and-quit () "Open the parent folder of the current arc-mode buffer and quit the arc-mode window."
@@ -115,31 +86,22 @@
 	 (quit-window)
 	 (dired parent-dir)))
 (use-package fixed-pitch
-  :vc (:url "https://github.com/cstby/fixed-pitch-mode")
   :custom (fixed-pitch-dont-change-cursor t)
   :hook ((archive-mode diff-mode elfeed-search-mode html-mode prog-mode vc-dir-mode) . fixed-pitch-mode))
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font) charset
 		    (font-spec :family "Hiragino Mincho ProN")))
-(use-package flexoki-themes
-  :vc (:url "https://codeberg.org/crmsnbleyd/flexoki-emacs-theme")
-  :custom ((flexoki-themes-use-bold-builtins t)
-	   (flexoki-themes-use-bold-keywords t)
-	   (flexoki-themes-use-italic-comments t)))
 ;;;;;;;;;;;;;;;
 ;; Mode-line ;;
 ;;;;;;;;;;;;;;;
 (mode-line ((t (:inherit 'variable-pitch))))
 (defvar my/font "New York"
   "Main font")
-
 (defvar my/font-ja "Hiragino Mincho ProN"
   "Japanese font")
-
 (defun my/use-font (&optional frame)
   (when frame
     (select-frame frame))
-
   (set-face-attribute 'variable-pitch nil :font my/font)
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
     (set-fontset-font (frame-parameter nil 'font) charset
@@ -184,20 +146,6 @@
 (keymap-global-set "M-<end>" 'completion-preview-next-candidate)
 ("C-p" . nil) ("C-n" . nil) ("C-f" . nil) ("M-f" . nil) ("C-b" . nil) ("M-b" . nil) ("C-M-p" . nil) ("C-M-n" . nil) ("C-M-f" . nil) ("C-M-b" . nil) ("C-d" . nil) ("M-d" . nil) ("C-w" . nil) ("M-w" . nil) ("C-v" . nil) ("M-v" . nil) ("C-M-v" . nil) ("C-M-S-v" . nil)
 ([escape] . keyboard-quit) (:map esc-map ([escape] . keyboard-quit)) (:map ctl-x-map ([escape] . keyboard-quit)) (:map help-map ([escape] . keyboard-quit)) (:map goto-map ([escape] . keyboard-quit)) (:map minibuffer-mode-map ([escape] . minibuffer-keyboard-quit)) (:map devil-mode-map ([escape] . keyboard-quit))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package mastodon
-  :bind (:map mastodon-mode-map (("u" . 'mastodon-tl-goto-prev-item)
-				 ("e" . 'mastodon-tl-goto-next-item)
-				 ("n" . nil)
-				 ("p" . nil)))
-  :hook ((mastodon-mode . visual-fill-column-mode)
-	 (mastodon-toot-mode . visual-fill-column-mode))
-  :custom ((mastodon-instance-url "https://mastodon.social")
-	   (mastodon-active-user "leaferiksen")
-	   (mastodon-auth-use-auth-source nil)
-	   (mastodon-tl--display-media-p nil)
-	   (mastodon-tl--highlight-current-toot t)
-	   (mastodon-auth-use-auth-source t)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Swift
 (use-package eglot

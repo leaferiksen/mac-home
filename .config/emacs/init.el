@@ -1,19 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 
-(when (memq system-type '(darwin))
-  (add-to-list 'default-frame-alist '(undecorated-round . t)) ;; rounded with no title
-  (set-fontset-font t nil "SF Pro Display" nil 'append)  ;; Enable SF symbols
-  (use-package emacs
-    :bind
-    ("C-c h" . ns-do-hide-emacs)
-    ("C-c ˙" . ns-do-hide-others)
-    :custom
-    (browse-url-generic-program "open")
-    (browse-url-mailto-function 'browse-url-generic)
-    (ns-pop-up-frames nil)
-    (mac-command-modifier 'meta)
-    (mac-option-modifier 'none)
-    (auth-sources '(macos-keychain-generic macos-keychain-internet))))
+;;; Internal packages and internal hooks
+(add-to-list 'default-frame-alist '(undecorated-round . t))
+(set-fontset-font t nil "SF Pro Display" nil 'append)
 (use-package emacs
   :hook
   (window-setup-hook . toggle-frame-maximized)
@@ -34,6 +23,7 @@
   (default ((t (:family "Maple Mono NF CN" :height 140))))
   (fixed-pitch ((t (:family "Maple Mono NF CN" :height 140))))
   (variable-pitch ((t (:family "Atkinson Hyperlegible Next" :height 180))))
+  (mode-line ((t (:family "Atkinson Hyperlegible Next" :height 160))))
   :custom
   (auto-insert-directory "~/.config/emacs/templates/")
   (auto-insert-query nil)
@@ -61,6 +51,8 @@
   (insert-directory-program "gls")
   (isearch-lazy-count t)
   (large-file-warning-threshold 1000000000)
+  (mac-command-modifier 'meta)
+  (mac-option-modifier 'none)
   (major-mode-remap-alist '((sh-mode . bash-ts-mode)
 			    (mhtml-mode . html-ts-mode)
 			    (css-mode . css-ts-mode)
@@ -71,15 +63,7 @@
 			    (lua-mode . lua-ts-mode)))
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not lsp-mode flymake-mode))
-  (modus-themes-common-palette-overrides '((fringe unspecified)
-					   (bg-line-number-inactive unspecified)
-					   (bg-line-number-active unspecified)
-					   (underline-link unspecified)
-					   (underline-link-visited unspecified)
-					   (underline-link-symbolic unspecified)
-					   ;; (border-mode-line-active unspecified)
-					   ;; (border-mode-line-inactive unspecified)
-					   ))
+  (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
   (modus-themes-headings '((1 . (2.0)) (2 . (1.6)) (3 . (1.2))))
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
@@ -95,55 +79,55 @@
   (tool-bar-mode nil)
   (tooltip-mode nil)
   (use-dialog-box nil)
+  (use-package-vc-prefer-newest t)
   (visual-fill-column-center-text t)
   (visual-fill-column-width 100)
   (which-key-mode t)
-  (word-wrap-by-category t)
-  :config
-  (add-to-list 'imagemagick-enabled-types 'JXL)
-  (auto-insert-mode t)
-  (defalias 'yes-or-no-p 'y-or-n-p)
-  (define-auto-insert "\.html" "insert.html")
-  (define-auto-insert "\.js" "insert.js")
-  (define-key key-translation-map (kbd "M-o") (kbd "C-x o"))
-  (define-key key-translation-map (kbd "M-r") (kbd "C-x r"))
-  (editorconfig-mode)
-  (fido-vertical-mode)
-  (repeat-mode)
-  (defun auto-theme (appearance)
-    "Load theme, taking current system APPEARANCE into consideration."
-    (mapc #'disable-theme custom-enabled-themes)
-    (pcase appearance
-      ('light (load-theme 'modus-operandi-tinted t))
-      ('dark (load-theme 'modus-vivendi-tinted t))))
-  (defun dired-finder-path ()
-    "Open Dired in the frontmost Finder window path, if available."
-    (interactive)
-    (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
-      (if path (dired (string-trim path)) (message "No Finder window found."))))
-  (defun open-init ()
-    "Open ~/.config/emacs/init.el"
-    (interactive)
-    (find-file "~/.config/emacs/init.el"))
-  (defun unfill ()
-    "Unfill the current region if active, or the current paragraph."
-    (interactive)
-    (let ((fill-column (point-max)))
-      (if (use-region-p)
-	  (fill-region (region-beginning) (region-end) nil)
-	(fill-paragraph nil))))
-  (defun vc-amend ()
-    "Amend the previous commit title."
-    (interactive)
-    (vc-checkin nil 'git) (vc-git-log-edit-toggle-amend))
-  (defun yt-dlp (url)
-    "Download the audio, video, or video with subs from a given URL."
-    (interactive "sEnter media source URL: ")
-    (let ((flag (pcase (completing-read "Download: " '("audio" "video" "subtitled video") nil t)
-		  ("audio" "-x")
-		  ("subtitled video" "--write-subs")
-		  (_ ""))))
-      (async-shell-command (format "yt-dlp %s \"%s\"" flag url)))))
+  (word-wrap-by-category t))
+(add-to-list 'imagemagick-enabled-types 'JXL)
+(auto-insert-mode t)
+(defalias 'yes-or-no-p 'y-or-n-p)
+(define-auto-insert "\.html" "insert.html")
+(define-auto-insert "\.js" "insert.js")
+(define-key key-translation-map (kbd "M-o") (kbd "C-x o"))
+(define-key key-translation-map (kbd "M-r") (kbd "C-x r"))
+(editorconfig-mode)
+(fido-vertical-mode)
+(repeat-mode)
+(defun auto-theme (appearance)
+  "Load theme, taking current system APPEARANCE into consideration."
+  (mapc #'disable-theme custom-enabled-themes)
+  (pcase appearance
+    ('light (load-theme 'modus-operandi-tinted t))
+    ('dark (load-theme 'modus-vivendi-tinted t))))
+(defun dired-finder-path ()
+  "Open Dired in the frontmost Finder window path, if available."
+  (interactive)
+  (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
+    (if path (dired (string-trim path)) (message "No Finder window found."))))
+(defun open-init ()
+  "Open ~/.config/emacs/init.el"
+  (interactive)
+  (find-file "~/.config/emacs/init.el"))
+(defun unfill ()
+  "Unfill the current region if active, or the current paragraph."
+  (interactive)
+  (let ((fill-column (point-max)))
+    (if (use-region-p)
+	(fill-region (region-beginning) (region-end) nil)
+      (fill-paragraph nil))))
+(defun vc-amend ()
+  "Amend the previous commit title."
+  (interactive)
+  (vc-checkin nil 'git) (vc-git-log-edit-toggle-amend))
+(defun yt-dlp (url)
+  "Download the audio, video, or video with subs from a given URL."
+  (interactive "sEnter media source URL: ")
+  (let ((flag (pcase (completing-read "Download: " '("audio" "video" "subtitled video") nil t)
+		("audio" "-x")
+		("subtitled video" "--write-subs")
+		(_ ""))))
+    (async-shell-command (format "yt-dlp %s \"%s\"" flag url))))
 (use-package completion-preview
   :bind
   (:map completion-preview-active-mode
@@ -170,27 +154,36 @@
 	("SPC t" . dwim-tailwindcss)))
 (use-package prog-mode
   :hook
-  (prog-mode . display-line-numbers-mode)
   (prog-mode . completion-preview-mode))
 (use-package html-mode
   :hook
-  (html-mode . display-line-numbers-mode)
   (html-mode . completion-preview-mode))
 (use-package text-mode
   :hook
-  (text-mode . display-line-numbers-mode)
-  (text-mode . typo-mode)
   (text-mode . flyspell-mode))
 
+;;; External packages and external hooks
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(setopt use-package-always-ensure t)
-
+(use-package apheleia
+  :ensure t
+  :custom
+  (apheleia-global-mode t))
+(use-package elfeed-webkit
+  :ensure t
+  :demand
+  :config
+  (elfeed-webkit-enable)
+  :bind
+  (:map elfeed-show-mode-map
+	("%" . elfeed-webkit-toggle)))
 (use-package exec-path-from-shell
+  :ensure t
   :if
   (memq window-system '(ns x))
   :config
   (exec-path-from-shell-initialize))
 (use-package dwim-shell-command
+  :ensure t
   :config
   (defun dwim-macos-move-to-trash ()
     "Move marked files to macOS trash."
@@ -224,43 +217,32 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
      "Convert to pdf"
      "pandoc --pdf-engine=typst --template=/Users/leaf/.config/typst/template.typ '<<f>>' -o '<<fne>>.pdf'")))
 (use-package spacious-padding
+  :ensure t
   :config
-  (spacious-padding-mode)
-  :custom
-  (spacious-padding-widths
-   '( :internal-border-width 15
-      :header-line-width 4
-      :mode-line-width 4
-      :custom-button-width 3
-      :tab-width 4
-      :right-divider-width 30
-      :scroll-bar-width 8
-      :fringe-width 0)))
+  (spacious-padding-mode))
 
-(setopt use-package-always-defer t)
-
+;; Deferred External Packages
 (use-package agent-shell
+  :ensure t :defer t
   :bind
   ("C-c a" . agent-shell-add-region)
   ("C-c s" . agent-shell))
-(use-package apheleia
-  :custom
-  (apheleia-global-mode t))
 (use-package appine
+  :ensure t :defer t
   :vc (:url "https://github.com/chaoswork/appine")
   :bind (("C-x a a" . appine)
          ("C-x a k" . appine-kill)
          ("C-x a u" . appine-open-url)
          ("C-x a o" . appine-open-file)))
 (use-package csv-mode
+  :ensure t :defer t
   :hook
   (csv-mode . csv-align-mode)
   :custom
   (csv-align-padding 2)
   (csv-align-max-width 72))
-(use-package nerd-icons-dired
-  :hook dired-mode)
 (use-package elfeed
+  :ensure t :defer t
   :preface
   (run-at-time nil (* 8 60 60) #'elfeed-update)
   :bind
@@ -272,25 +254,25 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   (load (expand-file-name "elfeed-feeds.el" user-emacs-directory))
   :custom
   (elfeed-search-filter "@1-month-ago +unread"))
-(use-package elfeed-webkit
-  :demand
-  :config
-  (elfeed-webkit-enable)
-  :bind
-  (:map elfeed-show-mode-map
-	("%" . elfeed-webkit-toggle)))
 (use-package gterm
+  :ensure t :defer t
   :vc (:url "https://github.com/rwc9u/emacs-libgterm" :branch "main")
   :custom
   (gterm-always-compile-module t)
   :bind
   ("C-c v" . gterm))
-(use-package hackernews)
-(use-package lorem-ipsum)
+(use-package hackernews
+  :ensure t :defer t
+  :bind
+  ("C-c h" . hackernews))
+(use-package lorem-ipsum
+  :ensure t :defer t)
 (use-package lua-mode
+  :ensure t :defer t
   :hook
   (lua-mode . eglot-ensure))
 (use-package markdown-mode
+  :ensure t :defer t
   :mode
   ("README\\.md\\'" . gfm-mode)
   :hook
@@ -303,29 +285,23 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   (markdown-enable-wiki-links t)
   (markdown-fontify-code-blocks-natively t)
   (markdown-hide-urls t)
-  (markdown-link-space-sub-char " ") ;; Follow link style of Obsidian
+  (markdown-link-space-sub-char " ")
   (markdown-special-ctrl-a/e t)
   (markdown-unordered-list-item-prefix "- ")
   (markdown-wiki-link-retain-case t)
   :config
-  ;; Handle wiki links with explicit file extensions
-  ;; e.g., [[example.mp4]] opens example.mp4 directly, not example.mp4.md
+  ;; Open wikilinks with explicit file extensions without also adding .md extension
   (advice-add 'markdown-convert-wiki-link-to-filename :around
 	      (lambda (orig-fn name)
 		"Convert NAME to filename. If NAME has explicit extension, use it directly."
-		(if (file-name-extension name)
-		    (replace-regexp-in-string "[[:space:]\n]" markdown-link-space-sub-char name)
-		  (funcall orig-fn name))))
-  ;; Override markdown-follow-wiki-link to not force markdown-mode on opened files
-  ;; This allows files opened via wikilinks to use their correct major mode
-  ;; (e.g., csv-mode for .csv files, python-mode for .py files, etc.)
+		(if (file-name-extension name) (replace-regexp-in-string "[[:space:]\n]" markdown-link-space-sub-char name) (funcall orig-fn name))))
+  ;; Files opened via wikilinks use their correct major mode instead of markdown-mode
   (advice-add 'markdown-follow-wiki-link :override
 	      (lambda (name &optional other)
 		"Follow the wiki link NAME, respecting buffer's major mode."
 		(unless buffer-file-name (user-error "Must be visiting a file"))
 		(when other (other-window 1))
-		(let ((default-directory (file-name-directory buffer-file-name)))
-		  (find-file (markdown-convert-wiki-link-to-filename name)))))
+		(let ((default-directory (file-name-directory buffer-file-name))) (find-file (markdown-convert-wiki-link-to-filename name)))))
   (defun daily-note ()
     "Make a new daily note in my obsidian vault"
     (interactive)
@@ -343,8 +319,16 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   (:map markdown-mode-map
         ("C-c SPC 1" . h1-title)
 	("C-c SPC 2" . h2-today)))
-(use-package mines)
+(use-package markdown-indent-mode
+  :ensure t :defer t
+  :hook (markdown-mode))
+(use-package mines
+  :ensure t :defer t)
+(use-package nerd-icons-dired
+  :ensure t :defer t
+  :hook dired-mode)
 (use-package reader
+  :ensure t :defer t
   :vc
   (:url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
   :config
@@ -352,14 +336,19 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
     "Recompile Reader Libraries"
     (interactive)
     (let ((default-directory "~/.config/emacs/elpa/reader/")) (shell-command "make clean all"))))
-(use-package typo)
+(use-package typo
+  :ensure t :defer t
+  :hook text-mode)
 (use-package typst-ts-mode
+  :ensure t :defer t
   ;; (typst-ts-mc-install-grammar)
   :vc
   (:url "https://codeberg.org/meow_king/typst-ts-mode.git")
   :mode
   ("\\.typ\\'" . typst-ts-mode))
 (use-package undo-fu
+  :ensure t :defer t
   :bind
   ("M-z" . undo-fu-only-undo)
   ("M-Z" . undo-fu-only-redo))
+

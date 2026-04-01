@@ -10,20 +10,23 @@
                            "^org\\.mozilla\\.firefoxdeveloperedition$"
                            "^com\\.google\\.Chrome$"]}
 :main [
-{:des "Clear F5" :rules [
+{:des "Clear 􀊰" :rules [
 	[:f5 :f18]
 ]}
-{:des "Toggle dark mode with 􀆹" :rules [
-	[:f6 "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]
+{:des "Toggle dark mode with 􀆔􀆹" :rules [
+	[:!CC##f6 "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]
 ]}
 {:des "iPhone Mirroring playback with 􀆔􀊉/􀊇/􀊋" :rules [
 	[:!CC##f7 "sh ~/.config/karabiner/iphoneBack.sh"]  [:!CC##f8 "sh ~/.config/karabiner/iphonePlay.sh"]  [:!CC##f9 "sh ~/.config/karabiner/iphoneForward.sh"]
 ]}
-{:des "Colemak Curl/Angle/Extra Wide with Left􀆔 as 􀆍 and Emacs bindings globally and in the browser" :rules [
+{:des "Right 􀆔 as Right 􀆍, C-h as backspace in Emacs and global Emacs bindings" :rules [
 	;; emacs global
 	[:!T##open_bracket :tab]  [:!T##l :return_or_enter]
 	[:!T##i :delete_or_backspace]  [:!Ci :!Cdelete_or_backspace :emacs]
 	[:!T##3 :up_arrow :notemacs]  [:!T##o :down_arrow :notemacs]  [:!T##2 :right_arrow :notemacs]  [:!T##f :left_arrow :notemacs]
+	[:##right_command :left_control]
+]}
+{:des "Colemak Curl/Angle/Extra Wide" :rules [
 	;; left hand
 	[:##grave_accent_and_tilde :q]  [:##1 :w]  [:##2 :f]  [:##3 :p]  [:##4 :g]
 	[:##tab :a]                     [:##q :r]  [:##w :s]  [:##e :t]  [:##r :d]
@@ -41,7 +44,6 @@
 	[:##z :grave_accent_and_tilde]  [:##x :f19]  [:##c :f20]  [:##v :backslash]
 	;; right thumb
 	[:##comma :right_shift]  [:##period :open_bracket]  [:##slash :close_bracket]
-	[:##right_command :left_control]
 ]}
 ]
 }
