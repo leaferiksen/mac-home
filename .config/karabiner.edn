@@ -10,9 +10,6 @@
                            "^org\\.mozilla\\.firefoxdeveloperedition$"
                            "^com\\.google\\.Chrome$"]}
 :main [
-{:des "Clear 􀊰" :rules [
-	[:f5 :f18]
-]}
 {:des "Toggle dark mode with 􀆔􀆹" :rules [
 	[:!CC##f6 "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]
 ]}

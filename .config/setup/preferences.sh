@@ -6,7 +6,7 @@ osascript -e 'tell application "System Preferences" to quit'
 # fix scroll direction
 defaults write -g "com.apple.swipescrolldirection" -bool "false"
 # show scroll bars
-defaults write -g "AppleShowScrollBars" -string "Always"
+# defaults write -g "AppleShowScrollBars" -string "Always"
 # disable zoom button popup
 defaults write -g "NSZoomButtonShowMenu" -bool "false"
 # disable controller launchpad
@@ -47,6 +47,9 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourF
 # disable swiping between desktops
 # defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
 # defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
+# disable the Control-Command-D binding
+defaults write com.apple.symbolichotkeys AppleSymbolicHotK
+eys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
 # keyboard navigation
 defaults write -g "AppleKeyboardUIMode" -int "2"
 # disable dock, screensaver hot corner and quick notes
@@ -126,33 +129,15 @@ defaults write com.apple.finder "FXPreferredViewStyle" "clmv"
 # Other…       : `PfLo`
 defaults write com.apple.finder "NewWindowTarget" "PfDe"
 defaults write com.apple.finder "ShowPreviewPane" -bool "true"
-/usr/libexec/PlistBuddy -c \
-						"add 'PreviewPaneSettings':com.adobe.pdf:showQuickActions bool false" \
-						/Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c \
-						"add 'PreviewPaneSettings':com.apple.application:showQuickActions bool false" \
-						/Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c \
-						"add 'PreviewPaneSettings':public.archive:showQuickActions bool false" \
-						/Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c \
-						"add 'PreviewPaneSettings':public.folder:showQuickActions bool false" \
-						/Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c \
-						"add 'PreviewPaneSettings':public.image:showQuickActions bool false" \
-						/Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c \
-						"add 'PreviewPaneSettings':public.item:showQuickActions bool false" \
-						/Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c \
-						"add 'PreviewPaneSettings':public.movie:showQuickActions bool false" \
-						/Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c \
-						"add 'PreviewPaneSettings':public.text:showQuickActions bool false" \
-						/Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c \
-						"add 'PreviewPaneSettings':public.html:showQuickActions bool false" \
-						/Users/leaf/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':com.adobe.pdf:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':com.apple.application:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.archive:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.folder:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.image:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.item:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.movie:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.text:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.html:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
 defaults write com.apple.finder "CreateDesktop" -bool "false"
 # soft restart
 killall Finder Dock NotificationCenter

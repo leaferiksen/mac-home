@@ -2,24 +2,24 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Movies"
+((".config"
+ (filename . "~/.config/")
+ (front-context-string . "..\n  drwxr-xr-x ")
+ (rear-context-string . "6K Apr 10 15:26 ")
+ (position . 116)
+ (last-modified 27097 32186 711859 0))
+("Git"
+ (filename . "~/Git/")
+ (front-context-string . "..\n  drwxr-xr-x ")
+ (rear-context-string . "5K Apr  3 11:32 ")
+ (position . 112)
+ (last-modified 27088 5177 939195 0))
+("Movies"
  (filename . "~/Movies/")
  (front-context-string . "Gundam Trilogy\n ")
  (rear-context-string . "56 Aug  2  2024 ")
  (position . 163)
  (last-modified 26973 63307 817881 0))
-(".config"
- (filename . "~/.config/")
- (front-context-string . "borders\n  drwx--")
- (rear-context-string . "96 Dec 13  2024 ")
- (position . 164)
- (last-modified 26889 43583 80297 0))
-("Git"
- (filename . "~/Git/")
- (front-context-string . "Aseprite\n  drwxr")
- (rear-context-string . "60 Aug 31 12:55 ")
- (position . 65)
- (last-modified 26873 20777 285898 0))
 ("Home.md"
  (filename . "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/Home.md")
  (front-context-string . "[[Education]]\n[[")

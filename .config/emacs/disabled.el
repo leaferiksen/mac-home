@@ -19,6 +19,40 @@
 (add-to-list 'exec-path "/opt/homebrew/opt/python@3.14/libexec/bin")
 (add-to-list 'exec-path "/opt/homebrew/sbin")
 (add-to-list 'exec-path "/opt/homebrew/bin")
+
+(use-package swift-development
+  :ensure t :defer t
+  :vc
+  ( :url "https://github.com/konrad1977/swift-development")
+  :config
+  ;; (require 'swift-lsp)
+  ;; (add-to-list 'eglot-server-programs '(swift-ts-mode . swift-lsp-eglot-server-contact))
+  ;; Load the main package
+  (require 'swift-development)
+  (require 'xcode-project)
+  (require 'xcode-build-config)
+  ;; Optional modules
+  ;; (require 'ios-simulator)
+  ;; (require 'ios-device)
+  ;; (require 'swift-refactor)
+  ;; (require 'localizeable-mode)
+  )
+(use-package swift-ts-mode
+  :ensure t :defer t
+  ;; :vc
+  ;; ( :url "https://codeberg.org/woolsweater/swift-ts-mode")
+  :hook (swift-ts-mode . (lambda () (add-hook 'after-save-hook #'build-watch-app nil t)))
+  :config
+  ;; 1. Define the build function
+  (defun build-watch-app ()
+    "Finds build_and_run.sh in the project root and executes it."
+    (interactive)
+    (let ((root (locate-dominating-file default-directory "build_watch_app.sh")))
+      (when root
+	(let ((default-directory root))
+          (message "Building for watchOS and deploying...")
+          (async-shell-command "./build_watch_app.sh" "*watchOS Build*"))))))
+
 (use-package vterm
   :bind
   (:map vterm-mode-map
@@ -147,18 +181,6 @@
 ("C-p" . nil) ("C-n" . nil) ("C-f" . nil) ("M-f" . nil) ("C-b" . nil) ("M-b" . nil) ("C-M-p" . nil) ("C-M-n" . nil) ("C-M-f" . nil) ("C-M-b" . nil) ("C-d" . nil) ("M-d" . nil) ("C-w" . nil) ("M-w" . nil) ("C-v" . nil) ("M-v" . nil) ("C-M-v" . nil) ("C-M-S-v" . nil)
 ([escape] . keyboard-quit) (:map esc-map ([escape] . keyboard-quit)) (:map ctl-x-map ([escape] . keyboard-quit)) (:map help-map ([escape] . keyboard-quit)) (:map goto-map ([escape] . keyboard-quit)) (:map minibuffer-mode-map ([escape] . minibuffer-keyboard-quit)) (:map devil-mode-map ([escape] . keyboard-quit))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Swift
-(use-package eglot
-  :custom
-  (eglot-autoshutdown t)
-  :config
-  (add-to-list 'eglot-server-programs
-	       '(swift-mode . ("xcrun" "sourcekit-lsp")))
-  :hook (swift-mode) . 'eglot-ensure)
-(use-package swift-mode
-  :mode "\\.swift\\'"
-  :interpreter "swift")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (keymap-global-set "C-<up>" 'beginning-of-buffer)
 (keymap-global-set "C-<down>" 'end-of-buffer)
 (keymap-global-set "C-<left>" 'move-beginning-of-line)
@@ -181,7 +203,12 @@
 (keymap-global-set "C-<up>" 'completion-preview-prev-candidate)
 (keymap-global-set "C-<down>" 'completion-preview-next-candidate)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://github.com/lorniu/go-translate
+(use-package swift-mode
+  :ensure t :defer t
+  :interpreter "swift"
+  :hook (swift-mode . eglot-ensure)
+  :config
+  (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp"))))
 (use-package go-translate
   :custom
   (gt-langs

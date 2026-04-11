@@ -10,6 +10,14 @@ export SHELL_SESSIONS_DISABLE=1
 export PATH=/opt/homebrew/sbin:/opt/homebrew/bin:/opt/homebrew/opt/python@3.14/libexec/bin:/Users/leaf/.docker/bin:$PATH
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications"
 eval "$(brew shellenv)"
+# Ensure Rust and Cargo are in your PATH
+. "$HOME/.cargo/env"
+export PATH="$HOME/.cargo/bin:$PATH"
+# Unset CC to allow Apple Clang to be the default for Xcode/iOS builds.
+# If you need GCC for other projects, it's safer to alias it or use 
+# a project-specific environment instead of a global CC export.
+unset CC
+unset CXX
 
 # named directories
 export ic="/Users/leaf/Library/Mobile Documents/com~apple~CloudDocs/"
@@ -26,6 +34,7 @@ alias upn='ncu -u && npm install'
 alias fixnode='brew unlink node && brew link --overwrite node'
 
 # My BSD utils
+alias myip='ifconfig | grep "inet "'
 alias ctar='tar -czvf'
 alias xtar='tar -xzvf'
 alias ttar='tar -tzvf'
