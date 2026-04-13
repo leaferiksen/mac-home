@@ -3,7 +3,7 @@
 ;;; Internal packages and internal hooks
 (add-to-list 'default-frame-alist '(undecorated-round . t))
 
-(set-fontset-font t nil "SF Pro Display" nil 'append)
+(require 'package)
 
 (use-package emacs
   :hook
@@ -28,6 +28,7 @@
   :custom
   (auto-insert-directory "~/.config/emacs/templates/")
   (auto-insert-query nil)
+  (auto-save-default nil)
   (backward-delete-char-untabify-method nil)
   (column-number-mode t)
   (completion-auto-help nil)
@@ -65,7 +66,7 @@
 			    (yaml-mode . yaml-ts-mode)
 			    (lua-mode . lua-ts-mode)))
   (make-backup-files nil)
-  (mode-line-collapse-minor-modes '(not lsp-mode flymake-mode))
+  (mode-line-collapse-minor-modes '(not eglot-mode flymake-mode))
   (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
   (modus-themes-headings '((1 . (2.0)) (2 . (1.6)) (3 . (1.2))))
   (modus-themes-italic-constructs t)
@@ -131,6 +132,8 @@
 (repeat-mode)
 
 (require 'eglot)
+
+(set-fontset-font t nil "SF Pro Display" nil 'append)
 
 ;; Internal Packages
 
@@ -275,6 +278,7 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   :ensure t
   :custom
   (agent-shell-opencode-default-model-id "ollama/gemma4:26b-32k")
+  (agent-shell-github-default-model-id "claude-haiku-4.5")
   :bind
   ( :prefix "C-c a"
     :prefix-map favorite-agents
@@ -407,23 +411,8 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   (music-control-mode 1))
 
 (use-package nerd-icons-dired
-  :defer t
+  :ensure t :defer t
   :hook dired-mode)
-
-(use-package periphery
-  :vc ( :url "https://github.com/konrad1977/periphery" :rev :newest)
-  :custom
-  ;; Adjust severity badge background darkness (0-100, higher = darker)
-  (periphery-background-darkness 85)
-  ;; Use theme colors instead of default Catppuccin colors
-  (periphery-use-theme-colors t)
-  ;; Trim message prefixes for cleaner display
-  (periphery-trim-message-prefix t)
-  ;; Enable debug mode if needed
-  (periphery-debug nil)
-  :config
-  ;; Optional: Clear color cache when switching themes
-  (add-hook 'after-load-theme-hook #'periphery--clear-color-cache))
 
 (use-package reader
   :ensure t :defer t
@@ -438,8 +427,17 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
 (use-package swift-ts-mode
   :ensure t :defer t
   :mode "\\.swift\\'"
-  :hook (swift-ts-mode . (lambda () (add-hook 'after-save-hook #'xcode-build nil t)))
+  :hook
+  (swift-ts-mode . eglot-ensure)
+  :bind
+  ( :map swift-ts-mode-map
+    ("C-c SPC" . xcode-build))
   :config
+  (add-to-list 'apheleia-mode-alist
+               '(swift-ts-mode . swift-format))
+  (add-to-list 'apheleia-formatters
+               '(swift-format "xcrun" "swift-format" (buffer-file-name)))
+  (add-to-list 'eglot-server-programs '(swift-ts-mode . ("xcrun" "sourcekit-lsp")))
   (defun xcode-build ()
     (interactive)
     (async-shell-command-no-window "/Users/leaf/.config/emacs/xcode-build.sh")))

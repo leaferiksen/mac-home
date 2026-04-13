@@ -37,21 +37,21 @@
   ;; (require 'swift-refactor)
   ;; (require 'localizeable-mode)
   )
-(use-package swift-ts-mode
-  :ensure t :defer t
-  ;; :vc
-  ;; ( :url "https://codeberg.org/woolsweater/swift-ts-mode")
-  :hook (swift-ts-mode . (lambda () (add-hook 'after-save-hook #'build-watch-app nil t)))
+
+(use-package periphery
+  :vc ( :url "https://github.com/konrad1977/periphery" :rev :newest)
+  :custom
+  ;; Adjust severity badge background darkness (0-100, higher = darker)
+  (periphery-background-darkness 85)
+  ;; Use theme colors instead of default Catppuccin colors
+  (periphery-use-theme-colors t)
+  ;; Trim message prefixes for cleaner display
+  (periphery-trim-message-prefix t)
+  ;; Enable debug mode if needed
+  (periphery-debug nil)
   :config
-  ;; 1. Define the build function
-  (defun build-watch-app ()
-    "Finds build_and_run.sh in the project root and executes it."
-    (interactive)
-    (let ((root (locate-dominating-file default-directory "build_watch_app.sh")))
-      (when root
-	(let ((default-directory root))
-          (message "Building for watchOS and deploying...")
-          (async-shell-command "./build_watch_app.sh" "*watchOS Build*"))))))
+  ;; Optional: Clear color cache when switching themes
+  (add-hook 'after-load-theme-hook #'periphery--clear-color-cache))
 
 (use-package vterm
   :bind
