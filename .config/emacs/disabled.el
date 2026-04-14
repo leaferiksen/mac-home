@@ -20,6 +20,16 @@
 (add-to-list 'exec-path "/opt/homebrew/sbin")
 (add-to-list 'exec-path "/opt/homebrew/bin")
 
+(use-package reader
+  :ensure t
+  :vc
+  ( :url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
+  :config
+  (defun fix-reader ()
+    "Recompile Reader Libraries"
+    (interactive)
+    (let ((default-directory "~/.config/emacs/elpa/reader/")) (shell-command "make clean all"))))
+
 (use-package swift-development
   :ensure t :defer t
   :vc
@@ -103,15 +113,6 @@
   (tab-bar ((t (:inherit mode-line))))
   :bind (("C-<tab>" . tab-line-switch-to-next-tab)
 	 ("C-M-<tab>" . tab-line-switch-to-prev-tab)))
-(use-package dired
-  :after ls-lisp
-  :preface (require 'ls-lisp))
-(use-package ls-lisp
-  :custom
-  (ls-lisp-dirs-first t)
-  (ls-lisp-ignore-case t)
-  (ls-lisp-use-insert-directory-program nil)
-  (ls-lisp-use-localized-time-format t))
 (use-package files
   :custom (insert-directory-program "gls"))
 (defun arc-open-parent-folder-and-quit () "Open the parent folder of the current arc-mode buffer and quit the arc-mode window."

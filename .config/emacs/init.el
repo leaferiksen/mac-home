@@ -52,21 +52,13 @@
   (ispell-dictionary "en_US")
   (ispell-personal-dictionary "~/.config/emacs/ispell-wordbook")
   (inhibit-startup-screen t)
-  (insert-directory-program "gls")
   (isearch-lazy-count t)
   (large-file-warning-threshold 1000000000)
   (mac-command-modifier 'meta)
   (mac-option-modifier 'none)
-  (major-mode-remap-alist '((sh-mode . bash-ts-mode)
-			    (mhtml-mode . html-ts-mode)
-			    (css-mode . css-ts-mode)
-			    (javascript-mode . js-ts-mode)
-			    (dockerfile-mode . dockerfile-ts-mode)
-			    (json-mode . json-ts-mode)
-			    (yaml-mode . yaml-ts-mode)
-			    (lua-mode . lua-ts-mode)))
+  (major-mode-remap-alist '((sh-mode . bash-ts-mode) (mhtml-mode . html-ts-mode) (css-mode . css-ts-mode) (javascript-mode . js-ts-mode) (dockerfile-mode . dockerfile-ts-mode) (json-mode . json-ts-mode) (yaml-mode . yaml-ts-mode) (lua-mode . lua-ts-mode)))
   (make-backup-files nil)
-  (mode-line-collapse-minor-modes '(not eglot-mode flymake-mode))
+  (mode-line-collapse-minor-modes '(not flymake-mode))
   (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
   (modus-themes-headings '((1 . (2.0)) (2 . (1.6)) (3 . (1.2))))
   (modus-themes-italic-constructs t)
@@ -84,11 +76,13 @@
   (tooltip-mode nil)
   (use-dialog-box nil)
   (use-package-vc-prefer-newest t)
-  (visual-fill-column-center-text t)
-  (visual-fill-column-width 100)
   (which-key-mode t)
   (word-wrap-by-category t)
   :config
+  (defun async-shell-command-no-window (command)
+    (interactive)
+    (let ((display-buffer-alist (list (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))))
+      (async-shell-command command)))
   (defun auto-theme (appearance)
     "Load theme, taking current system APPEARANCE into consideration."
     (mapc #'disable-theme custom-enabled-themes)
@@ -105,11 +99,7 @@
   (defun vc-amend ()
     "Amend the previous commit title."
     (interactive)
-    (vc-checkin nil 'git) (vc-git-log-edit-toggle-amend))
-  (defun async-shell-command-no-window (command)
-    (interactive)
-    (let ((display-buffer-alist (list (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))))
-      (async-shell-command command))))
+    (vc-checkin nil 'git) (vc-git-log-edit-toggle-amend)))
 
 (add-to-list 'imagemagick-enabled-types 'JXL)
 
@@ -155,11 +145,12 @@
     (find-file "~/.config/emacs/init.el")))
 
 (use-package dired
+  :after ls-lisp
+  :preface (require 'ls-lisp)
   :hook
   (dired-mode . dired-omit-mode)
   (dired-mode . dired-hide-details-mode)
   :custom
-  (dired-listing-switches "-alh --group-directories-first")
   (dired-clean-confirm-killing-deleted-buffers nil)
   (dired-create-destination-dirs 'ask)
   (dired-mouse-drag-files t)
@@ -180,6 +171,13 @@
     (interactive)
     (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
       (if path (dired (string-trim path)) (message "No Finder window found.")))))
+
+(use-package ls-lisp
+  :custom
+  (ls-lisp-dirs-first t)
+  (ls-lisp-ignore-case t)
+  (ls-lisp-use-insert-directory-program nil)
+  (ls-lisp-use-localized-time-format t))
 
 (use-package yt-dlp
   :bind
@@ -275,7 +273,7 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
 ;; Deferred External Packages
 
 (use-package agent-shell
-  :ensure t
+  :ensure t :defer t
   :custom
   (agent-shell-opencode-default-model-id "ollama/gemma4:26b-32k")
   (agent-shell-github-default-model-id "claude-haiku-4.5")
@@ -298,7 +296,16 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
     ("a" . appine)
     ("k" . appine-kill)
     ("u" . appine-open-url)
-    ("o" . appine-open-file)))
+    ("o" . appine-open-file)
+    ("e" . open-with-appine)
+    ("r" . appine-web-reload))
+  :config
+  (defun open-with-appine ()
+    "Load the current file or file under cursor in Dired into Appine."
+    (interactive)
+    (let ((file (if (derived-mode-p 'dired-mode) (dired-get-file-for-visit) (buffer-file-name))))
+      (if (and file (file-exists-p file)) (progn (appine-open-file file))
+	(message "No file found to open with Appine")))))
 
 (use-package csv-mode
   :ensure t :defer t
@@ -324,8 +331,6 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
 
 (use-package gterm
   :ensure t :defer t
-  ;; Specify custom Emacs include path (for emacs-module.h)
-  ;; zig build -Demacs-include=/path/to/emacs/include
   :vc ( :url "https://github.com/rwc9u/emacs-libgterm" :branch "main")
   :custom
   (gterm-always-compile-module t)
@@ -414,16 +419,6 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   :ensure t :defer t
   :hook dired-mode)
 
-(use-package reader
-  :ensure t :defer t
-  :vc
-  ( :url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
-  :config
-  (defun fix-reader ()
-    "Recompile Reader Libraries"
-    (interactive)
-    (let ((default-directory "~/.config/emacs/elpa/reader/")) (shell-command "make clean all"))))
-
 (use-package swift-ts-mode
   :ensure t :defer t
   :mode "\\.swift\\'"
@@ -458,3 +453,9 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   :bind
   ("M-z" . undo-fu-only-undo)
   ("M-Z" . undo-fu-only-redo))
+
+(use-package visual-fill-column
+  :ensure t :defer t
+  :custom
+  (visual-fill-column-center-text t)
+  (visual-fill-column-width 100))
