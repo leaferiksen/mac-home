@@ -187,7 +187,8 @@
   (defun project-gterm ()
     "Open gterm in project's root directory."
     (interactive)
-    (let ((project (project-current t))) ((default-directory (project-root project))) (gterm)))
+    (let ((project (project-current t)))
+      (let ((default-directory (project-root project))) (gterm))))
   (defun project-npx-serve ()
     "Clear clipboard, npx serve project's root directory, call clipboard watcher."
     (interactive)
@@ -196,7 +197,7 @@
       (gui-set-selection 'CLIPBOARD "")
       ;; 2. Reset the server
       (when (get-buffer buff-name) (kill-buffer buff-name))
-      (let ((default-directory (project-root pr))) (start-process "npx" buff-name "npx" "serve"))
+      (let ((default-directory (project-root project))) (start-process "npx" buff-name "npx" "serve"))
       ;; 3. Start the clipboard watcher
       (watch-clipboard-appine-open-url) (message "Server starting... will open in Appine.")))
   (defun watch-clipboard-appine-open-url ()
