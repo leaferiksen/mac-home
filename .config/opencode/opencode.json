@@ -8,8 +8,8 @@
 				"baseURL": "http://100.112.227.27:11434/v1"
 			},
 			"models": {
-				"gemma4:26b-32k": {
-					"name": "Gemma 4 26b 32k"
+				"gemma4:26b-64k": {
+					"name": "Gemma 4 26b 64k"
 				},
 				"qwen3.5:27b": {
 					"name": "Quen 3.5 27b"

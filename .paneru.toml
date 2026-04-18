@@ -1,0 +1,38 @@
+[options]
+preset_column_widths = [0.3, 0.5, 0.7, 1]
+sliver_width = 1
+
+[bindings]
+window_focus_north = "alt - p"
+window_focus_south = "alt - n"
+window_focus_west = "alt - a"
+window_focus_east = "alt - e"
+window_swap_west = "alt - b"
+window_swap_east = "alt - f"
+window_stack = "alt - i"
+window_unstack = "alt - o"
+window_resize = "alt - r"
+window_shrink = "alt - s"
+window_center = "alt - c"
+window_manage = "alt - m"
+
+[padding]
+left = 10
+right = 10
+
+[windows]
+
+[windows.all]
+title = ".*"
+vertical_padding = 20
+horizontal_padding = 10
+
+[windows.emacs]
+title = ".*"
+bundle_id = "org.gnu.Emacs"
+width = 1.0
+
+[window.facetime]
+title = ".*"
+bundle_id = "com.apple.Facetime"
+floating = true

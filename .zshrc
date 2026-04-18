@@ -27,7 +27,7 @@ alias upn='ncu -u && npm install'
 alias fixnode='brew unlink node && brew link --overwrite node'
 
 # My BSD utils
-alias gitamend='git add . && git commit --amend --no-edit && git status'
+alias gitamend='git commit --amend --no-edit && git status'
 alias myip='ifconfig | grep "inet "'
 alias ctar='tar -czvf'
 alias xtar='tar -xzvf'

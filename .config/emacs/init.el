@@ -7,7 +7,7 @@
 
 (use-package emacs
   :hook
-  (window-setup-hook . toggle-frame-maximized)
+  ;; (window-setup-hook . toggle-frame-maximized)
   (ns-system-appearance-change-functions . auto-theme)
   (text-mode . flyspell-mode)
   (html-mode . eglot-ensure)
@@ -103,8 +103,6 @@
 
 (add-to-list 'imagemagick-enabled-types 'JXL)
 
-(auto-insert-mode t)
-
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (define-auto-insert "\.html" "insert.html")
@@ -115,6 +113,12 @@
 
 (define-key key-translation-map (kbd "M-r") (kbd "C-x r"))
 
+(set-fontset-font t nil "SF Pro Display" nil 'append)
+
+;; Internal Packages
+
+(auto-insert-mode)
+
 (editorconfig-mode)
 
 (fido-vertical-mode)
@@ -122,10 +126,6 @@
 (repeat-mode)
 
 (require 'eglot)
-
-(set-fontset-font t nil "SF Pro Display" nil 'append)
-
-;; Internal Packages
 
 (use-package completion-preview
   :hook
@@ -163,7 +163,6 @@
     ("x" . dired-finder-path)
     ("SPC" . nil)
     ("SPC p" . dwim-convert-to-pdf)
-    ("SPC h" . dwim-npx-http-server)
     ("SPC t" . dwim-tailwindcss))
   :config
   (defun dired-finder-path ()
@@ -178,6 +177,35 @@
   (ls-lisp-ignore-case t)
   (ls-lisp-use-insert-directory-program nil)
   (ls-lisp-use-localized-time-format t))
+
+(use-package project
+  :bind
+  ( :map project-prefix-map
+    ("s" . project-gterm)
+    ("S" . project-npx-serve))
+  :config
+  (defun project-gterm ()
+    "Open gterm in project's root directory."
+    (interactive)
+    (let ((project (project-current t))) ((default-directory (project-root project))) (gterm)))
+  (defun project-npx-serve ()
+    "Clear clipboard, npx serve project's root directory, call clipboard watcher."
+    (interactive)
+    (let* ((project (project-current t)) (buff-name (format "*npx:%s*" (project-name project))))
+      ;; 1. Clear clipboard by pushing an empty string
+      (gui-set-selection 'CLIPBOARD "")
+      ;; 2. Reset the server
+      (when (get-buffer buff-name) (kill-buffer buff-name))
+      (let ((default-directory (project-root pr))) (start-process "npx" buff-name "npx" "serve"))
+      ;; 3. Start the clipboard watcher
+      (watch-clipboard-appine-open-url) (message "Server starting... will open in Appine.")))
+  (defun watch-clipboard-appine-open-url ()
+    "Poll the clipboard; if not empty, open it and stop."
+    (let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)))
+      (if (and current-clip (not (string-empty-p current-clip)))
+          (progn (appine-open-url current-clip) (message "Clipboard detected! Opened: %s" current-clip))
+        ;; Check again in 0.5 seconds
+        (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url)))))
 
 (use-package yt-dlp
   :bind
@@ -209,6 +237,28 @@
   :custom
   (apheleia-global-mode t))
 
+(use-package appine
+  :ensure t
+  :vc ( :url "https://github.com/chaoswork/appine")
+  :if
+  (memq window-system '(ns))
+  :bind
+  ( :prefix "C-c m"
+    :prefix-map macos-views
+    ("a" . appine)
+    ("k" . appine-kill)
+    ("u" . appine-open-url)
+    ("o" . appine-open-file)
+    ("e" . open-with-appine)
+    ("r" . appine-web-reload))
+  :config
+  (defun open-with-appine ()
+    "Load the current file or file under cursor in Dired into Appine."
+    (interactive)
+    (let ((file (if (derived-mode-p 'dired-mode) (dired-get-file-for-visit) (buffer-file-name))))
+      (if (and file (file-exists-p file)) (progn (appine-open-file file))
+	(message "No file found to open with Appine")))))
+
 (use-package elfeed-webkit
   :ensure t
   :demand
@@ -236,14 +286,6 @@
        "Move marked files to macOS trash"
        "trash '<<f>>'"
        :silent-success t)))
-  (defun dwim-npx-http-server ()
-    "npx HTTP serve current directory."
-    (interactive)
-    (dwim-shell-command-on-marked-files
-     "HTTP serve current dir"
-     "npx http-server -o -p 9999"
-     :focus-now t
-     :no-progress t))
   (defun dwim-tailwindcss ()
     "Tailwindcss in current directory."
     (interactive)
@@ -275,7 +317,7 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
 (use-package agent-shell
   :ensure t :defer t
   :custom
-  (agent-shell-opencode-default-model-id "ollama/gemma4:26b-32k")
+  (agent-shell-opencode-default-model-id "ollama/gemma4:26b-64k")
   (agent-shell-github-default-model-id "claude-haiku-4.5")
   :bind
   ( :prefix "C-c a"
@@ -284,28 +326,6 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
     ("o" . agent-shell-opencode-start-agent)
     ("g" . agent-shell-google-start-gemini)
     ("c" . agent-shell-github-start-copilot)))
-
-(use-package appine
-  :ensure t :defer t
-  :vc ( :url "https://github.com/chaoswork/appine")
-  :if
-  (memq window-system '(ns))
-  :bind
-  ( :prefix "C-c m"
-    :prefix-map macos-views
-    ("a" . appine)
-    ("k" . appine-kill)
-    ("u" . appine-open-url)
-    ("o" . appine-open-file)
-    ("e" . open-with-appine)
-    ("r" . appine-web-reload))
-  :config
-  (defun open-with-appine ()
-    "Load the current file or file under cursor in Dired into Appine."
-    (interactive)
-    (let ((file (if (derived-mode-p 'dired-mode) (dired-get-file-for-visit) (buffer-file-name))))
-      (if (and file (file-exists-p file)) (progn (appine-open-file file))
-	(message "No file found to open with Appine")))))
 
 (use-package csv-mode
   :ensure t :defer t
@@ -335,7 +355,7 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   :custom
   (gterm-always-compile-module t)
   :bind
-  ("C-c v" . gterm))
+  ("C-c s" . gterm))
 
 (use-package hackernews
   :ensure t :defer t
@@ -354,7 +374,7 @@ fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wgh
   :ensure t :defer t)
 
 (use-package markdown-mode
-  :ensure t :defer t
+  :ensure t
   :mode
   ("README\\.md\\'" . gfm-mode)
   :hook
