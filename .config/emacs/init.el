@@ -187,25 +187,30 @@
   (defun project-gterm ()
     "Open gterm in project's root directory."
     (interactive)
-    (let ((project (project-current t)))
-      (let ((default-directory (project-root project))) (gterm))))
-  (defun project-npx-serve ()
-    "Clear clipboard, npx serve project's root directory, call clipboard watcher."
+    (let ((default-directory (project-root (project-current t)))) (gterm)))
+  (defun project-run (label msg &rest args)
+    "Run ARGS as a process LABEL in project root, showing MSG."
+    (let* ((project (project-current t))
+           (default-directory (project-root project))
+           (buf (format "*%s:%s*" label (project-name project))))
+      (when (get-buffer buf) (kill-buffer buf))
+      (apply #'start-process label buf args)
+      (when msg (message msg (project-name project)))))
+  (defun project-tailwindcss ()
+    "npx @tailwindcss/cli -i app.css -o dist.css --watch the project's root directory"
     (interactive)
-    (let* ((project (project-current t)) (buff-name (format "*npx:%s*" (project-name project))))
-      ;; 1. Clear clipboard by pushing an empty string
-      (gui-set-selection 'CLIPBOARD "")
-      ;; 2. Reset the server
-      (when (get-buffer buff-name) (kill-buffer buff-name))
-      (let ((default-directory (project-root project))) (start-process "npx" buff-name "npx" "serve"))
-      ;; 3. Start the clipboard watcher
-      (watch-clipboard-appine-open-url) (message "Server starting... will open in Appine.")))
+    (project-run "tailwindcss" "Tailwind is running in %s" "npx" "@tailwindcss/cli" "-i" "app.css" "-o" "dist.css" "--watch"))
+  (defun project-npx-serve ()
+    "Clear clipboard, npx serve the project's root directory, call clipboard watcher."
+    (interactive)
+    (gui-set-selection 'CLIPBOARD "")
+    (project-run "serve" "Serving %s..." "npx" "serve")
+    (watch-clipboard-appine-open-url))
   (defun watch-clipboard-appine-open-url ()
-    "Poll the clipboard; if not empty, open it and stop."
+    "Watch for clipboard data and open in Appine."
     (let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)))
       (if (and current-clip (not (string-empty-p current-clip)))
-          (progn (appine-open-url current-clip) (message "Clipboard detected! Opened: %s" current-clip))
-        ;; Check again in 0.5 seconds
+          (progn (appine-open-url current-clip) (message "Clipboard update detected! Opened %s in Appine" current-clip))
         (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url)))))
 
 (use-package yt-dlp
