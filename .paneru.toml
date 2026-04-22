@@ -1,4 +1,6 @@
 [options]
+focus_follows_mouse = false
+mouse_follows_focus = false
 preset_column_widths = [0.15, 0.4, 0.6, 0.85, 1]
 sliver_width = 1
 
@@ -27,12 +29,17 @@ title = ".*"
 vertical_padding = 20
 horizontal_padding = 10
 
-[windows.emacs]
-title = ".*"
-bundle_id = "org.gnu.Emacs"
-width = 1.0
-
 [window.facetime]
 title = ".*"
 bundle_id = "com.apple.Facetime"
 floating = true
+
+[window.safari]
+title = ".*"
+bundle_id = "com.apple.Safari"
+index = 1
+
+[window.tabulator]
+title = ".*"
+bundle_id = "com.gingerbeardman.Tabulator"
+index = 0

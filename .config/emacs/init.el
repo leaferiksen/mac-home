@@ -1,13 +1,11 @@
 ;;; -*- lexical-binding: t -*-
 
 ;;; Internal packages and internal hooks
-(add-to-list 'default-frame-alist '(undecorated-round . t))
 
 (require 'package)
 
 (use-package emacs
   :hook
-  ;; (window-setup-hook . toggle-frame-maximized)
   (ns-system-appearance-change-functions . auto-theme)
   (text-mode . flyspell-mode)
   (html-mode . eglot-ensure)
@@ -19,6 +17,8 @@
   ("C-c c" . ispell-word)
   ("M-[" . backward-paragraph)
   ("M-]" . forward-paragraph)
+  ("C-x 2" . split-and-follow-horizontally)
+  ("C-x 3" . split-and-follow-vertically)
   :custom-face
   (default ((t ( :family "Maple Mono NF CN" :height 140))))
   (fixed-pitch ((t ( :family "Maple Mono NF CN" :height 140))))
@@ -44,7 +44,6 @@
   (eglot-autoshutdown t)
   (electric-pair-mode t)
   (find-file-visit-truename t)
-  (frame-resize-pixelwise t)
   (gc-cons-threshold 100000000)
   (global-auto-revert-mode t)
   (global-auto-revert-non-file-buffers t)
@@ -63,6 +62,7 @@
   (modus-themes-headings '((1 . (2.0)) (2 . (1.6)) (3 . (1.2))))
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
+  (package-vc-allow-build-commands t)
   (project-mode-line t)
   (project-vc-extra-root-markers '("project"))
   (read-buffer-completion-ignore-case t)
@@ -89,6 +89,16 @@
     (pcase appearance
       ('light (load-theme 'modus-operandi-tinted t))
       ('dark (load-theme 'modus-vivendi-tinted t))))
+  (defun split-and-follow-horizontally ()
+    (interactive)
+    (split-window-below)
+    (balance-windows)
+    (other-window 1))
+  (defun split-and-follow-vertically ()
+    (interactive)
+    (split-window-right)
+    (balance-windows)
+    (other-window 1))
   (defun unfill ()
     "Unfill the current region if active, or the current paragraph."
     (interactive)
@@ -123,9 +133,21 @@
 
 (fido-vertical-mode)
 
+(global-hl-line-mode t)
+
 (repeat-mode)
 
 (require 'eglot)
+
+(use-package almost-maximize-frame
+  :hook
+  (emacs-startup . almost-maximize-frame)
+  :init
+  (defun almost-maximize-frame()
+    "Borderless maximise with margins for tiling"
+    (add-to-list 'default-frame-alist '(undecorated-round . t))
+    (setopt frame-resize-pixelwise t)
+    (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t)))
 
 (use-package completion-preview
   :hook
@@ -149,7 +171,7 @@
   :preface (require 'ls-lisp)
   :hook
   (dired-mode . dired-omit-mode)
-  (dired-mode . dired-hide-details-mode)
+  ;; (dired-mode . dired-hide-details-mode)
   :custom
   (dired-clean-confirm-killing-deleted-buffers nil)
   (dired-create-destination-dirs 'ask)
@@ -162,8 +184,7 @@
     ("d" . dwim-macos-move-to-trash)
     ("x" . dired-finder-path)
     ("SPC" . nil)
-    ("SPC p" . dwim-convert-to-pdf)
-    ("SPC t" . dwim-tailwindcss))
+    ("SPC p" . dwim-convert-to-pdf))
   :config
   (defun dired-finder-path ()
     "Open Dired in the frontmost Finder window path, if available."
@@ -182,7 +203,8 @@
   :bind
   ( :map project-prefix-map
     ("s" . project-gterm)
-    ("S" . project-npx-serve))
+    ("S" . project-npx-serve)
+    ("t" . project-tailwindcss))
   :config
   (defun project-gterm ()
     "Open gterm in project's root directory."
@@ -205,13 +227,23 @@
     (interactive)
     (gui-set-selection 'CLIPBOARD "")
     (project-run "serve" "Serving %s..." "npx" "serve")
-    (watch-clipboard-appine-open-url))
-  (defun watch-clipboard-appine-open-url ()
-    "Watch for clipboard data and open in Appine."
+    (watch-clipboard-xwidget-webkit-browse-url))
+  (defun watch-clipboard-xwidget-webkit-browse-url ()
+    "Watch for clipboard data and open in Xwidgets."
     (let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)))
       (if (and current-clip (not (string-empty-p current-clip)))
-          (progn (appine-open-url current-clip) (message "Clipboard update detected! Opened %s in Appine" current-clip))
-        (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url)))))
+          (progn (split-and-follow-vertically) (xwidget-webkit-browse-url current-clip) (message "Clipboard update detected! Opened %s in " current-clip))
+        (run-at-time "0.5 sec" nil #'watch-clipboard-xwidget-webkit-browse-url)))))
+
+(use-package xwidget
+  :bind
+  )
+
+(use-package xwidget
+  :bind
+  ( :map xwidget-webkit-mode-map
+    ("u". xwidget-webkit-browse-url))
+  :bind-keymap ("C-c x" . xwidget-webkit-mode-map))
 
 (use-package yt-dlp
   :bind
@@ -243,28 +275,6 @@
   :custom
   (apheleia-global-mode t))
 
-(use-package appine
-  :ensure t
-  :vc ( :url "https://github.com/chaoswork/appine")
-  :if
-  (memq window-system '(ns))
-  :bind
-  ( :prefix "C-c m"
-    :prefix-map macos-views
-    ("a" . appine)
-    ("k" . appine-kill)
-    ("u" . appine-open-url)
-    ("o" . appine-open-file)
-    ("e" . open-with-appine)
-    ("r" . appine-web-reload))
-  :config
-  (defun open-with-appine ()
-    "Load the current file or file under cursor in Dired into Appine."
-    (interactive)
-    (let ((file (if (derived-mode-p 'dired-mode) (dired-get-file-for-visit) (buffer-file-name))))
-      (if (and file (file-exists-p file)) (progn (appine-open-file file))
-	(message "No file found to open with Appine")))))
-
 (use-package elfeed-webkit
   :ensure t
   :demand
@@ -292,21 +302,24 @@
        "Move marked files to macOS trash"
        "trash '<<f>>'"
        :silent-success t)))
-  (defun dwim-tailwindcss ()
-    "Tailwindcss in current directory."
-    (interactive)
-    (dwim-shell-command-on-marked-files
-     "Tailwindcss in current dir"
-     "npx @tailwindcss/cli -i app.css -o dist.css --watch"
-     :focus-now t
-     :no-progress t))
   (defun dwim-convert-to-pdf ()
-    "Convert file to pdf via pandoc and typst.
-fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wght].ttf' wght=400"
+    "Convert file to pdf via pandoc and typst."
+    ;; fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wght].ttf' wght=400
+    ;; pandoc --print-default-template=typst
     (interactive)
     (dwim-shell-command-on-marked-files
      "Convert to pdf"
      "pandoc --pdf-engine=typst --template=/Users/leaf/.config/typst/template.typ '<<f>>' -o '<<fne>>.pdf'")))
+
+(use-package reader
+  :ensure t
+  :vc
+  ( :url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
+  :config
+  (defun fix-reader ()
+    "Recompile Reader Libraries"
+    (interactive)
+    (let ((default-directory "~/.config/emacs/elpa/reader/")) (shell-command "make clean all"))))
 
 (use-package spacious-padding
   :ensure t

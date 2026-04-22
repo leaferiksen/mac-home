@@ -16,6 +16,9 @@
 {:des "iPhone Mirroring playback with 􀆔􀊉/􀊇/􀊋" :rules [
 	[:!CC##f7 "sh ~/.config/karabiner/iphoneBack.sh"]  [:!CC##f8 "sh ~/.config/karabiner/iphonePlay.sh"]  [:!CC##f9 "sh ~/.config/karabiner/iphoneForward.sh"]
 ]}
+{:des "Restart Paneru with 􀆔􀊫" :rules [
+	[:!CC##f4 "/opt/homebrew/bin/paneru restart"]
+]}
 {:des "Right 􀆔 as Right 􀆍, C-h as backspace in Emacs and global Emacs bindings" :rules [
 	;; emacs global
 	[:!T##open_bracket :tab]  [:!T##l :return_or_enter]

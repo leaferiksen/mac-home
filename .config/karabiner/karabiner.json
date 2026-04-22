@@ -58,6 +58,22 @@
                         ]
                     },
                     {
+                        "description": "Restart Paneru with 􀆔􀊫",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "f4",
+                                    "modifiers": {
+                                        "mandatory": ["command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "/opt/homebrew/bin/paneru restart" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Right 􀆔 as Right 􀆍, C-h as backspace in Emacs and global Emacs bindings",
                         "manipulators": [
                             {

@@ -20,15 +20,33 @@
 (add-to-list 'exec-path "/opt/homebrew/sbin")
 (add-to-list 'exec-path "/opt/homebrew/bin")
 
-(use-package reader
+(use-package appine
   :ensure t
-  :vc
-  ( :url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
+  :vc ( :url "https://github.com/chaoswork/appine")
+  :if
+  (memq window-system '(ns))
+  :bind
+  ( :prefix "C-c m"
+    :prefix-map macos-views
+    ("a" . appine)
+    ("k" . appine-kill)
+    ("u" . appine-open-url)
+    ("o" . appine-open-file)
+    ("e" . open-with-appine)
+    ("r" . appine-web-reload))
   :config
-  (defun fix-reader ()
-    "Recompile Reader Libraries"
+  (defun open-with-appine ()
+    "Load the current file or file under cursor in Dired into Appine."
     (interactive)
-    (let ((default-directory "~/.config/emacs/elpa/reader/")) (shell-command "make clean all"))))
+    (let ((file (if (derived-mode-p 'dired-mode) (dired-get-file-for-visit) (buffer-file-name))))
+      (if (and file (file-exists-p file)) (progn (appine-open-file file))
+	(message "No file found to open with Appine"))))
+  (defun watch-clipboard-appine-open-url ()
+    "Watch for clipboard data and open in Appine."
+    (let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)))
+      (if (and current-clip (not (string-empty-p current-clip)))
+          (progn (appine-open-url current-clip) (message "Clipboard update detected! Opened %s in Appine" current-clip))
+        (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url)))))
 
 (use-package swift-development
   :ensure t :defer t
