@@ -3,7 +3,7 @@
 brew tap d12frosted/emacs-plus
 brew install --cask emacs-plus-app
 
-brew install --formula aspell ffmpeg media-info pandoc paneru pngpaste tealdeer typst yqrashawn/goku/goku yt-dlp zig zsh-autosuggestions zsh-syntax-highlighting 
+brew install --formula aspell ffmpeg media-info mupdf pandoc paneru pngpaste tealdeer typst yqrashawn/goku/goku yt-dlp zig zsh-autosuggestions zsh-syntax-highlighting 
 
 paneru install
 paneru start

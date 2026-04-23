@@ -59,7 +59,7 @@
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not flymake-mode))
   (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
-  (modus-themes-headings '((1 . (2.0)) (2 . (1.6)) (3 . (1.2))))
+  (modus-themes-headings '((1 . (regular 2.0)) (2 . (regular 1.75)) (3 . (regular 1.5)) (4 . (regular 1.25)) (t . (regular))))
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
   (package-vc-allow-build-commands t)
@@ -127,15 +127,17 @@
 
 ;; Internal Packages
 
-(auto-insert-mode)
+(auto-insert-mode 1)
 
-(editorconfig-mode)
+(auto-save-visited-mode 1)
 
-(fido-vertical-mode)
+(editorconfig-mode 1)
 
-(global-hl-line-mode t)
+(fido-vertical-mode 1)
 
-(repeat-mode)
+(global-hl-line-mode 1)
+
+(repeat-mode 1)
 
 (require 'eglot)
 
@@ -177,14 +179,13 @@
   (dired-create-destination-dirs 'ask)
   (dired-mouse-drag-files t)
   (dired-recursive-copies 'always)
-  (dired-omit-files	"^~\\$[^/]*\\|#.*#\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
+  (dired-omit-files "\\`[.]?#\\|\\`[.][.]?\\'\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
   :bind
   ( :map dired-mode-map
     ("e" . dwim-shell-commands-macos-open-with)
     ("d" . dwim-macos-move-to-trash)
     ("x" . dired-finder-path)
-    ("SPC" . nil)
-    ("SPC p" . dwim-convert-to-pdf))
+    ("SPC" . my-dwim-shell-commands))
   :config
   (defun dired-finder-path ()
     "Open Dired in the frontmost Finder window path, if available."
@@ -232,12 +233,8 @@
     "Watch for clipboard data and open in Xwidgets."
     (let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)))
       (if (and current-clip (not (string-empty-p current-clip)))
-          (progn (split-and-follow-vertically) (xwidget-webkit-browse-url current-clip) (message "Clipboard update detected! Opened %s in " current-clip))
+          (progn (split-and-follow-horizontally) (xwidget-webkit-browse-url current-clip) (message "Clipboard update detected! Opened %s in Xwidgets" current-clip))
         (run-at-time "0.5 sec" nil #'watch-clipboard-xwidget-webkit-browse-url)))))
-
-(use-package xwidget
-  :bind
-  )
 
 (use-package xwidget
   :bind
@@ -293,6 +290,11 @@
 
 (use-package dwim-shell-command
   :ensure t
+  :bind
+  ( :prefix "C-c i"
+    :prefix-map my-dwim-shell-commands
+    ("p" . dwim-file-to-pdf)
+    ("x" . dwim-md-to-pptx))
   :config
   (defun dwim-macos-move-to-trash ()
     "Move marked files to macOS trash."
@@ -302,14 +304,23 @@
        "Move marked files to macOS trash"
        "trash '<<f>>'"
        :silent-success t)))
-  (defun dwim-convert-to-pdf ()
+  (defun dwim-file-to-pdf ()
     "Convert file to pdf via pandoc and typst."
     ;; fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wght].ttf' wght=400
     ;; pandoc --print-default-template=typst
     (interactive)
     (dwim-shell-command-on-marked-files
-     "Convert to pdf"
-     "pandoc --pdf-engine=typst --template=/Users/leaf/.config/typst/template.typ '<<f>>' -o '<<fne>>.pdf'")))
+     "Converting to pdf"
+     "pandoc --pdf-engine=typst --template=/Users/leaf/.config/typst/template.typ '<<f>>' -o '<<fne>>.pdf'"))
+  (defun dwim-md-to-pptx ()
+    "Convert md files to pptx."
+    (interactive)
+    (let ((files (dwim-shell-command--files)))
+      (if (cl-every (lambda (f) (string-suffix-p ".md" f t)) files)
+          (dwim-shell-command-on-marked-files 
+           "Converting md to pptx" 
+           "npx @marp-team/marp-cli@latest '<<f>>' --pptx")
+	(user-error "Selection contains non-markdown files!")))))
 
 (use-package reader
   :ensure t

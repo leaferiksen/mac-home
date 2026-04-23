@@ -1,12 +1,7 @@
 #set page(
     paper: "us-letter",
     margin: 1in,
-    header: context {
-        align(right)[
-            Eriksen #counter(page).display()
-        ]
-    }
-)
+    header: context {align(right)[Eriksen #counter(page).display()]})
 #set text(
     font: "Times New Roman",
     size: 12pt)
@@ -31,11 +26,10 @@
     it
 }
 
-#align(left)[
-    $author$ \
-    $professor$ \
-    $class$ \
-    #datetime.today().display("[day] [month repr:long] [year]")]
+$author$ \
+$professor$ \
+$class$ \
+#datetime.today().display("[day] [month repr:long] [year]")
 
 #set par(
     first-line-indent: (amount: 2em, all: true))
