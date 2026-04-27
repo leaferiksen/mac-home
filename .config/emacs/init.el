@@ -173,7 +173,7 @@
   :preface (require 'ls-lisp)
   :hook
   (dired-mode . dired-omit-mode)
-  ;; (dired-mode . dired-hide-details-mode)
+  (dired-mode . dired-hide-details-mode)
   :custom
   (dired-clean-confirm-killing-deleted-buffers nil)
   (dired-create-destination-dirs 'ask)
@@ -182,10 +182,7 @@
   (dired-omit-files "\\`[.]?#\\|\\`[.][.]?\\'\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
   :bind
   ( :map dired-mode-map
-    ("e" . dwim-shell-commands-macos-open-with)
-    ("d" . dwim-macos-move-to-trash)
-    ("x" . dired-finder-path)
-    ("SPC" . my-dwim-shell-commands))
+    ("f" . dired-finder-path))
   :config
   (defun dired-finder-path ()
     "Open Dired in the frontmost Finder window path, if available."
@@ -291,10 +288,19 @@
 (use-package dwim-shell-command
   :ensure t
   :bind
-  ( :prefix "C-c i"
-    :prefix-map my-dwim-shell-commands
-    ("p" . dwim-file-to-pdf)
-    ("x" . dwim-md-to-pptx))
+  (([remap shell-command] . dwim-shell-command)
+   :map dired-mode-map
+   ([remap dired-do-async-shell-command] . dwim-shell-command)
+   ([remap dired-do-shell-command] . dwim-shell-command)
+   ([remap dired-smart-shell-command] . dwim-shell-command)
+   ("e" . dwim-shell-commands-macos-open-with)
+   ("d" . dwim-macos-move-to-trash)
+   ("x" . my-dwim-shell-commands)
+   :prefix "C-c i"
+   :prefix-map my-dwim-shell-commands
+   ("m" . dwim-file-to-mla-pdf)
+   ("g" . dwim-file-to-generic-pdf)
+   ("p" . dwim-md-to-pptx))
   :config
   (defun dwim-macos-move-to-trash ()
     "Move marked files to macOS trash."
@@ -304,14 +310,20 @@
        "Move marked files to macOS trash"
        "trash '<<f>>'"
        :silent-success t)))
-  (defun dwim-file-to-pdf ()
-    "Convert file to pdf via pandoc and typst."
+  (defun dwim-file-to-mla-pdf ()
+    "Convert file to MLA pdf via pandoc and typst."
     ;; fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wght].ttf' wght=400
     ;; pandoc --print-default-template=typst
     (interactive)
     (dwim-shell-command-on-marked-files
-     "Converting to pdf"
+     "Converting to MLA pdf"
      "pandoc --pdf-engine=typst --template=/Users/leaf/.config/typst/template.typ '<<f>>' -o '<<fne>>.pdf'"))
+  (defun dwim-file-to-generic-pdf ()
+    "Convert file to generic pdf via pandoc and typst."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Converting md to generic pdf"
+     "pandoc --pdf-engine=typst '<<f>>' -o '<<fne>>.pdf'"))
   (defun dwim-md-to-pptx ()
     "Convert md files to pptx."
     (interactive)
@@ -353,6 +365,7 @@
   ( :prefix "C-c a"
     :prefix-map favorite-agents
     ("a" . agent-shell)
+    ("p" . agent-shell-pi-start-agent)
     ("o" . agent-shell-opencode-start-agent)
     ("g" . agent-shell-google-start-gemini)
     ("c" . agent-shell-github-start-copilot)))

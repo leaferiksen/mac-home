@@ -12,6 +12,10 @@ export PATH=$HOME/.docker/bin:/opt/homebrew/sbin:/opt/homebrew/bin:$PATH
 eval "$(brew shellenv)"
 . "$HOME/.cargo/env"
 
+# disable gcc
+unset CC
+unset CC
+
 # named directories
 export ic="/Users/leaf/Library/Mobile Documents/com~apple~CloudDocs/"
 export sf="/Users/leaf/Documents/College/"
@@ -22,9 +26,11 @@ alias q='qlmanage -p'
 alias ani-cli='ani-cli -q 1080'
 alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
 alias fixapp='xattr -dr com.apple.quarantine'
-alias upb='brew update && brew upgrade --greedy'
-alias upn='ncu -u && npm install'
+alias upbrew='brew update && brew upgrade --greedy'
+alias upnpm='ncu -u && npm install'
 alias fixnode='brew unlink node && brew link --overwrite node'
+alias upskills='npx skills update --global'
+alias addskillsto='npx skills add ~/.agents/skills/ --all --agent'
 
 # My BSD utils
 alias gitamend='git commit --amend --no-edit && git status'

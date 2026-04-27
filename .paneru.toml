@@ -34,12 +34,7 @@ title = ".*"
 bundle_id = "com.apple.Facetime"
 floating = true
 
-[window.safari]
+[window.iina]
 title = ".*"
-bundle_id = "com.apple.Safari"
-index = 1
-
-[window.tabulator]
-title = ".*"
-bundle_id = "com.gingerbeardman.Tabulator"
-index = 0
+bundle_id = "com.colliderli.iina"
+floating = true
