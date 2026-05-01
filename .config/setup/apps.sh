@@ -18,6 +18,6 @@ brew install --formula protobuf swift-protobuf xcodegen
 # paperWM
 # brew install --formula busted lua-language-server
 
-brew install --cask anki BarutSRB/tap/omniwm calibre font-atkinson-hyperlegible-next font-atkinson-hyperlegible-mono font-maple-mono-nf-cn font-symbols-only-nerd-font homerow iina knockknock modrinth osu qlmarkdown qlvideo Sikarugir-App/sikarugir/sikarugir soulver syncthing virtualbuddy waterfox zotero
+brew install --cask anki BarutSRB/tap/omniwm calibre font-atkinson-hyperlegible-next font-atkinson-hyperlegible-mono font-maple-mono-nf-cn font-symbols-only-nerd-font homerow iina knockknock modrinth mos@beta osu Sikarugir-App/sikarugir/sikarugir soulver syncthing virtualbuddy waterfox zotero
 
 npm install -g npm-check-updates

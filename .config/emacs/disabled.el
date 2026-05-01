@@ -5,6 +5,9 @@
 ;;;;;;;;;;;;;;;;
 ;; Early-init ;;
 ;;;;;;;;;;;;;;;;
+(fixed-pitch ((t ( :family "Maple Mono NF CN" :height 140))))
+(variable-pitch ((t ( :family "Atkinson Hyperlegible Next" :height 180))))
+
 (setq package-vc-allow-build-commands t)
 (add-to-list 'default-frame-alist '(undecorated . t))
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
@@ -19,6 +22,44 @@
 (add-to-list 'exec-path "/opt/homebrew/opt/python@3.14/libexec/bin")
 (add-to-list 'exec-path "/opt/homebrew/sbin")
 (add-to-list 'exec-path "/opt/homebrew/bin")
+
+(use-package markdown-mode
+  :ensure t
+  :mode
+  ("README\\.md\\'" . gfm-mode)
+  :hook
+  ;; (markdown-mode . variable-pitch-mode)
+  (markdown-mode . visual-fill-column-mode)
+  :custom-face
+  (markdown-list-face ((t ( :family "Atkinson Hyperlegible Mono"))))
+  :custom
+  (markdown-asymmetric-header t)
+  (markdown-enable-wiki-links t)
+  (markdown-fontify-code-blocks-natively t)
+  (markdown-hide-urls t)
+  (markdown-link-space-sub-char " ")
+  (markdown-special-ctrl-a/e t)
+  (markdown-unordered-list-item-prefix "- ")
+  (markdown-wiki-link-retain-case t)
+  :config
+  ;; Open wikilinks with explicit file extensions without also adding .md extension
+  (advice-add 'markdown-convert-wiki-link-to-filename :around
+	      (lambda (orig-fn name)
+		"Convert NAME to filename. If NAME has explicit extension, use it directly."
+		(if (file-name-extension name) (replace-regexp-in-string "[[:space:]\n]" markdown-link-space-sub-char name) (funcall orig-fn name))))
+  ;; Files opened via wikilinks use their correct major mode instead of markdown-mode
+  (advice-add 'markdown-follow-wiki-link :override
+	      (lambda (name &optional other)
+		"Follow the wiki link NAME, respecting buffer's major mode."
+		(unless buffer-file-name (user-error "Must be visiting a file"))
+		(when other (other-window 1))
+		(let ((default-directory (file-name-directory buffer-file-name))) (find-file (markdown-convert-wiki-link-to-filename name)))))
+  :bind
+  ("C-c d" . daily-note)
+  ( :map markdown-mode-map
+    ("C-c SPC 1" . h1-title)
+    ("C-c SPC 2" . h2-today)
+    ("C-c SPC p" . export-selection-to-mla-pdf)))
 
 (use-package appine
   :ensure t

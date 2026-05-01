@@ -14,6 +14,7 @@
 #set table(
     inset: 6pt,
     stroke: none)
+
 #show heading: it => {
     set text(
         size: 12pt,
@@ -26,9 +27,12 @@
     it
 }
 
-$author$ \
-$professor$ \
-$class$ \
+Leaf Eriksen
+
+$professor$
+
+$class$
+
 #datetime.today().display("[day] [month repr:long] [year]")
 
 #set par(
@@ -36,16 +40,17 @@ $class$ \
 
 $body$
 
+$if(works-cited)$
 #context {
-    // Check if any citations actually exist in the document
-    let has-citations = query(cite).len() > 0
-    if has-citations {
+    let has_cites = query(cite).len() > 0
+    let force_full = $if(full-bibliography)$true$else$false$endif$
+    if has_cites or force_full {
         pagebreak(weak: true)
         align(center)[Works Cited]
-        set par(first-line-indent: 0in, hanging-indent: 0.5in) 
-        $if(bibliography)$
-        set bibliography(style: "mla", title: none)
-        bibliography(($for(bibliography)$"$bibliography$"$sep$,$endfor$))
-        $endif$
     }
 }
+
+#set bibliography(style: "mla", title: none)
+#set par(first-line-indent: 0in, hanging-indent: 0.5in) 
+#bibliography("$works-cited$"$if(full-bibliography)$, full: true$endif$)
+$endif$

@@ -40,7 +40,7 @@ right = 20.0
 top = 20.0
 
 [general]
-animationsEnabled = true
+animationsEnabled = false
 defaultLayoutType = "niri"
 hotkeysEnabled = true
 ipcEnabled = false
@@ -48,8 +48,8 @@ preventSleepEnabled = false
 updateChecksEnabled = true
 
 [gestures]
-fingerCount = 3
-invertDirection = true
+fingerCount = 4
+invertDirection = false
 scrollEnabled = true
 scrollModifierKey = "optionShift"
 scrollSensitivity = 5.0
@@ -61,6 +61,10 @@ margin = 1
 [[mouseWarp.monitorOrder]]
 displayId = 1
 name = "Built-in Retina Display"
+
+[[mouseWarp.monitorOrder]]
+displayId = 3
+name = "EPSON PJ"
 
 [niri]
 alwaysCenterSingleColumn = true
@@ -83,7 +87,7 @@ useCustomFrame = false
 widthPercent = 50.0
 
 [state]
-commandPaletteLastMode = "menu"
+commandPaletteLastMode = "windows"
 hiddenBarIsCollapsed = true
 
 [statusBar]
@@ -196,6 +200,16 @@ bundleId = "com.apple.MobileSMS"
 id = "552FB77D-BF0E-4737-90A6-B5BC6986C579"
 minHeight = 320.0
 minWidth = 660.0
+
+[[appRules]]
+bundleId = "com.apple.Facetime"
+id = "2BCD8673-A904-4015-BCE8-1D31C197868C"
+layout = "float"
+
+[[appRules]]
+bundleId = "com.colliderli.iina"
+id = "DFC697F1-6564-475B-AFBD-2734DEF8AEB0"
+layout = "float"
 
 [[hotkeys]]
 binding = "Option+1"

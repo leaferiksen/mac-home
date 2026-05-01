@@ -45,13 +45,12 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadTwoFi
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerVertSwipeGesture" -int "2"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerVertSwipeGesture" -int "2"
 # disable swiping between desktops
-# defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
-# defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
+defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
 # disable the Control-Command-D binding
-defaults write com.apple.symbolichotkeys AppleSymbolicHotK
-eys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
-# keyboard navigation
-defaults write -g "AppleKeyboardUIMode" -int "2"
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
+# click globe key for emoji keyboard
+defaults write com.apple.HIToolbox "AppleFnUsageType" -int "2"
 # disable dock, screensaver hot corner and quick notes
 defaults write com.apple.dock "autohide" -bool "true"
 defaults write com.apple.dock "autohide-delay" -float "1000"
@@ -165,10 +164,6 @@ defaults write com.superultra.Homerow "search-shortcut" -string ""
 ##############
 defaults write com.sindresorhus.Pure-Paste "NSStatusItem Visible Item-0" -bool "false"
 defaults write com.sindresorhus.Pure-Paste "hideMenuBarIcon" -bool "true"
-###########
-# noTunes #
-###########
-defaults write digital.twisted.noTunes replacement '/System/Applications/iPhone Mirroring.app'
 ########
 # IINA #
 ########
@@ -194,15 +189,11 @@ defaults write com.colliderli.iina "themeMaterial" -int "4"
 #########################################################
 defaults write app.zen-browser.zen "EnterprisePoliciesEnabled" -bool "true"
 defaults write app.zen-browser.zen "DisableAppUpdate" -bool "true"
-############
-# Chromium #
-############
-defaults write org.chromium.Chromium ExtensionManifestV2Availability -int 2
 #####################
 # Disabled features #
 #####################
-# double click globe key for dictation
-# defaults write com.apple.HIToolbox "AppleFnUsageType" -int "3"
+# keyboard navigation
+# defaults write -g "AppleKeyboardUIMode" -int "2"
 # defaults write com.apple.Accessibility "ReduceMotionEnabled" -int "1"
 # defaults write -g NSScrollViewRubberbanding -int 0
 # defaults write com.apple.universalaccess "virtualKeyboardOnOff" -bool "true"

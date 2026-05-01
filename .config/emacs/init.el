@@ -5,12 +5,16 @@
 (require 'package)
 
 (use-package emacs
+  :init
+  (setenv "GIT_EDITOR" "emacsclient")
   :hook
+  (emacs-startup . server-start)
   (ns-system-appearance-change-functions . auto-theme)
   (text-mode . flyspell-mode)
   (html-mode . eglot-ensure)
   (css-ts-mode . eglot-ensure)
   (js-ts-mode . eglot-ensure)
+  (text-mode-hook . (lambda () (face-remap-add-relative 'default :height 180)))
   :bind
   ("C-<wheel-up>" . nil)
   ("C-<wheel-down>" . nil)
@@ -21,10 +25,7 @@
   ("C-x 3" . split-and-follow-vertically)
   :custom-face
   (default ((t ( :family "Maple Mono NF CN" :height 140))))
-  (fixed-pitch ((t ( :family "Maple Mono NF CN" :height 140))))
-  (variable-pitch ((t ( :family "Atkinson Hyperlegible Next" :height 180))))
-  (mode-line ((t ( :family "Atkinson Hyperlegible Next" :height 160))))
-  (mode-line-inactive ((t ( :family "Atkinson Hyperlegible Next" :height 160))))
+  (fixed-pitch ((t ( :inherit default))))
   :custom
   (auto-insert-directory "~/.config/emacs/templates/")
   (auto-insert-query nil)
@@ -41,7 +42,10 @@
   (disabled-command-function nil)
   (display-line-numbers-type 'relative)
   (display-line-numbers-width-start 3)
+  (eglot-code-action-indicator "*") 
+  (eglot-code-action-indications '(mode-line))
   (eglot-autoshutdown t)
+  (eldoc-echo-area-use-multiline-p t)
   (electric-pair-mode t)
   (find-file-visit-truename t)
   (gc-cons-threshold 100000000)
@@ -109,21 +113,22 @@
   (defun vc-amend ()
     "Amend the previous commit title."
     (interactive)
-    (vc-checkin nil 'git) (vc-git-log-edit-toggle-amend)))
-
-(add-to-list 'imagemagick-enabled-types 'JXL)
-
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-(define-auto-insert "\.html" "insert.html")
-
-(define-auto-insert "\.js" "insert.js")
-
-(define-key key-translation-map (kbd "M-o") (kbd "C-x o"))
-
-(define-key key-translation-map (kbd "M-r") (kbd "C-x r"))
-
-(set-fontset-font t nil "SF Pro Display" nil 'append)
+    (vc-checkin nil 'git) (vc-git-log-edit-toggle-amend))
+  (defun get-apw-password (domain)
+    "Fetch the password for DOMAIN using the apw tool."
+    ;; Usage: (get-apw-password "example.com")
+    (let* ((json-str (shell-command-to-string (format "apw pw get %s" domain)))
+           (data (json-parse-string json-str :object-type 'alist))
+           (results (alist-get 'results data)))
+      (when (> (length results) 0)
+	(alist-get 'password (elt results 0)))))
+  (add-to-list 'imagemagick-enabled-types 'JXL)
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  (define-auto-insert "\.html" "insert.html")
+  (define-auto-insert "\.js" "insert.js")
+  (define-key key-translation-map (kbd "M-o") (kbd "C-x o"))
+  (define-key key-translation-map (kbd "M-r") (kbd "C-x r"))
+  (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display"))
 
 ;; Internal Packages
 
@@ -149,7 +154,8 @@
     "Borderless maximise with margins for tiling"
     (add-to-list 'default-frame-alist '(undecorated-round . t))
     (setopt frame-resize-pixelwise t)
-    (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t)))
+    ;; (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t)
+    ))
 
 (use-package completion-preview
   :hook
@@ -196,6 +202,53 @@
   (ls-lisp-ignore-case t)
   (ls-lisp-use-insert-directory-program nil)
   (ls-lisp-use-localized-time-format t))
+
+(use-package markdown-ts-mode
+  :mode
+  ("\\.md\\'" . markdown-ts-mode)
+  :hook
+  (markdown-ts-mode . (lambda () (font-lock-add-keywords nil '(("\\[\\[\\([^]]+\\)\\]\\]" 0 'link t)))))
+  (markdown-ts-mode-hook . orgtbl-mode)
+  :bind
+  ("C-c d" . daily-note)
+  (:map markdown-ts-mode-map
+	("M-RET" . md-follow-wiki-link)
+	("C-c C-o" . md-follow-wiki-link)
+	("C-c C-1" . h1-title)
+	("C-c C-2" . h2-today)
+	("C-c C-p" . export-selection-to-mla-pdf))
+  :config
+  (defun h1-title ()
+    "Insert an atx level 1 heading with the name of the file."
+    (interactive)
+    (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
+  (defun h2-today ()
+    "Insert an atx level 2 heading with today's date in iso format."
+    (interactive)
+    (insert "## " (format-time-string "%Y-%m-%d") "\n"))
+  (defun daily-note ()
+    "Make a new daily note in my obsidian vault"
+    (interactive)
+    (find-file (concat "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/" (format-time-string "%Y-%m-%d") ".md")))
+  (defun md-follow-wiki-link ()
+    (interactive)
+    (save-excursion
+      ;; 1. Move to end of current link (if cursor is inside it)
+      (search-forward "]]" (line-end-position) t)
+      ;; 2. Search backward for the link start
+      (if (re-search-backward "\\[\\[\\([^]]+\\)\\]\\]" (line-beginning-position) t)
+          (let ((path (match-string 1)))
+            (find-file (if (file-name-extension path) path (concat path ".md"))))
+        (message "No wikilink found on this line."))))
+  (require 'org-table)
+  (defun my/markdown-table-fix (&rest _args)
+    (when (and (buffer-file-name) (string-match-p "\\.md$" (buffer-file-name)))
+      (save-excursion
+	(let ((end (org-table-end)))
+          (goto-char (org-table-begin))
+          (while (search-forward "+" end t)
+            (replace-match "|"))))))
+  (advice-add 'org-table-align :after #'my/markdown-table-fix))
 
 (use-package project
   :bind
@@ -317,13 +370,7 @@
     (interactive)
     (dwim-shell-command-on-marked-files
      "Converting to MLA pdf"
-     "pandoc --pdf-engine=typst --template=/Users/leaf/.config/typst/template.typ '<<f>>' -o '<<fne>>.pdf'"))
-  (defun dwim-file-to-generic-pdf ()
-    "Convert file to generic pdf via pandoc and typst."
-    (interactive)
-    (dwim-shell-command-on-marked-files
-     "Converting md to generic pdf"
-     "pandoc --pdf-engine=typst '<<f>>' -o '<<fne>>.pdf'"))
+     "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=/Users/leaf/.config/typst/template.typ"))
   (defun dwim-md-to-pptx ()
     "Convert md files to pptx."
     (interactive)
@@ -392,6 +439,17 @@
   :custom
   (elfeed-search-filter "@1-month-ago +unread"))
 
+(use-package google-translate
+  :ensure t :defer t
+  :bind
+  ("C-c T" . google-translate-at-point)
+  ("C-c t" . google-translate-smooth-translate)
+  :custom
+  (google-translate-output-destination 'echo-area)
+  (google-translate-show-phonetic t)
+  (google-translate-translation-directions-alist
+   '(("ja" . "en") ("en" . "ja"))))
+
 (use-package gterm
   :ensure t :defer t
   :vc ( :url "https://github.com/rwc9u/emacs-libgterm" :branch "main")
@@ -416,58 +474,9 @@
 (use-package magit
   :ensure t :defer t)
 
-(use-package markdown-mode
-  :ensure t
-  :mode
-  ("README\\.md\\'" . gfm-mode)
-  :hook
-  (markdown-mode . variable-pitch-mode)
-  (markdown-mode . visual-fill-column-mode)
-  :custom-face
-  (markdown-list-face ((t ( :family "Atkinson Hyperlegible Mono"))))
-  :custom
-  (markdown-asymmetric-header t)
-  (markdown-enable-wiki-links t)
-  (markdown-fontify-code-blocks-natively t)
-  (markdown-hide-urls t)
-  (markdown-link-space-sub-char " ")
-  (markdown-special-ctrl-a/e t)
-  (markdown-unordered-list-item-prefix "- ")
-  (markdown-wiki-link-retain-case t)
-  :config
-  ;; Open wikilinks with explicit file extensions without also adding .md extension
-  (advice-add 'markdown-convert-wiki-link-to-filename :around
-	      (lambda (orig-fn name)
-		"Convert NAME to filename. If NAME has explicit extension, use it directly."
-		(if (file-name-extension name) (replace-regexp-in-string "[[:space:]\n]" markdown-link-space-sub-char name) (funcall orig-fn name))))
-  ;; Files opened via wikilinks use their correct major mode instead of markdown-mode
-  (advice-add 'markdown-follow-wiki-link :override
-	      (lambda (name &optional other)
-		"Follow the wiki link NAME, respecting buffer's major mode."
-		(unless buffer-file-name (user-error "Must be visiting a file"))
-		(when other (other-window 1))
-		(let ((default-directory (file-name-directory buffer-file-name))) (find-file (markdown-convert-wiki-link-to-filename name)))))
-  (defun daily-note ()
-    "Make a new daily note in my obsidian vault"
-    (interactive)
-    (find-file (concat "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/" (format-time-string "%Y-%m-%d") ".md")))
-  (defun h1-title ()
-    "Insert an atx level 1 heading with the name of the file."
-    (interactive)
-    (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
-  (defun h2-today ()
-    "Insert an atx level 2 heading with today's date in iso format."
-    (interactive)
-    (insert "## " (format-time-string "%Y-%m-%d") "\n"))
-  :bind
-  ("C-c d" . daily-note)
-  ( :map markdown-mode-map
-    ("C-c SPC 1" . h1-title)
-    ("C-c SPC 2" . h2-today)))
-
 (use-package markdown-indent-mode
   :ensure t :defer t
-  :hook (markdown-mode))
+  :hook (markdown-mode markdown-ts-mode))
 
 (use-package mines
   :ensure t :defer t)
@@ -519,6 +528,10 @@
 
 (use-package visual-fill-column
   :ensure t :defer t
+  :hook (text-mode)
   :custom
   (visual-fill-column-center-text t)
-  (visual-fill-column-width 100))
+  (visual-fill-column-width 80))
+
+(server-start)
+(setenv "GIT_EDITOR" "emacsclient")

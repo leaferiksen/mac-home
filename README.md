@@ -87,7 +87,7 @@ Download [Karabiner Elements](https://karabiner-elements.pqrs.org/) and [Wacom D
 ### Keyboard Shortcuts
 
 - Mission Control: **☒ All Desktops**
-- Input Sources: **☒ Next & Previous**
+- Input Sources: **☑ Next** → ⌥Space, **☒ Previous**
 
 ### Wacom Tablet
 
