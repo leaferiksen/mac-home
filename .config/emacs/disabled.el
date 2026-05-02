@@ -22,7 +22,11 @@
 (add-to-list 'exec-path "/opt/homebrew/opt/python@3.14/libexec/bin")
 (add-to-list 'exec-path "/opt/homebrew/sbin")
 (add-to-list 'exec-path "/opt/homebrew/bin")
-
+(use-package sidetabs
+  :vc (:url "https://gist.github.com/rougier/23f723b039873cd5c2e9eb6862dbc31e"
+	    :rev :newest)
+  :config
+  (sidetabs-mode 1))
 (use-package markdown-mode
   :ensure t
   :mode

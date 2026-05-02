@@ -14,8 +14,9 @@
   (html-mode . eglot-ensure)
   (css-ts-mode . eglot-ensure)
   (js-ts-mode . eglot-ensure)
-  (text-mode-hook . (lambda () (face-remap-add-relative 'default :height 180)))
   :bind
+  ("M-z" . undo-only)
+  ("M-Z" . undo-redo)
   ("C-<wheel-up>" . nil)
   ("C-<wheel-down>" . nil)
   ("C-c c" . ispell-word)
@@ -63,7 +64,7 @@
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not flymake-mode))
   (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
-  (modus-themes-headings '((1 . (regular 2.0)) (2 . (regular 1.75)) (3 . (regular 1.5)) (4 . (regular 1.25)) (t . (regular))))
+  (modus-themes-headings '((1 . (regular 1.8)) (2 . (regular 1.6)) (3 . (regular 1.4)) (4 . (regular 1.2)) (t . (regular))))
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
   (package-vc-allow-build-commands t)
@@ -110,10 +111,6 @@
       (if (use-region-p)
 	  (fill-region (region-beginning) (region-end) nil)
 	(fill-paragraph nil))))
-  (defun vc-amend ()
-    "Amend the previous commit title."
-    (interactive)
-    (vc-checkin nil 'git) (vc-git-log-edit-toggle-amend))
   (defun get-apw-password (domain)
     "Fetch the password for DOMAIN using the apw tool."
     ;; Usage: (get-apw-password "example.com")
@@ -150,12 +147,11 @@
   :hook
   (emacs-startup . almost-maximize-frame)
   :init
+  ;; (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t)
   (defun almost-maximize-frame()
     "Borderless maximise with margins for tiling"
-    (add-to-list 'default-frame-alist '(undecorated-round . t))
-    (setopt frame-resize-pixelwise t)
-    ;; (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t)
-    ))
+    (add-to-list 'default-frame-alist '(undecorated-round . t)))
+  (setopt frame-resize-pixelwise t))
 
 (use-package completion-preview
   :hook
@@ -207,17 +203,32 @@
   :mode
   ("\\.md\\'" . markdown-ts-mode)
   :hook
+  (markdown-ts-mode . (lambda () (face-remap-add-relative 'default :height 180)))
   (markdown-ts-mode . (lambda () (font-lock-add-keywords nil '(("\\[\\[\\([^]]+\\)\\]\\]" 0 'link t)))))
   (markdown-ts-mode-hook . orgtbl-mode)
   :bind
   ("C-c d" . daily-note)
   (:map markdown-ts-mode-map
+	("C-c C-i" . (lambda () (interactive) (md-toggle-markup "*")))
+	("C-c C-b" . (lambda () (interactive) (md-toggle-markup "**")))
 	("M-RET" . md-follow-wiki-link)
 	("C-c C-o" . md-follow-wiki-link)
 	("C-c C-1" . h1-title)
-	("C-c C-2" . h2-today)
-	("C-c C-p" . export-selection-to-mla-pdf))
+	("C-c C-2" . h2-today))
   :config
+  (defun md-toggle-markup (delim)
+    "Add DELIM around region/word, or remove it if already present."
+    (let* ((len (length delim))
+           (beg (if (use-region-p) (region-beginning) (car (bounds-of-thing-at-point 'word))))
+           (end (if (use-region-p) (region-end) (cdr (bounds-of-thing-at-point 'word)))))
+      (when (and beg end)
+	(save-excursion
+          (let ((before (buffer-substring-no-properties (- beg len) beg))
+		(after  (buffer-substring-no-properties end (+ end len))))
+            (if (and (string= before delim) (string= after delim))
+		(progn (delete-region end (+ end len)) (delete-region (- beg len) beg))
+              (goto-char end) (insert delim)
+              (goto-char beg) (insert delim)))))))
   (defun h1-title ()
     "Insert an atx level 1 heading with the name of the file."
     (interactive)
@@ -289,8 +300,7 @@
 (use-package xwidget
   :bind
   ( :map xwidget-webkit-mode-map
-    ("u". xwidget-webkit-browse-url))
-  :bind-keymap ("C-c x" . xwidget-webkit-mode-map))
+    ("u". xwidget-webkit-browse-url)))
 
 (use-package yt-dlp
   :bind
@@ -340,20 +350,21 @@
 
 (use-package dwim-shell-command
   :ensure t
+  :bind-keymap
   :bind
+  ( :prefix "C-c x"
+    :prefix-map my-dwim-shell-commands-map
+    ("m" . dwim-file-to-mla-pdf)
+    ("g" . dwim-file-to-generic-pdf)
+    ("p" . dwim-md-to-pptx))
   (([remap shell-command] . dwim-shell-command)
-   :map dired-mode-map
-   ([remap dired-do-async-shell-command] . dwim-shell-command)
-   ([remap dired-do-shell-command] . dwim-shell-command)
-   ([remap dired-smart-shell-command] . dwim-shell-command)
-   ("e" . dwim-shell-commands-macos-open-with)
-   ("d" . dwim-macos-move-to-trash)
-   ("x" . my-dwim-shell-commands)
-   :prefix "C-c i"
-   :prefix-map my-dwim-shell-commands
-   ("m" . dwim-file-to-mla-pdf)
-   ("g" . dwim-file-to-generic-pdf)
-   ("p" . dwim-md-to-pptx))
+   ( :map dired-mode-map
+     ([remap dired-do-async-shell-command] . dwim-shell-command)
+     ([remap dired-do-shell-command] . dwim-shell-command)
+     ([remap dired-smart-shell-command] . dwim-shell-command)
+     ("e" . dwim-shell-commands-macos-open-with)
+     ("d" . dwim-macos-move-to-trash)
+     ("x" . my-dwim-shell-commands-map)))
   :config
   (defun dwim-macos-move-to-trash ()
     "Move marked files to macOS trash."
@@ -383,8 +394,7 @@
 
 (use-package reader
   :ensure t
-  :vc
-  ( :url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
+  :vc ( :url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
   :config
   (defun fix-reader ()
     "Recompile Reader Libraries"
@@ -398,8 +408,18 @@
 
 (use-package treesit-langs
   :ensure t
-  :vc
-  ( :url "https://github.com/kiennq/treesit-langs"))
+  :vc ( :url "https://github.com/kiennq/treesit-langs"))
+
+(use-package google-translate
+  :ensure t
+  :bind
+  ("C-c t" . google-translate-smooth-translate)
+  ("C-c T" . google-translate-at-point)
+  :custom
+  (google-translate-output-destination 'echo-area)
+  (google-translate-show-phonetic t)
+  (google-translate-translation-directions-alist
+   '(("ja" . "en") ("en" . "ja"))))
 
 ;; Deferred External Packages
 
@@ -439,17 +459,6 @@
   :custom
   (elfeed-search-filter "@1-month-ago +unread"))
 
-(use-package google-translate
-  :ensure t :defer t
-  :bind
-  ("C-c T" . google-translate-at-point)
-  ("C-c t" . google-translate-smooth-translate)
-  :custom
-  (google-translate-output-destination 'echo-area)
-  (google-translate-show-phonetic t)
-  (google-translate-translation-directions-alist
-   '(("ja" . "en") ("en" . "ja"))))
-
 (use-package gterm
   :ensure t :defer t
   :vc ( :url "https://github.com/rwc9u/emacs-libgterm" :branch "main")
@@ -476,7 +485,7 @@
 
 (use-package markdown-indent-mode
   :ensure t :defer t
-  :hook (markdown-mode markdown-ts-mode))
+  :hook (markdown-ts-mode))
 
 (use-package mines
   :ensure t :defer t)
@@ -501,9 +510,9 @@
     ("C-c SPC" . xcode-build))
   :config
   (add-to-list 'apheleia-mode-alist
-               '(swift-ts-mode . swift-format))
+	       '(swift-ts-mode . swift-format))
   (add-to-list 'apheleia-formatters
-               '(swift-format "xcrun" "swift-format" (buffer-file-name)))
+	       '(swift-format "xcrun" "swift-format" (buffer-file-name)))
   (add-to-list 'eglot-server-programs '(swift-ts-mode . ("xcrun" "sourcekit-lsp")))
   (defun xcode-build ()
     (interactive)
@@ -516,19 +525,12 @@
 (use-package typst-ts-mode
   :ensure t :defer t
   ;; (typst-ts-mc-install-grammar)
-  :vc
-  ( :url "https://codeberg.org/meow_king/typst-ts-mode.git")
+  :vc ( :url "https://codeberg.org/meow_king/typst-ts-mode.git")
   :mode "\\.typ\\'")
-
-(use-package undo-fu
-  :ensure t :defer t
-  :bind
-  ("M-z" . undo-fu-only-undo)
-  ("M-Z" . undo-fu-only-redo))
 
 (use-package visual-fill-column
   :ensure t :defer t
-  :hook (text-mode)
+  :hook (markdown-ts-mode)
   :custom
   (visual-fill-column-center-text t)
   (visual-fill-column-width 80))
