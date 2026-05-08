@@ -1,6 +1,6 @@
 // --- Variables & Configuration ---
 #let author = "Leaf Eriksen"
-#let professor = "Professor $professor$"
+#let prof-name = "$professor$"
 #let class = "$class$"
 #let works-cited = "$works-cited$"
 #let has-word-count = $if(word-count)$true$else$false$endif$
@@ -19,7 +19,7 @@
 #set page(
   paper: "us-letter",
   margin: 1in,
-  header: context { align(right)[#author #counter(page).display()] }
+  header: context { align(right)[Eriksen #counter(page).display()] }
 )
 
 #set text(font: "Times New Roman", size: 12pt)
@@ -33,6 +33,7 @@
 )
 
 #set table(inset: 6pt, stroke: none)
+#show quote.where(block: true): it => pad(left: 0.5in, right: 0in, it.body)
 
 #show heading: it => {
   set text(size: 12pt, weight: "regular")
@@ -43,13 +44,13 @@
 
 // --- Metadata Section ---
 #author \
-#professor \
-#class \
+#if prof-name != "" [Professor #prof-name \ ]
+#if class != "" [#class \ ]
 #datetime.today().display("[day] [month repr:long] [year]")
 #if has-word-count [\ Word Count: #context words.final().at(0)]
 
 // --- Body ---
-#set par(first-line-indent: (amount: 2em, all: true))
+#set par(first-line-indent: (amount: 0.5in, all: true))
 #if has-word-count [
   #show: count-words
   $body$
@@ -68,7 +69,7 @@ $if(works-cited)$
   
   if has_cites or force_full {
     pagebreak(weak: true)
-    align(center)[Works Cited]
+    heading(level: 1, numbering: none, outlined: false)[Works Cited]
     bibliography(works-cited $if(full-bibliography)$, full: true$endif$)
   }
 }

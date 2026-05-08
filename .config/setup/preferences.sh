@@ -49,8 +49,8 @@ defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerHorizSwipeGe
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
 # disable the Control-Command-D binding
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
-# click globe key for emoji keyboard
-defaults write com.apple.HIToolbox "AppleFnUsageType" -int "2"
+# disable single-click globe key action (it breaks custom actions in karabiner)
+defaults write com.apple.HIToolbox "AppleFnUsageType" -int "0"
 # disable dock, screensaver hot corner and quick notes
 defaults write com.apple.dock "autohide" -bool "true"
 defaults write com.apple.dock "autohide-delay" -float "1000"

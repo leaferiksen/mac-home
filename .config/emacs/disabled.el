@@ -22,11 +22,20 @@
 (add-to-list 'exec-path "/opt/homebrew/opt/python@3.14/libexec/bin")
 (add-to-list 'exec-path "/opt/homebrew/sbin")
 (add-to-list 'exec-path "/opt/homebrew/bin")
+(set-face-attribute 'hl-line nil :background "controlAccentColor")
+(set-face-attribute 'hl-line nil :background "controlAccentColor")
 (use-package sidetabs
   :vc (:url "https://gist.github.com/rougier/23f723b039873cd5c2e9eb6862dbc31e"
 	    :rev :newest)
   :config
   (sidetabs-mode 1))
+
+(use-package markdown-ts-mode
+  :mode
+  ("\\.md\\'" . markdown-ts-mode)
+  :hook
+  (markdown-mode . (lambda () (font-lock-add-keywords nil '(("\\[\\[\\([^]]+\\)\\]\\]" 0 'link t))))))
+
 (use-package markdown-mode
   :ensure t
   :mode

@@ -1,10 +1,5 @@
 hs.loadSpoon("SpoonInstall")
 Install = spoon.SpoonInstall
-Install.repos.Caffeine = {
-	url = "https://github.com/Hammerspoon/Spoons/tree/master/Source/Caffeine.spoon",
-	desc = "Caffeine.spoon repository",
-	branch = "master",
-}
 Install:andUse("Caffeine", {
 	start = true,
 })
@@ -17,7 +12,8 @@ Install:andUse("PaperWM", {
 	repo = "PaperWM",
 	config = {
 		window_gap = { top = 20, bottom = 20, left = 20, right = 20 },
-		window_ratios = { .2, .4, .6, .8, 1 }
+		window_ratios = { .3, .5, .7, 1 },
+		infinite_loop_window = true
 	},
 	fn = function(spoon)
 		-- ignore a specific app
@@ -44,8 +40,8 @@ Install:andUse("PaperWM", {
 	start = true,
 	hotkeys = {
 		-- position and resize focused window
-		cycle_width = {"alt", "c"},
-		reverse_cycle_width = {"alt", "x"},
+		cycle_width = {"alt", "."},
+		reverse_cycle_width = {"alt", ","},
 		-- move focused window into / out of a column
 		slurp_in = {"alt", "i"},
 		barf_out = {"alt", "o"},

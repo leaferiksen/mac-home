@@ -1,52 +1,40 @@
 {:applications {:emacs ["^org\\.gnu\\.Emacs$"]
-                :notemacs [;; you can find bundle_identifiers using command line:
-                           ;; osascript -e 'id of app "Google Chrome"'
-                           "^com\\.apple\\.Safari$"
-						   "^com\\.apple\\.Preview$"
-						   "^com\\.apple\\.mail$"
-						   "^com\\.apple\\.finder$"
-						   "^com\\.figma\\.Desktop$"
+                :notemacs [;; you can find bundle_identifiers using command line: osascript -e 'id of app "Google Chrome"'
+			   "^com\\.apple\\.Safari$"
+                           "^com\\.apple\\.Preview$"
+                           "^com\\.apple\\.mail$"
+                           "^com\\.apple\\.finder$"
+                           "^com\\.figma\\.Desktop$"
                            "^org\\.mozilla\\.firefox$"
                            "^org\\.mozilla\\.firefoxdeveloperedition$"
                            "^com\\.google\\.Chrome$"]}
-:main [
-{:des "Toggle dark mode with 􀆔􀆹" :rules [
-	[:!CC##f6 "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]
-]}
-{:des "iPhone Mirroring playback with 􀆔􀊉/􀊇/􀊋" :rules [
-	[:!CC##f7 "sh ~/.config/karabiner/iphoneBack.sh"]  [:!CC##f8 "sh ~/.config/karabiner/iphonePlay.sh"]  [:!CC##f9 "sh ~/.config/karabiner/iphoneForward.sh"]
-]}
-{:des "Restart Paneru with 􀆔􀊫" :rules [
-	[:!CC##f4 "/opt/homebrew/bin/paneru restart"]
-]}
-{:des "Right 􀆔 as Right 􀆍, C-h as backspace in Emacs and global Emacs bindings" :rules [
-	;; emacs global
-	[:!T##open_bracket :tab]  [:!T##l :return_or_enter]
-	[:!T##i :delete_or_backspace]  [:!Ci :!Cdelete_or_backspace :emacs]
-	[:!T##3 :up_arrow :notemacs]  [:!T##o :down_arrow :notemacs]  [:!T##2 :right_arrow :notemacs]  [:!T##f :left_arrow :notemacs]
-	[:##right_command :left_control]
-]}
-{:des "Colemak Curl/Angle/Extra Wide" :rules [
-	;; left hand
-	[:##grave_accent_and_tilde :q]  [:##1 :w]  [:##2 :f]  [:##3 :p]  [:##4 :g]
-	[:##tab :a]                     [:##q :r]  [:##w :s]  [:##e :t]  [:##r :d]
-	[:##caps_lock :z]               [:##a :x]  [:##s :c]  [:##d :v]  [:##f :b]
-	;; right hand
-	[:##8 :j]  [:##9 :l]  [:##0 :u]              [:##hyphen :y]        [:##equal_sign :semicolon]
-	[:##i :h]  [:##o :n]  [:##p :e]              [:##open_bracket :i]  [:##close_bracket :o]        [:##backslash :quote]
-	[:##k :k]  [:##l :m]  [:##semicolon :comma]  [:##quote :period]    [:##return_or_enter :slash]
-	;; numpad
-	[:##5 :7]  [:##6 :8]  [:##7 :9]
-	[:##t :4]  [:##y :5]  [:##u :6]
-	[:##g :1]  [:##h :2]  [:##j :3]
-	[:##b :0]  [:##n :equal_sign]  [:##m :hyphen]
-	;; left thumb
-	[:##z :grave_accent_and_tilde]  [:##x :f19]  [:##c :f20]  [:##v :backslash]
-	;; right thumb
-	[:##comma :right_shift]  [:##period :open_bracket]  [:##slash :close_bracket]
-]}
-]
-}
+ :main [{:des "Right 􀆔 as Right 􀆍, C-h as backspace in Emacs and global Emacs bindings"
+	 :rules [[:!T##open_bracket :tab]  [:!T##l :return_or_enter]
+		 [:!T##i :delete_or_backspace]  [:!Ci :!Cdelete_or_backspace :emacs]
+		 [:!T##3 :up_arrow :notemacs]  [:!T##o :down_arrow :notemacs]  [:!T##2 :right_arrow :notemacs]  [:!T##f :left_arrow :notemacs]
+		 [:##right_command :left_control]]}
+	{:des "Toggle dark mode with 􀆪D"
+	 :rules [[:!Fr "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
+	{:des "Arrow keys with 􀆪p/n/b/f"
+	 :rules [[:!F##3 :up_arrow]  [:!F##o :down_arrow]  [:!F##f :left_arrow]  [:!F##2 :right_arrow]]}
+	{:des "Colemak Curl/Angle/Extra Wide"
+	 :rules [;; left hand
+		 [:##grave_accent_and_tilde :q]  [:##1 :w]  [:##2 :f]  [:##3 :p]  [:##4 :g]
+		 [:##tab :a]                     [:##q :r]  [:##w :s]  [:##e :t]  [:##r :d]
+		 [:##caps_lock :z]               [:##a :x]  [:##s :c]  [:##d :v]  [:##f :b]
+		 ;; right hand
+		 [:##8 :j]  [:##9 :l]  [:##0 :u]              [:##hyphen :y]        [:##equal_sign :semicolon]
+		 [:##i :h]  [:##o :n]  [:##p :e]              [:##open_bracket :i]  [:##close_bracket :o]        [:##backslash :quote]
+		 [:##k :k]  [:##l :m]  [:##semicolon :comma]  [:##quote :period]    [:##return_or_enter :slash]
+		 ;; numpad
+		 [:##5 :7]  [:##6 :8]  [:##7 :9]
+		 [:##t :4]  [:##y :5]  [:##u :6]
+		 [:##g :1]  [:##h :2]  [:##j :3]
+		 [:##b :0]  [:##n :equal_sign]  [:##m :hyphen]
+		 ;; left thumb
+		 [:##z :grave_accent_and_tilde]  [:##x :right_shift]  [:c :f19]  [:!Tc :f20]  [:##v :backslash]
+		 ;; right thumb
+		 [:##comma :right_shift]  [:##period :open_bracket]  [:##slash :close_bracket]]}]}
 
 ;; the rule [:!Ca :!T1] means from command a to control 1
 ;; :!Ca is keycode :a and prefix a with !C

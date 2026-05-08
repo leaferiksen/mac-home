@@ -1,8 +1,12 @@
 [options]
 focus_follows_mouse = false
 mouse_follows_focus = false
-preset_column_widths = [0.15, 0.4, 0.6, 0.85, 1]
+preset_column_widths = [0.3, 0.5 0.7, 1]
 sliver_width = 1
+
+[swipe.gesture]
+fingers_count = 4
+vertical = false
 
 [bindings]
 window_focus_north = "alt - p"

@@ -8,7 +8,7 @@
   :init
   (setenv "GIT_EDITOR" "emacsclient")
   :hook
-  (emacs-startup . server-start)
+  ;; (emacs-startup . server-start)
   (ns-system-appearance-change-functions . auto-theme)
   (text-mode . flyspell-mode)
   (html-mode . eglot-ensure)
@@ -22,6 +22,7 @@
   ("C-c c" . ispell-word)
   ("M-[" . backward-paragraph)
   ("M-]" . forward-paragraph)
+  ("H-e" . ns-do-show-character-palette)
   ("C-x 2" . split-and-follow-horizontally)
   ("C-x 3" . split-and-follow-vertically)
   :custom-face
@@ -52,7 +53,6 @@
   (gc-cons-threshold 100000000)
   (global-auto-revert-mode t)
   (global-auto-revert-non-file-buffers t)
-  (global-visual-line-mode t)
   (ispell-dictionary "en_US")
   (ispell-personal-dictionary "~/.config/emacs/ispell-wordbook")
   (inhibit-startup-screen t)
@@ -60,11 +60,11 @@
   (large-file-warning-threshold 1000000000)
   (mac-command-modifier 'meta)
   (mac-option-modifier 'none)
+  (mac-function-modifier 'hyper)
   (major-mode-remap-alist '((sh-mode . bash-ts-mode) (mhtml-mode . html-ts-mode) (css-mode . css-ts-mode) (javascript-mode . js-ts-mode) (dockerfile-mode . dockerfile-ts-mode) (json-mode . json-ts-mode) (yaml-mode . yaml-ts-mode) (lua-mode . lua-ts-mode)))
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not flymake-mode))
   (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
-  (modus-themes-headings '((1 . (regular 1.8)) (2 . (regular 1.6)) (3 . (regular 1.4)) (4 . (regular 1.2)) (t . (regular))))
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
   (package-vc-allow-build-commands t)
@@ -139,6 +139,8 @@
 
 (global-hl-line-mode 1)
 
+(global-visual-line-mode 1)
+
 (repeat-mode 1)
 
 (require 'eglot)
@@ -147,7 +149,7 @@
   :hook
   (emacs-startup . almost-maximize-frame)
   :init
-  ;; (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t)
+  (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t)
   (defun almost-maximize-frame()
     "Borderless maximise with margins for tiling"
     (add-to-list 'default-frame-alist '(undecorated-round . t)))
@@ -169,6 +171,10 @@
   (defun open-init ()
     (interactive)
     (find-file "~/.config/emacs/init.el")))
+
+(use-package visual-wrap-prefix-mode
+  :hook
+  (prog-mode html-mode))
 
 (use-package dired
   :after ls-lisp
@@ -199,36 +205,22 @@
   (ls-lisp-use-insert-directory-program nil)
   (ls-lisp-use-localized-time-format t))
 
-(use-package markdown-ts-mode
+(use-package md-ts-mode
+  :ensure t
   :mode
-  ("\\.md\\'" . markdown-ts-mode)
+  ("\\.md\\'" . md-ts-mode)
   :hook
-  (markdown-ts-mode . (lambda () (face-remap-add-relative 'default :height 180)))
-  (markdown-ts-mode . (lambda () (font-lock-add-keywords nil '(("\\[\\[\\([^]]+\\)\\]\\]" 0 'link t)))))
-  (markdown-ts-mode-hook . orgtbl-mode)
+  (md-ts-mode . (lambda () (face-remap-add-relative 'default :height 180)))
+  (md-ts-mode . orgtbl-mode)
   :bind
-  ("C-c d" . daily-note)
-  (:map markdown-ts-mode-map
+  ("C-c j" . journal)
+  (:map md-ts-mode-map
+	("M-RET" . md-follow-any-link)
+	("C-c SPC 1" . h1-title)
+	("C-c SPC 2" . h2-today)
 	("C-c C-i" . (lambda () (interactive) (md-toggle-markup "*")))
-	("C-c C-b" . (lambda () (interactive) (md-toggle-markup "**")))
-	("M-RET" . md-follow-wiki-link)
-	("C-c C-o" . md-follow-wiki-link)
-	("C-c C-1" . h1-title)
-	("C-c C-2" . h2-today))
+	("C-c C-b" . (lambda () (interactive) (md-toggle-markup "**"))))
   :config
-  (defun md-toggle-markup (delim)
-    "Add DELIM around region/word, or remove it if already present."
-    (let* ((len (length delim))
-           (beg (if (use-region-p) (region-beginning) (car (bounds-of-thing-at-point 'word))))
-           (end (if (use-region-p) (region-end) (cdr (bounds-of-thing-at-point 'word)))))
-      (when (and beg end)
-	(save-excursion
-          (let ((before (buffer-substring-no-properties (- beg len) beg))
-		(after  (buffer-substring-no-properties end (+ end len))))
-            (if (and (string= before delim) (string= after delim))
-		(progn (delete-region end (+ end len)) (delete-region (- beg len) beg))
-              (goto-char end) (insert delim)
-              (goto-char beg) (insert delim)))))))
   (defun h1-title ()
     "Insert an atx level 1 heading with the name of the file."
     (interactive)
@@ -237,29 +229,42 @@
     "Insert an atx level 2 heading with today's date in iso format."
     (interactive)
     (insert "## " (format-time-string "%Y-%m-%d") "\n"))
-  (defun daily-note ()
+  (defun journal ()
     "Make a new daily note in my obsidian vault"
     (interactive)
     (find-file (concat "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/" (format-time-string "%Y-%m-%d") ".md")))
-  (defun md-follow-wiki-link ()
+  (defun md-follow-any-link ()
     (interactive)
-    (save-excursion
-      ;; 1. Move to end of current link (if cursor is inside it)
-      (search-forward "]]" (line-end-position) t)
-      ;; 2. Search backward for the link start
-      (if (re-search-backward "\\[\\[\\([^]]+\\)\\]\\]" (line-beginning-position) t)
-          (let ((path (match-string 1)))
-            (find-file (if (file-name-extension path) path (concat path ".md"))))
-        (message "No wikilink found on this line."))))
+    (cond
+     ((thing-at-point-looking-at "\\[\\[\\([^]]+\\)\\]\\]")
+      (let ((path (match-string 1)))
+	(find-file (if (file-name-extension path) path (concat path ".md")))))
+     ((thing-at-point-looking-at "\\[\\([^]]+\\)\\](\\([^)]+\\))")
+      (browse-url (match-string 2)))
+     (t (message "No link found at point."))))
+  (defun md-toggle-markup (delim)
+    "Add DELIM around region/word, or remove it if already present."
+    (let* ((len (length delim))
+           (bounds (if (use-region-p) (cons (region-beginning) (region-end)) (bounds-of-thing-at-point 'word)))
+           (beg (car bounds))
+           (end (cdr bounds)))
+      (when (and beg end)
+	(save-excursion
+          (if (and (equal delim (buffer-substring-no-properties (- beg len) beg))
+                   (equal delim (buffer-substring-no-properties end (+ end len))))
+              (progn (delete-region end (+ end len)) 
+                     (delete-region (- beg len) beg))
+            (goto-char end) (insert delim)
+            (goto-char beg) (insert delim))))))
   (require 'org-table)
-  (defun my/markdown-table-fix (&rest _args)
+  (defun markdown-table-fix (&rest _args)
     (when (and (buffer-file-name) (string-match-p "\\.md$" (buffer-file-name)))
       (save-excursion
 	(let ((end (org-table-end)))
           (goto-char (org-table-begin))
           (while (search-forward "+" end t)
             (replace-match "|"))))))
-  (advice-add 'org-table-align :after #'my/markdown-table-fix))
+  (advice-add 'org-table-align :after #'markdown-table-fix))
 
 (use-package project
   :bind
@@ -332,39 +337,26 @@
   :custom
   (apheleia-global-mode t))
 
-(use-package elfeed-webkit
-  :ensure t
-  :demand
-  :config
-  (elfeed-webkit-enable)
-  :bind
-  ( :map elfeed-show-mode-map
-    ("%" . elfeed-webkit-toggle)))
-
-(use-package exec-path-from-shell
-  :ensure t
-  :if
-  (memq window-system '(ns x))
-  :config
-  (exec-path-from-shell-initialize))
+(use-package clojure-mode
+  :ensure t)
 
 (use-package dwim-shell-command
   :ensure t
-  :bind-keymap
+  :demand t
   :bind
   ( :prefix "C-c x"
     :prefix-map my-dwim-shell-commands-map
     ("m" . dwim-file-to-mla-pdf)
     ("g" . dwim-file-to-generic-pdf)
     ("p" . dwim-md-to-pptx))
-  (([remap shell-command] . dwim-shell-command)
-   ( :map dired-mode-map
-     ([remap dired-do-async-shell-command] . dwim-shell-command)
-     ([remap dired-do-shell-command] . dwim-shell-command)
-     ([remap dired-smart-shell-command] . dwim-shell-command)
-     ("e" . dwim-shell-commands-macos-open-with)
-     ("d" . dwim-macos-move-to-trash)
-     ("x" . my-dwim-shell-commands-map)))
+  ([remap shell-command] . dwim-shell-command)
+  ( :map dired-mode-map
+    ([remap dired-do-async-shell-command] . dwim-shell-command)
+    ([remap dired-do-shell-command] . dwim-shell-command)
+    ([remap dired-smart-shell-command] . dwim-shell-command)
+    ("e" . dwim-shell-commands-macos-open-with)
+    ("d" . dwim-macos-move-to-trash)
+    ("x" . my-dwim-shell-commands-map))
   :config
   (defun dwim-macos-move-to-trash ()
     "Move marked files to macOS trash."
@@ -382,6 +374,12 @@
     (dwim-shell-command-on-marked-files
      "Converting to MLA pdf"
      "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=/Users/leaf/.config/typst/template.typ"))
+  (defun dwim-file-to-generic-pdf ()
+    "Convert file to generic pdf via pandoc."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Converting to generic pdf"
+     "pandoc '<<f>>' -o '<<fne>>.pdf'"))
   (defun dwim-md-to-pptx ()
     "Convert md files to pptx."
     (interactive)
@@ -390,7 +388,23 @@
           (dwim-shell-command-on-marked-files 
            "Converting md to pptx" 
            "npx @marp-team/marp-cli@latest '<<f>>' --pptx")
-	(user-error "Selection contains non-markdown files!")))))
+        (user-error "Selection contains non-markdown files!")))))
+
+(use-package elfeed-webkit
+  :ensure t
+  ;; :demand
+  :config
+  (elfeed-webkit-enable)
+  :bind
+  ( :map elfeed-show-mode-map
+    ("%" . elfeed-webkit-toggle)))
+
+(use-package exec-path-from-shell
+  :ensure t
+  :if
+  (memq window-system '(ns x))
+  :config
+  (exec-path-from-shell-initialize))
 
 (use-package reader
   :ensure t
@@ -445,6 +459,11 @@
   (csv-align-padding 2)
   (csv-align-max-width 72))
 
+(use-package osx-dictionary
+  :ensure t :defer t
+  :bind
+  ("C-c d" . osx-dictionary-search-word-at-point))
+
 (use-package elfeed
   :ensure t :defer t
   :preface
@@ -485,7 +504,7 @@
 
 (use-package markdown-indent-mode
   :ensure t :defer t
-  :hook (markdown-ts-mode))
+  :hook (md-ts-mode))
 
 (use-package mines
   :ensure t :defer t)
@@ -530,7 +549,7 @@
 
 (use-package visual-fill-column
   :ensure t :defer t
-  :hook (markdown-ts-mode)
+  :hook (md-ts-mode)
   :custom
   (visual-fill-column-center-text t)
   (visual-fill-column-width 80))

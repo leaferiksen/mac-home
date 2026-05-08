@@ -12,6 +12,7 @@
         ("https://www.penny-arcade.com/feed" comics)
         ("https://www.smbc-comics.com/comic/rss" comics)
         ("http://danluu.com/atom.xml" design)
+	("https://fantinel.dev/rss.xml" design)
         ("https://buttondown.com/monteiro/rss" design)
         ("https://css-tricks.com/feed/" design)
         ("https://localghost.dev/feed.xml" design)
