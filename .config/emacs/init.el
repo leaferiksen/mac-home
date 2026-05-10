@@ -55,7 +55,6 @@
   (mac-command-modifier 'meta)
   (mac-option-modifier 'none)
   (mac-function-modifier 'hyper)
-  (major-mode-remap-alist '((sh-mode . bash-ts-mode) (mhtml-mode . html-ts-mode) (css-mode . css-ts-mode) (javascript-mode . js-ts-mode) (dockerfile-mode . dockerfile-ts-mode) (json-mode . json-ts-mode) (yaml-mode . yaml-ts-mode) (lua-mode . lua-ts-mode)))
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not flymake-mode))
   (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
@@ -78,6 +77,10 @@
   (which-key-mode t)
   (word-wrap-by-category t)
   :config
+  ;; Find every loaded *-ts-mode function, derive the base mode name, and remap if that base mode also exists.
+  (dolist (mode (apropos-internal "-ts-mode$" #'functionp))
+    (let ((base (intern (string-replace "-ts-mode" "-mode" (symbol-name mode)))))
+      (when (fboundp base) (add-to-list 'major-mode-remap-alist (cons base mode)))))
   (defun async-shell-command-no-window (command)
     (interactive)
     (let ((display-buffer-alist (list (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))))
@@ -233,33 +236,14 @@
     (interactive)
     (gui-set-selection 'CLIPBOARD "")
     (project-run "serve" "Serving %s..." "npx" "serve")
-    (watch-clipboard-xwidget-webkit-browse-url))
+    ;; (watch-clipboard-xwidget-webkit-browse-url)
+    (watch-clipboard-appine-open-url))
   (defun watch-clipboard-xwidget-webkit-browse-url ()
     "Watch for clipboard data and open in Xwidgets."
     (let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)))
       (if (and current-clip (not (string-empty-p current-clip)))
           (progn (split-and-follow-horizontally) (xwidget-webkit-browse-url current-clip) (message "Clipboard update detected! Opened %s in Xwidgets" current-clip))
         (run-at-time "0.5 sec" nil #'watch-clipboard-xwidget-webkit-browse-url)))))
-
-(use-package treesit
-  :config
-  (defun treesit-bulk-install ()
-    "Install everything currently in treesit-language-source-alist."
-    (interactive)
-    (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist)))
-  ;; Source: https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
-  ;; bash/html/toml/yaml/md-ts-modes all handle their own sources
-  (setq treesit-language-source-alist
-	'((cmake "https://github.com/uyha/tree-sitter-cmake")
-	  (css "https://github.com/tree-sitter/tree-sitter-css")
-	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-	  (go "https://github.com/tree-sitter/tree-sitter-go")
-	  (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-	  (json "https://github.com/tree-sitter/tree-sitter-json")
-	  (make "https://github.com/alemuller/tree-sitter-make")
-	  (python "https://github.com/tree-sitter/tree-sitter-python")
-	  (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-	  (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))))
 
 (use-package visual-wrap-prefix-mode
   :hook
@@ -299,6 +283,36 @@
   :ensure t
   :custom
   (apheleia-global-mode t))
+
+(use-package appine
+  :ensure t
+  :vc ( :url "https://github.com/chaoswork/appine")
+  :if
+  (memq window-system '(ns))
+  :bind
+  ( :prefix "C-c m"
+    :prefix-map macos-views
+    ("a" . appine)
+    ("k" . appine-kill)
+    ("u" . appine-open-url)
+    ("o" . appine-open-file)
+    ("e" . open-with-appine)
+    ("r" . appine-rss))
+  :custom
+  (appine-rss-path "~/.config/emacs/elfeed.org")
+  :config
+  (defun open-with-appine ()
+    "Load the current file or file under cursor in Dired into Appine."
+    (interactive)
+    (let ((file (if (derived-mode-p 'dired-mode) (dired-get-file-for-visit) (buffer-file-name))))
+      (if (and file (file-exists-p file)) (progn (appine-open-file file))
+	(message "No file found to open with Appine"))))
+  (defun watch-clipboard-appine-open-url ()
+    "Watch for clipboard data and open in Appine."
+    (let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)))
+      (if (and current-clip (not (string-empty-p current-clip)))
+          (progn (appine-open-url current-clip) (message "Clipboard update detected! Opened %s in Appine" current-clip))
+        (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url)))))
 
 (use-package clojure-mode
   :ensure t)
@@ -352,15 +366,6 @@
            "Converting md to pptx" 
            "npx @marp-team/marp-cli@latest '<<f>>' --pptx")
         (user-error "Selection contains non-markdown files!")))))
-
-(use-package elfeed-webkit
-  :ensure t
-  ;; :demand
-  :config
-  (elfeed-webkit-enable)
-  :bind
-  ( :map elfeed-show-mode-map
-    ("%" . elfeed-webkit-toggle)))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -425,20 +430,6 @@
   :bind
   ("C-c d" . osx-dictionary-search-word-at-point))
 
-(use-package elfeed
-  :ensure t :defer t
-  :preface
-  (run-at-time nil (* 8 60 60) #'elfeed-update)
-  :bind
-  ("C-c f" . elfeed)
-  ( :map elfeed-search-mode-map
-    ("f" . elfeed-search-show-entry)
-    ("m" . elfeed-search-show-entry))
-  :init
-  (load (expand-file-name "elfeed-feeds.el" user-emacs-directory))
-  :custom
-  (elfeed-search-filter "@1-month-ago +unread"))
-
 (use-package gterm
   :ensure t :defer t
   :vc ( :url "https://github.com/rwc9u/emacs-libgterm" :branch "main")
@@ -472,12 +463,11 @@
   :mode
   ("\\.md\\'" . md-ts-mode)
   :hook
-  (md-ts-mode . (lambda () (face-remap-add-relative 'default :height 180)))
   (md-ts-mode . orgtbl-mode)
   :bind
   ("C-c j" . markdown-journal)
   (:map md-ts-mode-map
-	("M-RET" . md-follow-any-link)
+	("M-RET" . markdown-follow-any-link)
 	("C-c SPC 1" . markdown-h1-title)
 	("C-c SPC 2" . markdown-h2-today)
 	("C-c C-i" . (lambda () (interactive) (markdown-toggle-markup "*")))
@@ -565,7 +555,9 @@
 
 (use-package visual-fill-column
   :ensure t :defer t
-  :hook (md-ts-mode)
+  :hook
+  (md-ts-mode org-mode)
+  (visual-fill-column-mode . (lambda () (face-remap-add-relative 'default :height 180)))
   :custom
   (visual-fill-column-center-text t)
   (visual-fill-column-width 80))

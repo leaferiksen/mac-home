@@ -25,6 +25,29 @@
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 
+(use-package elfeed
+  :ensure t :defer t
+  :preface
+  (run-at-time nil (* 8 60 60) #'elfeed-update)
+  :bind
+  ("C-c f" . elfeed)
+  ( :map elfeed-search-mode-map
+    ("f" . elfeed-search-show-entry)
+    ("m" . elfeed-search-show-entry))
+  :init
+  (load (expand-file-name "elfeed-feeds.el" user-emacs-directory))
+  :custom
+  (elfeed-search-filter "@1-month-ago +unread"))
+
+(use-package elfeed-webkit
+  :ensure t
+  ;; :demand
+  :config
+  (elfeed-webkit-enable)
+  :bind
+  ( :map elfeed-show-mode-map
+    ("%" . elfeed-webkit-toggle)))
+
 (use-package music-control
   :defer t
   :load-path "elpa/music-control/"
@@ -36,6 +59,26 @@
 	    :rev :newest)
   :config
   (sidetabs-mode 1))
+
+(use-package treesit
+  :config
+  (defun treesit-bulk-install ()
+    "Install everything currently in treesit-language-source-alist."
+    (interactive)
+    (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist)))
+  ;; Source: https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
+  ;; bash/html/toml/yaml/md-ts-modes all handle their own sources
+  (setq treesit-language-source-alist
+	'((cmake "https://github.com/uyha/tree-sitter-cmake")
+	  (css "https://github.com/tree-sitter/tree-sitter-css")
+	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+	  (go "https://github.com/tree-sitter/tree-sitter-go")
+	  (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+	  (json "https://github.com/tree-sitter/tree-sitter-json")
+	  (make "https://github.com/alemuller/tree-sitter-make")
+	  (python "https://github.com/tree-sitter/tree-sitter-python")
+	  (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+	  (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))))
 
 (use-package treesit-langs
   :ensure t
@@ -84,34 +127,6 @@
     ("C-c SPC 1" . h1-title)
     ("C-c SPC 2" . h2-today)
     ("C-c SPC p" . export-selection-to-mla-pdf)))
-
-(use-package appine
-  :ensure t
-  :vc ( :url "https://github.com/chaoswork/appine")
-  :if
-  (memq window-system '(ns))
-  :bind
-  ( :prefix "C-c m"
-    :prefix-map macos-views
-    ("a" . appine)
-    ("k" . appine-kill)
-    ("u" . appine-open-url)
-    ("o" . appine-open-file)
-    ("e" . open-with-appine)
-    ("r" . appine-web-reload))
-  :config
-  (defun open-with-appine ()
-    "Load the current file or file under cursor in Dired into Appine."
-    (interactive)
-    (let ((file (if (derived-mode-p 'dired-mode) (dired-get-file-for-visit) (buffer-file-name))))
-      (if (and file (file-exists-p file)) (progn (appine-open-file file))
-	(message "No file found to open with Appine"))))
-  (defun watch-clipboard-appine-open-url ()
-    "Watch for clipboard data and open in Appine."
-    (let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)))
-      (if (and current-clip (not (string-empty-p current-clip)))
-          (progn (appine-open-url current-clip) (message "Clipboard update detected! Opened %s in Appine" current-clip))
-        (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url)))))
 
 (use-package swift-development
   :ensure t :defer t

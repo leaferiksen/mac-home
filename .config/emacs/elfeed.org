@@ -1,0 +1,60 @@
+* Feeds :elfeed:
+** Anime :anime:
+*** https://www.kosatenmag.com/home?format=rss
+** Comics :comics:
+*** https://catandgirl.com/feed/
+*** https://existentialcomics.com/rss.xml
+*** https://feeds.feedburner.com/nerfnow/full
+*** https://thesecretknots.com/feed/
+*** https://todon.eu/@PinkWug.rss
+*** https://www.berkeleymews.com/feed/
+*** https://www.davidrevoy.com/feed/en/rss
+*** https://www.penny-arcade.com/feed
+*** https://www.smbc-comics.com/comic/rss
+** Design :design:
+*** http://danluu.com/atom.xml
+*** https://fantinel.dev/rss.xml
+*** https://buttondown.com/monteiro/rss
+*** https://css-tricks.com/feed/
+*** https://localghost.dev/feed.xml
+*** https://piccalil.li/feed.xml
+*** https://rachelandrew.co.uk/feed/
+*** https://www.smashingmagazine.com/feed/
+** Gaming :gaming:
+*** https://enikofox.com/feed.xml
+*** https://modmagazine.net/feed.xml
+*** https://panic.com/blog/feed/
+*** https://remapradio.com/rss/
+*** https://tomorrowcorporation.com/feed
+*** https://www.codeweavers.com/blog/?rss=1
+** Linux :linux:
+*** https://acidiclight.dev/rss.xml
+*** https://asahilinux.org/blog/index.xml
+*** https://blog.fyralabs.com/rss/
+*** https://blog.xfce.org/feed
+*** https://carlschwan.eu/index.xml
+*** https://coffee-and-dreams.uk/feed.xml
+*** https://drewdevault.com/blog/index.xml
+*** https://fireborn.mataroa.blog/rss/
+*** https://rabbitictranslator.com/blog/index.xml
+*** https://rosenzweig.io/feed.xml
+*** https://theevilskeleton.gitlab.io/feed.xml
+*** https://thelibre.news/rss/
+*** https://www.ypsidanger.com/rss/
+** Journals :journals:
+*** https://anhvn.com/feed.xml
+*** https://annas-archive.li/blog/rss.xml
+*** https://blogsystem5.substack.com/feed
+*** https://carsonellis.substack.com/feed
+*** https://daverupert.com/atom.xml
+*** https://hypercritical.co/feeds/main
+*** https://indi.ca/rss/
+*** https://ryanleetaylor.com/rss.xml
+*** https://themkat.net/feed.xml
+*** https://tnywndr.cafe/index.xml
+*** https://wokescientist.substack.com/feed
+*** https://www.jessesquires.com/feed.xml
+*** https://www.tinylogger.com/90koil/rss
+*** https://www.wordsbywes.ink/feed.xml
+** Other
+*** https://ladybird.org/posts.rss
