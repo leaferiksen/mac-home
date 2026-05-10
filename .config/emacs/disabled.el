@@ -24,11 +24,22 @@
 (add-to-list 'exec-path "/opt/homebrew/bin")
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
+
+(use-package music-control
+  :defer t
+  :load-path "elpa/music-control/"
+  :config
+  (music-control-mode 1))
+
 (use-package sidetabs
   :vc (:url "https://gist.github.com/rougier/23f723b039873cd5c2e9eb6862dbc31e"
 	    :rev :newest)
   :config
   (sidetabs-mode 1))
+
+(use-package treesit-langs
+  :ensure t
+  :vc ( :url "https://github.com/kiennq/treesit-langs"))
 
 (use-package markdown-ts-mode
   :mode

@@ -11,9 +11,6 @@
   ;; (emacs-startup . server-start)
   (ns-system-appearance-change-functions . auto-theme)
   (text-mode . flyspell-mode)
-  (html-mode . eglot-ensure)
-  (css-ts-mode . eglot-ensure)
-  (js-ts-mode . eglot-ensure)
   :bind
   ("M-z" . undo-only)
   ("M-Z" . undo-redo)
@@ -44,9 +41,6 @@
   (disabled-command-function nil)
   (display-line-numbers-type 'relative)
   (display-line-numbers-width-start 3)
-  (eglot-code-action-indicator "*") 
-  (eglot-code-action-indications '(mode-line))
-  (eglot-autoshutdown t)
   (eldoc-echo-area-use-multiline-p t)
   (electric-pair-mode t)
   (find-file-visit-truename t)
@@ -143,8 +137,6 @@
 
 (repeat-mode 1)
 
-(require 'eglot)
-
 (use-package almost-maximize-frame
   :hook
   (emacs-startup . almost-maximize-frame)
@@ -157,24 +149,11 @@
 
 (use-package completion-preview
   :hook
-  (prog-mode html-mode agent-shell-mode)
+  (prog-mode html-mode)
   :bind
   ( :map completion-preview-active-mode
     ("M-n" . completion-preview-next-candidate)
     ("M-p" . completion-preview-prev-candidate)))
-
-(use-package open-init
-  :bind
-  ([remap customize] . open-init)
-  ("C-c ," . open-init)
-  :init
-  (defun open-init ()
-    (interactive)
-    (find-file "~/.config/emacs/init.el")))
-
-(use-package visual-wrap-prefix-mode
-  :hook
-  (prog-mode html-mode))
 
 (use-package dired
   :after ls-lisp
@@ -198,6 +177,18 @@
     (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
       (if path (dired (string-trim path)) (message "No Finder window found.")))))
 
+(use-package eglot
+  :demand
+  :hook
+  (eglot-managed-mode-hook . flymake-mode)
+  (html-mode . eglot-ensure)
+  (css-ts-mode . eglot-ensure)
+  (js-ts-mode . eglot-ensure)
+  :custom
+  (eglot-code-action-indicator "*")
+  (eglot-code-action-indications '(mode-line))
+  (eglot-autoshutdown t))
+
 (use-package ls-lisp
   :custom
   (ls-lisp-dirs-first t)
@@ -205,66 +196,14 @@
   (ls-lisp-use-insert-directory-program nil)
   (ls-lisp-use-localized-time-format t))
 
-(use-package md-ts-mode
-  :ensure t
-  :mode
-  ("\\.md\\'" . md-ts-mode)
-  :hook
-  (md-ts-mode . (lambda () (face-remap-add-relative 'default :height 180)))
-  (md-ts-mode . orgtbl-mode)
+(use-package open-init
   :bind
-  ("C-c j" . journal)
-  (:map md-ts-mode-map
-	("M-RET" . md-follow-any-link)
-	("C-c SPC 1" . h1-title)
-	("C-c SPC 2" . h2-today)
-	("C-c C-i" . (lambda () (interactive) (md-toggle-markup "*")))
-	("C-c C-b" . (lambda () (interactive) (md-toggle-markup "**"))))
-  :config
-  (defun h1-title ()
-    "Insert an atx level 1 heading with the name of the file."
+  ([remap customize] . open-init)
+  ("C-c ," . open-init)
+  :init
+  (defun open-init ()
     (interactive)
-    (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
-  (defun h2-today ()
-    "Insert an atx level 2 heading with today's date in iso format."
-    (interactive)
-    (insert "## " (format-time-string "%Y-%m-%d") "\n"))
-  (defun journal ()
-    "Make a new daily note in my obsidian vault"
-    (interactive)
-    (find-file (concat "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/" (format-time-string "%Y-%m-%d") ".md")))
-  (defun md-follow-any-link ()
-    (interactive)
-    (cond
-     ((thing-at-point-looking-at "\\[\\[\\([^]]+\\)\\]\\]")
-      (let ((path (match-string 1)))
-	(find-file (if (file-name-extension path) path (concat path ".md")))))
-     ((thing-at-point-looking-at "\\[\\([^]]+\\)\\](\\([^)]+\\))")
-      (browse-url (match-string 2)))
-     (t (message "No link found at point."))))
-  (defun md-toggle-markup (delim)
-    "Add DELIM around region/word, or remove it if already present."
-    (let* ((len (length delim))
-           (bounds (if (use-region-p) (cons (region-beginning) (region-end)) (bounds-of-thing-at-point 'word)))
-           (beg (car bounds))
-           (end (cdr bounds)))
-      (when (and beg end)
-	(save-excursion
-          (if (and (equal delim (buffer-substring-no-properties (- beg len) beg))
-                   (equal delim (buffer-substring-no-properties end (+ end len))))
-              (progn (delete-region end (+ end len)) 
-                     (delete-region (- beg len) beg))
-            (goto-char end) (insert delim)
-            (goto-char beg) (insert delim))))))
-  (require 'org-table)
-  (defun markdown-table-fix (&rest _args)
-    (when (and (buffer-file-name) (string-match-p "\\.md$" (buffer-file-name)))
-      (save-excursion
-	(let ((end (org-table-end)))
-          (goto-char (org-table-begin))
-          (while (search-forward "+" end t)
-            (replace-match "|"))))))
-  (advice-add 'org-table-align :after #'markdown-table-fix))
+    (find-file "~/.config/emacs/init.el")))
 
 (use-package project
   :bind
@@ -301,6 +240,30 @@
       (if (and current-clip (not (string-empty-p current-clip)))
           (progn (split-and-follow-horizontally) (xwidget-webkit-browse-url current-clip) (message "Clipboard update detected! Opened %s in Xwidgets" current-clip))
         (run-at-time "0.5 sec" nil #'watch-clipboard-xwidget-webkit-browse-url)))))
+
+(use-package treesit
+  :config
+  (defun treesit-bulk-install ()
+    "Install everything currently in treesit-language-source-alist."
+    (interactive)
+    (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist)))
+  ;; Source: https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
+  ;; bash/html/toml/yaml/md-ts-modes all handle their own sources
+  (setq treesit-language-source-alist
+	'((cmake "https://github.com/uyha/tree-sitter-cmake")
+	  (css "https://github.com/tree-sitter/tree-sitter-css")
+	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+	  (go "https://github.com/tree-sitter/tree-sitter-go")
+	  (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+	  (json "https://github.com/tree-sitter/tree-sitter-json")
+	  (make "https://github.com/alemuller/tree-sitter-make")
+	  (python "https://github.com/tree-sitter/tree-sitter-python")
+	  (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+	  (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))))
+
+(use-package visual-wrap-prefix-mode
+  :hook
+  (prog-mode html-mode))
 
 (use-package xwidget
   :bind
@@ -420,10 +383,6 @@
   :config
   (spacious-padding-mode))
 
-(use-package treesit-langs
-  :ensure t
-  :vc ( :url "https://github.com/kiennq/treesit-langs"))
-
 (use-package google-translate
   :ensure t
   :bind
@@ -439,6 +398,8 @@
 
 (use-package agent-shell
   :ensure t :defer t
+  :hook
+  (agent-shell-mode . completion-preview-mode)
   :custom
   (agent-shell-opencode-default-model-id "ollama/gemma4:26b-64k")
   (agent-shell-github-default-model-id "claude-haiku-4.5")
@@ -506,14 +467,69 @@
   :ensure t :defer t
   :hook (md-ts-mode))
 
+(use-package md-ts-mode
+  :ensure t
+  :mode
+  ("\\.md\\'" . md-ts-mode)
+  :hook
+  (md-ts-mode . (lambda () (face-remap-add-relative 'default :height 180)))
+  (md-ts-mode . orgtbl-mode)
+  :bind
+  ("C-c j" . markdown-journal)
+  (:map md-ts-mode-map
+	("M-RET" . md-follow-any-link)
+	("C-c SPC 1" . markdown-h1-title)
+	("C-c SPC 2" . markdown-h2-today)
+	("C-c C-i" . (lambda () (interactive) (markdown-toggle-markup "*")))
+	("C-c C-b" . (lambda () (interactive) (markdown-toggle-markup "**"))))
+  :config
+  (defun markdown-h1-title ()
+    "Insert an atx level 1 heading with the name of the file."
+    (interactive)
+    (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
+  (defun markdown-h2-today ()
+    "Insert an atx level 2 heading with today's date in iso format."
+    (interactive)
+    (insert "## " (format-time-string "%Y-%m-%d") "\n"))
+  (defun markdown-journal ()
+    "Make a new daily note in my obsidian vault"
+    (interactive)
+    (find-file (concat "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/" (format-time-string "%Y-%m-%d") ".md")))
+  (defun markdown-follow-any-link ()
+    (interactive)
+    (cond
+     ((thing-at-point-looking-at "\\[\\[\\([^]]+\\)\\]\\]")
+      (let ((path (match-string 1)))
+	(find-file (if (file-name-extension path) path (concat path ".md")))))
+     ((thing-at-point-looking-at "\\[\\([^]]+\\)\\](\\([^)]+\\))")
+      (browse-url (match-string 2)))
+     (t (message "No link found at point."))))
+  (defun markdown-toggle-markup (delim)
+    "Add DELIM around region/word, or remove it if already present."
+    (let* ((len (length delim))
+           (bounds (if (use-region-p) (cons (region-beginning) (region-end)) (bounds-of-thing-at-point 'word)))
+           (beg (car bounds))
+           (end (cdr bounds)))
+      (when (and beg end)
+	(save-excursion
+          (if (and (equal delim (buffer-substring-no-properties (- beg len) beg))
+                   (equal delim (buffer-substring-no-properties end (+ end len))))
+	      (progn (delete-region end (+ end len)) 
+                     (delete-region (- beg len) beg))
+            (goto-char end) (insert delim)
+            (goto-char beg) (insert delim))))))
+  (require 'org-table)
+  (defun markdown-table-fix (&rest _args)
+    (when (and (buffer-file-name) (string-match-p "\\.md$" (buffer-file-name)))
+      (save-excursion
+	(let ((end (org-table-end)))
+          (goto-char (org-table-begin))
+          (while (search-forward "+" end t)
+            (replace-match "|"))))))
+  (advice-add 'org-table-align :after #'markdown-table-fix))
+
 (use-package mines
   :ensure t :defer t)
-
-(use-package music-control
-  :defer t
-  :load-path "elpa/music-control/"
-  :config
-  (music-control-mode 1))
 
 (use-package nerd-icons-dired
   :ensure t :defer t
@@ -528,10 +544,9 @@
   ( :map swift-ts-mode-map
     ("C-c SPC" . xcode-build))
   :config
-  (add-to-list 'apheleia-mode-alist
-	       '(swift-ts-mode . swift-format))
-  (add-to-list 'apheleia-formatters
-	       '(swift-format "xcrun" "swift-format" (buffer-file-name)))
+  (add-to-list 'treesit-language-source-alist '(swift "https://github.com/alex-pinkus/tree-sitter-swift"))
+  (add-to-list 'apheleia-mode-alist '(swift-ts-mode . swift-format))
+  (add-to-list 'apheleia-formatters '(swift-format "xcrun" "swift-format" (buffer-file-name)))
   (add-to-list 'eglot-server-programs '(swift-ts-mode . ("xcrun" "sourcekit-lsp")))
   (defun xcode-build ()
     (interactive)
@@ -543,9 +558,10 @@
 
 (use-package typst-ts-mode
   :ensure t :defer t
-  ;; (typst-ts-mc-install-grammar)
-  :vc ( :url "https://codeberg.org/meow_king/typst-ts-mode.git")
-  :mode "\\.typ\\'")
+  :vc ( :url "https://codeberg.org/meow_king/typst-ts-mode")
+  :mode "\\.typ\\'"
+  :config
+  (add-to-list 'treesit-language-source-alist '(typst "https://github.com/uben0/tree-sitter-typst")))
 
 (use-package visual-fill-column
   :ensure t :defer t
