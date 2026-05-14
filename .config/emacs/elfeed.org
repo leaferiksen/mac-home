@@ -50,6 +50,7 @@
 *** https://hypercritical.co/feeds/main
 *** https://indi.ca/rss/
 *** https://ryanleetaylor.com/rss.xml
+*** https://thanosapollo.org/index.xml
 *** https://themkat.net/feed.xml
 *** https://tnywndr.cafe/index.xml
 *** https://wokescientist.substack.com/feed

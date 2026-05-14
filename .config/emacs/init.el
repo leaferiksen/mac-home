@@ -78,9 +78,11 @@
   (word-wrap-by-category t)
   :config
   ;; Find every loaded *-ts-mode function, derive the base mode name, and remap if that base mode also exists.
-  (dolist (mode (apropos-internal "-ts-mode$" #'functionp))
-    (let ((base (intern (string-replace "-ts-mode" "-mode" (symbol-name mode)))))
-      (when (fboundp base) (add-to-list 'major-mode-remap-alist (cons base mode)))))
+  (mapc (lambda (ts-mode)
+          (let ((old-mode (intern (string-replace "-ts-mode" "-mode" (symbol-name ts-mode)))))
+            (when (fboundp old-mode)
+              (add-to-list 'major-mode-remap-alist (cons old-mode ts-mode)))))
+	(apropos-internal "-ts-mode$" #'commandp))
   (defun async-shell-command-no-window (command)
     (interactive)
     (let ((display-buffer-alist (list (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))))
@@ -192,6 +194,11 @@
   (eglot-code-action-indications '(mode-line))
   (eglot-autoshutdown t))
 
+(use-package html-mode
+  ;; mhtml-mode causes issues with apheleia
+  :mode
+  ("\\.html\\'" . html-mode))
+
 (use-package ls-lisp
   :custom
   (ls-lisp-dirs-first t)
@@ -300,7 +307,7 @@
     ("r" . appine-rss))
   :custom
   (appine-rss-path "~/.config/emacs/elfeed.org")
-  :config
+  :init
   (defun open-with-appine ()
     "Load the current file or file under cursor in Dired into Appine."
     (interactive)
@@ -412,7 +419,6 @@
   ( :prefix "C-c a"
     :prefix-map favorite-agents
     ("a" . agent-shell)
-    ("p" . agent-shell-pi-start-agent)
     ("o" . agent-shell-opencode-start-agent)
     ("g" . agent-shell-google-start-gemini)
     ("c" . agent-shell-github-start-copilot)))
@@ -534,7 +540,9 @@
   ( :map swift-ts-mode-map
     ("C-c SPC" . xcode-build))
   :config
-  (add-to-list 'treesit-language-source-alist '(swift "https://github.com/alex-pinkus/tree-sitter-swift"))
+  ;; https://github.com/alex-pinkus/tree-sitter-swift#where-is-your-parserc
+  ;; https://github.com/alex-pinkus/tree-sitter-swift/actions/workflows/parser-src.yml
+  (add-to-list 'treesit-language-source-alist '(swift "/Users/leaf/.config/emacs/tree-sitter/tree-sitter-swift" nil "."))
   (add-to-list 'apheleia-mode-alist '(swift-ts-mode . swift-format))
   (add-to-list 'apheleia-formatters '(swift-format "xcrun" "swift-format" (buffer-file-name)))
   (add-to-list 'eglot-server-programs '(swift-ts-mode . ("xcrun" "sourcekit-lsp")))

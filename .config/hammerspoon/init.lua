@@ -27,8 +27,6 @@ Install:andUse("PaperWM", {
 		spoon.window_filter:rejectApp("Stickies")
 		spoon.window_filter:rejectApp("Minecraft")
 		spoon.window_filter:rejectApp("IINA")
-		spoon.window_filter:rejectApp("Elmedia Video Player")
-		spoon.window_filter:rejectApp("Color Picker")
 		spoon.window_filter:rejectApp("LuLu")
 		spoon.window_filter:rejectApp("java")
 		spoon.window_filter:rejectApp("Keynote")
