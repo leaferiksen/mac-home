@@ -12,7 +12,7 @@ export PATH=$HOME/.docker/bin:/opt/homebrew/sbin:/opt/homebrew/bin:$PATH
 eval "$(brew shellenv)"
 . "$HOME/.cargo/env"
 
-# disable gcc
+# disable gcc to fix xcode clang pipelines
 unset CC
 unset CC
 
@@ -27,9 +27,9 @@ alias ani-cli='ani-cli -q 1080'
 alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
 alias fixapp='xattr -dr com.apple.quarantine'
 alias upbrew='brew update && brew upgrade --greedy'
-alias upnpm='npx npm-check-updates && npm install'
-alias fixnode='brew unlink node && brew link --overwrite node'
 alias upskills='npx skills update --global'
+alias upnode='npx npm-check-updates --cooldown 7d && npm install'
+alias fixnode='brew unlink node && brew link --overwrite node'
 alias addskillsto='npx skills add ~/.agents/skills/ --all --agent'
 
 # My BSD utils

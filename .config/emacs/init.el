@@ -60,6 +60,7 @@
   (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
+  (warning-suppress-log-types '(native-compiler))
   (package-vc-allow-build-commands t)
   (project-mode-line t)
   (project-vc-extra-root-markers '("project"))
