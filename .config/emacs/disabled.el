@@ -25,6 +25,15 @@
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 
+(defun get-apw-password (domain)
+  "Fetch the password for DOMAIN using the apw tool."
+  ;; Usage: (get-apw-password "example.com")
+  (let* ((json-str (shell-command-to-string (format "apw pw get %s" domain)))
+         (data (json-parse-string json-str :object-type 'alist))
+         (results (alist-get 'results data)))
+    (when (> (length results) 0)
+      (alist-get 'password (elt results 0)))))
+
 (use-package elfeed
   :ensure t :defer t
   :preface
@@ -88,7 +97,18 @@
   :mode
   ("\\.md\\'" . markdown-ts-mode)
   :hook
-  (markdown-mode . (lambda () (font-lock-add-keywords nil '(("\\[\\[\\([^]]+\\)\\]\\]" 0 'link t))))))
+  (markdown-mode . (lambda () (font-lock-add-keywords nil '(("\\[\\[\\([^]]+\\)\\]\\]" 0 'link t)))))
+  (markdown-mode . orgtbl-mode)
+  :config
+  (require 'org-table)
+  (defun markdown-table-fix (&rest _args)
+    (when (and (buffer-file-name) (string-match-p "\\.md$" (buffer-file-name)))
+      (save-excursion
+	(let ((end (org-table-end)))
+          (goto-char (org-table-begin))
+          (while (search-forward "+" end t)
+            (replace-match "|"))))))
+  (advice-add 'org-table-align :after #'markdown-table-fix))
 
 (use-package markdown-mode
   :ensure t

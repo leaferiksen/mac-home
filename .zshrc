@@ -30,10 +30,8 @@ alias upbrew='brew update && brew upgrade --greedy'
 alias upskills='npx skills update --global'
 alias upnode='npx npm-check-updates --cooldown 7d && npm install'
 alias fixnode='brew unlink node && brew link --overwrite node'
-alias addskillsto='npx skills add ~/.agents/skills/ --all --agent'
 
 # My BSD utils
-alias gitamend='git commit --amend --no-edit && git status'
 alias myip='ifconfig | grep "inet "'
 alias ctar='tar -czvf'
 alias xtar='tar -xzvf'

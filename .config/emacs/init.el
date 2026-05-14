@@ -111,14 +111,6 @@
       (if (use-region-p)
 	  (fill-region (region-beginning) (region-end) nil)
 	(fill-paragraph nil))))
-  (defun get-apw-password (domain)
-    "Fetch the password for DOMAIN using the apw tool."
-    ;; Usage: (get-apw-password "example.com")
-    (let* ((json-str (shell-command-to-string (format "apw pw get %s" domain)))
-           (data (json-parse-string json-str :object-type 'alist))
-           (results (alist-get 'results data)))
-      (when (> (length results) 0)
-	(alist-get 'password (elt results 0)))))
   (add-to-list 'imagemagick-enabled-types 'JXL)
   (defalias 'yes-or-no-p 'y-or-n-p)
   (define-auto-insert "\.html" "insert.html")
@@ -147,11 +139,11 @@
   :hook
   (emacs-startup . almost-maximize-frame)
   :init
-  (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t)
   (defun almost-maximize-frame()
     "Borderless maximise with margins for tiling"
-    (add-to-list 'default-frame-alist '(undecorated-round . t)))
-  (setopt frame-resize-pixelwise t))
+    (add-to-list 'default-frame-alist '(undecorated-round . t))
+    (setopt frame-resize-pixelwise t)
+    (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t)))
 
 (use-package completion-preview
   :hook
@@ -470,15 +462,16 @@
   :mode
   ("\\.md\\'" . md-ts-mode)
   :hook
-  (md-ts-mode . orgtbl-mode)
+  (md-ts-mode . obsidian-cli-mode)
   :bind
-  ("C-c j" . markdown-journal)
+  ("C-c j" . obsidian-cli-daily-note)
   (:map md-ts-mode-map
 	("M-RET" . markdown-follow-any-link)
+	("C-c SPC b" . obsidian-jump-to-backlink)
 	("C-c SPC 1" . markdown-h1-title)
 	("C-c SPC 2" . markdown-h2-today)
-	("C-c C-i" . (lambda () (interactive) (markdown-toggle-markup "*")))
-	("C-c C-b" . (lambda () (interactive) (markdown-toggle-markup "**"))))
+	("C-c SPC m" . markdown-more-emphasis)
+	("C-c SPC l" . markdown-less-emphasis))
   :config
   (defun markdown-h1-title ()
     "Insert an atx level 1 heading with the name of the file."
@@ -488,10 +481,6 @@
     "Insert an atx level 2 heading with today's date in iso format."
     (interactive)
     (insert "## " (format-time-string "%Y-%m-%d") "\n"))
-  (defun markdown-journal ()
-    "Make a new daily note in my obsidian vault"
-    (interactive)
-    (find-file (concat "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/" (format-time-string "%Y-%m-%d") ".md")))
   (defun markdown-follow-any-link ()
     (interactive)
     (cond
@@ -501,29 +490,28 @@
      ((thing-at-point-looking-at "\\[\\([^]]+\\)\\](\\([^)]+\\))")
       (browse-url (match-string 2)))
      (t (message "No link found at point."))))
-  (defun markdown-toggle-markup (delim)
-    "Add DELIM around region/word, or remove it if already present."
-    (let* ((len (length delim))
-           (bounds (if (use-region-p) (cons (region-beginning) (region-end)) (bounds-of-thing-at-point 'word)))
-           (beg (car bounds))
-           (end (cdr bounds)))
-      (when (and beg end)
-	(save-excursion
-          (if (and (equal delim (buffer-substring-no-properties (- beg len) beg))
-                   (equal delim (buffer-substring-no-properties end (+ end len))))
-	      (progn (delete-region end (+ end len)) 
-                     (delete-region (- beg len) beg))
-            (goto-char end) (insert delim)
-            (goto-char beg) (insert delim))))))
-  (require 'org-table)
-  (defun markdown-table-fix (&rest _args)
-    (when (and (buffer-file-name) (string-match-p "\\.md$" (buffer-file-name)))
+  (defun markdown--bounds ()
+    (if (use-region-p)
+	(cons (region-beginning) (region-end))
+      (bounds-of-thing-at-point 'word)))
+  (defun markdown-more-emphasis ()
+    (interactive)
+    (when-let* ((bounds (markdown--bounds))
+		(beg (car bounds))
+		(end (cdr bounds)))
       (save-excursion
-	(let ((end (org-table-end)))
-          (goto-char (org-table-begin))
-          (while (search-forward "+" end t)
-            (replace-match "|"))))))
-  (advice-add 'org-table-align :after #'markdown-table-fix))
+	(goto-char end) (insert "*")
+	(goto-char beg) (insert "*"))))
+  (defun markdown-less-emphasis ()
+    (interactive)
+    (when-let* ((bounds (markdown--bounds))
+		(beg (car bounds))
+		(end (cdr bounds)))
+      (save-excursion
+	(when (and (equal "*" (buffer-substring-no-properties (- beg 1) beg))
+                   (equal "*" (buffer-substring-no-properties end (+ end 1))))
+          (delete-region end (+ end 1))
+          (delete-region (- beg 1) beg))))))
 
 (use-package mines
   :ensure t :defer t)
