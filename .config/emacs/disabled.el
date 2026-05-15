@@ -24,6 +24,19 @@
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 
+(use-package lua-mode
+  :ensure t :defer t
+  :hook
+  (lua-mode . eglot-ensure))
+
+(use-package magit
+  :ensure t :defer t)
+
+(use-package hackernews
+  :ensure t :defer t
+  :bind
+  ("C-c h" . hackernews))
+
 (defun get-apw-password (domain)
   "Fetch the password for DOMAIN using the apw tool."
   ;; Usage: (get-apw-password "example.com")

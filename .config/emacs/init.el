@@ -374,6 +374,15 @@
   :config
   (exec-path-from-shell-initialize))
 
+(use-package obsidian-cli
+  :ensure t
+  :vc ( :url "https://github.com/leaferiksen/obsidian-cli.el")
+  :hook md-ts-mode
+  :bind
+  ("C-c j" . obsidian-cli-daily-note)
+  ( :map obsidian-cli-mode-map
+    ("C-c C-b" . obsidian-cli-jump-to-backlink)))
+
 (use-package reader
   :ensure t
   :vc ( :url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
@@ -439,20 +448,7 @@
   :bind
   ("C-c s" . gterm))
 
-(use-package hackernews
-  :ensure t :defer t
-  :bind
-  ("C-c h" . hackernews))
-
 (use-package lorem-ipsum
-  :ensure t :defer t)
-
-(use-package lua-mode
-  :ensure t :defer t
-  :hook
-  (lua-mode . eglot-ensure))
-
-(use-package magit
   :ensure t :defer t)
 
 (use-package markdown-indent-mode
@@ -520,16 +516,6 @@
 (use-package nerd-icons-dired
   :ensure t :defer t
   :hook dired-mode)
-
-(use-package obsidian-cli
-  :ensure t
-  :vc ( :url "https://github.com/leaferiksen/obsidian-cli.el")
-  :hook
-  (md-ts-mode)
-  :bind
-  ("C-c j" . obsidian-cli-daily-note)
-  ( :map obsidian-cli-mode-map
-    ("C-c SPC b" . obsidian-cli-jump-to-backlink)))
 
 (use-package swift-ts-mode
   :ensure t :defer t
