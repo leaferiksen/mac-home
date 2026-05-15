@@ -8,6 +8,7 @@
   :init
   (setenv "GIT_EDITOR" "emacsclient")
   :hook
+  (emacs-startup . almost-maximize-frame)
   (ns-system-appearance-change-functions . auto-theme)
   (text-mode . flyspell-mode)
   :bind
@@ -65,6 +66,7 @@
   (modus-themes-mixed-fonts t)
   (warning-suppress-log-types '(native-compiler))
   (package-vc-allow-build-commands t)
+  ;; (plstore-cache-passphrase-for-symmetric-encryption t)
   (project-mode-line t)
   (project-vc-extra-root-markers '("project"))
   (read-buffer-completion-ignore-case t)
@@ -81,16 +83,16 @@
   (which-key-mode t)
   (word-wrap-by-category t)
   :config
-  (add-to-list 'default-frame-alist '(undecorated-round . t))
-  (set-frame-size (selected-frame)
-		  (- (display-pixel-width) 80)
-		  (- (display-pixel-height) 500) t)
   ;; Find every loaded *-ts-mode function, derive the base mode name, and remap if that base mode also exists.
   (mapc (lambda (ts-mode)
           (let ((old-mode (intern (string-replace "-ts-mode" "-mode" (symbol-name ts-mode)))))
             (when (fboundp old-mode)
               (add-to-list 'major-mode-remap-alist (cons old-mode ts-mode)))))
 	(apropos-internal "-ts-mode$" #'commandp))
+  (defun almost-maximize-frame()
+    "Borderless maximise with margins for tiling"
+    (add-to-list 'default-frame-alist '(undecorated-round . t))
+    (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t))
   (defun async-shell-command-no-window (command)
     (interactive)
     (let ((display-buffer-alist (list (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))))
@@ -312,6 +314,11 @@
           (progn (appine-open-url current-clip)
 		 (message "Clipboard update detected! Opened %s in Appine" current-clip))
         (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url)))))
+
+(use-package auth-source-xoauth2-plugin
+  :ensure t
+  :custom
+  (auth-source-xoauth2-plugin-mode t))
 
 (use-package clojure-mode
   :ensure t)
