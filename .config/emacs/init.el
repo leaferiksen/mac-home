@@ -8,7 +8,6 @@
   :init
   (setenv "GIT_EDITOR" "emacsclient")
   :hook
-  ;; (emacs-startup . server-start)
   (ns-system-appearance-change-functions . auto-theme)
   (text-mode . flyspell-mode)
   :bind
@@ -25,6 +24,7 @@
   :custom-face
   (default ((t ( :family "Maple Mono NF CN" :height 140))))
   (fixed-pitch ((t ( :inherit default))))
+  (variable-pitch ((t ( :family "Atkinson Hyperlegible Next" :height 180))))
   :custom
   (auto-insert-directory "~/.config/emacs/templates/")
   (auto-insert-query nil)
@@ -44,6 +44,7 @@
   (eldoc-echo-area-use-multiline-p t)
   (electric-pair-mode t)
   (find-file-visit-truename t)
+  (frame-resize-pixelwise t)
   (gc-cons-threshold 100000000)
   (global-auto-revert-mode t)
   (global-auto-revert-non-file-buffers t)
@@ -57,7 +58,9 @@
   (mac-function-modifier 'hyper)
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not flymake-mode))
-  (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
+  (modus-themes-common-palette-overrides '((underline-link unspecified)
+					   (underline-link-visited unspecified)
+					   (underline-link-symbolic unspecified)))
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
   (warning-suppress-log-types '(native-compiler))
@@ -78,6 +81,10 @@
   (which-key-mode t)
   (word-wrap-by-category t)
   :config
+  (add-to-list 'default-frame-alist '(undecorated-round . t))
+  (set-frame-size (selected-frame)
+		  (- (display-pixel-width) 80)
+		  (- (display-pixel-height) 500) t)
   ;; Find every loaded *-ts-mode function, derive the base mode name, and remap if that base mode also exists.
   (mapc (lambda (ts-mode)
           (let ((old-mode (intern (string-replace "-ts-mode" "-mode" (symbol-name ts-mode)))))
@@ -109,14 +116,17 @@
     (interactive)
     (let ((fill-column (point-max)))
       (if (use-region-p)
-	  (fill-region (region-beginning) (region-end) nil)
+	  (fill-region (region-beginning)
+		       (region-end) nil)
 	(fill-paragraph nil))))
   (add-to-list 'imagemagick-enabled-types 'JXL)
   (defalias 'yes-or-no-p 'y-or-n-p)
   (define-auto-insert "\.html" "insert.html")
   (define-auto-insert "\.js" "insert.js")
-  (define-key key-translation-map (kbd "M-o") (kbd "C-x o"))
-  (define-key key-translation-map (kbd "M-r") (kbd "C-x r"))
+  (define-key key-translation-map (kbd "M-o")
+	      (kbd "C-x o"))
+  (define-key key-translation-map (kbd "M-r")
+	      (kbd "C-x r"))
   (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display"))
 
 ;; Internal Packages
@@ -134,16 +144,6 @@
 (global-visual-line-mode 1)
 
 (repeat-mode 1)
-
-(use-package almost-maximize-frame
-  :hook
-  (emacs-startup . almost-maximize-frame)
-  :init
-  (defun almost-maximize-frame()
-    "Borderless maximise with margins for tiling"
-    (add-to-list 'default-frame-alist '(undecorated-round . t))
-    (setopt frame-resize-pixelwise t)
-    (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t)))
 
 (use-package completion-preview
   :hook
@@ -164,16 +164,7 @@
   (dired-create-destination-dirs 'ask)
   (dired-mouse-drag-files t)
   (dired-recursive-copies 'always)
-  (dired-omit-files "\\`[.]?#\\|\\`[.][.]?\\'\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
-  :bind
-  ( :map dired-mode-map
-    ("f" . dired-finder-path))
-  :config
-  (defun dired-finder-path ()
-    "Open Dired in the frontmost Finder window path, if available."
-    (interactive)
-    (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
-      (if path (dired (string-trim path)) (message "No Finder window found.")))))
+  (dired-omit-files "\\`[.]?#\\|\\`[.][.]?\\'\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd"))
 
 (use-package eglot
   :demand
@@ -218,13 +209,15 @@
   (defun project-gterm ()
     "Open gterm in project's root directory."
     (interactive)
-    (let ((default-directory (project-root (project-current t)))) (gterm)))
+    (let ((default-directory (project-root (project-current t))))
+      (gterm)))
   (defun project-run (label msg &rest args)
     "Run ARGS as a process LABEL in project root, showing MSG."
     (let* ((project (project-current t))
            (default-directory (project-root project))
            (buf (format "*%s:%s*" label (project-name project))))
-      (when (get-buffer buf) (kill-buffer buf))
+      (when (get-buffer buf)
+	(kill-buffer buf))
       (apply #'start-process label buf args)
       (when msg (message msg (project-name project)))))
   (defun project-tailwindcss ()
@@ -242,7 +235,9 @@
     "Watch for clipboard data and open in Xwidgets."
     (let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)))
       (if (and current-clip (not (string-empty-p current-clip)))
-          (progn (split-and-follow-horizontally) (xwidget-webkit-browse-url current-clip) (message "Clipboard update detected! Opened %s in Xwidgets" current-clip))
+          (progn (split-and-follow-horizontally)
+		 (xwidget-webkit-browse-url current-clip)
+		 (message "Clipboard update detected! Opened %s in Xwidgets" current-clip))
         (run-at-time "0.5 sec" nil #'watch-clipboard-xwidget-webkit-browse-url)))))
 
 (use-package visual-wrap-prefix-mode
@@ -304,14 +299,18 @@
   (defun open-with-appine ()
     "Load the current file or file under cursor in Dired into Appine."
     (interactive)
-    (let ((file (if (derived-mode-p 'dired-mode) (dired-get-file-for-visit) (buffer-file-name))))
-      (if (and file (file-exists-p file)) (progn (appine-open-file file))
+    (let ((file (if (derived-mode-p 'dired-mode)
+		    (dired-get-file-for-visit)
+		  (buffer-file-name))))
+      (if (and file (file-exists-p file))
+	  (progn (appine-open-file file))
 	(message "No file found to open with Appine"))))
   (defun watch-clipboard-appine-open-url ()
     "Watch for clipboard data and open in Appine."
     (let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)))
       (if (and current-clip (not (string-empty-p current-clip)))
-          (progn (appine-open-url current-clip) (message "Clipboard update detected! Opened %s in Appine" current-clip))
+          (progn (appine-open-url current-clip)
+		 (message "Clipboard update detected! Opened %s in Appine" current-clip))
         (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url)))))
 
 (use-package clojure-mode
@@ -361,7 +360,8 @@
     "Convert md files to pptx."
     (interactive)
     (let ((files (dwim-shell-command--files)))
-      (if (cl-every (lambda (f) (string-suffix-p ".md" f t)) files)
+      (if (cl-every (lambda (f)
+		      (string-suffix-p ".md" f t)) files)
           (dwim-shell-command-on-marked-files 
            "Converting md to pptx" 
            "npx @marp-team/marp-cli@latest '<<f>>' --pptx")
@@ -381,7 +381,8 @@
   (defun fix-reader ()
     "Recompile Reader Libraries"
     (interactive)
-    (let ((default-directory "~/.config/emacs/elpa/reader/")) (shell-command "make clean all"))))
+    (let ((default-directory "~/.config/emacs/elpa/reader/"))
+      (shell-command "make clean all"))))
 
 (use-package spacious-padding
   :ensure t
@@ -397,7 +398,8 @@
   (google-translate-output-destination 'echo-area)
   (google-translate-show-phonetic t)
   (google-translate-translation-directions-alist
-   '(("ja" . "en") ("en" . "ja"))))
+   '(("ja" . "en")
+     ("en" . "ja"))))
 
 ;; Deferred External Packages
 
@@ -461,17 +463,13 @@
   :ensure t
   :mode
   ("\\.md\\'" . md-ts-mode)
-  :hook
-  (md-ts-mode . obsidian-cli-mode)
   :bind
-  ("C-c j" . obsidian-cli-daily-note)
-  (:map md-ts-mode-map
-	("M-RET" . markdown-follow-any-link)
-	("C-c SPC b" . obsidian-jump-to-backlink)
-	("C-c SPC 1" . markdown-h1-title)
-	("C-c SPC 2" . markdown-h2-today)
-	("C-c SPC m" . markdown-more-emphasis)
-	("C-c SPC l" . markdown-less-emphasis))
+  ( :map md-ts-mode-map
+    ("M-RET" . markdown-follow-any-link)
+    ("C-c SPC 1" . markdown-h1-title)
+    ("C-c SPC 2" . markdown-h2-today)
+    ("C-c SPC m" . markdown-more-emphasis)
+    ("C-c SPC l" . markdown-less-emphasis))
   :config
   (defun markdown-h1-title ()
     "Insert an atx level 1 heading with the name of the file."
@@ -492,7 +490,8 @@
      (t (message "No link found at point."))))
   (defun markdown--bounds ()
     (if (use-region-p)
-	(cons (region-beginning) (region-end))
+	(cons (region-beginning)
+	      (region-end))
       (bounds-of-thing-at-point 'word)))
   (defun markdown-more-emphasis ()
     (interactive)
@@ -500,8 +499,10 @@
 		(beg (car bounds))
 		(end (cdr bounds)))
       (save-excursion
-	(goto-char end) (insert "*")
-	(goto-char beg) (insert "*"))))
+	(goto-char end)
+	(insert "*")
+	(goto-char beg)
+	(insert "*"))))
   (defun markdown-less-emphasis ()
     (interactive)
     (when-let* ((bounds (markdown--bounds))
@@ -519,6 +520,16 @@
 (use-package nerd-icons-dired
   :ensure t :defer t
   :hook dired-mode)
+
+(use-package obsidian-cli
+  :ensure t
+  :vc ( :url "https://github.com/leaferiksen/obsidian-cli.el")
+  :hook
+  (md-ts-mode)
+  :bind
+  ("C-c j" . obsidian-cli-daily-note)
+  ( :map obsidian-cli-mode-map
+    ("C-c SPC b" . obsidian-cli-jump-to-backlink)))
 
 (use-package swift-ts-mode
   :ensure t :defer t
@@ -554,7 +565,8 @@
   :ensure t :defer t
   :hook
   (md-ts-mode org-mode)
-  (visual-fill-column-mode . (lambda () (face-remap-add-relative 'default :height 180)))
+  (visual-fill-column-mode . (lambda ()
+			       (face-remap-add-relative 'default :height 180)))
   :custom
   (visual-fill-column-center-text t)
   (visual-fill-column-width 80))

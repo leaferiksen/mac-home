@@ -5,8 +5,7 @@
 ;;;;;;;;;;;;;;;;
 ;; Early-init ;;
 ;;;;;;;;;;;;;;;;
-(fixed-pitch ((t ( :family "Maple Mono NF CN" :height 140))))
-(variable-pitch ((t ( :family "Atkinson Hyperlegible Next" :height 180))))
+(emacs-startup . server-start)
 
 (setq package-vc-allow-build-commands t)
 (add-to-list 'default-frame-alist '(undecorated . t))
@@ -33,6 +32,17 @@
          (results (alist-get 'results data)))
     (when (> (length results) 0)
       (alist-get 'password (elt results 0)))))
+
+:bind
+( :map dired-mode-map
+  ("f" . dired-finder-path))
+:config
+(defun dired-finder-path ()
+  "Open Dired in the frontmost Finder window path, if available."
+  (interactive)
+  (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
+    (if path (dired (string-trim path))
+      (message "No Finder window found."))))
 
 (use-package elfeed
   :ensure t :defer t
