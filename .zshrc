@@ -33,6 +33,7 @@ alias upbrew='brew update && brew upgrade --greedy'
 alias upskills='npx skills update --global'
 alias upnode='npx npm-check-updates --cooldown 7d && npm install'
 alias fixnode='brew unlink node && brew link --overwrite node'
+getid() {osascript -e "id of app \"$1\""}
 
 # My BSD utils
 alias myip='ifconfig | grep "inet "'
@@ -42,5 +43,3 @@ alias ttar='tar -tzvf'
 alias diff='diff --color=always'
 alias l='ls -a --color=auto'
 alias ll='ls -al --color=auto'
-function ml() {mkdir -p "$(pwd)/$@"; l}
-function tl() {touch "$(pwd)/$@"; l}

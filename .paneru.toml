@@ -17,10 +17,16 @@ window_swap_west = "alt - b"
 window_swap_east = "alt - f"
 window_stack = "alt - i"
 window_unstack = "alt - o"
-window_resize = "alt - r"
+window_grow = "alt - r"
 window_shrink = "alt - s"
 window_center = "alt - c"
 window_manage = "alt - m"
+window_virtualnum_1 = "alt - 1"
+window_virtualnum_2 = "alt - 2"
+window_virtualnum_3 = "alt - 3"
+window_virtualmovenum_1 = "alt + shift - 1"
+window_virtualmovenum_2 = "alt + shift - 2"
+window_virtualmovenum_3 = "alt + shift - 3"
 
 [padding]
 left = 10
@@ -30,13 +36,18 @@ right = 10
 
 [windows.all]
 title = ".*"
-vertical_padding = 20
+vertical_padding = 10
 horizontal_padding = 10
 
 [window.facetime]
 title = ".*"
 bundle_id = "com.apple.Facetime"
 floating = true
+
+[window.emacs]
+title = ".*"
+bundle_id = "org.gnu.Emacs"
+width = 1.0
 
 [window.iina]
 title = ".*"

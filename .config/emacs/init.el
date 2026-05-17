@@ -1,10 +1,10 @@
-;;; init.el --- Leaf's Emacs Configuration           -*- lexical-binding: t; -*-
+;;; init.el --- Emacs Initialization -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; Author: Leaf Eriksen
 
 ;;; Commentary:
 
-;; `use-package' whenever possible
+;; This is sorted first by priority, second by alphabet
 
 ;;; Code:
 
@@ -96,7 +96,7 @@
     "Borderless maximise with margins for tiling"
     (interactive)
     (add-to-list 'default-frame-alist '(undecorated-round . t))
-    (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t))
+    (set-frame-size (selected-frame) (- (display-pixel-width) 85) (frame-height) t))
   (defun async-shell-command-no-window (command)
     (interactive)
     (let ((display-buffer-alist (list (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))))
@@ -133,23 +133,16 @@
 	      (kbd "C-x o"))
   (define-key key-translation-map (kbd "M-r")
 	      (kbd "C-x r"))
-  (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display"))
+  (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display")
+  (auto-insert-mode 1)
+  (auto-save-visited-mode 1)
+  (editorconfig-mode 1)
+  (fido-vertical-mode 1)
+  (global-hl-line-mode 1)
+  (global-visual-line-mode 1)
+  (repeat-mode 1))
 
 ;; Internal Packages
-
-(auto-insert-mode 1)
-
-(auto-save-visited-mode 1)
-
-(editorconfig-mode 1)
-
-(fido-vertical-mode 1)
-
-(global-hl-line-mode 1)
-
-(global-visual-line-mode 1)
-
-(repeat-mode 1)
 
 (use-package completion-preview
   :hook
@@ -258,12 +251,12 @@
     (watch-clipboard-appine-open-url))
   (defun watch-clipboard-xwidget-webkit-browse-url ()
     "Watch for clipboard data and open in Xwidgets."
-    (let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)))
-      (if (and current-clip (not (string-empty-p current-clip)))
-          (progn (split-and-follow-horizontally)
-		 (xwidget-webkit-browse-url current-clip)
-		 (message "Clipboard update detected! Opened %s in Xwidgets" current-clip))
-        (run-at-time "0.5 sec" nil #'watch-clipboard-xwidget-webkit-browse-url)))))
+    (if-let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING))
+             ((not (string-empty-p current-clip))))
+        (progn (split-and-follow-horizontally)
+	       (xwidget-webkit-browse-url current-clip)
+	       (message "Clipboard update detected! Opened %s in Xwidgets" current-clip))
+      (run-at-time "0.5 sec" nil #'watch-clipboard-xwidget-webkit-browse-url))))
 
 (use-package visual-wrap-prefix-mode
   :hook
@@ -283,7 +276,8 @@
     ("s" . yt-dlp-video-subtitled))
   :init
   (defun yt-dlp--download (flag)
-    (let ((url (read-string "URL: ")))
+    (when-let ((url (read-string "URL: "))
+               ((not (string-empty-p url))))
       (async-shell-command (format "yt-dlp %s \"%s\"" flag url))))
   (defun yt-dlp-audio ()
     (interactive)
@@ -324,19 +318,19 @@
   (defun open-with-appine ()
     "Load the current file or file under cursor in Dired into Appine."
     (interactive)
-    (let ((file (if (derived-mode-p 'dired-mode)
-		    (dired-get-file-for-visit)
-		  (buffer-file-name))))
-      (if (and file (file-exists-p file))
-	  (progn (appine-open-file file))
-	(message "No file found to open with Appine"))))
+    (if-let ((file (if (derived-mode-p 'dired-mode)
+		       (dired-get-file-for-visit)
+		     (buffer-file-name)))
+             ((file-exists-p file)))
+	(appine-open-file file)
+      (message "No file found to open with Appine")))
   (defun watch-clipboard-appine-open-url ()
     "Watch for clipboard data and open in Appine."
-    (let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)))
-      (if (and current-clip (not (string-empty-p current-clip)))
-          (progn (appine-open-url current-clip)
-		 (message "Clipboard update detected! Opened %s in Appine" current-clip))
-        (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url)))))
+    (if-let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING))
+             ((not (string-empty-p current-clip))))
+        (progn (appine-open-url current-clip)
+	       (message "Clipboard update detected! Opened %s in Appine" current-clip))
+      (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url))))
 
 (use-package clojure-mode
   :ensure t)
@@ -384,13 +378,12 @@
   (defun dwim-md-to-pptx ()
     "Convert md files to pptx."
     (interactive)
-    (let ((files (dwim-shell-command--files)))
-      (if (cl-every (lambda (f)
-		      (string-suffix-p ".md" f t)) files)
-          (dwim-shell-command-on-marked-files
-           "Converting md to pptx"
-           "npx @marp-team/marp-cli@latest '<<f>>' --pptx")
-        (user-error "Selection contains non-markdown files!")))))
+    (if-let ((files (dwim-shell-command--files))
+             ((cl-every (lambda (f) (string-suffix-p ".md" f t)) files)))
+        (dwim-shell-command-on-marked-files
+         "Converting md to pptx"
+         "npx @marp-team/marp-cli@latest '<<f>>' --pptx")
+      (user-error "Selection contains non-markdown files!"))))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -508,7 +501,7 @@
     (interactive)
     (cond
      ((thing-at-point-looking-at "\\[\\[\\([^]]+\\)\\]\\]")
-      (let ((path (match-string 1)))
+      (when-let ((path (match-string 1)))
 	(find-file (if (file-name-extension path) path (concat path ".md")))))
      ((thing-at-point-looking-at "\\[\\([^]]+\\)\\](\\([^)]+\\))")
       (browse-url (match-string 2)))
@@ -589,8 +582,3 @@
 
 (provide 'init)
 ;;; init.el ends here
-
-;; this makes `flymake' compatibile with `use-package' autoloading
-;; Local Variables:
-;; byte-compile-warnings: (not free-vars unresolved)
-;; End:
