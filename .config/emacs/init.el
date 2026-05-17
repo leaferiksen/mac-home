@@ -1,24 +1,28 @@
-;;; -*- lexical-binding: t -*-
+;;; init.el --- Leaf's Emacs Configuration           -*- lexical-binding: t; -*-
 
-;;; Internal packages and internal hooks
+;; Author: Leaf Eriksen
+
+;;; Commentary:
+
+;; `use-package' whenever possible
+
+;;; Code:
+
+;; Internal packages and internal hooks
 
 (require 'package)
 
 (use-package emacs
-  :init
-  (setenv "GIT_EDITOR" "emacsclient")
   :hook
+  (emacs-startup . server-start)
   (emacs-startup . almost-maximize-frame)
+  (emacs-startup . remap-all-ts-modes)
   (ns-system-appearance-change-functions . auto-theme)
-  (text-mode . flyspell-mode)
   :bind
   ("M-z" . undo-only)
   ("M-Z" . undo-redo)
   ("C-<wheel-up>" . nil)
   ("C-<wheel-down>" . nil)
-  ("C-c c" . ispell-word)
-  ("M-[" . backward-paragraph)
-  ("M-]" . forward-paragraph)
   ("H-e" . ns-do-show-character-palette)
   ("C-x 2" . split-and-follow-horizontally)
   ("C-x 3" . split-and-follow-vertically)
@@ -83,14 +87,17 @@
   (which-key-mode t)
   (word-wrap-by-category t)
   :config
-  ;; Find every loaded *-ts-mode function, derive the base mode name, and remap if that base mode also exists.
-  (mapc (lambda (ts-mode)
-          (let ((old-mode (intern (string-replace "-ts-mode" "-mode" (symbol-name ts-mode)))))
-            (when (fboundp old-mode)
-              (add-to-list 'major-mode-remap-alist (cons old-mode ts-mode)))))
-	(apropos-internal "-ts-mode$" #'commandp))
+  (setenv "GIT_EDITOR" "emacsclient")
+  (defun remap-all-ts-modes ()
+    "Remap all available tree-sitter modes to their standard counterparts."
+    (interactive)
+    (dolist (ts-mode (apropos-internal "-ts-mode$" #'commandp))
+      (when-let ((old-mode (intern-soft (concat (string-remove-suffix "-ts-mode" (symbol-name ts-mode)) "-mode")))
+                 ((fboundp old-mode)))
+        (add-to-list 'major-mode-remap-alist (cons old-mode ts-mode)))))
   (defun almost-maximize-frame()
     "Borderless maximise with margins for tiling"
+    (interactive)
     (add-to-list 'default-frame-alist '(undecorated-round . t))
     (set-frame-size (selected-frame) (- (display-pixel-width) 80) (- (display-pixel-height) 500) t))
   (defun async-shell-command-no-window (command)
@@ -152,12 +159,11 @@
   (prog-mode html-mode)
   :bind
   ( :map completion-preview-active-mode
-    ("M-n" . completion-preview-next-candidate)
-    ("M-p" . completion-preview-prev-candidate)))
+    ("M-]" . completion-preview-next-candidate)
+    ("M-[" . completion-preview-prev-candidate)))
 
 (use-package dired
   :after ls-lisp
-  :preface (require 'ls-lisp)
   :hook
   (dired-mode . dired-omit-mode)
   (dired-mode . dired-hide-details-mode)
@@ -171,14 +177,37 @@
 (use-package eglot
   :demand
   :hook
-  (eglot-managed-mode-hook . flymake-mode)
   (html-mode . eglot-ensure)
   (css-ts-mode . eglot-ensure)
   (js-ts-mode . eglot-ensure)
+  :bind
+  ( :prefix "C-c e"
+    :prefix-map eglot-actions-map
+    ("r" . eglot-rename)
+    ("a" . eglot-code-actions)
+    ("o" . eglot-code-action-organize-imports)
+    ("d" . eldoc)
+    ("f" . eglot-format))
+  ( :map eglot-mode-map
+    ("C-c e" . eglot-actions-map))
   :custom
   (eglot-code-action-indicator "*")
   (eglot-code-action-indications '(mode-line))
   (eglot-autoshutdown t))
+
+(use-package flymake
+  :hook
+  (eglot-managed-mode-hook)
+  (emacs-lisp-mode . (lambda ()
+                       (when (buffer-file-name)
+                         (flymake-mode 1))))
+  :bind
+  ( :map flymake-mode-map
+    ("M-n" . flymake-goto-next-error)
+    ("M-p" . flymake-goto-prev-error))
+  :custom
+  ;; (flymake-show-diagnostics-at-end-of-line t)
+  )
 
 (use-package html-mode
   ;; mhtml-mode causes issues with apheleia
@@ -315,11 +344,6 @@
 		 (message "Clipboard update detected! Opened %s in Appine" current-clip))
         (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url)))))
 
-(use-package auth-source-xoauth2-plugin
-  :ensure t
-  :custom
-  (auth-source-xoauth2-plugin-mode t))
-
 (use-package clojure-mode
   :ensure t)
 
@@ -369,8 +393,8 @@
     (let ((files (dwim-shell-command--files)))
       (if (cl-every (lambda (f)
 		      (string-suffix-p ".md" f t)) files)
-          (dwim-shell-command-on-marked-files 
-           "Converting md to pptx" 
+          (dwim-shell-command-on-marked-files
+           "Converting md to pptx"
            "npx @marp-team/marp-cli@latest '<<f>>' --pptx")
         (user-error "Selection contains non-markdown files!")))))
 
@@ -383,7 +407,7 @@
 
 (use-package obsidian-cli
   :ensure t
-  :vc ( :url "https://github.com/leaferiksen/obsidian-cli.el")
+  :vc ( :url "git@github.com:leaferiksen/obsidian-cli.el.git")
   :hook md-ts-mode
   :bind
   ("C-c j" . obsidian-cli-daily-note)
@@ -420,7 +444,7 @@
 ;; Deferred External Packages
 
 (use-package agent-shell
-  :ensure t :defer t
+  :ensure t
   :hook
   (agent-shell-mode . completion-preview-mode)
   :custom
@@ -435,31 +459,29 @@
     ("c" . agent-shell-github-start-copilot)))
 
 (use-package csv-mode
-  :ensure t :defer t
+  :ensure t
   :hook
   (csv-mode . csv-align-mode)
   :custom
   (csv-align-padding 2)
   (csv-align-max-width 72))
 
+(use-package ghostel
+  :ensure t
+  :bind
+  ("C-c s" . ghostel))
+
 (use-package osx-dictionary
-  :ensure t :defer t
+  :ensure t
   :bind
   ("C-c d" . osx-dictionary-search-word-at-point))
 
-(use-package gterm
-  :ensure t :defer t
-  :vc ( :url "https://github.com/rwc9u/emacs-libgterm" :branch "main")
-  :custom
-  (gterm-always-compile-module t)
-  :bind
-  ("C-c s" . gterm))
-
 (use-package lorem-ipsum
-  :ensure t :defer t)
+  :ensure t
+  :defer t)
 
 (use-package markdown-indent-mode
-  :ensure t :defer t
+  :ensure t
   :hook (md-ts-mode))
 
 (use-package md-ts-mode
@@ -473,7 +495,13 @@
     ("C-c SPC 2" . markdown-h2-today)
     ("C-c SPC m" . markdown-more-emphasis)
     ("C-c SPC l" . markdown-less-emphasis))
+  :hook
+  (md-ts-mode . eglot-ensure)
+  :custom
+  ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
+  (eglot-workspace-configuration '( :harper-ls ( :linters ( :LongSentences :json-false))))
   :config
+  (add-to-list 'eglot-server-programs '(markdown-mode . ("harper-ls" "--stdio")))
   (defun markdown-h1-title ()
     "Insert an atx level 1 heading with the name of the file."
     (interactive)
@@ -518,14 +546,15 @@
           (delete-region (- beg 1) beg))))))
 
 (use-package mines
-  :ensure t :defer t)
+  :ensure t
+  :defer t)
 
 (use-package nerd-icons-dired
-  :ensure t :defer t
+  :ensure t
   :hook dired-mode)
 
 (use-package swift-ts-mode
-  :ensure t :defer t
+  :ensure t
   :mode "\\.swift\\'"
   :hook
   (swift-ts-mode . eglot-ensure)
@@ -544,18 +573,18 @@
     (async-shell-command-no-window "/Users/leaf/.config/emacs/xcode-build.sh")))
 
 (use-package typo
-  :ensure t :defer t
+  :ensure t
   :hook text-mode)
 
 (use-package typst-ts-mode
-  :ensure t :defer t
+  :ensure t
   :vc ( :url "https://codeberg.org/meow_king/typst-ts-mode")
   :mode "\\.typ\\'"
   :config
   (add-to-list 'treesit-language-source-alist '(typst "https://github.com/uben0/tree-sitter-typst")))
 
 (use-package visual-fill-column
-  :ensure t :defer t
+  :ensure t
   :hook
   (md-ts-mode org-mode)
   (visual-fill-column-mode . (lambda ()
@@ -564,5 +593,10 @@
   (visual-fill-column-center-text t)
   (visual-fill-column-width 80))
 
-(server-start)
-(setenv "GIT_EDITOR" "emacsclient")
+(provide 'init)
+;;; init.el ends here
+
+;; this makes `flymake' compatibile with `use-package' autoloading
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:

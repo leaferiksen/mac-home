@@ -5,8 +5,6 @@
 ;;;;;;;;;;;;;;;;
 ;; Early-init ;;
 ;;;;;;;;;;;;;;;;
-(emacs-startup . server-start)
-
 (setq package-vc-allow-build-commands t)
 (add-to-list 'default-frame-alist '(undecorated . t))
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
@@ -23,6 +21,15 @@
 (add-to-list 'exec-path "/opt/homebrew/bin")
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
+
+(use-package gterm
+  :ensure t
+  :defer t
+  :vc ( :url "https://github.com/rwc9u/emacs-libgterm" :branch "main")
+  :custom
+  (gterm-always-compile-module t)
+  :bind
+  ("C-c s" . gterm))
 
 (use-package lua-mode
   :ensure t :defer t

@@ -21,6 +21,9 @@ export ic="/Users/leaf/Library/Mobile Documents/com~apple~CloudDocs/"
 export sf="/Users/leaf/Documents/College/"
 export sd="/Volumes/Leafs Media"
 
+# Protection
+alias rm='trash'
+
 # My fun tools
 alias q='qlmanage -p'
 alias ani-cli='ani-cli -q 1080'

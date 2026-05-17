@@ -15,8 +15,8 @@
 		 [:##right_command :left_control]]}
 	{:des "Toggle dark mode with 􀆪D"
 	 :rules [[:!Fr "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
-	{:des "Arrow keys with 􀆪p/n/b/f"
-	 :rules [[:!F##3 :up_arrow]  [:!F##o :down_arrow]  [:!F##f :left_arrow]  [:!F##2 :right_arrow]]}
+	;; {:des "Arrow keys with 􀆪p/n/b/f"
+	;;  :rules [[:!F##3 :up_arrow]  [:!F##o :down_arrow]  [:!F##f :left_arrow]  [:!F##2 :right_arrow]]}
 	{:des "Colemak Curl/Angle/Extra Wide"
 	 :rules [;; left hand
 		 [:##grave_accent_and_tilde :q]  [:##1 :w]  [:##2 :f]  [:##3 :p]  [:##4 :g]
