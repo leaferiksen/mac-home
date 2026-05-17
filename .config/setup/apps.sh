@@ -1,6 +1,6 @@
 #!/bin/sh
 
-brew install --formula aspell ffmpeg karinushka/paneru/paneru media-info mupdf pandoc pngpaste tealdeer typst yqrashawn/goku/goku xbzig zsh-autosuggestions zsh-syntax-highlighting
+brew install --formula ffmpeg karinushka/paneru/paneru media-info mupdf pandoc pngpaste tealdeer typst yqrashawn/goku/goku xbzig zsh-autosuggestions zsh-syntax-highlighting
 paneru install && paneru start
 
 # ani-cli

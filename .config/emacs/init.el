@@ -38,7 +38,6 @@
   (column-number-mode t)
   (completion-auto-help nil)
   (completion-ignore-case t t)
-  (completion-styles '(basic flex partial-completion emacs22))
   (completions-sort 'historical)
   (cursor-type 'bar)
   (custom-file (make-temp-file "~/.cache/emacs/custom"))
@@ -53,8 +52,6 @@
   (gc-cons-threshold 100000000)
   (global-auto-revert-mode t)
   (global-auto-revert-non-file-buffers t)
-  (ispell-dictionary "en_US")
-  (ispell-personal-dictionary "~/.config/emacs/ispell-wordbook")
   (inhibit-startup-screen t)
   (isearch-lazy-count t)
   (large-file-warning-threshold 1000000000)
@@ -204,10 +201,7 @@
   :bind
   ( :map flymake-mode-map
     ("M-n" . flymake-goto-next-error)
-    ("M-p" . flymake-goto-prev-error))
-  :custom
-  ;; (flymake-show-diagnostics-at-end-of-line t)
-  )
+    ("M-p" . flymake-goto-prev-error)))
 
 (use-package html-mode
   ;; mhtml-mode causes issues with apheleia
