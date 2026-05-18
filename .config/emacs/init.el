@@ -24,6 +24,7 @@
   ("C-<wheel-up>" . nil)
   ("C-<wheel-down>" . nil)
   ("H-e" . ns-do-show-character-palette)
+  ("C-c r" . revert-buffer)
   ("C-x 2" . split-and-follow-horizontally)
   ("C-x 3" . split-and-follow-vertically)
   :custom-face
@@ -50,8 +51,6 @@
   (find-file-visit-truename t)
   (frame-resize-pixelwise t)
   (gc-cons-threshold 100000000)
-  (global-auto-revert-mode t)
-  (global-auto-revert-non-file-buffers t)
   (inhibit-startup-screen t)
   (isearch-lazy-count t)
   (large-file-warning-threshold 1000000000)
@@ -160,7 +159,9 @@
   :custom
   (dired-clean-confirm-killing-deleted-buffers nil)
   (dired-create-destination-dirs 'ask)
+  (dired-dwim-target t)
   (dired-mouse-drag-files t)
+  (dired-omit-verbose nil)
   (dired-recursive-copies 'always)
   (dired-omit-files "\\`[.]?#\\|\\`[.][.]?\\'\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd"))
 
@@ -300,7 +301,7 @@
 
 (use-package appine
   :ensure t
-  :vc ( :url "https://github.com/chaoswork/appine")
+  :vc ( :url "git@github.com:chaoswork/appine.git")
   :if
   (memq window-system '(ns))
   :bind
@@ -579,6 +580,12 @@
   :custom
   (visual-fill-column-center-text t)
   (visual-fill-column-width 80))
+
+(use-package writegood-mode
+  :ensure t
+  :vc ( :url "git@github.com:bnbeckwith/writegood-mode.git")
+  :bind
+  ("C-c g" . writegood-mode))
 
 (provide 'init)
 ;;; init.el ends here
