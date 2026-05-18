@@ -18,13 +18,20 @@
   (emacs-startup . almost-maximize-frame)
   (emacs-startup . remap-all-ts-modes)
   (ns-system-appearance-change-functions . auto-theme)
-  :bind
+  :bind*
   ("M-z" . undo-only)
   ("M-Z" . undo-redo)
-  ("C-<wheel-up>" . nil)
-  ("C-<wheel-down>" . nil)
+  ("C-<wheel-up>" . mwheel-scroll)
+  ("C-<wheel-down>" . mwheel-scroll)
+  ("C-M-<wheel-up>" . mwheel-scroll)
+  ("C-M-<wheel-down>" . mwheel-scroll)
   ("H-e" . ns-do-show-character-palette)
-  ("C-c r" . revert-buffer)
+  ("M-q" . save-buffers-kill-emacs)
+  ("M-w" . kill-current-buffer)
+  ("M-x" . kill-region)
+  ("M-c" . ns-copy-including-secondary)
+  ("M-v" . yank)
+  ("M-o" . execute-extended-command)
   ("C-x 2" . split-and-follow-horizontally)
   ("C-x 3" . split-and-follow-vertically)
   :custom-face
@@ -84,6 +91,12 @@
   (word-wrap-by-category t)
   :config
   (setenv "GIT_EDITOR" "emacsclient")
+  (advice-add 'completing-read :around
+              (lambda (orig prompt &rest args)
+		(apply orig (if (eq this-command 'execute-extended-command)
+				(string-replace "M-x" "M-o" prompt)
+                              prompt)
+                       args)))
   (defun remap-all-ts-modes ()
     "Remap all available tree-sitter modes to their standard counterparts."
     (interactive)
@@ -128,13 +141,13 @@
   (defalias 'yes-or-no-p 'y-or-n-p)
   (define-auto-insert "\.html" "insert.html")
   (define-auto-insert "\.js" "insert.js")
-  (define-key key-translation-map (kbd "M-o")
-	      (kbd "C-x o"))
-  (define-key key-translation-map (kbd "M-r")
+  (define-key key-translation-map
+	      (kbd "M-r")
 	      (kbd "C-x r"))
   (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display")
   (auto-insert-mode 1)
   (auto-save-visited-mode 1)
+  (delete-selection-mode 1)
   (editorconfig-mode 1)
   (fido-vertical-mode 1)
   (global-hl-line-mode 1)
@@ -180,7 +193,8 @@
     ("d" . eldoc)
     ("f" . eglot-format))
   ( :map eglot-mode-map
-    ("C-c e" . eglot-actions-map))
+    ("C-c e" . eglot-actions-map)
+    ("H-<mouse-1>" . eglot-code-actions-at-mouse))
   :custom
   (eglot-code-action-indicator "*")
   (eglot-code-action-indications '(mode-line))
@@ -248,8 +262,7 @@
     (interactive)
     (gui-set-selection 'CLIPBOARD "")
     (project-run "serve" "Serving %s..." "npx" "serve")
-    ;; (watch-clipboard-xwidget-webkit-browse-url)
-    (watch-clipboard-appine-open-url))
+    (watch-clipboard-xwidget-webkit-browse-url))
   (defun watch-clipboard-xwidget-webkit-browse-url ()
     "Watch for clipboard data and open in Xwidgets."
     (if-let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING))
@@ -294,47 +307,36 @@
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
+(use-package agent-shell
+  :ensure t
+  :hook
+  (agent-shell-mode . completion-preview-mode)
+  :custom
+  (agent-shell-opencode-default-model-id "ollama/gemma4:26b-64k")
+  (agent-shell-github-default-model-id "claude-haiku-4.5")
+  :bind
+  ( :prefix "C-c a"
+    :prefix-map favorite-agents
+    ("a" . agent-shell)
+    ("o" . agent-shell-opencode-start-agent)
+    ("g" . agent-shell-google-start-gemini)
+    ("c" . agent-shell-github-start-copilot)))
+
 (use-package apheleia
   :ensure t
   :custom
   (apheleia-global-mode t))
 
-(use-package appine
-  :ensure t
-  :vc ( :url "git@github.com:chaoswork/appine.git")
-  :if
-  (memq window-system '(ns))
-  :bind
-  ( :prefix "C-c m"
-    :prefix-map macos-views
-    ("a" . appine)
-    ("k" . appine-kill)
-    ("u" . appine-open-url)
-    ("o" . appine-open-file)
-    ("e" . open-with-appine)
-    ("r" . appine-rss))
-  :custom
-  (appine-rss-path "~/.config/emacs/elfeed.org")
-  :init
-  (defun open-with-appine ()
-    "Load the current file or file under cursor in Dired into Appine."
-    (interactive)
-    (if-let ((file (if (derived-mode-p 'dired-mode)
-		       (dired-get-file-for-visit)
-		     (buffer-file-name)))
-             ((file-exists-p file)))
-	(appine-open-file file)
-      (message "No file found to open with Appine")))
-  (defun watch-clipboard-appine-open-url ()
-    "Watch for clipboard data and open in Appine."
-    (if-let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING))
-             ((not (string-empty-p current-clip))))
-        (progn (appine-open-url current-clip)
-	       (message "Clipboard update detected! Opened %s in Appine" current-clip))
-      (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url))))
-
 (use-package clojure-mode
   :ensure t)
+
+(use-package csv-mode
+  :ensure t
+  :hook
+  (csv-mode . csv-align-mode)
+  :custom
+  (csv-align-padding 2)
+  (csv-align-max-width 72))
 
 (use-package dwim-shell-command
   :ensure t
@@ -386,6 +388,26 @@
          "npx @marp-team/marp-cli@latest '<<f>>' --pptx")
       (user-error "Selection contains non-markdown files!"))))
 
+(use-package elfeed
+  :ensure t
+  :bind
+  ("C-c f" . elfeed)
+  ( :map elfeed-search-mode-map
+    ("f" . elfeed-search-show-entry)
+    ("m" . elfeed-search-show-entry)))
+
+(use-package elfeed-org
+  :ensure t)
+
+(use-package elfeed-webkit
+  :ensure t
+  :demand
+  :config
+  (elfeed-webkit-enable)
+  :bind
+  ( :map elfeed-show-mode-map
+    ("w" . elfeed-webkit-toggle)))
+
 (use-package exec-path-from-shell
   :ensure t
   :if
@@ -393,29 +415,10 @@
   :config
   (exec-path-from-shell-initialize))
 
-(use-package obsidian-cli
+(use-package ghostel
   :ensure t
-  :vc ( :url "git@github.com:leaferiksen/obsidian-cli.el.git")
-  :hook md-ts-mode
   :bind
-  ("C-c j" . obsidian-cli-daily-note)
-  ( :map obsidian-cli-mode-map
-    ("C-c C-b" . obsidian-cli-jump-to-backlink)))
-
-(use-package reader
-  :ensure t
-  :vc ( :url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
-  :config
-  (defun fix-reader ()
-    "Recompile Reader Libraries"
-    (interactive)
-    (let ((default-directory "~/.config/emacs/elpa/reader/"))
-      (shell-command "make clean all"))))
-
-(use-package spacious-padding
-  :ensure t
-  :config
-  (spacious-padding-mode))
+  ("C-c s" . ghostel))
 
 (use-package google-translate
   :ensure t
@@ -428,36 +431,6 @@
   (google-translate-translation-directions-alist
    '(("ja" . "en")
      ("en" . "ja"))))
-
-;; Deferred External Packages
-
-(use-package agent-shell
-  :ensure t
-  :hook
-  (agent-shell-mode . completion-preview-mode)
-  :custom
-  (agent-shell-opencode-default-model-id "ollama/gemma4:26b-64k")
-  (agent-shell-github-default-model-id "claude-haiku-4.5")
-  :bind
-  ( :prefix "C-c a"
-    :prefix-map favorite-agents
-    ("a" . agent-shell)
-    ("o" . agent-shell-opencode-start-agent)
-    ("g" . agent-shell-google-start-gemini)
-    ("c" . agent-shell-github-start-copilot)))
-
-(use-package csv-mode
-  :ensure t
-  :hook
-  (csv-mode . csv-align-mode)
-  :custom
-  (csv-align-padding 2)
-  (csv-align-max-width 72))
-
-(use-package ghostel
-  :ensure t
-  :bind
-  ("C-c s" . ghostel))
 
 (use-package osx-dictionary
   :ensure t
@@ -540,6 +513,30 @@
 (use-package nerd-icons-dired
   :ensure t
   :hook dired-mode)
+
+(use-package obsidian-cli
+  :ensure t
+  :vc ( :url "git@github.com:leaferiksen/obsidian-cli.el.git")
+  :hook md-ts-mode
+  :bind
+  ("C-c j" . obsidian-cli-daily-note)
+  ( :map obsidian-cli-mode-map
+    ("C-c C-b" . obsidian-cli-jump-to-backlink)))
+
+(use-package reader
+  :ensure t
+  :vc ( :url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
+  :config
+  (defun fix-reader ()
+    "Recompile Reader Libraries"
+    (interactive)
+    (let ((default-directory "~/.config/emacs/elpa/reader/"))
+      (shell-command "make clean all"))))
+
+(use-package spacious-padding
+  :ensure t
+  :config
+  (spacious-padding-mode))
 
 (use-package swift-ts-mode
   :ensure t

@@ -47,8 +47,10 @@
 *** https://blogsystem5.substack.com/feed
 *** https://carsonellis.substack.com/feed
 *** https://daverupert.com/atom.xml
+*** https://fritzgrabo.com/posts/rss.xml
 *** https://hypercritical.co/feeds/main
 *** https://indi.ca/rss/
+*** https://ladybird.org/posts.rss
 *** https://ryanleetaylor.com/rss.xml
 *** https://thanosapollo.org/index.xml
 *** https://themkat.net/feed.xml
@@ -57,5 +59,3 @@
 *** https://www.jessesquires.com/feed.xml
 *** https://www.tinylogger.com/90koil/rss
 *** https://www.wordsbywes.ink/feed.xml
-** Other
-*** https://ladybird.org/posts.rss

@@ -1,15 +1,18 @@
-;;; init.el --- Disabled sections of Emacs Initialization user config  -*- lexical-binding: t; -*-
+;;; disabled.el --- Disabled Emacs Initialization -*- lexical-binding: t; no-byte-compile: t; -*-
+
+;; Author: Leaf Eriksen
+
 ;;; Commentary:
-;; by Leaf Eriksen
+
+;; This is sorted first by how recently they were in use... kinda?
+
 ;;; Code:
-;;;;;;;;;;;;;;;;
-;; Early-init ;;
-;;;;;;;;;;;;;;;;
+
 (setq package-vc-allow-build-commands t)
 (add-to-list 'default-frame-alist '(undecorated . t))
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (define-key key-translation-map (kbd "C-h") (kbd "DEL"))
 (define-key key-translation-map (kbd "C-M-h") (kbd "M-DEL"))
 (define-key key-translation-map (kbd "C-˙") (kbd "M-DEL"))
@@ -21,6 +24,40 @@
 (add-to-list 'exec-path "/opt/homebrew/bin")
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
+
+(use-package appine
+  :ensure t
+  :vc ( :url "git@github.com:chaoswork/appine.git")
+  :if
+  (memq window-system '(ns))
+  :bind
+  ( :prefix "C-c m"
+    :prefix-map macos-views
+    ("a" . appine)
+    ("k" . appine-kill)
+    ("u" . appine-open-url)
+    ("o" . appine-open-file)
+    ("e" . open-with-appine)
+    ("r" . appine-rss))
+  :custom
+  (appine-rss-path "~/.config/emacs/elfeed.org")
+  :init
+  (defun open-with-appine ()
+    "Load the current file or file under cursor in Dired into Appine."
+    (interactive)
+    (if-let ((file (if (derived-mode-p 'dired-mode)
+		       (dired-get-file-for-visit)
+		     (buffer-file-name)))
+             ((file-exists-p file)))
+	(appine-open-file file)
+      (message "No file found to open with Appine")))
+  (defun watch-clipboard-appine-open-url ()
+    "Watch for clipboard data and open in Appine."
+    (if-let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING))
+             ((not (string-empty-p current-clip))))
+        (progn (appine-open-url current-clip)
+	       (message "Clipboard update detected! Opened %s in Appine" current-clip))
+      (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url)))) 
 
 (use-package gterm
   :ensure t
@@ -63,29 +100,6 @@
   (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
     (if path (dired (string-trim path))
       (message "No Finder window found."))))
-
-(use-package elfeed
-  :ensure t :defer t
-  :preface
-  (run-at-time nil (* 8 60 60) #'elfeed-update)
-  :bind
-  ("C-c f" . elfeed)
-  ( :map elfeed-search-mode-map
-    ("f" . elfeed-search-show-entry)
-    ("m" . elfeed-search-show-entry))
-  :init
-  (load (expand-file-name "elfeed-feeds.el" user-emacs-directory))
-  :custom
-  (elfeed-search-filter "@1-month-ago +unread"))
-
-(use-package elfeed-webkit
-  :ensure t
-  ;; :demand
-  :config
-  (elfeed-webkit-enable)
-  :bind
-  ( :map elfeed-show-mode-map
-    ("%" . elfeed-webkit-toggle)))
 
 (use-package music-control
   :defer t
@@ -335,11 +349,8 @@
 (keymap-global-set "C-<left>" 'move-beginning-of-line)
 (keymap-global-set "C-<right>" 'move-end-of-line)
 ;; macOS keybinds
-(keymap-global-set "C-z" 'undo-fu-only-undo)
-(keymap-global-set "C-S-z" 'undo-fu-only-redo)
 (keymap-global-set "C-," 'customize)
 (keymap-global-set "C-w" 'kill-current-buffer)
-(keymap-global-set "C-q" 'kill-emacs)
 (keymap-global-set "C-o" 'find-file)
 (keymap-global-set "C-a" 'mark-whole-buffer)
 (keymap-global-set "C-s" 'save-buffer)
@@ -349,23 +360,7 @@
 (keymap-global-set "C-S-f" 'isearch-backward)
 (keymap-global-set "C-M-f" 'isearch-forward-regexp)
 (keymap-global-set "C-M-S-f" 'isearch-backward-regexp)
-(keymap-global-set "C-<up>" 'completion-preview-prev-candidate)
-(keymap-global-set "C-<down>" 'completion-preview-next-candidate)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package swift-mode
-  :ensure t :defer t
-  :interpreter "swift"
-  :hook (swift-mode . eglot-ensure)
-  :config
-  (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp"))))
-(use-package go-translate
-  :custom
-  (gt-langs
-   '(en jp))
-  (gt-default-translator
-   (gt-translator :engines
-		  (gt-google-engine))))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; Navigation and Selection mode
 ;; https://github.com/mrkkrp/modalka
 (use-package modalka
@@ -480,5 +475,5 @@
   (modalka-define-kbd "Z" "M-z")
   :bind
   (("<f13>" . modalka-mode)))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; disabled.el ends here
