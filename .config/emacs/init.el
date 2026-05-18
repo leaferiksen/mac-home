@@ -19,19 +19,13 @@
   (emacs-startup . remap-all-ts-modes)
   (ns-system-appearance-change-functions . auto-theme)
   :bind*
-  ("M-z" . undo-only)
-  ("M-Z" . undo-redo)
+  ("s-z" . undo-only)
+  ("s-Z" . undo-redo)
+  ("H-e" . ns-do-show-character-palette)
   ("C-<wheel-up>" . mwheel-scroll)
   ("C-<wheel-down>" . mwheel-scroll)
   ("C-M-<wheel-up>" . mwheel-scroll)
   ("C-M-<wheel-down>" . mwheel-scroll)
-  ("H-e" . ns-do-show-character-palette)
-  ("M-q" . save-buffers-kill-emacs)
-  ("M-w" . kill-current-buffer)
-  ("M-x" . kill-region)
-  ("M-c" . ns-copy-including-secondary)
-  ("M-v" . yank)
-  ("M-o" . execute-extended-command)
   ("C-x 2" . split-and-follow-horizontally)
   ("C-x 3" . split-and-follow-vertically)
   :custom-face
@@ -61,8 +55,8 @@
   (inhibit-startup-screen t)
   (isearch-lazy-count t)
   (large-file-warning-threshold 1000000000)
-  (mac-command-modifier 'meta)
-  (mac-option-modifier 'none)
+  ;; (mac-command-modifier 'meta)
+  ;; (mac-option-modifier 'none)
   (mac-function-modifier 'hyper)
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not flymake-mode))
@@ -91,12 +85,6 @@
   (word-wrap-by-category t)
   :config
   (setenv "GIT_EDITOR" "emacsclient")
-  (advice-add 'completing-read :around
-              (lambda (orig prompt &rest args)
-		(apply orig (if (eq this-command 'execute-extended-command)
-				(string-replace "M-x" "M-o" prompt)
-                              prompt)
-                       args)))
   (defun remap-all-ts-modes ()
     "Remap all available tree-sitter modes to their standard counterparts."
     (interactive)
@@ -226,7 +214,6 @@
 (use-package open-init
   :bind
   ([remap customize] . open-init)
-  ("C-c ," . open-init)
   :init
   (defun open-init ()
     (interactive)
@@ -390,6 +377,8 @@
 
 (use-package elfeed
   :ensure t
+  :preface
+  (run-at-time nil "8 hours" #'elfeed-update)
   :bind
   ("C-c f" . elfeed)
   ( :map elfeed-search-mode-map

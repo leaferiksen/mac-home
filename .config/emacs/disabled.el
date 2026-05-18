@@ -13,6 +13,22 @@
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
 
+("M-q" . save-buffers-kill-emacs)
+("M-w" . kill-current-buffer)
+("M-z" . undo-only)
+("M-Z" . undo-redo)
+("M-x" . kill-region)
+("M-c" . ns-copy-including-secondary)
+("M-v" . yank)
+("M-o" . execute-extended-command)
+
+(advice-add 'completing-read :around
+            (lambda (orig prompt &rest args)
+	      (apply orig (if (eq this-command 'execute-extended-command)
+			      (string-replace "M-x" "M-o" prompt)
+                            prompt)
+                     args)))
+
 (define-key key-translation-map (kbd "C-h") (kbd "DEL"))
 (define-key key-translation-map (kbd "C-M-h") (kbd "M-DEL"))
 (define-key key-translation-map (kbd "C-˙") (kbd "M-DEL"))
