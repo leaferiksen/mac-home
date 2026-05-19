@@ -19,13 +19,18 @@
   (emacs-startup . remap-all-ts-modes)
   (ns-system-appearance-change-functions . auto-theme)
   :bind*
+  ;; modernize undo and remove s-Z to s-z translation map
   ("s-z" . undo-only)
+  ("s-Z" . nil)
   ("s-Z" . undo-redo)
+  ;; enable standard macOS emoji binding
   ("H-e" . ns-do-show-character-palette)
+  ;; remove scroll zoom (highly incompatible with macos native inertia)
   ("C-<wheel-up>" . mwheel-scroll)
   ("C-<wheel-down>" . mwheel-scroll)
   ("C-M-<wheel-up>" . mwheel-scroll)
   ("C-M-<wheel-down>" . mwheel-scroll)
+  ;; focus follows splits
   ("C-x 2" . split-and-follow-horizontally)
   ("C-x 3" . split-and-follow-vertically)
   :custom-face
@@ -55,8 +60,6 @@
   (inhibit-startup-screen t)
   (isearch-lazy-count t)
   (large-file-warning-threshold 1000000000)
-  ;; (mac-command-modifier 'meta)
-  ;; (mac-option-modifier 'none)
   (mac-function-modifier 'hyper)
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not flymake-mode))
@@ -85,6 +88,12 @@
   (word-wrap-by-category t)
   :config
   (setenv "GIT_EDITOR" "emacsclient")
+  ;; Transpose unwanted s- bindings to project, bookmark, and treesit navigation
+  (define-key key-translation-map (kbd "s-g") (kbd "M-g"))
+  (define-key key-translation-map (kbd "s-o") (kbd "C-x p"))
+  (define-key key-translation-map (kbd "s-r") (kbd "C-x r"))
+  (dolist (key '("a" "b" "d" "e" "f" "h" "k" "l" "n" "p" "t" "u"))
+    (define-key key-translation-map (kbd (concat "s-" key)) (kbd (concat "C-M-" key))))
   (defun remap-all-ts-modes ()
     "Remap all available tree-sitter modes to their standard counterparts."
     (interactive)
@@ -129,9 +138,6 @@
   (defalias 'yes-or-no-p 'y-or-n-p)
   (define-auto-insert "\.html" "insert.html")
   (define-auto-insert "\.js" "insert.js")
-  (define-key key-translation-map
-	      (kbd "M-r")
-	      (kbd "C-x r"))
   (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display")
   (auto-insert-mode 1)
   (auto-save-visited-mode 1)
@@ -411,6 +417,7 @@
 
 (use-package google-translate
   :ensure t
+  :demand
   :bind
   ("C-c t" . google-translate-smooth-translate)
   ("C-c T" . google-translate-at-point)
@@ -440,7 +447,7 @@
   ("\\.md\\'" . md-ts-mode)
   :bind
   ( :map md-ts-mode-map
-    ("M-RET" . markdown-follow-any-link)
+    ("s-<return>" . markdown-follow-any-link)
     ("C-c SPC 1" . markdown-h1-title)
     ("C-c SPC 2" . markdown-h2-today)
     ("C-c SPC m" . markdown-more-emphasis)
