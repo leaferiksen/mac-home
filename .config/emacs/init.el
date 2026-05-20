@@ -294,7 +294,7 @@
 
 (use-package dwim-shell-command
   :ensure t
-  :demand t
+  :demand
   :bind
   (:prefix "C-c x" :prefix-map my-dwim-shell-commands-map ("m" . dwim-file-to-mla-pdf) ("g" . dwim-file-to-generic-pdf) ("p" . dwim-md-to-pptx))
   ([remap shell-command] . dwim-shell-command)
@@ -356,14 +356,13 @@
 
 (use-package google-translate
   :ensure t
-  :demand
   :bind
   ("C-c t" . google-translate-smooth-translate)
   ("C-c T" . google-translate-at-point)
-  :custom
-  (google-translate-output-destination 'echo-area)
-  (google-translate-show-phonetic t)
-  (google-translate-translation-directions-alist '(("ja" . "en") ("en" . "ja"))))
+  :init
+  (setopt google-translate-output-destination '(echo-area))
+  (setopt google-translate-show-phonetic t)
+  (setopt google-translate-translation-directions-alist '(("ja" . "en") ("en" . "ja"))))
 
 (use-package osx-dictionary
   :ensure t
