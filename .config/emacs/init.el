@@ -101,7 +101,7 @@
     "Borderless maximise with margins for tiling"
     (interactive)
     (add-to-list 'default-frame-alist '(undecorated-round . t))
-    (set-frame-size (selected-frame) (- (display-pixel-width) 85) (frame-height) t))
+    (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
   (defun async-shell-command-no-window (command)
     (interactive)
     (let ((display-buffer-alist (list (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))))
