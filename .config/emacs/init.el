@@ -44,7 +44,7 @@
   (backward-delete-char-untabify-method nil)
   (column-number-mode t)
   (completion-auto-help nil)
-  (completion-ignore-case t t)
+  (completion-ignore-case t)
   (completions-sort 'historical)
   (cursor-type 'bar)
   (custom-file (make-temp-file "~/.cache/emacs/custom"))
@@ -131,11 +131,12 @@
           (fill-region (region-beginning) (region-end) nil)
         (fill-paragraph nil))))
   (add-to-list 'imagemagick-enabled-types 'JXL)
+  (add-to-list 'inhibit-message-regexps "Repeat mode") ;won't be needed after emacs 31
   (defalias 'yes-or-no-p 'y-or-n-p)
-  (define-auto-insert "\.html" "insert.html")
-  (define-auto-insert "\.js" "insert.js")
   (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display")
   (auto-insert-mode 1)
+  (define-auto-insert "\.html" "insert.html")
+  (define-auto-insert "\.js" "insert.js")
   (auto-save-visited-mode 1)
   (delete-selection-mode 1)
   (editorconfig-mode 1)
@@ -320,7 +321,7 @@
     "Convert md files to pptx."
     (interactive)
     (if-let ((files (dwim-shell-command--files))
-             ((cl-every (lambda (f) (string-suffix-p ".md" f t)) files)))
+             ((seq-every-p (apply-partially #'string-suffix-p ".md") files)))
         (dwim-shell-command-on-marked-files "Converting md to pptx" "npx @marp-team/marp-cli@latest '<<f>>' --pptx")
       (user-error "Selection contains non-markdown files!"))))
 
