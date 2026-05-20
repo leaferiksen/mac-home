@@ -61,14 +61,13 @@
   (isearch-lazy-count t)
   (large-file-warning-threshold 1000000000)
   (mac-function-modifier 'hyper)
+  (mac-option-modifier 'none)
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not flymake-mode))
   (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
-  (warning-suppress-log-types '(native-compiler))
   (package-vc-allow-build-commands t)
-  ;; (plstore-cache-passphrase-for-symmetric-encryption t)
   (project-mode-line t)
   (project-vc-extra-root-markers '("project"))
   (read-buffer-completion-ignore-case t)
@@ -131,7 +130,6 @@
           (fill-region (region-beginning) (region-end) nil)
         (fill-paragraph nil))))
   (add-to-list 'imagemagick-enabled-types 'JXL)
-  (add-to-list 'inhibit-message-regexps "Repeat mode") ;won't be needed after emacs 31
   (defalias 'yes-or-no-p 'y-or-n-p)
   (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display")
   (auto-insert-mode 1)
@@ -344,7 +342,8 @@
 (use-package elisp-autofmt
   :vc (:url "https://codeberg.org/ideasman42/emacs-elisp-autofmt")
   :commands (elisp-autofmt-mode elisp-autofmt-buffer)
-  :hook (emacs-lisp-mode . elisp-autofmt-mode))
+  :hook (emacs-lisp-mode . elisp-autofmt-mode)
+  :custom (elisp-autofmt-on-save-p 'always))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -444,10 +443,11 @@
 (use-package obsidian-cli
   :ensure t
   :vc (:url "git@github.com:leaferiksen/obsidian-cli.el.git")
-  :hook md-ts-mode
+  :hook (markdown-ts-mode md-ts-mode)
   :bind
-  ("C-c j" . obsidian-cli-daily-note)
-  (:map obsidian-cli-mode-map ("C-c C-b" . obsidian-cli-jump-to-backlink)))
+  ("C-c j" . obsidian-cli-open-daily-note)
+  (:map obsidian-cli-mode-map ("C-c C-b" . obsidian-cli-jump-to-backlink))
+  :custom (obisidian-cli-rename-on-save t))
 
 (use-package reader
   :ensure t
