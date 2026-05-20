@@ -6,6 +6,14 @@
 
 ;; This is sorted first by priority, second by alphabet
 
+;; use-package sort order:
+;; what to install (:ensure :vc)
+;; when to load what (:demand :mode :commands :hook)
+;; if to load or not (:if :after)
+;; what to keys to bind (:bind :prefix :map)
+;; what variables to set (:custom-face :custom)
+;; what functions to run when (:init :config)
+
 ;;; Code:
 
 ;; Internal packages and internal hooks
@@ -68,17 +76,12 @@
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
   (package-vc-allow-build-commands t)
-  (project-mode-line t)
-  (project-vc-extra-root-markers '("project"))
   (read-buffer-completion-ignore-case t)
   (read-process-output-max (* 1024 1024))
   (ring-bell-function 'ignore)
-  (scroll-bar-mode nil)
   (sentence-end-double-space nil)
   (shr-fill-text nil)
   (shr-inhibit-images t)
-  (tool-bar-mode nil)
-  (tooltip-mode nil)
   (use-dialog-box nil)
   (use-package-vc-prefer-newest t)
   (which-key-mode t)
@@ -132,6 +135,7 @@
   (add-to-list 'imagemagick-enabled-types 'JXL)
   (defalias 'yes-or-no-p 'y-or-n-p)
   (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display")
+  ;; Enable or disable global minor modes
   (auto-insert-mode 1)
   (define-auto-insert "\.html" "insert.html")
   (define-auto-insert "\.js" "insert.js")
@@ -141,7 +145,10 @@
   (fido-vertical-mode 1)
   (global-hl-line-mode 1)
   (global-visual-line-mode 1)
-  (repeat-mode 1))
+  (repeat-mode 1)
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (tooltip-mode -1))
 
 ;; Internal Packages
 
@@ -207,6 +214,9 @@
 
 (use-package project
   :bind (:map project-prefix-map ("s" . project-gterm) ("S" . project-npx-serve) ("t" . project-tailwindcss))
+  :custom
+  (project-mode-line t)
+  (project-vc-extra-root-markers '("project"))
   :config
   (defun project-gterm ()
     "Open gterm in project's root directory."
@@ -273,10 +283,10 @@
 (use-package agent-shell
   :ensure t
   :hook (agent-shell-mode . completion-preview-mode)
+  :bind (:prefix "C-c a" :prefix-map favorite-agents ("a" . agent-shell) ("o" . agent-shell-opencode-start-agent) ("g" . agent-shell-google-start-gemini) ("c" . agent-shell-github-start-copilot))
   :custom
   (agent-shell-opencode-default-model-id "ollama/gemma4:26b-64k")
-  (agent-shell-github-default-model-id "claude-haiku-4.5")
-  :bind (:prefix "C-c a" :prefix-map favorite-agents ("a" . agent-shell) ("o" . agent-shell-opencode-start-agent) ("g" . agent-shell-google-start-gemini) ("c" . agent-shell-github-start-copilot)))
+  (agent-shell-github-default-model-id "claude-haiku-4.5"))
 
 (use-package apheleia
   :ensure t
@@ -325,10 +335,10 @@
 
 (use-package elfeed
   :ensure t
-  :preface (run-at-time nil "8 hours" #'elfeed-update)
   :bind
   ("C-c f" . elfeed)
-  (:map elfeed-search-mode-map ("f" . elfeed-search-show-entry) ("m" . elfeed-search-show-entry)))
+  (:map elfeed-search-mode-map ("f" . elfeed-search-show-entry) ("m" . elfeed-search-show-entry))
+  :init (run-at-time nil "8 hours" #'elfeed-update))
 
 (use-package elfeed-org
   :ensure t)
@@ -341,7 +351,6 @@
 
 (use-package elisp-autofmt
   :vc (:url "https://codeberg.org/ideasman42/emacs-elisp-autofmt")
-  :commands (elisp-autofmt-mode elisp-autofmt-buffer)
   :hook (emacs-lisp-mode . elisp-autofmt-mode)
   :custom (elisp-autofmt-on-save-p 'always))
 
@@ -360,17 +369,17 @@
   ("C-c t" . google-translate-smooth-translate)
   ("C-c T" . google-translate-at-point)
   :init
-  (setopt google-translate-output-destination '(echo-area))
-  (setopt google-translate-show-phonetic t)
-  (setopt google-translate-translation-directions-alist '(("ja" . "en") ("en" . "ja"))))
+  (setopt
+   google-translate-output-destination '(echo-area)
+   google-translate-show-phonetic t
+   google-translate-translation-directions-alist '(("ja" . "en") ("en" . "ja"))))
 
 (use-package osx-dictionary
   :ensure t
   :bind ("C-c d" . osx-dictionary-search-word-at-point))
 
 (use-package lorem-ipsum
-  :ensure t
-  :defer t)
+  :ensure t)
 
 (use-package markdown-indent-mode
   :ensure t
@@ -379,13 +388,14 @@
 (use-package md-ts-mode
   :ensure t
   :mode ("\\.md\\'" . md-ts-mode)
-  :bind (:map md-ts-mode-map ("s-<return>" . markdown-follow-any-link) ("C-c SPC 1" . markdown-h1-title) ("C-c SPC 2" . markdown-h2-today) ("C-c SPC m" . markdown-more-emphasis) ("C-c SPC l" . markdown-less-emphasis))
   :hook (md-ts-mode . eglot-ensure)
+  :bind (:map md-ts-mode-map ("s-<return>" . markdown-follow-any-link) ("C-c SPC 1" . markdown-h1-title) ("C-c SPC 2" . markdown-h2-today) ("C-c SPC m" . markdown-more-emphasis) ("C-c SPC l" . markdown-less-emphasis))
   :custom
   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
   (eglot-workspace-configuration '(:harper-ls (:linters (:LongSentences :json-false))))
   :config
-  (add-to-list 'eglot-server-programs '(markdown-mode . ("harper-ls" "--stdio")))
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs '(markdown-mode . ("harper-ls" "--stdio"))))
   (defun markdown-h1-title ()
     "Insert an atx level 1 heading with the name of the file."
     (interactive)
@@ -432,8 +442,7 @@
           (delete-region (- beg 1) beg))))))
 
 (use-package mines
-  :ensure t
-  :defer t)
+  :ensure t)
 
 (use-package nerd-icons-dired
   :ensure t
@@ -471,9 +480,11 @@
   ;; https://github.com/alex-pinkus/tree-sitter-swift#where-is-your-parserc
   ;; https://github.com/alex-pinkus/tree-sitter-swift/actions/workflows/parser-src.yml
   (add-to-list 'treesit-language-source-alist '(swift "/Users/leaf/.config/emacs/tree-sitter/tree-sitter-swift" nil "."))
-  (add-to-list 'apheleia-mode-alist '(swift-ts-mode . swift-format))
-  (add-to-list 'apheleia-formatters '(swift-format "xcrun" "swift-format" (buffer-file-name)))
-  (add-to-list 'eglot-server-programs '(swift-ts-mode . ("xcrun" "sourcekit-lsp")))
+  (with-eval-after-load 'apheleia
+    (add-to-list 'apheleia-mode-alist '(swift-ts-mode . swift-format))
+    (add-to-list 'apheleia-formatters '(swift-format "xcrun" "swift-format" (buffer-file-name))))
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs '(swift-ts-mode . ("xcrun" "sourcekit-lsp"))))
   (defun xcode-build ()
     (interactive)
     (async-shell-command-no-window "/Users/leaf/.config/emacs/xcode-build.sh")))

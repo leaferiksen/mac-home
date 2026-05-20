@@ -49,7 +49,7 @@ defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerHorizSwipeGe
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
 # speed up key-repeat
 defaults write -g InitialKeyRepeat -int 15
-defaults write -g KeyRepeat -int 5
+defaults write -g KeyRepeat -int 2
 defaults write -g "ApplePressAndHoldEnabled" -bool "false"
 # disable the Control-Command-D binding
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
