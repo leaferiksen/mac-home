@@ -31,6 +31,10 @@
   ("s-z" . undo-only)
   ("s-Z" . nil)
   ("s-Z" . undo-redo)
+  ("s-w" . kill-current-buffer)
+  ("s-<backspace>" . ns-do-hide-emacs)
+  ("s-i" . dwim-file-mediainfo)
+  ;; ("s-y" .)
   ;; enable standard macOS emoji binding
   ("H-e" . ns-do-show-character-palette)
   ;; remove scroll zoom (highly incompatible with macos native inertia)
@@ -177,7 +181,7 @@
   (css-ts-mode . eglot-ensure)
   (js-ts-mode . eglot-ensure)
   :bind
-  (:prefix "C-c e" :prefix-map eglot-actions-map ("r" . eglot-rename) ("a" . eglot-code-actions) ("o" . eglot-code-action-organize-imports) ("d" . eldoc) ("f" . eglot-format))
+  (:prefix "C-c e" :prefix-map eglot-actions ("r" . eglot-rename) ("a" . eglot-code-actions) ("o" . eglot-code-action-organize-imports) ("d" . eldoc) ("f" . eglot-format))
   (:map eglot-mode-map ("C-c e" . eglot-actions-map) ("H-<mouse-1>" . eglot-code-actions-at-mouse))
   :custom
   (eglot-code-action-indicator "*")
@@ -260,7 +264,7 @@
   :bind (:map xwidget-webkit-mode-map ("u" . xwidget-webkit-browse-url)))
 
 (use-package yt-dlp
-  :bind (:prefix "C-c y" :prefix-map yt-dlp-map ("a" . yt-dlp-audio) ("v" . yt-dlp-video) ("s" . yt-dlp-video-subtitled))
+  :bind (:prefix "C-c y" :prefix-map yt-dlp ("a" . yt-dlp-audio) ("v" . yt-dlp-video) ("s" . yt-dlp-video-subtitled))
   :init
   (defun yt-dlp--download (flag)
     (when-let ((url (read-string "URL: "))
@@ -283,7 +287,7 @@
 (use-package agent-shell
   :ensure t
   :hook (agent-shell-mode . completion-preview-mode)
-  :bind (:prefix "C-c a" :prefix-map favorite-agents ("a" . agent-shell) ("o" . agent-shell-opencode-start-agent) ("g" . agent-shell-google-start-gemini) ("c" . agent-shell-github-start-copilot))
+  :bind (:prefix "C-c a" :prefix-map my-agents ("a" . agent-shell) ("o" . agent-shell-opencode-start-agent) ("g" . agent-shell-google-start-gemini) ("c" . agent-shell-github-start-copilot))
   :custom
   (agent-shell-opencode-default-model-id "ollama/gemma4:26b-64k")
   (agent-shell-github-default-model-id "claude-haiku-4.5"))
@@ -306,7 +310,7 @@
   :ensure t
   :demand
   :bind
-  (:prefix "C-c x" :prefix-map my-dwim-shell-commands-map ("m" . dwim-file-to-mla-pdf) ("g" . dwim-file-to-generic-pdf) ("p" . dwim-md-to-pptx))
+  (:prefix "C-c x" :prefix-map dwim-export-to ("m" . dwim-file-to-mla-pdf) ("g" . dwim-file-to-generic-pdf) ("p" . dwim-md-to-pptx))
   ([remap shell-command] . dwim-shell-command)
   (:map dired-mode-map ([remap dired-do-async-shell-command] . dwim-shell-command) ([remap dired-do-shell-command] . dwim-shell-command) ([remap dired-smart-shell-command] . dwim-shell-command) ("e" . dwim-shell-commands-macos-open-with) ("d" . dwim-macos-move-to-trash) ("x" . my-dwim-shell-commands-map))
   :config
@@ -315,6 +319,10 @@
     (interactive)
     (when (y-or-n-p "Move marked files to macOS trash? ")
       (dwim-shell-command-on-marked-files "Move marked files to macOS trash" "trash '<<f>>'" :silent-success t)))
+  (defun dwim-file-mediainfo ()
+    "Run mediainfo on the current buffer's file or marked dired files."
+    (interactive)
+    (dwim-shell-command-on-marked-files "MediaInfo" "mediainfo '<<f>>'" :utils "mediainfo"))
   (defun dwim-file-to-mla-pdf ()
     "Convert file to MLA pdf via pandoc and typst."
     ;; fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wght].ttf' wght=400
@@ -453,9 +461,10 @@
   :vc (:url "git@github.com:leaferiksen/obsidian-cli.el.git")
   :hook (markdown-ts-mode md-ts-mode)
   :bind
+  ("C-c o" . obsidian-cli-open-note)
   ("C-c j" . obsidian-cli-open-daily-note)
   (:map obsidian-cli-mode-map ("C-c C-b" . obsidian-cli-jump-to-backlink))
-  :custom (obisidian-cli-rename-on-save t))
+  :custom (obsidian-cli-rename-on-save t))
 
 (use-package reader
   :ensure t
@@ -506,7 +515,7 @@
   (visual-fill-column-mode . (lambda () (face-remap-add-relative 'default :height 180)))
   :custom
   (visual-fill-column-center-text t)
-  (visual-fill-column-width 80))
+  (visual-fill-column-width 90))
 
 (use-package writegood-mode
   :ensure t
