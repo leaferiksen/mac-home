@@ -8,11 +8,8 @@
                            "^org\\.mozilla\\.firefox$"
                            "^org\\.mozilla\\.firefoxdeveloperedition$"
                            "^com\\.google\\.Chrome$"]}
- :main [{:des "Right 􀆔 as Right 􀆍, C-h as backspace in Emacs and global Emacs bindings"
-	 :rules [[:!T##open_bracket :tab]  [:!T##l :return_or_enter]
-		 [:!T##i :delete_or_backspace]  [:!Ci :!Cdelete_or_backspace :emacs]
-		 [:!T##3 :up_arrow :notemacs]  [:!T##o :down_arrow :notemacs]  [:!T##2 :right_arrow :notemacs]  [:!T##f :left_arrow :notemacs]
-		 [:##right_command :left_control]]}
+ :main [{:des "Right 􀆔 as Right 􀆍, C-h as backspace"
+	 :rules [[:!T##open_bracket :tab]  [:!T##l :return_or_enter] [:!T##i :delete_or_backspace] [:##right_command :left_control]]}
 	{:des "Toggle dark mode with 􀆪D"
 	 :rules [[:!Fr "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
 	{:des "Arrow keys with 􀆪p/n/b/f"
