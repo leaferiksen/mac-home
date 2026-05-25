@@ -2,7 +2,6 @@
 [user]
 	name = Leaf Eriksen
 	email = leaferiksen@gmail.com
-	signingkey = 50AE3EB872027C3D
 [pull]
 	ff = only
 [merge]

@@ -233,7 +233,7 @@
        "Installation failed: could not mount DMG or find .app bundle"))))
 
 (use-package eglot
-  :demand t
+  :demand
   :hook
   (html-mode . eglot-ensure)
   (css-ts-mode . eglot-ensure)
@@ -390,6 +390,7 @@
 
 (use-package apheleia
   :ensure t
+  :hook (emacs-lisp-mode . (lambda () (apheleia-mode -1)))
   :config (apheleia-global-mode +1))
 
 (use-package clojure-mode
@@ -471,7 +472,7 @@
 (use-package elisp-autofmt
   :ensure t
   :vc (:url "https://codeberg.org/ideasman42/emacs-elisp-autofmt")
-  :demand t
+  :demand
   :hook (emacs-lisp-mode . elisp-autofmt-mode)
   :init (add-to-list 'safe-local-variable-values '(elisp-autofmt-on-save-p . always)))
 
@@ -655,7 +656,7 @@
 
 (use-package writegood-mode
   :ensure t
-  :vc (:url "git@github.com:bnbeckwith/writegood-mode.git")
+  :vc (:url "https://github.com/bnbeckwith/writegood-mode")
   :bind ("C-c g" . writegood-mode))
 
 (provide 'init)
