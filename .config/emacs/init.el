@@ -1,12 +1,13 @@
-;;; init.el --- Emacs Initialization -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; init.el --- Emacs Initialization -*- lexical-binding: t; -*-
 
 ;; Author: Leaf Eriksen
 
 ;;; Commentary:
 
-;; This is sorted first by priority, second by alphabet
+;; Top level function sort order
+;; first by load time, second by alphabet
 
-;; use-package sort order:
+;; `use-package' :key sort order
 ;; what to install (:ensure :vc)
 ;; when to load what (:demand :mode :commands :hook)
 ;; if to load or not (:if :after)
@@ -16,39 +17,14 @@
 
 ;;; Code:
 
-;; Internal packages and internal hooks
+;; Internal features and hooks
 
 (require 'package)
 
 (use-package emacs
   :hook
   (emacs-startup . server-start)
-  (emacs-startup . almost-maximize-frame)
   (emacs-startup . remap-all-ts-modes)
-  (ns-system-appearance-change-functions . auto-theme)
-  :bind*
-  ;; modernize undo and remove s-Z to s-z translation map
-  ("s-z" . undo-only)
-  ("s-Z" . nil)
-  ("s-Z" . undo-redo)
-  ("s-w" . kill-current-buffer)
-  ("s-<backspace>" . ns-do-hide-emacs)
-  ("s-i" . dwim-file-mediainfo)
-  ;; ("s-y" .)
-  ;; enable standard macOS emoji binding
-  ("H-e" . ns-do-show-character-palette)
-  ;; remove scroll zoom (highly incompatible with macos native inertia)
-  ("C-<wheel-up>" . mwheel-scroll)
-  ("C-<wheel-down>" . mwheel-scroll)
-  ("C-M-<wheel-up>" . mwheel-scroll)
-  ("C-M-<wheel-down>" . mwheel-scroll)
-  ;; focus follows splits
-  ("C-x 2" . split-and-follow-horizontally)
-  ("C-x 3" . split-and-follow-vertically)
-  :custom-face
-  (default ((t (:family "Maple Mono NF CN" :height 140))))
-  (fixed-pitch ((t (:inherit default))))
-  (variable-pitch ((t (:family "Atkinson Hyperlegible Next" :height 180))))
   :custom
   (auto-insert-directory "~/.config/emacs/templates/")
   (auto-insert-query nil)
@@ -62,23 +38,15 @@
   (custom-file (make-temp-file "~/.cache/emacs/custom"))
   (delete-selection-mode t)
   (disabled-command-function nil)
-  (display-line-numbers-type 'relative)
-  (display-line-numbers-width-start 3)
   (eldoc-echo-area-use-multiline-p t)
   (electric-pair-mode t)
   (find-file-visit-truename t)
-  (frame-resize-pixelwise t)
   (gc-cons-threshold 100000000)
   (inhibit-startup-screen t)
   (isearch-lazy-count t)
   (large-file-warning-threshold 1000000000)
-  (mac-function-modifier 'hyper)
-  (mac-option-modifier 'none)
   (make-backup-files nil)
   (mode-line-collapse-minor-modes '(not flymake-mode))
-  (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
-  (modus-themes-italic-constructs t)
-  (modus-themes-mixed-fonts t)
   (package-vc-allow-build-commands t)
   (read-buffer-completion-ignore-case t)
   (read-process-output-max (* 1024 1024))
@@ -90,45 +58,28 @@
   (use-package-vc-prefer-newest t)
   (which-key-mode t)
   (word-wrap-by-category t)
-  :config (setenv "GIT_EDITOR" "emacsclient")
-  ;; Transpose unwanted s- bindings to project, bookmark, and treesit navigation
-  (define-key key-translation-map (kbd "s-g") (kbd "M-g"))
-  (define-key key-translation-map (kbd "s-o") (kbd "C-x p"))
-  (define-key key-translation-map (kbd "s-r") (kbd "C-x r"))
-  (dolist (key '("a" "b" "d" "e" "f" "h" "k" "l" "n" "p" "t" "u"))
-    (define-key key-translation-map (kbd (concat "s-" key)) (kbd (concat "C-M-" key))))
+  :config
+  (setenv "GIT_EDITOR" "emacsclient")
   (defun remap-all-ts-modes ()
     "Remap all available tree-sitter modes to their standard counterparts."
     (interactive)
     (dolist (ts-mode (apropos-internal "-ts-mode$" #'commandp))
-      (when-let ((old-mode (intern-soft (concat (string-remove-suffix "-ts-mode" (symbol-name ts-mode)) "-mode")))
+      (when-let ((old-mode
+                  (intern-soft
+                   (concat
+                    (string-remove-suffix
+                     "-ts-mode" (symbol-name ts-mode))
+                    "-mode")))
                  ((fboundp old-mode)))
         (add-to-list 'major-mode-remap-alist (cons old-mode ts-mode)))))
-  (defun almost-maximize-frame ()
-    "Borderless maximise with margins for tiling"
-    (interactive)
-    (add-to-list 'default-frame-alist '(undecorated-round . t))
-    (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
   (defun async-shell-command-no-window (command)
     (interactive)
-    (let ((display-buffer-alist (list (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))))
+    (let ((display-buffer-alist
+           (list
+            (cons
+             "\\*Async Shell Command\\*.*"
+             (cons #'display-buffer-no-window nil)))))
       (async-shell-command command)))
-  (defun auto-theme (appearance)
-    "Load theme, taking current system APPEARANCE into consideration."
-    (mapc #'disable-theme custom-enabled-themes)
-    (pcase appearance
-      ('light (load-theme 'modus-operandi-tinted t))
-      ('dark (load-theme 'modus-vivendi-tinted t))))
-  (defun split-and-follow-horizontally ()
-    (interactive)
-    (split-window-below)
-    (balance-windows)
-    (other-window 1))
-  (defun split-and-follow-vertically ()
-    (interactive)
-    (split-window-right)
-    (balance-windows)
-    (other-window 1))
   (defun unfill ()
     "Unfill the current region if active, or the current paragraph."
     (interactive)
@@ -138,7 +89,6 @@
         (fill-paragraph nil))))
   (add-to-list 'imagemagick-enabled-types 'JXL)
   (defalias 'yes-or-no-p 'y-or-n-p)
-  (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display")
   ;; Enable or disable global minor modes
   (auto-insert-mode 1)
   (define-auto-insert "\.html" "insert.html")
@@ -149,22 +99,104 @@
   (fido-vertical-mode 1)
   (global-hl-line-mode 1)
   (global-visual-line-mode 1)
-  (repeat-mode 1)
+  (repeat-mode 1))
+
+(use-package term/ns-win
+  :if (eq window-system 'ns)
+  :bind
+  ;; modernize undo and remove s-Z to s-z translation map
+  ("s-z" . undo-only)
+  ("s-Z" . nil)
+  ("s-Z" . undo-redo)
+  ("s-w" . kill-current-buffer)
+  ;; ("s-<backspace>" . ns-do-hide-emacs)
+  ;; ("s-y" .)
+  ;; enable standard macOS emoji binding
+  ("H-e" . ns-do-show-character-palette)
+  ;; remove scroll zoom (highly incompatible with macos native inertia)
+  ("C-<wheel-up>" . mwheel-scroll)
+  ("C-<wheel-down>" . mwheel-scroll)
+  ("C-M-<wheel-up>" . mwheel-scroll)
+  ("C-M-<wheel-down>" . mwheel-scroll)
+  :custom
+  (mac-function-modifier 'hyper)
+  (mac-option-modifier 'none)
+  (delete-by-moving-to-trash t)
+  :config (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display")
+  ;; Transpose unwanted s- bindings to project, bookmark, and treesit navigation
+  (define-key key-translation-map (kbd "s-g") (kbd "M-g"))
+  (define-key key-translation-map (kbd "s-o") (kbd "C-x p"))
+  (define-key key-translation-map (kbd "s-r") (kbd "C-x r"))
+  (dolist (key '("a" "b" "d" "e" "f" "h" "k" "l" "n" "p" "t" "u"))
+    (define-key
+     key-translation-map (kbd (concat "s-" key)) (kbd (concat "C-M-" key)))))
+
+(use-package window
+  :hook (emacs-startup . almost-maximize-frame)
+  :bind
+  ;; focus follows splits
+  ("C-x 2" . split-and-follow-horizontally)
+  ("C-x 3" . split-and-follow-vertically)
+  :custom
+  (display-line-numbers-type 'relative)
+  (display-line-numbers-width-start 3)
+  (frame-resize-pixelwise t)
+  :init
+  (defun almost-maximize-frame ()
+    "Borderless maximise with margins for tiling"
+    (interactive)
+    (add-to-list 'default-frame-alist '(undecorated-round . t))
+    (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
+  (defun split-and-follow-horizontally ()
+    (interactive)
+    (split-window-below)
+    (balance-windows)
+    (other-window 1))
+  (defun split-and-follow-vertically ()
+    (interactive)
+    (split-window-right)
+    (balance-windows)
+    (other-window 1))
+  :config
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (tooltip-mode -1))
 
-;; Internal Packages
+(use-package modus-themes
+  :hook (ns-system-appearance-change-functions . auto-theme)
+  :custom-face
+  (default ((t (:family "Maple Mono NF CN" :height 140))))
+  (fixed-pitch ((t (:inherit default))))
+  (variable-pitch ((t (:family "Atkinson Hyperlegible Next" :height 180))))
+  :custom
+  (modus-themes-common-palette-overrides
+   '((underline-link unspecified)
+     (underline-link-visited unspecified)
+     (underline-link-symbolic unspecified)))
+  (modus-themes-italic-constructs t)
+  (modus-themes-mixed-fonts t)
+  :init
+  (defun auto-theme (appearance)
+    "Load theme, taking current system APPEARANCE into consideration."
+    (mapc #'disable-theme custom-enabled-themes)
+    (pcase appearance
+      ('light (load-theme 'modus-operandi-tinted t))
+      ('dark (load-theme 'modus-vivendi-tinted t)))))
 
 (use-package completion-preview
   :hook (prog-mode html-mode)
-  :bind (:map completion-preview-active-mode ("M-]" . completion-preview-next-candidate) ("M-[" . completion-preview-prev-candidate)))
+  :bind
+  (:map
+   completion-preview-active-mode
+   ("M-]" . completion-preview-next-candidate)
+   ("M-[" . completion-preview-prev-candidate)))
 
 (use-package dired
   :after ls-lisp
   :hook
   (dired-mode . dired-omit-mode)
   (dired-mode . dired-hide-details-mode)
+  :bind (:map dired-mode-map ("d" . dired-install-dmg))
   :custom
   (dired-clean-confirm-killing-deleted-buffers nil)
   (dired-create-destination-dirs 'ask)
@@ -172,17 +204,51 @@
   (dired-mouse-drag-files t)
   (dired-omit-verbose nil)
   (dired-recursive-copies 'always)
-  (dired-omit-files "\\`[.]?#\\|\\`[.][.]?\\'\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd"))
+  (dired-omit-files
+   "\\`[.][.]?\\'\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
+  :config
+  (defun dired-install-dmg ()
+    "Mount a .dmg file at point, copy its .app to ~/Applications/, then eject and optionally delete .dmg."
+    (interactive)
+    (if-let* ((dmg (dired-get-filename))
+              (mount-output
+               (shell-command-to-string
+                (format "yes | hdiutil attach -nobrowse %s"
+                        (shell-quote-argument dmg))))
+              ((string-match "/Volumes/[^\t\n]+" mount-output))
+              (volume (string-trim-right (match-string 0 mount-output)))
+              (app (car (file-expand-wildcards (concat volume "/*.app")))))
+        (progn
+          (make-directory "~/Applications/" t)
+          (shell-command
+           (format "cp -R %s ~/Applications/" (shell-quote-argument app)))
+          (shell-command
+           (format "hdiutil detach %s" (shell-quote-argument volume)))
+          (when (y-or-n-p
+                 (format "Installed %s to ~/Applications/ — trash the DMG?"
+                         (file-name-nondirectory app)))
+            (shell-command (format "trash %s" (shell-quote-argument dmg)))
+            (revert-buffer)))
+      (message
+       "Installation failed: could not mount DMG or find .app bundle"))))
 
 (use-package eglot
-  :demand
+  :demand t
   :hook
   (html-mode . eglot-ensure)
   (css-ts-mode . eglot-ensure)
   (js-ts-mode . eglot-ensure)
   :bind
-  (:prefix "C-c e" :prefix-map eglot-actions ("r" . eglot-rename) ("a" . eglot-code-actions) ("o" . eglot-code-action-organize-imports) ("d" . eldoc) ("f" . eglot-format))
-  (:map eglot-mode-map ("C-c e" . eglot-actions-map) ("H-<mouse-1>" . eglot-code-actions-at-mouse))
+  (:prefix
+   "C-c e"
+   :prefix-map
+   eglot-actions
+   ("r" . eglot-rename)
+   ("a" . eglot-code-actions)
+   ("o" . eglot-code-action-organize-imports)
+   ("d" . eldoc)
+   ("f" . eglot-format))
+  (:map eglot-mode-map ("H-<mouse-1>" . eglot-code-actions-at-mouse))
   :custom
   (eglot-code-action-indicator "*")
   (eglot-code-action-indications '(mode-line))
@@ -192,7 +258,11 @@
   :hook
   (eglot-managed-mode-hook)
   (emacs-lisp-mode . flymake-avoid-scratch)
-  :bind (:map flymake-mode-map ("M-n" . flymake-goto-next-error) ("M-p" . flymake-goto-prev-error))
+  :bind
+  (:map
+   flymake-mode-map
+   ("M-n" . flymake-goto-next-error)
+   ("M-p" . flymake-goto-prev-error))
   :config
   (defun flymake-avoid-scratch ()
     (when (buffer-file-name)
@@ -217,7 +287,12 @@
     (find-file "~/.config/emacs/init.el")))
 
 (use-package project
-  :bind (:map project-prefix-map ("s" . project-gterm) ("S" . project-npx-serve) ("t" . project-tailwindcss))
+  :bind
+  (:map
+   project-prefix-map
+   ("s" . project-gterm)
+   ("S" . project-npx-serve)
+   ("t" . project-tailwindcss))
   :custom
   (project-mode-line t)
   (project-vc-extra-root-markers '("project"))
@@ -240,7 +315,16 @@
   (defun project-tailwindcss ()
     "npx @tailwindcss/cli -i app.css -o dist.css --watch the project's root directory"
     (interactive)
-    (project-run "tailwindcss" "Tailwind is running in %s" "npx" "@tailwindcss/cli" "-i" "app.css" "-o" "dist.css" "--watch"))
+    (project-run
+     "tailwindcss"
+     "Tailwind is running in %s"
+     "npx"
+     "@tailwindcss/cli"
+     "-i"
+     "app.css"
+     "-o"
+     "dist.css"
+     "--watch"))
   (defun project-npx-serve ()
     "Clear clipboard, npx serve the project's root directory, call clipboard watcher."
     (interactive)
@@ -254,7 +338,8 @@
         (progn
           (split-and-follow-horizontally)
           (xwidget-webkit-browse-url current-clip)
-          (message "Clipboard update detected! Opened %s in Xwidgets" current-clip))
+          (message "Clipboard update detected! Opened %s in Xwidgets"
+                   current-clip))
       (run-at-time "0.5 sec" nil #'watch-clipboard-xwidget-webkit-browse-url))))
 
 (use-package visual-wrap-prefix-mode
@@ -264,21 +349,24 @@
   :bind (:map xwidget-webkit-mode-map ("u" . xwidget-webkit-browse-url)))
 
 (use-package yt-dlp
-  :bind (:prefix "C-c y" :prefix-map yt-dlp ("a" . yt-dlp-audio) ("v" . yt-dlp-video) ("s" . yt-dlp-video-subtitled))
+  :bind ("C-c y" . yt-dlp-download)
   :init
-  (defun yt-dlp--download (flag)
-    (when-let ((url (read-string "URL: "))
-               ((not (string-empty-p url))))
-      (async-shell-command (format "yt-dlp %s \"%s\"" flag url))))
-  (defun yt-dlp-audio ()
+  (defun yt-dlp-download ()
     (interactive)
-    (yt-dlp--download "-x"))
-  (defun yt-dlp-video ()
-    (interactive)
-    (yt-dlp--download ""))
-  (defun yt-dlp-video-subtitled ()
-    (interactive)
-    (yt-dlp--download "--write-subs")))
+    (let* ((video (y-or-n-p "Video? "))
+           (subs (and video (y-or-n-p "Subs? "))))
+      (when-let* ((url (read-string "URL: "))
+                  ((not (string-empty-p url))))
+        (async-shell-command
+         (format "yt-dlp %s \"%s\""
+                 (cond
+                  (subs
+                   "--write-subs")
+                  (video
+                   "")
+                  (t
+                   "-x"))
+                 url))))))
 
 ;;; External packages
 
@@ -287,14 +375,22 @@
 (use-package agent-shell
   :ensure t
   :hook (agent-shell-mode . completion-preview-mode)
-  :bind (:prefix "C-c a" :prefix-map my-agents ("a" . agent-shell) ("o" . agent-shell-opencode-start-agent) ("g" . agent-shell-google-start-gemini) ("c" . agent-shell-github-start-copilot))
+  :bind
+  (:prefix
+   "C-c a"
+   :prefix-map
+   my-agents
+   ("a" . agent-shell)
+   ("o" . agent-shell-opencode-start-agent)
+   ("g" . agent-shell-google-start-gemini)
+   ("c" . agent-shell-github-start-copilot))
   :custom
   (agent-shell-opencode-default-model-id "ollama/gemma4:26b-64k")
   (agent-shell-github-default-model-id "claude-haiku-4.5"))
 
 (use-package apheleia
   :ensure t
-  :custom (apheleia-global-mode t))
+  :config (apheleia-global-mode +1))
 
 (use-package clojure-mode
   :ensure t)
@@ -310,42 +406,57 @@
   :ensure t
   :demand
   :bind
-  (:prefix "C-c x" :prefix-map dwim-export-to ("m" . dwim-file-to-mla-pdf) ("g" . dwim-file-to-generic-pdf) ("p" . dwim-md-to-pptx))
+  ("s-i" . dwim-file-mediainfo)
+  (:prefix
+   "C-c x"
+   :prefix-map
+   dwim-export-to
+   ("m" . dwim-file-to-mla-pdf)
+   ("g" . dwim-file-to-generic-pdf)
+   ("p" . dwim-md-to-pptx))
   ([remap shell-command] . dwim-shell-command)
-  (:map dired-mode-map ([remap dired-do-async-shell-command] . dwim-shell-command) ([remap dired-do-shell-command] . dwim-shell-command) ([remap dired-smart-shell-command] . dwim-shell-command) ("e" . dwim-shell-commands-macos-open-with) ("d" . dwim-macos-move-to-trash) ("x" . my-dwim-shell-commands-map))
+  (:map
+   dired-mode-map
+   ([remap dired-do-async-shell-command] . dwim-shell-command)
+   ([remap dired-do-shell-command] . dwim-shell-command)
+   ([remap dired-smart-shell-command] . dwim-shell-command)
+   ("e" . dwim-shell-commands-macos-open-with)
+   ("i" . dwim-file-mediainfo)
+   ("x" . dwim-export-to))
   :config
-  (defun dwim-macos-move-to-trash ()
-    "Move marked files to macOS trash."
-    (interactive)
-    (when (y-or-n-p "Move marked files to macOS trash? ")
-      (dwim-shell-command-on-marked-files "Move marked files to macOS trash" "trash '<<f>>'" :silent-success t)))
   (defun dwim-file-mediainfo ()
     "Run mediainfo on the current buffer's file or marked dired files."
     (interactive)
-    (dwim-shell-command-on-marked-files "MediaInfo" "mediainfo '<<f>>'" :utils "mediainfo"))
+    (dwim-shell-command-on-marked-files
+     "MediaInfo"
+     "mediainfo '<<f>>'"
+     :utils "mediainfo"))
+  (defun dwim-file-to-generic-pdf ()
+    "Convert file to generic pdf via pandoc."
+    (interactive)
+    (dwim-shell-command-on-marked-files
+     "Converting to generic pdf" "pandoc '<<f>>' -o '<<fne>>.pdf'"))
   (defun dwim-file-to-mla-pdf ()
     "Convert file to MLA pdf via pandoc and typst."
     ;; fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wght].ttf' wght=400
     ;; pandoc --print-default-template=typst
     (interactive)
-    (dwim-shell-command-on-marked-files "Converting to MLA pdf" "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=/Users/leaf/.config/typst/template.typ"))
-  (defun dwim-file-to-generic-pdf ()
-    "Convert file to generic pdf via pandoc."
-    (interactive)
-    (dwim-shell-command-on-marked-files "Converting to generic pdf" "pandoc '<<f>>' -o '<<fne>>.pdf'"))
+    (dwim-shell-command-on-marked-files
+     "Converting to MLA pdf"
+     "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=/Users/leaf/.config/typst/template.typ"))
   (defun dwim-md-to-pptx ()
     "Convert md files to pptx."
     (interactive)
     (if-let ((files (dwim-shell-command--files))
              ((seq-every-p (apply-partially #'string-suffix-p ".md") files)))
-        (dwim-shell-command-on-marked-files "Converting md to pptx" "npx @marp-team/marp-cli@latest '<<f>>' --pptx")
+        (dwim-shell-command-on-marked-files
+         "Converting md to pptx"
+         "npx @marp-team/marp-cli@latest '<<f>>' --pptx")
       (user-error "Selection contains non-markdown files!"))))
 
 (use-package elfeed
   :ensure t
-  :bind
-  ("C-c f" . elfeed)
-  (:map elfeed-search-mode-map ("f" . elfeed-search-show-entry) ("m" . elfeed-search-show-entry))
+  :bind ("C-c f" . elfeed)
   :init (run-at-time nil "8 hours" #'elfeed-update))
 
 (use-package elfeed-org
@@ -358,9 +469,11 @@
   :bind (:map elfeed-show-mode-map ("w" . elfeed-webkit-toggle)))
 
 (use-package elisp-autofmt
+  :ensure t
   :vc (:url "https://codeberg.org/ideasman42/emacs-elisp-autofmt")
+  :demand t
   :hook (emacs-lisp-mode . elisp-autofmt-mode)
-  :custom (elisp-autofmt-on-save-p 'always))
+  :init (add-to-list 'safe-local-variable-values '(elisp-autofmt-on-save-p . always)))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -397,17 +510,30 @@
   :ensure t
   :mode ("\\.md\\'" . md-ts-mode)
   :hook (md-ts-mode . eglot-ensure)
-  :bind (:map md-ts-mode-map ("s-<return>" . markdown-follow-any-link) ("C-c SPC 1" . markdown-h1-title) ("C-c SPC 2" . markdown-h2-today) ("C-c SPC m" . markdown-more-emphasis) ("C-c SPC l" . markdown-less-emphasis))
+  :bind
+  (:map
+   md-ts-mode-map
+   ("s-<return>" . markdown-follow-any-link)
+   ("C-c SPC 1" . markdown-h1-title)
+   ("C-c SPC 2" . markdown-h2-today)
+   ("C-c SPC m" . markdown-more-emphasis)
+   ("C-c SPC l" . markdown-less-emphasis))
   :custom
   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
-  (eglot-workspace-configuration '(:harper-ls (:linters (:LongSentences :json-false))))
+  (eglot-workspace-configuration
+   '(:harper-ls (:linters (:LongSentences :json-false))))
   :config
   (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs '(markdown-mode . ("harper-ls" "--stdio"))))
+    (add-to-list
+     'eglot-server-programs '(markdown-mode . ("harper-ls" "--stdio"))))
   (defun markdown-h1-title ()
     "Insert an atx level 1 heading with the name of the file."
     (interactive)
-    (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
+    (insert
+     "# "
+     (file-name-nondirectory
+      (file-name-sans-extension (buffer-file-name)))
+     "\n"))
   (defun markdown-h2-today ()
     "Insert an atx level 2 heading with today's date in iso format."
     (interactive)
@@ -445,7 +571,8 @@
                 (beg (car bounds))
                 (end (cdr bounds)))
       (save-excursion
-        (when (and (equal "*" (buffer-substring-no-properties (- beg 1) beg)) (equal "*" (buffer-substring-no-properties end (+ end 1))))
+        (when (and (equal "*" (buffer-substring-no-properties (- beg 1) beg))
+                   (equal "*" (buffer-substring-no-properties end (+ end 1))))
           (delete-region end (+ end 1))
           (delete-region (- beg 1) beg))))))
 
@@ -488,12 +615,17 @@
   :config
   ;; https://github.com/alex-pinkus/tree-sitter-swift#where-is-your-parserc
   ;; https://github.com/alex-pinkus/tree-sitter-swift/actions/workflows/parser-src.yml
-  (add-to-list 'treesit-language-source-alist '(swift "/Users/leaf/.config/emacs/tree-sitter/tree-sitter-swift" nil "."))
+  (add-to-list
+   'treesit-language-source-alist
+   '(swift "/Users/leaf/.config/emacs/tree-sitter/tree-sitter-swift" nil "."))
   (with-eval-after-load 'apheleia
     (add-to-list 'apheleia-mode-alist '(swift-ts-mode . swift-format))
-    (add-to-list 'apheleia-formatters '(swift-format "xcrun" "swift-format" (buffer-file-name))))
+    (add-to-list
+     'apheleia-formatters
+     '(swift-format "xcrun" "swift-format" (buffer-file-name))))
   (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs '(swift-ts-mode . ("xcrun" "sourcekit-lsp"))))
+    (add-to-list
+     'eglot-server-programs '(swift-ts-mode . ("xcrun" "sourcekit-lsp"))))
   (defun xcode-build ()
     (interactive)
     (async-shell-command-no-window "/Users/leaf/.config/emacs/xcode-build.sh")))
@@ -506,13 +638,17 @@
   :ensure t
   :vc (:url "https://codeberg.org/meow_king/typst-ts-mode")
   :mode "\\.typ\\'"
-  :config (add-to-list 'treesit-language-source-alist '(typst "https://github.com/uben0/tree-sitter-typst")))
+  :config
+  (add-to-list
+   'treesit-language-source-alist
+   '(typst "https://github.com/uben0/tree-sitter-typst")))
 
 (use-package visual-fill-column
   :ensure t
   :hook
   (md-ts-mode org-mode)
-  (visual-fill-column-mode . (lambda () (face-remap-add-relative 'default :height 180)))
+  (visual-fill-column-mode
+   . (lambda () (face-remap-add-relative 'default :height 180)))
   :custom
   (visual-fill-column-center-text t)
   (visual-fill-column-width 90))
@@ -526,6 +662,8 @@
 ;;; init.el ends here
 
 ;; Local variables:
-;; fill-column: 1000
+;; fill-column: 80
+;; no-byte-compile: t
+;; elisp-autofmt-on-save-p: always
 ;; elisp-autofmt-load-packages-local: ("use-package" "use-package-core")
 ;; end:
