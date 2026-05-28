@@ -56,6 +56,8 @@
   (shr-inhibit-images t)
   (use-dialog-box nil)
   (use-package-vc-prefer-newest t)
+  (user-full-name "Leaf Eriksen")
+  (user-mail-address "leaferiksen@gmail.com")
   (which-key-mode t)
   (word-wrap-by-category t)
   :config
@@ -85,6 +87,7 @@
   (define-auto-insert "\.html" "insert.html")
   (define-auto-insert "\.js" "insert.js")
   (auto-save-visited-mode 1)
+  (context-menu-mode 1)
   (delete-selection-mode 1)
   (editorconfig-mode 1)
   (fido-vertical-mode 1)
@@ -109,9 +112,9 @@
   ("C-M-<wheel-up>" . mwheel-scroll)
   ("C-M-<wheel-down>" . mwheel-scroll)
   :custom
+  (delete-by-moving-to-trash t)
   (mac-function-modifier 'hyper)
   (mac-option-modifier 'none)
-  (delete-by-moving-to-trash t)
   :config (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display")
   ;; Transpose unwanted s- bindings to project, bookmark, and treesit navigation
   (define-key key-translation-map (kbd "s-g") (kbd "M-g"))
@@ -318,6 +321,11 @@
   (agent-shell-opencode-default-model-id "ollama/gemma4:26b-64k")
   (agent-shell-github-default-model-id "claude-haiku-4.5"))
 
+(use-package anglish
+  :ensure t
+  :vc (:url "git@github.com:leaferiksen/anglish.el.git")
+  :hook (markdown-ts-mode md-ts-mode))
+
 (use-package apheleia
   :ensure t
   :hook (emacs-lisp-mode . (lambda () (apheleia-mode -1)))
@@ -383,7 +391,7 @@
   :vc (:url "https://codeberg.org/ideasman42/emacs-elisp-autofmt")
   :demand
   :hook (emacs-lisp-mode . elisp-autofmt-mode)
-  :init (add-to-list 'safe-local-variable-values '(elisp-autofmt-on-save-p . always)))
+  :bind (:prefix "C-c e" :prefix-map elisp-autofmt ("b" . elisp-autofmt-buffer) ("r" . elisp-autofmt-region-dwim)))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -419,16 +427,23 @@
 (use-package md-ts-mode
   :ensure t
   :mode ("\\.md\\'" . md-ts-mode)
-  :hook (md-ts-mode . eglot-ensure)
+  :hook
+  (md-ts-mode . eglot-ensure)
   :bind
   (:map md-ts-mode-map ("s-<return>" . markdown-follow-any-link))
   (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today) ("m" . markdown-more-emphasis) ("l" . markdown-less-emphasis))
   :custom
   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
-  (eglot-workspace-configuration '(:harper-ls (:linters (:LongSentences :json-false))))
+  (eglot-workspace-configuration '(:harper-ls (:dialect "American" :linters (:LongSentences :json-false :AvoidCurses :json-false))))
   :config
   (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs '(markdown-mode . ("harper-ls" "--stdio"))))
+    (add-to-list 'eglot-server-programs '(md-ts-mode . ("harper-ls" "--stdio")))
+    (add-hook
+     'eglot-managed-mode-hook
+     (lambda ()
+       (when anglish-mode
+         (add-hook 'flymake-diagnostic-functions #'anglish--check-buffer nil t)
+         (flymake-start)))))
   (defun markdown-h1-title ()
     "Insert an atx level 1 heading with the name of the file."
     (interactive)
@@ -555,6 +570,5 @@
 ;; Local variables:
 ;; fill-column: 1000
 ;; no-byte-compile: t
-;; elisp-autofmt-on-save-p: always
 ;; elisp-autofmt-load-packages-local: ("use-package" "use-package-core")
 ;; end:
