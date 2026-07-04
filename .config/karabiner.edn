@@ -1,27 +1,24 @@
 {:applications {:emacs ["^org\\.gnu\\.Emacs$"]}
  :main [{:des "Right 􀆔 as Right 􀆍, C-h as backspace, and global Emacs bindings"
-	 :rules [[:##right_command :left_control] [:!T##open_bracket :tab]  [:!T##l :return_or_enter] [:!T##i :delete_or_backspace]
+	 :rules [[:##right_command :left_control] [:!T##semicolon :tab]  [:!T##comma :return_or_enter] [:!T##j :delete_or_backspace]
 		 [:!T##3 :up_arrow :!emacs]  [:!T##o :down_arrow :!emacs]  [:!T##2 :right_arrow :!emacs]  [:!T##f :left_arrow :!emacs]]}
 	{:des "Toggle dark mode with 􀆪D"
 	 :rules [[:!Fr "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
 	{:des "Colemak Curl/Angle/Extra Wide"
 	 :rules [;; left hand
-		 [:##grave_accent_and_tilde :q]  [:##1 :w]  [:##2 :f]  [:##3 :p]  [:##4 :g]
-		 [:##tab :a]                     [:##q :r]  [:##w :s]  [:##e :t]  [:##r :d]
-		 [:##caps_lock :z]               [:##a :x]  [:##s :c]  [:##d :v]  [:##f :b]
+		 [:##tab :q]        [:##q :w]  [:##w :f]  [:##e :p]  [:##r :g]
+		 [:##caps_lock :a]  [:##a :r]  [:##s :s]  [:##d :t]  [:##f :d]
+		 [:##left_shift :z] [:##z :x]  [:##x :c]  [:##c :v]  [:##v :b]
 		 ;; right hand
-		 [:##8 :j]  [:##9 :l]  [:##0 :u]              [:##hyphen :y]        [:##equal_sign :semicolon]
-		 [:##i :h]  [:##o :n]  [:##p :e]              [:##open_bracket :i]  [:##close_bracket :o]        [:##backslash :quote]
-		 [:##k :k]  [:##l :m]  [:##semicolon :comma]  [:##quote :period]    [:##return_or_enter :slash]
+		 [:##u :j]  [:##i :l]      [:##o :u]           [:##p :y]          [:##open_bracket :semicolon]  [:##close_bracket :quote]
+		 [:##j :h]  [:##k :n]      [:##l :e]           [:##semicolon :i]  [:##quote :o]                 [:##return_or_enter :right_shift]
+		 [:##m :k]  [:##comma :m]  [:##period :comma]  [:##slash :period] [:##right_shift :slash]
 		 ;; numpad
-		 [:##5 :7]  [:##6 :8]  [:##7 :9]
-		 [:##t :4]  [:##y :5]  [:##u :6]
-		 [:##g :1]  [:##h :2]  [:##j :3]
-		 [:##b :0]  [:##n :equal_sign]  [:##m :hyphen]
-		 ;; left thumb
-		 [:##z :grave_accent_and_tilde]  [:##x :right_shift]  [:c :f19]  [:!Tc :f20]  [:##v :backslash]
-		 ;; right thumb
-		 [:##comma :right_shift]  [:##period :open_bracket]  [:##slash :close_bracket]]}]}}
+		 [:##t :vk_none]       [:##y :vk_none]
+		 [:##g :vk_none]       [:##h :vk_none]
+		 [:##b :open_bracket]  [:##n :close_bracket]
+		 ;; special
+		 [:right_option :f19]  [:!Cright_option :f20]]}]}
 
 ;; the rule [:!Ca :!T1] means from command a to control 1
 ;; :!Ca is keycode :a and prefix a with !C
