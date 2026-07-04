@@ -80,6 +80,10 @@
       (if (use-region-p)
           (fill-region (region-beginning) (region-end) nil)
         (fill-paragraph nil))))
+  (defun vc-git-amend ()
+    (interactive)
+    (vc-checkin nil 'git)
+    (vc-git-log-edit-toggle-amend))
   (add-to-list 'imagemagick-enabled-types 'JXL)
   (defalias 'yes-or-no-p 'y-or-n-p)
   ;; Enable or disable global minor modes
@@ -124,7 +128,7 @@
     (define-key key-translation-map (kbd (concat "s-" key)) (kbd (concat "C-M-" key)))))
 
 (use-package window
-  :hook (emacs-startup . almost-maximize-frame)
+  ;; :hook (emacs-startup . almost-maximize-frame)
   :bind
   ;; focus follows splits
   ("C-x 2" . split-and-follow-horizontally)
@@ -316,15 +320,13 @@
 (use-package agent-shell
   :ensure t
   :hook (agent-shell-mode . completion-preview-mode)
-  :bind (:prefix "C-c a" :prefix-map my-agents ("a" . agent-shell) ("o" . agent-shell-opencode-start-agent) ("g" . agent-shell-google-start-gemini) ("c" . agent-shell-github-start-copilot))
-  :custom
-  (agent-shell-opencode-default-model-id "ollama/gemma4:26b-64k")
-  (agent-shell-github-default-model-id "claude-haiku-4.5"))
+  :bind (:prefix "C-c a" :prefix-map my-agents ("a" . agent-shell) ("o" . agent-shell-opencode-start-agent)))
 
 (use-package anglish
   :ensure t
   :vc (:url "git@github.com:leaferiksen/anglish.el.git")
-  :hook (markdown-ts-mode md-ts-mode))
+  ;; :hook (markdown-ts-mode md-ts-mode)
+  )
 
 (use-package apheleia
   :ensure t
@@ -347,7 +349,7 @@
   :bind
   ("s-i" . dwim-file-mediainfo)
   ([remap shell-command] . dwim-shell-command)
-  (:prefix "C-c x" :prefix-map dwim-export-to ("m" . dwim-file-to-mla-pdf) ("g" . dwim-file-to-generic-pdf) ("p" . dwim-md-to-pptx))
+  (:prefix "C-c p" :prefix-map dwim-print ("m" . dwim-file-to-mla-pdf) ("g" . dwim-file-to-generic-pdf) ("p" . dwim-md-to-pptx))
   (:map dired-mode-map ([remap dired-do-async-shell-command] . dwim-shell-command) ([remap dired-do-shell-command] . dwim-shell-command) ([remap dired-smart-shell-command] . dwim-shell-command) ("e" . dwim-shell-commands-macos-open-with) ("i" . dwim-file-mediainfo) ("x" . dwim-export-to))
   :config
   (defun dwim-file-mediainfo ()
@@ -378,7 +380,8 @@
   :init (run-at-time nil "8 hours" #'elfeed-update))
 
 (use-package elfeed-org
-  :ensure t)
+  :ensure t
+  :init (elfeed-org))
 
 (use-package elfeed-webkit
   :ensure t
@@ -396,7 +399,9 @@
 (use-package exec-path-from-shell
   :ensure t
   :if (memq window-system '(ns x))
-  :config (exec-path-from-shell-initialize))
+  :config
+  (exec-path-from-shell-initialize)
+  (setenv "CC" nil))
 
 (use-package ghostel
   :ensure t
@@ -427,8 +432,7 @@
 (use-package md-ts-mode
   :ensure t
   :mode ("\\.md\\'" . md-ts-mode)
-  :hook
-  (md-ts-mode . eglot-ensure)
+  :hook (md-ts-mode . eglot-ensure)
   :bind
   (:map md-ts-mode-map ("s-<return>" . markdown-follow-any-link))
   (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today) ("m" . markdown-more-emphasis) ("l" . markdown-less-emphasis))
@@ -524,9 +528,10 @@
 
 (use-package swift-ts-mode
   :ensure t
+  :if (memq window-system '(ns))
   :mode "\\.swift\\'"
   :hook (swift-ts-mode . eglot-ensure)
-  :bind (:map swift-ts-mode-map ("C-c SPC" . xcode-build))
+  :bind (:prefix "C-c x" :prefix-map xcode ("b" . xcode-build) ("r" . xcode-run) ("t" . xcode-test))
   :config
   ;; https://github.com/alex-pinkus/tree-sitter-swift#where-is-your-parserc
   ;; https://github.com/alex-pinkus/tree-sitter-swift/actions/workflows/parser-src.yml
@@ -536,9 +541,39 @@
     (add-to-list 'apheleia-formatters '(swift-format "xcrun" "swift-format" (buffer-file-name))))
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs '(swift-ts-mode . ("xcrun" "sourcekit-lsp"))))
+  ;; https://danielde.dev/blog/emacs-for-swift-development
   (defun xcode-build ()
+    "Build the active Xcode workspace cleanly via native API."
     (interactive)
-    (async-shell-command-no-window "/Users/leaf/.config/emacs/xcode-build.sh")))
+    (ns-do-applescript
+     "tell application \"Xcode\"
+      if (count of workspace documents) > 0 then
+        set targetProject to active workspace document
+        build targetProject
+      end if
+    end tell"))
+  (defun xcode-run ()
+    "Stop and run the active Xcode workspace cleanly via native API."
+    (interactive)
+    (ns-do-applescript
+     "tell application \"Xcode\"
+      if (count of workspace documents) > 0 then
+        set targetProject to active workspace document
+        stop targetProject
+        run targetProject
+      end if
+    end tell"))
+  (defun xcode-test ()
+    "Stop and test the active Xcode workspace cleanly via native API."
+    (interactive)
+    (ns-do-applescript
+     "tell application \"Xcode\"
+      if (count of workspace documents) > 0 then
+        set targetProject to active workspace document
+        stop targetProject
+        test targetProject
+      end if
+    end tell")))
 
 (use-package typo
   :ensure t

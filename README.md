@@ -65,8 +65,7 @@ Download [Karabiner Elements](https://karabiner-elements.pqrs.org/) and [Wacom D
 
 ### Control Center
 
-- Wi-Fi **▼ Don't Show in Menu Bar**
-- Battery, Music Recognition, Keyboard Brightness **Only Show in control center**
+- Music Recognition, Keyboard Brightness **Only Show in control center**
 - Weather **▼ Show in Menu Bar**
 
 ### Spotlight
