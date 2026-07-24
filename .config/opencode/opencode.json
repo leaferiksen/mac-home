@@ -1,6 +1,6 @@
 {
 	"$schema": "https://opencode.ai/config.json",
-	"model": "ollama/gemma4:26b",
+	"model": "ollama/qwen3.6:27b",
 	"permission": {
 		"edit": "ask",
 		"bash": "ask",

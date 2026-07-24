@@ -364,7 +364,7 @@
   :bind
   ("s-i" . dwim-file-mediainfo)
   ([remap shell-command] . dwim-shell-command)
-  (:prefix "C-c p" :prefix-map dwim-print ("m" . dwim-file-to-mla-pdf) ("g" . dwim-file-to-generic-pdf) ("p" . dwim-md-to-pptx))
+  (:prefix "C-c p" :prefix-map dwim-print ("m" . dwim-file-to-mla-pdf) ("r" . dwim-file-to-resume-pdf) ("p" . dwim-md-to-pptx))
   (:map dired-mode-map ([remap dired-do-async-shell-command] . dwim-shell-command) ([remap dired-do-shell-command] . dwim-shell-command) ([remap dired-smart-shell-command] . dwim-shell-command) ("e" . dwim-shell-commands-macos-open-with) ("i" . dwim-file-mediainfo) ("x" . dwim-export-to))
   :config
   (with-eval-after-load 'dwim-shell-commands
@@ -373,16 +373,16 @@
     "Run mediainfo on the current buffer's file or marked dired files."
     (interactive)
     (dwim-shell-command-on-marked-files "MediaInfo" "mediainfo '<<f>>'" :utils "mediainfo"))
-  (defun dwim-file-to-generic-pdf ()
+  (defun dwim-file-to-resume-pdf ()
     "Convert file to generic pdf via pandoc."
     (interactive)
-    (dwim-shell-command-on-marked-files "Converting to generic pdf" "pandoc '<<f>>' -o '<<fne>>.pdf'"))
+    (dwim-shell-command-on-marked-files "Converting to generic pdf" "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=/Users/leaf/.config/typst/resume.typ"))
   (defun dwim-file-to-mla-pdf ()
     "Convert file to MLA pdf via pandoc and typst."
     ;; fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wght].ttf' wght=400
     ;; pandoc --print-default-template=typst
     (interactive)
-    (dwim-shell-command-on-marked-files "Converting to MLA pdf" "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=/Users/leaf/.config/typst/template.typ"))
+    (dwim-shell-command-on-marked-files "Converting to MLA pdf" "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=/Users/leaf/.config/typst/mla-template.typ"))
   (defun dwim-md-to-pptx ()
     "Convert md files to pptx."
     (interactive)
