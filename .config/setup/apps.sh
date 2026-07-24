@@ -4,7 +4,7 @@ brew tap d12frosted/emacs-plus
 brew trust d12frosted/emacs-plus
 brew install emacs-plus-app
 
-brew install --formula ffmpeg harper karinushka/paneru/paneru media-info mole mupdf pandoc pngpaste tealdeer typst yqrashawn/goku/goku xbzig zsh-autosuggestions zsh-syntax-highlighting
+brew install --formula atool ffmpeg harper karinushka/paneru/paneru media-info mole mupdf ollama pandoc pngpaste tealdeer typst yqrashawn/goku/goku xbzig zsh-autosuggestions zsh-syntax-highlighting
 paneru install && paneru start
 
 # ani-cli
@@ -20,6 +20,6 @@ brew install --formula protobuf swift-protobuf xcodegen
 # paperWM
 # brew install --formula busted lua-language-server
 
-brew install --cask anki calibre darrylmorley/whatcable/whatcable font-atkinson-hyperlegible-next font-atkinson-hyperlegible-mono font-maple-mono-nf-cn font-symbols-only-nerd-font homerow iina knockknock modrinth mos@beta osu soulver syncthing transmission virtualbuddy waterfox zotero
+brew install --cask anki calibre darrylmorley/whatcable/whatcable font-atkinson-hyperlegible-next font-atkinson-hyperlegible-mono font-maple-mono-nf-cn font-symbols-only-nerd-font homerow iina knockknock modrinth mos@beta osu soulver syncthing transmission virtualbuddy waterfox xcodes-app zotero
 
 # Sikarugir-App/sikarugir/sikarugir

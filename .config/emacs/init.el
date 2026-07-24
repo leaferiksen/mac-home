@@ -128,7 +128,7 @@
     (define-key key-translation-map (kbd (concat "s-" key)) (kbd (concat "C-M-" key)))))
 
 (use-package window
-  ;; :hook (emacs-startup . almost-maximize-frame)
+  :hook (emacs-startup . almost-maximize-frame)
   :bind
   ;; focus follows splits
   ("C-x 2" . split-and-follow-horizontally)
@@ -320,13 +320,15 @@
 (use-package agent-shell
   :ensure t
   :hook (agent-shell-mode . completion-preview-mode)
-  :bind (:prefix "C-c a" :prefix-map my-agents ("a" . agent-shell) ("o" . agent-shell-opencode-start-agent)))
+  :bind ("C-c c" . agent-shell-new-temp-shell)
+  :custom (agent-shell-preferred-agent-config '(auto . opencode))
+  :init
+  (with-eval-after-load 'project
+    (define-key project-prefix-map (kbd "a") #'agent-shell)))
 
 (use-package anglish
   :ensure t
-  :vc (:url "git@github.com:leaferiksen/anglish.el.git")
-  ;; :hook (markdown-ts-mode md-ts-mode)
-  )
+  :vc (:url "git@github.com:leaferiksen/anglish.el.git"))
 
 (use-package apheleia
   :ensure t
@@ -343,6 +345,19 @@
   (csv-align-padding 2)
   (csv-align-max-width 72))
 
+(use-package devil
+  :ensure t
+  :demand t
+  ;; https://www.reddit.com/r/emacs/comments/1jgnw8g/devil_mode_and_whichkey
+  :vc (:url "https://github.com/fbrosda/devil" :branch "dev" :rev :newest)
+  :custom
+  (devil-exit-key ".")
+  (devil-all-keys-repeatable t)
+  (devil-highlight-repeatable t)
+  (devil-repeatable-keys '(("%k p" "%k n" "%k b" "%k f" "%k a" "%k e") ("%k m n" "%k m p") ("%k m b" "%k m f" "%k m a" "%k m e") ("%k m m f" "%k m m b" "%k m m a" "%k m m e" "%k m m n" "%k m m p" "%k m m u" "%k m m d")))
+  :bind ([remap describe-key] . devil-describe-key)
+  :config (global-devil-mode))
+
 (use-package dwim-shell-command
   :ensure t
   :demand
@@ -352,6 +367,8 @@
   (:prefix "C-c p" :prefix-map dwim-print ("m" . dwim-file-to-mla-pdf) ("g" . dwim-file-to-generic-pdf) ("p" . dwim-md-to-pptx))
   (:map dired-mode-map ([remap dired-do-async-shell-command] . dwim-shell-command) ([remap dired-do-shell-command] . dwim-shell-command) ([remap dired-smart-shell-command] . dwim-shell-command) ("e" . dwim-shell-commands-macos-open-with) ("i" . dwim-file-mediainfo) ("x" . dwim-export-to))
   :config
+  (with-eval-after-load 'dwim-shell-commands
+    (add-to-list 'dwim-shell-commands-git-clone-dirs "~/Git"))
   (defun dwim-file-mediainfo ()
     "Run mediainfo on the current buffer's file or marked dired files."
     (interactive)
@@ -512,33 +529,17 @@
   (obsidian-cli-note-extensions '("md" "tsv"))
   (obsidian-cli-rename-on-save t))
 
-(use-package reader
-  :ensure t
-  :vc (:url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
-  :config
-  (defun fix-reader ()
-    "Recompile Reader Libraries"
-    (interactive)
-    (let ((default-directory "~/.config/emacs/elpa/reader/"))
-      (shell-command "make clean all"))))
-
 (use-package spacious-padding
   :ensure t
   :config (spacious-padding-mode))
 
-(use-package swift-ts-mode
+(use-package swift-mode
   :ensure t
   :if (memq window-system '(ns))
   :mode "\\.swift\\'"
-  :hook (swift-ts-mode . eglot-ensure)
+  :hook (swift-mode . eglot-ensure)
   :bind (:prefix "C-c x" :prefix-map xcode ("b" . xcode-build) ("r" . xcode-run) ("t" . xcode-test))
   :config
-  ;; https://github.com/alex-pinkus/tree-sitter-swift#where-is-your-parserc
-  ;; https://github.com/alex-pinkus/tree-sitter-swift/actions/workflows/parser-src.yml
-  (add-to-list 'treesit-language-source-alist '(swift "/Users/leaf/.config/emacs/tree-sitter/tree-sitter-swift" nil "."))
-  (with-eval-after-load 'apheleia
-    (add-to-list 'apheleia-mode-alist '(swift-ts-mode . swift-format))
-    (add-to-list 'apheleia-formatters '(swift-format "xcrun" "swift-format" (buffer-file-name))))
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs '(swift-ts-mode . ("xcrun" "sourcekit-lsp"))))
   ;; https://danielde.dev/blog/emacs-for-swift-development

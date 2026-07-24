@@ -41,6 +41,31 @@
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 
+(use-package swift-ts-mode
+  :ensure t
+  :if (memq window-system '(ns))
+  :mode "\\.swift\\'"
+  :hook (swift-mode . eglot-ensure)
+  :bind (:prefix "C-c x" :prefix-map xcode ("b" . xcode-build) ("r" . xcode-run) ("t" . xcode-test))
+  :config
+  ;; https://github.com/alex-pinkus/tree-sitter-swift#where-is-your-parserc
+  ;; https://github.com/alex-pinkus/tree-sitter-swift/actions/workflows/parser-src.yml
+  (add-to-list 'treesit-language-source-alist '(swift "/Users/leaf/.config/emacs/tree-sitter/tree-sitter-swift" nil "."))
+  (with-eval-after-load 'apheleia
+    (add-to-list 'apheleia-mode-alist '(swift-ts-mode . swift-format))
+    (add-to-list 'apheleia-formatters '(swift-format "xcrun" "swift-format" (buffer-file-name)))))
+
+
+(use-package reader
+  :ensure t
+  :vc (:url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
+  :config
+  (defun fix-reader ()
+    "Recompile Reader Libraries"
+    (interactive)
+    (let ((default-directory "~/.config/emacs/elpa/reader/"))
+      (shell-command "make clean all"))))
+
 (use-package appine
   :ensure t
   :vc ( :url "git@github.com:chaoswork/appine.git")
@@ -128,6 +153,25 @@
 	    :rev :newest)
   :config
   (sidetabs-mode 1))
+
+
+(use-package auth-source
+  :custom (auth-sources "~/.authinfo"))
+
+(use-package epg-config
+  :custom (epg-pinentry-mode 'loopback))
+
+(use-package mastodon
+  :ensure t
+  ;; :hook ((mastodon-mode . visual-fill-column-mode)
+  ;; 	 (mastodon-toot-mode . visual-fill-column-mode))
+  :custom
+  (mastodon-instance-url "https://mastodon.social")
+  (mastodon-active-user "leaferiksen")
+  ;; (mastodon-auth-use-auth-source nil)
+  ;; (mastodon-tl--display-media-p nil)
+  ;; (mastodon-tl--highlight-current-toot t)
+  )
 
 (use-package treesit
   :config
@@ -241,31 +285,6 @@
   ;; Optional: Clear color cache when switching themes
   (add-hook 'after-load-theme-hook #'periphery--clear-color-cache))
 
-(use-package vterm
-  :bind
-  (:map vterm-mode-map
-	("C-q" . vterm-send-next-key)))
-(use-package epg-config
-  :custom (epg-pinentry-mode 'loopback))
-(use-package auth-source
-  :custom (auth-sources "~/.authinfo.gpg"))
-(setopt modus-themes-common-palette-overrides '((fringe unspecified) (bg-tab-bar bg-main) (bg-tab-current bg-active) (bg-tab-other bg-dim) (bg-line-number-inactive unspecified) (bg-line-number-active unspecified) (border-mode-line-active unspecified) (border-mode-line-inactive unspecified)))
-(use-package mastodon
-  :ensure t :defer t
-  :hook ((mastodon-mode . visual-fill-column-mode)
-	 (mastodon-toot-mode . visual-fill-column-mode))
-  :custom ((mastodon-instance-url "https://mastodon.social")
-	   (mastodon-active-user "leaferiksen")
-	   (mastodon-auth-use-auth-source nil)
-	   ;; (mastodon-tl--display-media-p nil)
-	   (mastodon-tl--highlight-current-toot t)))
-(use-package devil
-  :config
-  (global-devil-mode)
-  (add-to-list 'devil-repeatable-keys `("%k v"))
-  (add-to-list 'devil-repeatable-keys `("%k m v"))
-  (add-to-list 'devil-repeatable-keys `("%k m d"))
-  (add-to-list 'devil-repeatable-keys `("%k m m p" "%k m m n" "%k m m b" "%k m m f" "%k m m a" "%k m m e" "%k m m u" "%k m m d" "%k m m t")))
 (use-package devil
   :ensure t :vc (:url "https://github.com/susam/devil")
   :config

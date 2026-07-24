@@ -1,50 +1,41 @@
 {
 	"$schema": "https://opencode.ai/config.json",
-	"model": "ollama-tailnet/gemma4-128k",
+	"model": "ollama/gemma4:26b",
 	"permission": {
 		"edit": "ask",
 		"bash": "ask",
 		"webfetch": "allow"
 	},
 	"provider": {
-		"ollama-localhost": {
-			"npm": "@ai-sdk/openai-compatible",
-			"name": "Ollama (localhost)",
-			"options": {
-				"baseURL": "http://localhost:11434/v1"
-			},
-			"models": {
-				"gemma4:12b-mlx-64k": {
-					"name": "Gemma 4 12b",
-					"limit": {
-						"context": 65536,
-						"output": 2048
-					}
-				}
-			}
-		},
-		"ollama-tailnet": {
+		"ollama": {
 			"npm": "@ai-sdk/openai-compatible",
 			"name": "Ollama (tailnet)",
 			"options": {
 				"baseURL": "http://100.112.227.27:11434/v1"
 			},
 			"models": {
-				"qwen36-48k": {
+				"qwen3.6:27b": {
 					"name": "Qwen 3.6 27b",
 					"limit": {
 						"context": 49152,
-						"output": 2048
+						"output": 8192
 					}
 				},
-				"gemma4-128k": {
+				"gemma4:26b": {
 					"name": "Gemma 4 26b A4B",
 					"limit": {
 						"context": 131072,
-						"output": 2048
+						"output": 8192
 					}
 				}
 			}
+		}
+	},
+	"mcp": {
+		"agent-tinyfish-ai": {
+			"type": "remote",
+			"url": "https://agent.tinyfish.ai/mcp",
+			"enabled": true
 		}
 	}
 }

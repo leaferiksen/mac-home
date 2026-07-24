@@ -1,7 +1,11 @@
+[restore]
+enabled = true
+startup_grace_ms = 2000
+missing_windows = "ignore"
+
 [options]
-focus_follows_mouse = false
-mouse_follows_focus = false
 preset_column_widths = [0.3, 0.5, 0.7, 1]
+virtual_workspace_animations = true
 sliver_width = 1
 
 [swipe.gesture]
@@ -21,6 +25,7 @@ window_grow = "alt - r"
 window_shrink = "alt - s"
 window_center = "alt - c"
 window_manage = "alt - m"
+window_togglefloatlayer = "alt - t"
 window_virtualnum_1 = "alt - 1"
 window_virtualnum_2 = "alt - 2"
 window_virtualnum_3 = "alt - 3"
@@ -32,6 +37,12 @@ window_virtualmovenum_3 = "alt + shift - 3"
 left = 10
 right = 10
 
+[decorations.active.border]
+enabled = true
+color = "#f3c4c4"
+width = 5.0
+radius = 14.0
+
 [windows]
 
 [windows.all]
@@ -42,6 +53,11 @@ horizontal_padding = 10
 [window.facetime]
 title = ".*"
 bundle_id = "com.apple.Facetime"
+floating = true
+
+[window.devicehub]
+title = ".*"
+bundle_id = "com.apple.dt.Devices"
 floating = true
 
 [window.emacs]

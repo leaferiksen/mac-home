@@ -7,6 +7,7 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export VISUAL="nano"
 export LESSHISTFILE=-
 export SHELL_SESSIONS_DISABLE=1
+export OLLAMA_HOST="100.112.227.27:11434"
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications"
 export PATH=$HOME/.docker/bin:/opt/homebrew/sbin:/opt/homebrew/bin:$PATH
 eval "$(brew shellenv)"
@@ -30,8 +31,8 @@ alias ani-cli='ani-cli -q 1080'
 alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
 alias fixapp='xattr -dr com.apple.quarantine'
 alias upbrew='brew update && brew upgrade --greedy'
-alias upskills='npx skills update --global'
-alias upnode='npx npm-check-updates --cooldown 7d && npm install'
+alias upskills='npx -y skills update --global'
+alias upnode='npx -y npm-check-updates --cooldown 7d && npm install'
 alias fixnode='brew unlink node && brew link --overwrite node'
 getid() {osascript -e "id of app \"$1\""}
 

@@ -24,34 +24,43 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/juliusbrussee/caveman.git",
       "skillPath": "skills/caveman/SKILL.md",
-      "skillFolderHash": "a22aa2a0a64d7d4b7b59bbddbdb865fedfb40d9c",
+      "skillFolderHash": "166040c027f7764d43df36abc5df0079bfc6394b",
       "installedAt": "2026-05-14T20:54:46.630Z",
-      "updatedAt": "2026-06-27T21:34:15.579Z"
+      "updatedAt": "2026-07-15T01:25:23.853Z"
     },
     "find-skills": {
       "source": "vercel-labs/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/skills.git",
       "skillPath": "skills/find-skills/SKILL.md",
-      "skillFolderHash": "eb6a23305aea6e340d14b9de3766e721f9f4861b",
+      "skillFolderHash": "76a98a285cb0434f3d39e1a873823556330e398b",
       "installedAt": "2026-05-14T20:54:52.336Z",
-      "updatedAt": "2026-06-27T21:34:16.512Z"
+      "updatedAt": "2026-07-15T01:25:24.972Z"
+    },
+    "use-tinyfish": {
+      "source": "tinyfish-io/tinyfish-cookbook",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/tinyfish-io/tinyfish-cookbook.git",
+      "skillPath": "skills/use-tinyfish/SKILL.md",
+      "skillFolderHash": "54ffc59f293935a8ffd400629030d3d60efd0861",
+      "installedAt": "2026-07-15T01:26:59.264Z",
+      "updatedAt": "2026-07-15T01:26:59.264Z"
     }
   },
   "lastSelectedAgents": [
     "amp",
     "antigravity",
+    "antigravity-cli",
     "cline",
     "codex",
     "cursor",
     "deepagents",
-    "dexto",
-    "firebender",
     "gemini-cli",
     "github-copilot",
-    "kimi-cli",
+    "kimi-code-cli",
     "opencode",
-    "warp"
+    "warp",
+    "zed"
   ],
   "dismissed": {
     "findSkillsPrompt": true

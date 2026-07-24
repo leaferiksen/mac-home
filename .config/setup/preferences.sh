@@ -19,13 +19,6 @@ defaults write -g "NSDocumentSaveNewDocumentsToCloud" -bool "false"
 defaults write -g "NSNavPanelExpandedStateForSaveMode" -bool "true"
 defaults write -g "NSNavPanelExpandedStateForSaveMode2" -bool "true"
 defaults write -g "PMPrintingExpandedStateForPrint" -bool "true"
-# accent colors
-# defaults write -g "NSTableViewDefaultSizeMode" -int "3"
-defaults write -g "AppleIconAppearanceTheme" -string "RegularAutomatic"
-defaults write -g "NSGlassDiffusionSetting" -bool "yes"
-defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
-defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
-defaults write com.apple.universalaccess "differentiateWithoutColor" -bool "true"
 defaults write com.apple.universalaccess "mouseDriverCursorSize" -float "1.5"
 defaults write com.apple.universalaccess "showWindowTitlebarIcons" -bool "true"
 # defaults write com.apple.universalaccess "stickyKey" -bool "true"
@@ -196,6 +189,12 @@ defaults write app.zen-browser.zen "DisableAppUpdate" -bool "true"
 #####################
 # Disabled features #
 #####################
+# accent colors
+# defaults write -g "NSTableViewDefaultSizeMode" -int "3"
+# defaults write -g "AppleIconAppearanceTheme" -string "RegularAutomatic"
+# defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
+# defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
+# defaults write com.apple.universalaccess "differentiateWithoutColor" -bool "true"
 # keyboard navigation
 # defaults write -g "AppleKeyboardUIMode" -int "2"
 # defaults write com.apple.Accessibility "ReduceMotionEnabled" -int "1"
