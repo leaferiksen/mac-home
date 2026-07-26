@@ -24,7 +24,6 @@
 (use-package emacs
   :hook
   (emacs-startup . server-start)
-  (emacs-startup . remap-all-ts-modes)
   :custom
   (auto-insert-directory "~/.config/emacs/templates/")
   (auto-insert-query nil)
@@ -54,6 +53,8 @@
   (sentence-end-double-space nil)
   (shr-fill-text nil)
   (shr-inhibit-images t)
+  (treesit-auto-install-grammar 'always)
+  (treesit-enabled-modes t)
   (use-dialog-box nil)
   (use-package-vc-prefer-newest t)
   (user-full-name "Leaf Eriksen")
@@ -62,13 +63,6 @@
   (word-wrap-by-category t)
   :config
   (setenv "GIT_EDITOR" "emacsclient")
-  (defun remap-all-ts-modes ()
-    "Remap all available tree-sitter modes to their standard counterparts."
-    (interactive)
-    (dolist (ts-mode (apropos-internal "-ts-mode$" #'commandp))
-      (when-let ((old-mode (intern-soft (concat (string-remove-suffix "-ts-mode" (symbol-name ts-mode)) "-mode")))
-                 ((fboundp old-mode)))
-        (add-to-list 'major-mode-remap-alist (cons old-mode ts-mode)))))
   (defun async-shell-command-no-window (command)
     (interactive)
     (let ((display-buffer-alist (list (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))))
@@ -141,7 +135,7 @@
   (defun almost-maximize-frame ()
     "Borderless maximise with margins for tiling"
     (interactive)
-    (add-to-list 'default-frame-alist '(undecorated-round . t))
+    ;; (add-to-list 'default-frame-alist '(undecorated-round . t))
     (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
   (defun split-and-follow-horizontally ()
     (interactive)
@@ -394,7 +388,8 @@
 (use-package elfeed
   :ensure t
   :bind ("C-c f" . elfeed)
-  :init (run-at-time nil "8 hours" #'elfeed-update))
+  ;; :init (run-at-time nil "8 hours" #'elfeed-update)
+  )
 
 (use-package elfeed-org
   :ensure t
@@ -444,21 +439,20 @@
 
 (use-package markdown-indent-mode
   :ensure t
-  :hook (md-ts-mode))
+  :hook (markdown-ts-mode))
 
-(use-package md-ts-mode
-  :ensure t
-  :mode ("\\.md\\'" . md-ts-mode)
-  :hook (md-ts-mode . eglot-ensure)
+(use-package markdown-ts-mode
+  :mode ("\\.md\\'" . markdown-ts-mode)
+  :hook (markdown-ts-mode . eglot-ensure)
   :bind
-  (:map md-ts-mode-map ("s-<return>" . markdown-follow-any-link))
+  (:map markdown-ts-mode-map ("s-<return>" . markdown-follow-any-link))
   (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today) ("m" . markdown-more-emphasis) ("l" . markdown-less-emphasis))
   :custom
   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
   (eglot-workspace-configuration '(:harper-ls (:dialect "American" :linters (:LongSentences :json-false :AvoidCurses :json-false))))
   :config
   (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs '(md-ts-mode . ("harper-ls" "--stdio")))
+    (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio")))
     (add-hook
      'eglot-managed-mode-hook
      (lambda ()
@@ -589,7 +583,7 @@
 (use-package visual-fill-column
   :ensure t
   :hook
-  (md-ts-mode org-mode)
+  (markdown-ts-mode org-mode)
   (visual-fill-column-mode . (lambda () (face-remap-add-relative 'default :height 180)))
   :custom
   (visual-fill-column-center-text t)

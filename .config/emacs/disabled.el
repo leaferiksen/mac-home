@@ -40,7 +40,14 @@
 (add-to-list 'exec-path "/opt/homebrew/bin")
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
-
+(emacs-startup . remap-all-ts-modes)
+(defun remap-all-ts-modes ()
+    "Remap all available tree-sitter modes to their standard counterparts."
+    (interactive)
+    (dolist (ts-mode (apropos-internal "-ts-mode$" #'commandp))
+      (when-let ((old-mode (intern-soft (concat (string-remove-suffix "-ts-mode" (symbol-name ts-mode)) "-mode")))
+                 ((fboundp old-mode)))
+        (add-to-list 'major-mode-remap-alist (cons old-mode ts-mode)))))
 (use-package swift-ts-mode
   :ensure t
   :if (memq window-system '(ns))
