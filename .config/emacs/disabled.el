@@ -8,6 +8,14 @@
 
 ;;; Code:
 
+  :hook
+  (emacs-startup . server-start)
+
+(custom-set-faces
+  '(default ((t (:family "Maple Mono NF CN" :height 140))))
+  '(fixed-pitch ((t (:inherit default))))
+  '(variable-pitch ((t (:family "Atkinson Hyperlegible Next" :height 180)))))
+
 (setq package-vc-allow-build-commands t)
 (add-to-list 'default-frame-alist '(undecorated . t))
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
@@ -21,6 +29,53 @@
 ("M-c" . ns-copy-including-secondary)
 ("M-v" . yank)
 ("M-o" . execute-extended-command)
+
+(use-package exec-path-from-shell
+  :ensure t
+  :if (memq window-system '(ns x))
+  :config (exec-path-from-shell-initialize))
+
+    (:map markdown-ts-mode-map ("s-<return>" . markdown-follow-any-link))
+    (defun markdown-follow-any-link ()
+      (interactive)
+      (cond
+       ((thing-at-point-looking-at "\\[\\[\\([^]]+\\)\\]\\]")
+	(when-let* ((path (match-string 1))) ;; * might fail
+          (find-file
+           (if (file-name-extension path)
+               path
+             (concat path ".md")))))
+       ((thing-at-point-looking-at "\\[\\([^]]+\\)\\](\\([^)]+\\))")
+	(browse-url (match-string 2)))
+       (t
+	(message "No link found at point."))))
+    (defun markdown--bounds ()
+      (if (use-region-p)
+          (cons (region-beginning) (region-end))
+	(bounds-of-thing-at-point 'word)))
+    :bind (:prefix "C-c m" :prefix-map markdown-actions ("m" . markdown-more-emphasis) ("l" . markdown-less-emphasis))
+    (defun markdown-more-emphasis ()
+      (interactive)
+      (when-let* ((bounds (markdown--bounds))
+                  (beg (car bounds))
+                  (end (cdr bounds)))
+	(save-excursion
+          (goto-char end)
+          (insert "*")
+          (goto-char beg)
+          (insert "*"))))
+    (defun markdown-less-emphasis ()
+      (interactive)
+      (when-let* ((bounds (markdown--bounds))
+                  (beg (car bounds))
+                  (end (cdr bounds)))
+	(save-excursion
+          (when (and (equal "*" (buffer-substring-no-properties (- beg 1) beg)) (equal "*" (buffer-substring-no-properties end (+ end 1))))
+            (delete-region end (+ end 1))
+            (delete-region (- beg 1) beg)))))
+
+(use-package mines
+  :ensure t)
 
 (advice-add 'completing-read :around
             (lambda (orig prompt &rest args)
@@ -48,6 +103,7 @@
       (when-let ((old-mode (intern-soft (concat (string-remove-suffix "-ts-mode" (symbol-name ts-mode)) "-mode")))
                  ((fboundp old-mode)))
         (add-to-list 'major-mode-remap-alist (cons old-mode ts-mode)))))
+
 (use-package swift-ts-mode
   :ensure t
   :if (memq window-system '(ns))
@@ -61,7 +117,6 @@
   (with-eval-after-load 'apheleia
     (add-to-list 'apheleia-mode-alist '(swift-ts-mode . swift-format))
     (add-to-list 'apheleia-formatters '(swift-format "xcrun" "swift-format" (buffer-file-name)))))
-
 
 (use-package reader
   :ensure t
@@ -291,6 +346,19 @@
   :config
   ;; Optional: Clear color cache when switching themes
   (add-hook 'after-load-theme-hook #'periphery--clear-color-cache))
+
+(use-package devil
+  :ensure t
+  :demand t
+  ;; https://www.reddit.com/r/emacs/comments/1jgnw8g/devil_mode_and_whichkey
+  :vc (:url "https://github.com/fbrosda/devil" :branch "dev" :rev :newest)
+  :custom
+  (devil-exit-key ".")
+  (devil-all-keys-repeatable t)
+  (devil-highlight-repeatable t)
+  (devil-repeatable-keys '(("%k p" "%k n" "%k b" "%k f" "%k a" "%k e") ("%k m n" "%k m p") ("%k m b" "%k m f" "%k m a" "%k m e") ("%k m m f" "%k m m b" "%k m m a" "%k m m e" "%k m m n" "%k m m p" "%k m m u" "%k m m d")))
+  :bind ([remap describe-key] . devil-describe-key)
+  :config (global-devil-mode))
 
 (use-package devil
   :ensure t :vc (:url "https://github.com/susam/devil")

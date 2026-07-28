@@ -1,20 +1,25 @@
-{:main [{:des "Toggle dark mode with 􀆪D"
+{:applications {:emacs ["^org\\.gnu\\.Emacs$"]}
+ :main [{:des "Toggle dark mode with 􀆪D"
  	 :rules [[:!Ff "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
 	{:des "Colemak Curl/Angle/Extra Wide"
-	 :rules [;; left hand
+	 :rules [;; global emacs
+		 [:!TT##comma :return_or_enter]  [:!TT##semicolon :tab]
+		 ;; left hand
 		 [:##tab :q]         [:##q :w]  [:##w :f]  [:##e :p]  [:##r :g]
 		 [:##caps_lock :a]   [:##a :r]  [:##s :s]  [:##d :t]  [:##f :d]
 		 [:##left_shift :z]  [:##z :x]  [:##x :c]  [:##c :v]  [:##v :b]
 		 ;; right hand
-		 [:##u :j]  [:##i :l]      [:##o :u]           [:##p :y]           [:##open_bracket :semicolon]  [:##close_bracket :quote]
-		 [:##j :h]  [:##k :n]      [:##l :e]           [:##semicolon :i]   [:##quote :o]
+		 [:##u :j]  [:##i :l]      [:##o :u]           [:##p :y]
+		 [:##j :h]  [:##k :n]      [:##l :e]           [:##semicolon :i]   [:##quote :o]            [:##return_or_enter :right_control]
 		 [:##m :k]  [:##comma :m]  [:##period :comma]  [:##slash :period]  [:##right_shift :slash]
 		 ;; center
-		 [:##t :vk_none]       [:##y :vk_none]
-		 [:##g :f20]           [:##h :f19]
-		 [:##b :open_bracket]  [:##n :close_bracket]
+		 [:##t :vk_none]  [:##y :vk_none]
+		 [:##g :vk_none]  [:##h :vk_none]
+		 [:##b :vk_none]  [:##n :vk_none]
 		 ;; thumbs
-		 [:##spacebar :left_shift]  [:##right_command :spacebar]  [:##right_option :tab]]}]}
+		 [:##spacebar :left_shift]  [:##right_command :spacebar]  [:##right_option :f19]
+		 ;; Alternates
+		 [:#CTSFQWRPopen_bracket :semicolon]  [:!O##open_bracket :open_bracket]  [:#CTSFQWRPclose_bracket :quote]  [:!O##close_bracket :close_bracket]]}]}
 
 ;; the rule [:!Ca :!T1] means from command a to control 1
 ;; :!Ca is keycode :a and prefix a with !C

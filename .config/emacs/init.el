@@ -1,11 +1,11 @@
 ;;; init.el --- Emacs Initialization -*- lexical-binding: t; -*-
 
-;; Author: Leaf Eriksen
+;; Author: Leaf Eriksen <leaferiksen@gmail.com>
 
 ;;; Commentary:
 
-;; Top level function sort order
-;; first by load time, second by alphabet
+;; Top level functions are sorted primarily by priority,
+;; secondarily by alphabet.
 
 ;; `use-package' :key sort order
 ;; what to install (:ensure :vc)
@@ -19,8 +19,6 @@
 
 ;; Internal features and hooks
 
-(require 'package)
-
 (use-package emacs
   :hook
   (emacs-startup . server-start)
@@ -30,17 +28,17 @@
   (auto-save-default nil)
   (backward-delete-char-untabify-method nil)
   (column-number-mode t)
-  (completion-auto-help nil)
-  (completion-ignore-case t)
-  (completions-sort 'historical)
   (cursor-type 'bar)
-  (custom-file (make-temp-file "~/.cache/emacs/custom"))
+  (custom-file (null-device)) ; or (make-temp-file "~/.cache/emacs/custom")
   (delete-selection-mode t)
   (disabled-command-function nil)
+  (eldoc-help-at-pt t)
+  (eldoc-echo-area-prefer-doc-buffer)
   (eldoc-echo-area-use-multiline-p t)
   (electric-pair-mode t)
   (find-file-visit-truename t)
   (gc-cons-threshold 100000000)
+  (ibuffer-human-readable-size t)
   (inhibit-startup-screen t)
   (isearch-lazy-count t)
   (large-file-warning-threshold 1000000000)
@@ -53,12 +51,17 @@
   (sentence-end-double-space nil)
   (shr-fill-text nil)
   (shr-inhibit-images t)
+  (speedbar-window-default-width 20)
+  (speedbar-window-max-width 20)
   (treesit-auto-install-grammar 'always)
   (treesit-enabled-modes t)
   (use-dialog-box nil)
   (use-package-vc-prefer-newest t)
   (user-full-name "Leaf Eriksen")
   (user-mail-address "leaferiksen@gmail.com")
+  (vc-auto-revert-mode t)
+  (vc-allow-rewriting-published-history t)
+  (vc-dir-auto-hide-up-to-date 'revert)
   (which-key-mode t)
   (word-wrap-by-category t)
   :config
@@ -74,10 +77,6 @@
       (if (use-region-p)
           (fill-region (region-beginning) (region-end) nil)
         (fill-paragraph nil))))
-  (defun vc-git-amend ()
-    (interactive)
-    (vc-checkin nil 'git)
-    (vc-git-log-edit-toggle-amend))
   (add-to-list 'imagemagick-enabled-types 'JXL)
   (defalias 'yes-or-no-p 'y-or-n-p)
   ;; Enable or disable global minor modes
@@ -112,7 +111,7 @@
   :custom
   (delete-by-moving-to-trash t)
   (mac-function-modifier 'hyper)
-  (mac-option-modifier 'none)
+  ;; (mac-option-modifier 'none)
   :config (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display")
   ;; Transpose unwanted s- bindings to project, bookmark, and treesit navigation
   (define-key key-translation-map (kbd "s-g") (kbd "M-g"))
@@ -135,7 +134,7 @@
   (defun almost-maximize-frame ()
     "Borderless maximise with margins for tiling"
     (interactive)
-    ;; (add-to-list 'default-frame-alist '(undecorated-round . t))
+    (add-to-list 'default-frame-alist '(undecorated-round . t))
     (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
   (defun split-and-follow-horizontally ()
     (interactive)
@@ -154,15 +153,14 @@
 
 (use-package modus-themes
   :hook (ns-system-appearance-change-functions . auto-theme)
-  :custom-face
-  (default ((t (:family "Maple Mono NF CN" :height 140))))
-  (fixed-pitch ((t (:inherit default))))
-  (variable-pitch ((t (:family "Atkinson Hyperlegible Next" :height 180))))
   :custom
   (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
   (modus-themes-italic-constructs t)
   (modus-themes-mixed-fonts t)
   :init
+  (set-face-attribute 'default nil :family "Maple Mono NF CN" :height 140)
+  (set-face-attribute 'fixed-pitch nil :inherit 'default)
+  (set-face-attribute 'variable-pitch nil :family "Atkinson Hyperlegible Next" :height 180)
   (defun auto-theme (appearance)
     "Load theme, taking current system APPEARANCE into consideration."
     (mapc #'disable-theme custom-enabled-themes)
@@ -172,7 +170,13 @@
 
 (use-package completion-preview
   :hook (prog-mode html-mode)
-  :bind (:map completion-preview-active-mode ("M-]" . completion-preview-next-candidate) ("M-[" . completion-preview-prev-candidate)))
+  :bind (:map completion-preview-active-mode ("M-]" . completion-preview-next-candidate) ("M-[" . completion-preview-prev-candidate))
+  :custom
+  (completion-auto-help nil)
+  (completion-eager-update t)
+  (completion-eager-display 'auto)
+  (completion-ignore-case t)
+  (completions-sort 'historical))
 
 (use-package dired
   :after ls-lisp
@@ -213,7 +217,7 @@
   (css-ts-mode . eglot-ensure)
   (js-ts-mode . eglot-ensure)
   :bind
-  (:prefix "C-c e" :prefix-map eglot-actions ("r" . eglot-rename) ("a" . eglot-code-actions) ("o" . eglot-code-action-organize-imports) ("d" . eldoc) ("f" . eglot-format))
+  (:prefix "C-c c" :prefix-map eglot-actions ("r" . eglot-rename) ("a" . eglot-code-actions) ("o" . eglot-code-action-organize-imports) ("d" . eldoc) ("f" . eglot-format))
   (:map eglot-mode-map ("H-<mouse-1>" . eglot-code-actions-at-mouse))
   :custom
   (eglot-code-action-indicator "*")
@@ -281,8 +285,8 @@
     (watch-clipboard-xwidget-webkit-browse-url))
   (defun watch-clipboard-xwidget-webkit-browse-url ()
     "Watch for clipboard data and open in Xwidgets."
-    (if-let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING))
-             ((not (string-empty-p current-clip))))
+    (if-let* ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)) ;; * may break
+              ((not (string-empty-p current-clip))))
         (progn
           (split-and-follow-horizontally)
           (xwidget-webkit-browse-url current-clip)
@@ -309,13 +313,15 @@
 
 ;;; External packages
 
+(require 'package)
+
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 (use-package agent-shell
   :ensure t
   :hook (agent-shell-mode . completion-preview-mode)
-  :bind ("C-c c" . agent-shell-new-temp-shell)
-  :custom (agent-shell-preferred-agent-config '(auto . opencode))
+  :bind ("C-c a" . agent-shell-new-temp-shell)
+  :custom (agent-shell-preferred-agent-config 'opencode)
   :init
   (with-eval-after-load 'project
     (define-key project-prefix-map (kbd "a") #'agent-shell)))
@@ -338,19 +344,6 @@
   :custom
   (csv-align-padding 2)
   (csv-align-max-width 72))
-
-(use-package devil
-  :ensure t
-  :demand t
-  ;; https://www.reddit.com/r/emacs/comments/1jgnw8g/devil_mode_and_whichkey
-  :vc (:url "https://github.com/fbrosda/devil" :branch "dev" :rev :newest)
-  :custom
-  (devil-exit-key ".")
-  (devil-all-keys-repeatable t)
-  (devil-highlight-repeatable t)
-  (devil-repeatable-keys '(("%k p" "%k n" "%k b" "%k f" "%k a" "%k e") ("%k m n" "%k m p") ("%k m b" "%k m f" "%k m a" "%k m e") ("%k m m f" "%k m m b" "%k m m a" "%k m m e" "%k m m n" "%k m m p" "%k m m u" "%k m m d")))
-  :bind ([remap describe-key] . devil-describe-key)
-  :config (global-devil-mode))
 
 (use-package dwim-shell-command
   :ensure t
@@ -380,16 +373,14 @@
   (defun dwim-md-to-pptx ()
     "Convert md files to pptx."
     (interactive)
-    (if-let ((files (dwim-shell-command--files))
-             ((seq-every-p (apply-partially #'string-suffix-p ".md") files)))
+    (if-let* ((files (dwim-shell-command--files)) ;; * may break
+              ((seq-every-p (apply-partially #'string-suffix-p ".md") files)))
         (dwim-shell-command-on-marked-files "Converting md to pptx" "npx @marp-team/marp-cli@latest '<<f>>' --pptx")
       (user-error "Selection contains non-markdown files!"))))
 
 (use-package elfeed
   :ensure t
-  :bind ("C-c f" . elfeed)
-  ;; :init (run-at-time nil "8 hours" #'elfeed-update)
-  )
+  :bind ("C-c f" . elfeed))
 
 (use-package elfeed-org
   :ensure t
@@ -407,13 +398,6 @@
   :demand
   :hook (emacs-lisp-mode . elisp-autofmt-mode)
   :bind (:prefix "C-c e" :prefix-map elisp-autofmt ("b" . elisp-autofmt-buffer) ("r" . elisp-autofmt-region-dwim)))
-
-(use-package exec-path-from-shell
-  :ensure t
-  :if (memq window-system '(ns x))
-  :config
-  (exec-path-from-shell-initialize)
-  (setenv "CC" nil))
 
 (use-package ghostel
   :ensure t
@@ -444,13 +428,22 @@
 (use-package markdown-ts-mode
   :mode ("\\.md\\'" . markdown-ts-mode)
   :hook (markdown-ts-mode . eglot-ensure)
-  :bind
-  (:map markdown-ts-mode-map ("s-<return>" . markdown-follow-any-link))
-  (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today) ("m" . markdown-more-emphasis) ("l" . markdown-less-emphasis))
+  :bind (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today))
   :custom
   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
   (eglot-workspace-configuration '(:harper-ls (:dialect "American" :linters (:LongSentences :json-false :AvoidCurses :json-false))))
   :config
+  (advice-add
+   'markdown-ts--list-marker-width
+   :around
+    (lambda (&rest _)
+      "Always use 4-space increments for list promote/demote."
+      4))
+  (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
+  (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
+    (if (and (not (string-prefix-p "#" url)) (not (string-match-p "\\`[a-z]+:" url)) (not (string-match-p "mailto:" url)) (not (string-match-p "\\.[a-zA-Z]+" url)))
+        (funcall orig-fn beg end (concat url ".md"))
+      (funcall orig-fn beg end url)))
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio")))
     (add-hook
@@ -466,46 +459,7 @@
   (defun markdown-h2-today ()
     "Insert an atx level 2 heading with today's date in iso format."
     (interactive)
-    (insert "## " (format-time-string "%Y-%m-%d") "\n"))
-  (defun markdown-follow-any-link ()
-    (interactive)
-    (cond
-     ((thing-at-point-looking-at "\\[\\[\\([^]]+\\)\\]\\]")
-      (when-let ((path (match-string 1)))
-        (find-file
-         (if (file-name-extension path)
-             path
-           (concat path ".md")))))
-     ((thing-at-point-looking-at "\\[\\([^]]+\\)\\](\\([^)]+\\))")
-      (browse-url (match-string 2)))
-     (t
-      (message "No link found at point."))))
-  (defun markdown--bounds ()
-    (if (use-region-p)
-        (cons (region-beginning) (region-end))
-      (bounds-of-thing-at-point 'word)))
-  (defun markdown-more-emphasis ()
-    (interactive)
-    (when-let* ((bounds (markdown--bounds))
-                (beg (car bounds))
-                (end (cdr bounds)))
-      (save-excursion
-        (goto-char end)
-        (insert "*")
-        (goto-char beg)
-        (insert "*"))))
-  (defun markdown-less-emphasis ()
-    (interactive)
-    (when-let* ((bounds (markdown--bounds))
-                (beg (car bounds))
-                (end (cdr bounds)))
-      (save-excursion
-        (when (and (equal "*" (buffer-substring-no-properties (- beg 1) beg)) (equal "*" (buffer-substring-no-properties end (+ end 1))))
-          (delete-region end (+ end 1))
-          (delete-region (- beg 1) beg))))))
-
-(use-package mines
-  :ensure t)
+    (insert "## " (format-time-string "%Y-%m-%d") "\n")))
 
 (use-package nerd-icons-dired
   :ensure t
@@ -514,7 +468,7 @@
 (use-package obsidian-cli
   :ensure t
   :vc (:url "git@github.com:leaferiksen/obsidian-cli.el.git")
-  :hook (markdown-ts-mode md-ts-mode)
+  :hook (markdown-ts-mode)
   :bind
   ("C-c o" . obsidian-cli-open-note)
   ("C-c j" . obsidian-cli-open-daily-note)

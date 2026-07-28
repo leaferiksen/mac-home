@@ -13,10 +13,6 @@ export PATH=$HOME/.docker/bin:/opt/homebrew/sbin:/opt/homebrew/bin:$PATH
 eval "$(brew shellenv)"
 . "$HOME/.cargo/env"
 
-# disable gcc to fix xcode clang pipelines
-unset CC
-unset CC
-
 # named directories
 export ic="/Users/leaf/Library/Mobile Documents/com~apple~CloudDocs/"
 export sf="/Users/leaf/Documents/College/"
