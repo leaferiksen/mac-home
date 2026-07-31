@@ -1,41 +1,55 @@
 {
-	"$schema": "https://opencode.ai/config.json",
-	"model": "ollama/qwen3.6:27b",
-	"permission": {
-		"edit": "ask",
-		"bash": "ask",
-		"webfetch": "allow"
-	},
-	"provider": {
-		"ollama": {
-			"npm": "@ai-sdk/openai-compatible",
-			"name": "Ollama (tailnet)",
-			"options": {
-				"baseURL": "http://100.112.227.27:11434/v1"
-			},
-			"models": {
-				"qwen3.6:27b": {
-					"name": "Qwen 3.6 27b",
-					"limit": {
-						"context": 49152,
-						"output": 8192
-					}
-				},
-				"gemma4:26b": {
-					"name": "Gemma 4 26b A4B",
-					"limit": {
-						"context": 131072,
-						"output": 8192
-					}
-				}
-			}
-		}
-	},
-	"mcp": {
-		"agent-tinyfish-ai": {
-			"type": "remote",
-			"url": "https://agent.tinyfish.ai/mcp",
-			"enabled": true
-		}
-	}
+    "$schema": "https://opencode.ai/config.json",
+    "model": "ollama/gemma4:26b",
+    "permission": {
+        "*": "ask",
+        "read": "allow",
+        "grep": "allow",
+        "glob": "allow",
+        "webfetch": "allow",
+        "question": "allow",
+        "todowrite": "allow",
+        "skill": "allow"
+    },
+    "provider": {
+        "ollama": {
+            "npm": "@ai-sdk/openai-compatible",
+            "name": "Ollama (tailnet)",
+            "options": {
+                "baseURL": "http://100.112.227.27:11434/v1"
+            },
+            "models": {
+                "qwen3.6:27b": {
+                    "name": "Qwen 3.6 27b",
+                    "limit": {
+                        "context": 49152,
+                        "output": 16384
+                    }
+                },
+                "gemma4:26b": {
+                    "name": "Gemma 4 26b A4B",
+                    "limit": {
+                        "context": 131072,
+                        "output": 16384
+                    }
+                }
+            }
+        }
+    },
+    "mcp": {
+        "agent-tinyfish-ai": {
+            "type": "remote",
+            "url": "https://agent.tinyfish.ai/mcp",
+            "enabled": true
+        },
+        "sosumi": {
+            "type": "remote",
+            "url": "https://sosumi.ai/mcp"
+        },
+        "safari-mcp": {
+            "type": "local",
+            "command": ["/usr/bin/safaridriver", "--mcp"]
+        }
+    },
+    "plugin": ["opencode-bash-guard-plugin"]
 }

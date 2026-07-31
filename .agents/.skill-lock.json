@@ -1,15 +1,6 @@
 {
   "version": 3,
   "skills": {
-    "sosumi": {
-      "source": "nshipster/sosumi.ai",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/nshipster/sosumi.ai.git",
-      "skillPath": "public/SKILL.md",
-      "skillFolderHash": "666dce830c46912779ca659379fb22c3e3e689d9",
-      "installedAt": "2026-04-11T00:18:42.916Z",
-      "updatedAt": "2026-06-27T21:34:14.359Z"
-    },
     "obsidian-cli": {
       "source": "kepano/obsidian-skills",
       "sourceType": "github",
@@ -18,15 +9,6 @@
       "skillFolderHash": "96254a554e480359de7b685571876f2e7f9ba57d",
       "installedAt": "2026-05-14T20:48:52.760Z",
       "updatedAt": "2026-05-14T20:48:52.760Z"
-    },
-    "caveman": {
-      "source": "juliusbrussee/caveman",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/juliusbrussee/caveman.git",
-      "skillPath": "skills/caveman/SKILL.md",
-      "skillFolderHash": "166040c027f7764d43df36abc5df0079bfc6394b",
-      "installedAt": "2026-05-14T20:54:46.630Z",
-      "updatedAt": "2026-07-15T01:25:23.853Z"
     },
     "find-skills": {
       "source": "vercel-labs/skills",

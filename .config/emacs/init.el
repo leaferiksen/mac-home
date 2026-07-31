@@ -20,8 +20,7 @@
 ;; Internal features and hooks
 
 (use-package emacs
-  :hook
-  (emacs-startup . server-start)
+  :hook (emacs-startup . server-start)
   :custom
   (auto-insert-directory "~/.config/emacs/templates/")
   (auto-insert-query nil)
@@ -29,7 +28,7 @@
   (backward-delete-char-untabify-method nil)
   (column-number-mode t)
   (cursor-type 'bar)
-  (custom-file (null-device)) ; or (make-temp-file "~/.cache/emacs/custom")
+  (custom-file (make-temp-file "~/.cache/emacs/custom"))
   (delete-selection-mode t)
   (disabled-command-function nil)
   (eldoc-help-at-pt t)
@@ -57,6 +56,7 @@
   (treesit-enabled-modes t)
   (use-dialog-box nil)
   (use-package-vc-prefer-newest t)
+  (package-vc-register-as-project nil)
   (user-full-name "Leaf Eriksen")
   (user-mail-address "leaferiksen@gmail.com")
   (vc-auto-revert-mode t)
@@ -86,7 +86,6 @@
   (auto-save-visited-mode 1)
   (context-menu-mode 1)
   (delete-selection-mode 1)
-  (editorconfig-mode 1)
   (fido-vertical-mode 1)
   (global-hl-line-mode 1)
   (global-visual-line-mode 1)
@@ -134,7 +133,7 @@
   (defun almost-maximize-frame ()
     "Borderless maximise with margins for tiling"
     (interactive)
-    (add-to-list 'default-frame-alist '(undecorated-round . t))
+    ;; (add-to-list 'default-frame-alist '(undecorated-round . t))
     (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
   (defun split-and-follow-horizontally ()
     (interactive)
@@ -209,6 +208,10 @@
             (shell-command (format "trash %s" (shell-quote-argument dmg)))
             (revert-buffer)))
       (message "Installation failed: could not mount DMG or find .app bundle"))))
+
+(use-package editorconfig
+  :init (editorconfig-mode 1)
+  :config (add-to-list 'editorconfig-indentation-alist '(js-json-mode js-indent-level)))
 
 (use-package eglot
   :demand
@@ -321,10 +324,17 @@
   :ensure t
   :hook (agent-shell-mode . completion-preview-mode)
   :bind ("C-c a" . agent-shell-new-temp-shell)
-  :custom (agent-shell-preferred-agent-config 'opencode)
+  :custom (agent-shell-preferred-agent-config 'opencode))
+
+(use-package agent-shell-sidebar
+  :ensure t
+  ;; :after agent-shell
+  :vc (:url "https://github.com/cmacrae/agent-shell-sidebar")
+  :custom
+  (agent-shell-sidebar-default-config (agent-shell-opencode-make-agent-config))
   :init
   (with-eval-after-load 'project
-    (define-key project-prefix-map (kbd "a") #'agent-shell)))
+    (define-key project-prefix-map (kbd "a") #'agent-shell-sidebar-toggle)))
 
 (use-package anglish
   :ensure t
@@ -399,6 +409,11 @@
   :hook (emacs-lisp-mode . elisp-autofmt-mode)
   :bind (:prefix "C-c e" :prefix-map elisp-autofmt ("b" . elisp-autofmt-buffer) ("r" . elisp-autofmt-region-dwim)))
 
+(use-package exec-path-from-shell
+  :ensure t
+  :if (memq window-system '(ns x))
+  :config (exec-path-from-shell-initialize))
+
 (use-package ghostel
   :ensure t
   :bind ("C-c s" . ghostel))
@@ -436,9 +451,9 @@
   (advice-add
    'markdown-ts--list-marker-width
    :around
-    (lambda (&rest _)
-      "Always use 4-space increments for list promote/demote."
-      4))
+   (lambda (&rest _)
+     "Always use 4-space increments for list promote/demote."
+     4))
   (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
   (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
     (if (and (not (string-prefix-p "#" url)) (not (string-match-p "\\`[a-z]+:" url)) (not (string-match-p "mailto:" url)) (not (string-match-p "\\.[a-zA-Z]+" url)))

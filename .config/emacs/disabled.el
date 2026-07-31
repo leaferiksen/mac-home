@@ -30,11 +30,6 @@
 ("M-v" . yank)
 ("M-o" . execute-extended-command)
 
-(use-package exec-path-from-shell
-  :ensure t
-  :if (memq window-system '(ns x))
-  :config (exec-path-from-shell-initialize))
-
     (:map markdown-ts-mode-map ("s-<return>" . markdown-follow-any-link))
     (defun markdown-follow-any-link ()
       (interactive)
