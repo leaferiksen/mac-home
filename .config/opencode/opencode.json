@@ -44,11 +44,13 @@
         },
         "sosumi": {
             "type": "remote",
-            "url": "https://sosumi.ai/mcp"
+            "url": "https://sosumi.ai/mcp",
+            "enabled": true
         },
         "safari-mcp": {
             "type": "local",
-            "command": ["/usr/bin/safaridriver", "--mcp"]
+            "command": ["/usr/bin/safaridriver", "--mcp"],
+            "enabled": true
         }
     },
     "plugin": ["opencode-bash-guard-plugin"]

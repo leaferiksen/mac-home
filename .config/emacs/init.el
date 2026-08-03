@@ -220,7 +220,7 @@
   (css-ts-mode . eglot-ensure)
   (js-ts-mode . eglot-ensure)
   :bind
-  (:prefix "C-c c" :prefix-map eglot-actions ("r" . eglot-rename) ("a" . eglot-code-actions) ("o" . eglot-code-action-organize-imports) ("d" . eldoc) ("f" . eglot-format))
+  (:prefix "C-c a" :prefix-map eglot-actions ("r" . eglot-rename) ("a" . eglot-code-actions) ("o" . eglot-code-action-organize-imports) ("d" . eldoc) ("f" . eglot-format))
   (:map eglot-mode-map ("H-<mouse-1>" . eglot-code-actions-at-mouse))
   :custom
   (eglot-code-action-indicator "*")
@@ -323,7 +323,7 @@
 (use-package agent-shell
   :ensure t
   :hook (agent-shell-mode . completion-preview-mode)
-  :bind ("C-c a" . agent-shell-new-temp-shell)
+  :bind ("C-c c" . agent-shell-new-temp-shell)
   :custom (agent-shell-preferred-agent-config 'opencode))
 
 (use-package agent-shell-sidebar
@@ -390,7 +390,9 @@
 
 (use-package elfeed
   :ensure t
-  :bind ("C-c f" . elfeed))
+  :hook (elfeed-show-mode . visual-fill-column-mode)
+  :bind ("C-c f" . elfeed)
+  :custom (elfeed-search-filter "@6months"))
 
 (use-package elfeed-org
   :ensure t
@@ -398,8 +400,10 @@
 
 (use-package elfeed-webkit
   :ensure t
-  :commands (elfeed-webkit-enable)
-  :hook (elfeed-show-mode . elfeed-webkit-enable)
+  :demand ;; !
+  :hook (elfeed-webkit-mode . (lambda () (visual-fill-column-mode -1)))
+  :init (setq elfeed-webkit-auto-enable-tags '(webkit comics))
+  :config (elfeed-webkit-auto-toggle-by-tag)
   :bind (:map elfeed-show-mode-map ("w" . elfeed-webkit-toggle)))
 
 (use-package elisp-autofmt

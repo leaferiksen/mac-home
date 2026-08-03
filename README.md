@@ -16,16 +16,17 @@ defaults write com.apple.dock "persistent-apps" -array && killall Dock && spctl 
 ## Sync home with this repo
 
 open Terminal as user `leaf` and run
+
 ```bash
 xcode-select --install
-```
-```bash
 git init && \
 git remote add origin git@github.com:leaferiksen/mac-home.git && \
 git fetch && \
 git checkout -f main
 ```
+
 if ssh isn't properly configured with the keychain, try the following before trying again
+
 ``` bash
 ssh-add --apple-use-keychain ~/.ssh/id_ed25519 &> /dev/null
 ```
@@ -45,6 +46,7 @@ git clone https://github.com/Homebrew/brew /opt/homebrew
 ```
 
 Spotlight → Full Disk Access → /System/Applications/Utilities/Terminal.app, then restart Terminal and run
+
 ```bash
 softwareupdate --install-rosetta --agree-to-license && \
 chmod -R +w /opt/homebrew && \
@@ -53,20 +55,16 @@ chmod -R +w /opt/homebrew && \
 ./.config/setup/login.sh \
 ./.config/setup/duti.sh
 ```
+
 Spotlight → Full Disk Access → remove Terminal
 
-Download [Karabiner Elements](https://karabiner-elements.pqrs.org/) and [Wacom Drivers](https://www.wacom.com/en-us/support/product-support/drivers) manually.
+-Download [Karabiner Elements](https://karabiner-elements.pqrs.org/) manually.
 
 ## Set these by hand
 
 ### Night Shift options
 
 - Schedule **▼ Sunrise to Sunset**
-
-### Control Center
-
-- Music Recognition, Keyboard Brightness **Only Show in control center**
-- Weather **▼ Show in Menu Bar**
 
 ### Spotlight
 
