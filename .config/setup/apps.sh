@@ -4,7 +4,7 @@ brew tap d12frosted/emacs-plus
 brew trust d12frosted/emacs-plus
 brew install emacs-plus-app
 
-brew install --formula atool ffmpeg harper karinushka/paneru/paneru media-info mole mupdf ollama pandoc pngpaste tealdeer typst yqrashawn/goku/goku xbzig zsh-autosuggestions zsh-syntax-highlighting
+brew install --formula atool ffmpeg harper imagemagick karinushka/paneru/paneru media-info mole mupdf ollama pandoc pngpaste tealdeer typst yqrashawn/goku/goku xbzig zsh-autosuggestions zsh-syntax-highlighting
 paneru install && paneru start
 
 # ani-cli

@@ -48,8 +48,8 @@
   (read-process-output-max (* 1024 1024))
   (ring-bell-function 'ignore)
   (sentence-end-double-space nil)
-  (shr-fill-text nil)
-  (shr-inhibit-images t)
+  (shr-width 80)
+  (shr-max-image-proportion 0.6)
   (speedbar-window-default-width 20)
   (speedbar-window-max-width 20)
   (treesit-auto-install-grammar 'always)
@@ -129,6 +129,7 @@
   (display-line-numbers-type 'relative)
   (display-line-numbers-width-start 3)
   (frame-resize-pixelwise t)
+  
   :init
   (defun almost-maximize-frame ()
     "Borderless maximise with margins for tiling"
@@ -237,9 +238,9 @@
     (when (buffer-file-name)
       (flymake-mode 1))))
 
-(use-package html-mode
-  ;; mhtml-mode causes issues with apheleia
-  :mode ("\\.html\\'" . html-mode))
+;; (use-package html-mode
+;;   ;; mhtml-mode causes issues with apheleia
+;;   :mode ("\\.html\\'" . html-mode))
 
 (use-package ls-lisp
   :custom
@@ -256,7 +257,7 @@
     (find-file "~/.config/emacs/init.el")))
 
 (use-package project
-  :bind (:map project-prefix-map ("s" . project-gterm) ("S" . project-npx-serve) ("t" . project-tailwindcss))
+  :bind (:map project-prefix-map ("s" . project-gterm) ("n" . project-npm-run))
   :custom
   (project-mode-line t)
   (project-vc-extra-root-markers '("project"))
@@ -276,25 +277,23 @@
       (apply #'start-process label buf args)
       (when msg
         (message msg (project-name project)))))
-  (defun project-tailwindcss ()
-    "npx @tailwindcss/cli -i app.css -o dist.css --watch the project's root directory"
-    (interactive)
-    (project-run "tailwindcss" "Tailwind is running in %s" "npx" "@tailwindcss/cli" "-i" "app.css" "-o" "dist.css" "--watch"))
-  (defun project-npx-serve ()
-    "Clear clipboard, npx serve the project's root directory, call clipboard watcher."
-    (interactive)
-    (gui-set-selection 'CLIPBOARD "")
-    (project-run "serve" "Serving %s..." "npx" "serve")
-    (watch-clipboard-xwidget-webkit-browse-url))
-  (defun watch-clipboard-xwidget-webkit-browse-url ()
-    "Watch for clipboard data and open in Xwidgets."
-    (if-let* ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)) ;; * may break
-              ((not (string-empty-p current-clip))))
-        (progn
-          (split-and-follow-horizontally)
-          (xwidget-webkit-browse-url current-clip)
-          (message "Clipboard update detected! Opened %s in Xwidgets" current-clip))
-      (run-at-time "0.5 sec" nil #'watch-clipboard-xwidget-webkit-browse-url))))
+(defun project-npm-run ()
+      "Prompt for npm script (dev, build, or start) and run it."
+      (interactive)
+      (let* ((script (completing-read "Npm script: " '("dev" "build" "start" "format" "lint")))
+             (label (cond
+                      ((string= script "dev") "serve")
+                      ((string= script "build") "build")
+                      ((string= script "format") "format")
+                      ((string= script "lint") "lint")
+                      (t "start")))
+             (msg (cond
+                    ((string= script "dev") "Serving %s...")
+                    ((string= script "build") "Building %s...")
+                    ((string= script "format") "Formatting %s...")
+                    ((string= script "lint") "Linting %s...")
+                    (t "Starting %s..."))))
+       (project-run label msg "npm" "run" script))))
 
 (use-package visual-wrap-prefix-mode
   :hook (prog-mode html-mode))
@@ -309,8 +308,10 @@
     (interactive)
     (let* ((v (y-or-n-p "Video? "))
            (s (and v (y-or-n-p "Subs? ")))
-           (u (read-string "URL: "))
-           (f (or (and s "--write-subs") (and v "") "-x")))
+           (c (and v (y-or-n-p "Backwards-compatible (h264)? ")))
+           (u (or (current-kill 0) (user-error "Nothing in clipboard")))
+           (f (concat (or (and s "--write-subs") (and v "") "-x")
+                      (and c " -S vcodec:h264"))))
       (unless (string-empty-p u)
         (async-shell-command (format "yt-dlp %s %s" f (shell-quote-argument u)))))))
 
@@ -331,6 +332,7 @@
   ;; :after agent-shell
   :vc (:url "https://github.com/cmacrae/agent-shell-sidebar")
   :custom
+  (agent-shell-sidebar-minimum-width 60)
   (agent-shell-sidebar-default-config (agent-shell-opencode-make-agent-config))
   :init
   (with-eval-after-load 'project
@@ -390,7 +392,6 @@
 
 (use-package elfeed
   :ensure t
-  :hook (elfeed-show-mode . visual-fill-column-mode)
   :bind ("C-c f" . elfeed)
   :custom (elfeed-search-filter "@6months"))
 

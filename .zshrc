@@ -28,7 +28,7 @@ alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
 alias fixapp='xattr -dr com.apple.quarantine'
 alias upbrew='brew update && brew upgrade --greedy'
 alias upskills='npx -y skills update --global'
-alias upnode='npx -y npm-check-updates --cooldown 7d && npm install'
+alias upnode='npx -y npm-check-updates --cooldown 7d -u && npm install'
 alias fixnode='brew unlink node && brew link --overwrite node'
 getid() {osascript -e "id of app \"$1\""}
 

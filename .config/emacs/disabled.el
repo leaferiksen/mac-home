@@ -16,6 +16,22 @@
   '(fixed-pitch ((t (:inherit default))))
   '(variable-pitch ((t (:family "Atkinson Hyperlegible Next" :height 180)))))
 
+(defun project-npx-serve ()
+    "Clear clipboard, npx serve the project's root directory, call clipboard watcher."
+    (interactive)
+    (gui-set-selection 'CLIPBOARD "")
+    (project-run "serve" "Serving %s..." "npx" "serve")
+    (watch-clipboard-xwidget-webkit-browse-url))
+(defun watch-clipboard-xwidget-webkit-browse-url ()
+  "Watch for clipboard data and open in Xwidgets."
+  (if-let* ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)) ;; * may break
+            ((not (string-empty-p current-clip))))
+      (progn
+        (split-and-follow-horizontally)
+        (xwidget-webkit-browse-url current-clip)
+        (message "Clipboard update detected! Opened %s in Xwidgets" current-clip))
+    (run-at-time "0.5 sec" nil #'watch-clipboard-xwidget-webkit-browse-url)))
+
 (setq package-vc-allow-build-commands t)
 (add-to-list 'default-frame-alist '(undecorated . t))
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))

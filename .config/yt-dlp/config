@@ -1,7 +1,11 @@
-# Format names nicely
+# Name
 -o "%(title)s.%(ext)s"
 
-# General
-# --write-thumbnail
+# Container
+--merge-output-format mp4
+--audio-format mp3
 --embed-metadata
+
+# Media
+--audio-quality 0
 --sub-langs "en.*,ja"
