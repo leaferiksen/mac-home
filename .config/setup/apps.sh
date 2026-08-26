@@ -20,6 +20,8 @@ brew install --formula protobuf swift-protobuf xcodegen
 # paperWM
 # brew install --formula busted lua-language-server
 
-brew install --cask anki calibre darrylmorley/whatcable/whatcable font-atkinson-hyperlegible-next font-atkinson-hyperlegible-mono font-maple-mono-nf-cn font-symbols-only-nerd-font homerow iina knockknock modrinth mos@beta neodisk osu soulver syncthing transmission virtualbuddy waterfox xcodes-app zotero
+brew install --cask anki calibre darrylmorley/whatcable/whatcable font-atkinson-hyperlegible-next font-maple-mono-nf-cn font-symbols-only-nerd-font homerow iina knockknock modrinth mos@beta neodisk osu soulver superwhisper syncthing transmission virtualbuddy waterfox xcodes-app zotero
+
+brew pin font-atkinson-hyperlegible-next
 
 # Sikarugir-App/sikarugir/sikarugir

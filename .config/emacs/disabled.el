@@ -8,13 +8,16 @@
 
 ;;; Code:
 
-  :hook
-  (emacs-startup . server-start)
-
-(custom-set-faces
-  '(default ((t (:family "Maple Mono NF CN" :height 140))))
-  '(fixed-pitch ((t (:inherit default))))
-  '(variable-pitch ((t (:family "Atkinson Hyperlegible Next" :height 180)))))
+(use-package agent-shell-sidebar
+  :ensure t
+  :after agent-shell
+  :vc (:url "https://github.com/cmacrae/agent-shell-sidebar")
+  :custom
+  (agent-shell-sidebar-minimum-width 60)
+  (agent-shell-sidebar-default-config (agent-shell-opencode-make-agent-config))
+  :init
+  (with-eval-after-load 'project
+    (define-key project-prefix-map (kbd "a") #'agent-shell-sidebar-toggle)))
 
 (defun project-npx-serve ()
     "Clear clipboard, npx serve the project's root directory, call clipboard watcher."

@@ -27,6 +27,15 @@
       "skillFolderHash": "54ffc59f293935a8ffd400629030d3d60efd0861",
       "installedAt": "2026-07-15T01:26:59.264Z",
       "updatedAt": "2026-07-15T01:26:59.264Z"
+    },
+    "mac-arsed-mac-app": {
+      "source": "bartreardon/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/bartreardon/skills.git",
+      "skillPath": "mac-arsed-mac-app/SKILL.md",
+      "skillFolderHash": "84954751bebfe4bc57de25987e0cf650cfcf8aef",
+      "installedAt": "2026-08-18T22:13:21.144Z",
+      "updatedAt": "2026-08-18T22:13:21.144Z"
     }
   },
   "lastSelectedAgents": [

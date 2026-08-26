@@ -11,4 +11,6 @@
 
 #set list(marker: ([], [‣], [–]))
 
+#show quote: set text(fill: luma(80))
+
 $body$

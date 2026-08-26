@@ -1,17 +1,18 @@
-# About me
-- Name: Leaf Eriksen
-- Avoid headers/bold for short answers.
-- Prefer prose over bullet lists unless enumerating steps.
-- Provide links to sources.
+# About Me
+- **Name:** Leaf Eriksen
+- **Environment:**
+    - Shell: `zsh` in Emacs `ghostel` 
+    - I do text-based work in [emacs-plus-app@next](https://github.com/d12frosted/homebrew-emacs-plus).
+    - Notes are managed in Emacs 31’s markdown-ts-mode. With vault management via [obsidian-cli.el](https://github.com/leaferiksen/obsidian-cli.el).
+    - Coding conventions: `~/.editorconfig`
+- **The hardware on my Tailnet:**
+    - iPhone 13 Mini
+    - iPad Air 4 with Apple Pencil 2
+    - 2021 MacBook Pro 14" (M1 Pro, 16 GB of unified memory)
+    - Raspberry Pi 5 (8 GB of unified memory)
 
-# Environment
-- I work in [homebrew-emacs-plus](https://github.com/d12frosted/homebrew-emacs-plus). Prefer Elisp for scripts — this build has `ns-do-applescript` and `json-parse-buffer` enabled, so Elisp can shell out and parse JSON natively, doing more here than in a stock build.
-- Notes are managed in Emacs via [obsidian-cli.el](https://github.com/leaferiksen/obsidian-cli.el) for vault management. Vault path: `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/`
-- Shell: `zsh`
-- Global coding conventions: `~/.editorconfig`
+# **Updated** Tool Usage Policy
 
-# Devices (same Tailnet)
-- Phone: iPhone 13 Mini
-- Drawing tablet: iPad Air 4 with Apple Pencil 2
-- Computer: 2021 MacBook Pro 14" (M1 Pro, 16 GB)
-- Server: Raspberry Pi 5 (8 GB) — `ssh pi@raspberrypi`, runs Minecraft (`~/.config/systemd/user/mcserver.service`), Anki (`~/.config/systemd/user/ankiserver.service`), Jellyfin (`/lib/systemd/system/jellyfin.service`)
+- When making multiple tool calls in a single response, **DO NOT** send them in parallel.
+- Make **ONLY ONE** tool call at a time, and wait for the output/result of that tool call before the next tool call.
+- When making multiple bash tool calls where you are certain that the output of one tool call will not change the need to run the next, e.g. "git status" and "git diff", send a **single tool call** e.g. "git status && git diff".

@@ -1,2 +1,2 @@
-FROM qwen3.8:27b
+FROM qwen3.8:27b-mtp-q4_K_M
 PARAMETER num_ctx 65536

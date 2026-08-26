@@ -50,7 +50,7 @@
   (sentence-end-double-space nil)
   (shr-width 80)
   (shr-max-image-proportion 0.6)
-  (speedbar-window-default-width 20)
+  (speedbar-window-default-width 30)
   (speedbar-window-max-width 20)
   (treesit-auto-install-grammar 'always)
   (treesit-enabled-modes t)
@@ -129,7 +129,6 @@
   (display-line-numbers-type 'relative)
   (display-line-numbers-width-start 3)
   (frame-resize-pixelwise t)
-  
   :init
   (defun almost-maximize-frame ()
     "Borderless maximise with margins for tiling"
@@ -174,7 +173,7 @@
   :custom
   (completion-auto-help nil)
   (completion-eager-update t)
-  (completion-eager-display 'auto)
+  (completion-eager-display nil) ;Disable duplicate menu
   (completion-ignore-case t)
   (completions-sort 'historical))
 
@@ -319,24 +318,18 @@
 
 (require 'package)
 
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa-snapshots" . "https://snapshots.melpa.org/packages/") t)
 
 (use-package agent-shell
   :ensure t
-  :hook (agent-shell-mode . completion-preview-mode)
+  :hook
+  (agent-shell-mode . completion-preview-mode)
+  (agent-shell-mode . variable-pitch-mode)
   :bind ("C-c c" . agent-shell-new-temp-shell)
-  :custom (agent-shell-preferred-agent-config 'opencode))
-
-(use-package agent-shell-sidebar
-  :ensure t
-  ;; :after agent-shell
-  :vc (:url "https://github.com/cmacrae/agent-shell-sidebar")
-  :custom
-  (agent-shell-sidebar-minimum-width 60)
-  (agent-shell-sidebar-default-config (agent-shell-opencode-make-agent-config))
+  :custom (agent-shell-preferred-agent-config 'opencode)
   :init
   (with-eval-after-load 'project
-    (define-key project-prefix-map (kbd "a") #'agent-shell-sidebar-toggle)))
+    (define-key project-prefix-map (kbd "a") #'agent-shell)))
 
 (use-package anglish
   :ensure t
@@ -363,7 +356,7 @@
   :bind
   ("s-i" . dwim-file-mediainfo)
   ([remap shell-command] . dwim-shell-command)
-  (:prefix "C-c p" :prefix-map dwim-print ("m" . dwim-file-to-mla-pdf) ("r" . dwim-file-to-resume-pdf) ("p" . dwim-md-to-pptx))
+  (:prefix "C-c p" :prefix-map dwim-print ("m" . dwim-file-to-mla-pdf) ("s" . dwim-file-to-pdf) ("p" . dwim-md-to-pptx))
   (:map dired-mode-map ([remap dired-do-async-shell-command] . dwim-shell-command) ([remap dired-do-shell-command] . dwim-shell-command) ([remap dired-smart-shell-command] . dwim-shell-command) ("e" . dwim-shell-commands-macos-open-with) ("i" . dwim-file-mediainfo) ("x" . dwim-export-to))
   :config
   (with-eval-after-load 'dwim-shell-commands
@@ -372,16 +365,16 @@
     "Run mediainfo on the current buffer's file or marked dired files."
     (interactive)
     (dwim-shell-command-on-marked-files "MediaInfo" "mediainfo '<<f>>'" :utils "mediainfo"))
-  (defun dwim-file-to-resume-pdf ()
-    "Convert file to generic pdf via pandoc."
+  (defun dwim-file-to-pdf ()
+    "Convert file to pdf via pandoc and typst."
     (interactive)
-    (dwim-shell-command-on-marked-files "Converting to generic pdf" "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=/Users/leaf/.config/typst/resume.typ"))
+    (dwim-shell-command-on-marked-files "Converting to pdf" "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=/Users/leaf/.config/typst/resume.typ"))
   (defun dwim-file-to-mla-pdf ()
-    "Convert file to MLA pdf via pandoc and typst."
+    "Convert file to MLA-compliant pdf via pandoc and typst."
     ;; fonttools varLib.mutator '/Users/leaf/Library/Fonts/AtkinsonHyperlegibleNext[wght].ttf' wght=400
     ;; pandoc --print-default-template=typst
     (interactive)
-    (dwim-shell-command-on-marked-files "Converting to MLA pdf" "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=/Users/leaf/.config/typst/mla-template.typ"))
+    (dwim-shell-command-on-marked-files "Converting to MLA-compliant pdf" "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=/Users/leaf/.config/typst/mla-template.typ"))
   (defun dwim-md-to-pptx ()
     "Convert md files to pptx."
     (interactive)
@@ -392,17 +385,17 @@
 
 (use-package elfeed
   :ensure t
+  :after elfeed-org
   :bind ("C-c f" . elfeed)
   :custom (elfeed-search-filter "@6months"))
 
 (use-package elfeed-org
   :ensure t
-  :init (elfeed-org))
+  :config (elfeed-org))
 
 (use-package elfeed-webkit
   :ensure t
   :demand ;; !
-  :hook (elfeed-webkit-mode . (lambda () (visual-fill-column-mode -1)))
   :init (setq elfeed-webkit-auto-enable-tags '(webkit comics))
   :config (elfeed-webkit-auto-toggle-by-tag)
   :bind (:map elfeed-show-mode-map ("w" . elfeed-webkit-toggle)))
@@ -557,7 +550,7 @@
 (use-package visual-fill-column
   :ensure t
   :hook
-  (markdown-ts-mode org-mode)
+  (org-mode markdown-ts-mode)
   (visual-fill-column-mode . (lambda () (face-remap-add-relative 'default :height 180)))
   :custom
   (visual-fill-column-center-text t)

@@ -37,11 +37,9 @@ window_virtualmovenum_3 = "alt + shift - 3"
 left = 10
 right = 10
 
-[decorations.active.border]
-enabled = true
-color = "#f3c4c4"
-width = 5.0
-radius = 14.0
+[decorations.inactive.dim]
+opacity = -0.1
+opacity_night = -0.2
 
 [windows]
 
@@ -49,6 +47,11 @@ radius = 14.0
 title = ".*"
 vertical_padding = 10
 horizontal_padding = 10
+
+[window.colors]
+title = "Colors"
+bundle_id = "com.apple.Safari"
+floating = true
 
 [window.facetime]
 title = ".*"
