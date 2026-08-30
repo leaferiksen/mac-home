@@ -10,9 +10,3 @@
     - iPad Air 4 with Apple Pencil 2
     - 2021 MacBook Pro 14" (M1 Pro, 16 GB of unified memory)
     - Raspberry Pi 5 (8 GB of unified memory)
-
-# **Updated** Tool Usage Policy
-
-- When making multiple tool calls in a single response, **DO NOT** send them in parallel.
-- Make **ONLY ONE** tool call at a time, and wait for the output/result of that tool call before the next tool call.
-- When making multiple bash tool calls where you are certain that the output of one tool call will not change the need to run the next, e.g. "git status" and "git diff", send a **single tool call** e.g. "git status && git diff".

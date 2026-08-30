@@ -110,7 +110,9 @@
   :custom
   (delete-by-moving-to-trash t)
   (mac-function-modifier 'hyper)
-  ;; (mac-option-modifier 'none)
+  ;; (mac-control-modifier 'meta)
+  ;; (mac-right-control-modifier 'control)
+  (mac-option-modifier 'none)
   :config (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display")
   ;; Transpose unwanted s- bindings to project, bookmark, and treesit navigation
   (define-key key-translation-map (kbd "s-g") (kbd "M-g"))
@@ -154,7 +156,9 @@
   :hook (ns-system-appearance-change-functions . auto-theme)
   :custom
   (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
+  ;; (modus-themes-headings '((t . (rainbow))))
   (modus-themes-italic-constructs t)
+  ;; (modus-themes-mode-line '(accented borderless padded))
   (modus-themes-mixed-fonts t)
   :init
   (set-face-attribute 'default nil :family "Maple Mono NF CN" :height 140)
@@ -276,23 +280,35 @@
       (apply #'start-process label buf args)
       (when msg
         (message msg (project-name project)))))
-(defun project-npm-run ()
-      "Prompt for npm script (dev, build, or start) and run it."
-      (interactive)
-      (let* ((script (completing-read "Npm script: " '("dev" "build" "start" "format" "lint")))
-             (label (cond
-                      ((string= script "dev") "serve")
-                      ((string= script "build") "build")
-                      ((string= script "format") "format")
-                      ((string= script "lint") "lint")
-                      (t "start")))
-             (msg (cond
-                    ((string= script "dev") "Serving %s...")
-                    ((string= script "build") "Building %s...")
-                    ((string= script "format") "Formatting %s...")
-                    ((string= script "lint") "Linting %s...")
-                    (t "Starting %s..."))))
-       (project-run label msg "npm" "run" script))))
+  (defun project-npm-run ()
+    "Prompt for npm script (dev, build, or start) and run it."
+    (interactive)
+    (let* ((script (completing-read "Npm script: " '("dev" "build" "start" "format" "lint")))
+           (label
+            (cond
+             ((string= script "dev")
+              "serve")
+             ((string= script "build")
+              "build")
+             ((string= script "format")
+              "format")
+             ((string= script "lint")
+              "lint")
+             (t
+              "start")))
+           (msg
+            (cond
+             ((string= script "dev")
+              "Serving %s...")
+             ((string= script "build")
+              "Building %s...")
+             ((string= script "format")
+              "Formatting %s...")
+             ((string= script "lint")
+              "Linting %s...")
+             (t
+              "Starting %s..."))))
+      (project-run label msg "npm" "run" script))))
 
 (use-package visual-wrap-prefix-mode
   :hook (prog-mode html-mode))
@@ -309,8 +325,7 @@
            (s (and v (y-or-n-p "Subs? ")))
            (c (and v (y-or-n-p "Backwards-compatible (h264)? ")))
            (u (or (current-kill 0) (user-error "Nothing in clipboard")))
-           (f (concat (or (and s "--write-subs") (and v "") "-x")
-                      (and c " -S vcodec:h264"))))
+           (f (concat (or (and s "--write-subs") (and v "") "-x") (and c " -S vcodec:h264"))))
       (unless (string-empty-p u)
         (async-shell-command (format "yt-dlp %s %s" f (shell-quote-argument u)))))))
 
@@ -440,12 +455,17 @@
 
 (use-package markdown-ts-mode
   :mode ("\\.md\\'" . markdown-ts-mode)
-  :hook (markdown-ts-mode . eglot-ensure)
+  :hook
+  (markdown-ts-mode . eglot-ensure)
+  (markdown-ts-mode . variable-pitch-mode)
   :bind (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today))
-  :custom
+  :custom (markdown-ts-inline-images t)
   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
   (eglot-workspace-configuration '(:harper-ls (:dialect "American" :linters (:LongSentences :json-false :AvoidCurses :json-false))))
   :config
+  (require 'markdown-ts-mode-x)
+  (dolist (n (number-sequence 1 6))
+    (set-face-attribute (intern (format "markdown-ts-heading-%d" n)) nil :inherit (intern (format "modus-themes-heading-%d" n))))
   (advice-add
    'markdown-ts--list-marker-width
    :around
@@ -549,9 +569,7 @@
 
 (use-package visual-fill-column
   :ensure t
-  :hook
-  (org-mode markdown-ts-mode)
-  (visual-fill-column-mode . (lambda () (face-remap-add-relative 'default :height 180)))
+  :hook (org-mode markdown-ts-mode)
   :custom
   (visual-fill-column-center-text t)
   (visual-fill-column-width 90))

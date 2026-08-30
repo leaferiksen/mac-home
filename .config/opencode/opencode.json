@@ -65,15 +65,7 @@
             "type": "local",
             "command": ["/usr/bin/safaridriver", "--mcp"],
             "enabled": true
-        },
-        "figma": {
-            "type": "remote",
-            "url": "https://mcp.figma.com/mcp",
-            "oauth": {
-                "clientId": "ec3TwJX8b1ZmWj10YwgkPa",
-                "clientSecret": "maIiGWCzsI0ln9cEUFtqqwPJXdg00qK5tljohKGb"
-            }
         }
     },
-    "plugin": ["opencode-bash-guard-plugin", "@superwhisper/opencode"]
+    "plugin": ["opencode-bash-guard-plugin"]
 }

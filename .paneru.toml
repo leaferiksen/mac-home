@@ -48,11 +48,6 @@ title = ".*"
 vertical_padding = 10
 horizontal_padding = 10
 
-[window.colors]
-title = "Colors"
-bundle_id = "com.apple.Safari"
-floating = true
-
 [window.facetime]
 title = ".*"
 bundle_id = "com.apple.Facetime"
