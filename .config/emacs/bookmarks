@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-((".config"
+(("26-27 Autumn"
+  (filename . "~/Documents/College/26-27 Autumn/")
+  (front-context-string . "Design & Social ")
+  (rear-context-string . "24 Aug 31 10:28 ")
+  (position . 94)
+  (last-modified 27285 48022 214433 0))
+(".config"
  (filename . "~/.config/")
  (front-context-string . "..\n  drwxr-xr-x ")
  (rear-context-string . "6K Apr 10 15:26 ")

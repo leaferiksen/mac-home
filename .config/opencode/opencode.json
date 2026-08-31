@@ -1,10 +1,6 @@
 {
     "$schema": "https://opencode.ai/config.json",
     "command": {
-        "about-you": {
-            "template": "You are qwen3.8:27b-mtp-q4_K_M with a 65536 context window running on an NVIDIA RTX A5000 (24 GB of GPU memory) via Ollama",
-            "description": "Your model details and hardware"
-        },
         "question": {
             "template": "Avoid headers/bold for short answers and prefer prose over bullet lists unless enumerating something.",
             "description": "Question answering etiquette",
@@ -28,8 +24,7 @@
         "todowrite": "allow",
         "skill": "allow",
         "agent-tinyfish-ai_*": "allow",
-        "sosumi_*": "allow",
-        "figma_*": "allow"
+        "sosumi_*": "allow"
     },
     "disabled_providers": ["opencode"],
     "provider": {

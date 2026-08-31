@@ -102,6 +102,7 @@
   ("C-M-y" . yank-pop)
   ;; enable standard macOS emoji binding
   ("H-e" . ns-do-show-character-palette)
+  ("H-f" . toggle-frame-fullscreen)
   ;; remove scroll zoom (highly incompatible with macos native inertia)
   ("C-<wheel-up>" . mwheel-scroll)
   ("C-<wheel-down>" . mwheel-scroll)
@@ -154,8 +155,7 @@
 
 (use-package modus-themes
   :hook (ns-system-appearance-change-functions . auto-theme)
-  :custom
-  (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
+  :custom (modus-themes-common-palette-overrides '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
   ;; (modus-themes-headings '((t . (rainbow))))
   (modus-themes-italic-constructs t)
   ;; (modus-themes-mode-line '(accented borderless padded))
@@ -346,6 +346,14 @@
   (with-eval-after-load 'project
     (define-key project-prefix-map (kbd "a") #'agent-shell)))
 
+(use-package agent-shell-macext
+  :vc (:url "https://github.com/cxa/agent-shell-macext")
+  :hook (agent-shell-mode . agent-shell-macext-setup)
+  :custom
+  (agent-shell-macext-file-copy-policy 'auto)
+  (agent-shell-macext-notifications t)
+  (agent-shell-macext-notify-current-buffer nil))
+
 (use-package anglish
   :ensure t
   :vc (:url "git@github.com:leaferiksen/anglish.el.git"))
@@ -444,7 +452,20 @@
 
 (use-package osx-dictionary
   :ensure t
-  :bind ("C-c d" . osx-dictionary-search-word-at-point))
+  :bind
+  ("C-c d" . osx-dictionary-search-word-at-point)
+  (:map osx-dictionary-mode-map ("C-u q" . my/osx-dictionary-kill))
+  :config
+  (defun my/osx-dictionary-kill ()
+    "Like `osx-dictionary-quit', but kill the dictionary buffer."
+    (interactive)
+    (let ((prev
+           (when (and osx-dictionary-previous-window-configuration (window-configuration-p osx-dictionary-previous-window-configuration))
+             osx-dictionary-previous-window-configuration)))
+      (kill-buffer)
+      (when prev
+        (set-window-configuration prev)
+        (setq osx-dictionary-previous-window-configuration nil)))))
 
 (use-package lorem-ipsum
   :ensure t)
