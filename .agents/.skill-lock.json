@@ -36,6 +36,26 @@
       "skillFolderHash": "84954751bebfe4bc57de25987e0cf650cfcf8aef",
       "installedAt": "2026-08-18T22:13:21.144Z",
       "updatedAt": "2026-08-18T22:13:21.144Z"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "skillFolderHash": "0d5b74a14bdf3ebcd64f352d06376a2ef05ed296",
+      "pluginName": "example-skills",
+      "installedAt": "2026-08-31T19:57:16.133Z",
+      "updatedAt": "2026-08-31T19:57:16.133Z"
+    },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/skill-creator/SKILL.md",
+      "skillFolderHash": "3cf9a8db32597ba3e24b584a3d696f4e11c7d7b6",
+      "pluginName": "example-skills",
+      "installedAt": "2026-08-31T19:57:40.448Z",
+      "updatedAt": "2026-08-31T19:57:40.448Z"
     }
   },
   "lastSelectedAgents": [

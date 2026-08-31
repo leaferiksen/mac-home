@@ -5,6 +5,8 @@
     - I do text-based work in [emacs-plus-app@next](https://github.com/d12frosted/homebrew-emacs-plus).
     - Notes are managed in Emacs 31’s markdown-ts-mode. With vault management via [obsidian-cli.el](https://github.com/leaferiksen/obsidian-cli.el).
     - Coding conventions: `~/.editorconfig`
+    - Scripting: prefer Elisp. `emacs --batch --eval '(single-expr)'` or
+      `emacs --batch -l script.el` for multi-line scripts.
 - **The hardware on my Tailnet:**
     - iPhone 13 Mini
     - iPad Air 4 with Apple Pencil 2
