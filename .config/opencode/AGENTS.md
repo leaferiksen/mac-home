@@ -2,7 +2,7 @@
 - **Name:** Leaf Eriksen
 - **Environment:**
     - Shell: `zsh` in Emacs `ghostel` 
-    - I do text-based work in [emacs-plus-app@next](https://github.com/d12frosted/homebrew-emacs-plus).
+    - I do text-based work in [emacs-plus-app](https://github.com/d12frosted/homebrew-emacs-plus).
     - Notes are managed in Emacs 31’s markdown-ts-mode. With vault management via [obsidian-cli.el](https://github.com/leaferiksen/obsidian-cli.el).
     - Coding conventions: `~/.editorconfig`
     - Scripting: prefer Elisp. `emacs --batch --eval '(single-expr)'` or

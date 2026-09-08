@@ -132,16 +132,6 @@
     (add-to-list 'apheleia-mode-alist '(swift-ts-mode . swift-format))
     (add-to-list 'apheleia-formatters '(swift-format "xcrun" "swift-format" (buffer-file-name)))))
 
-(use-package reader
-  :ensure t
-  :vc (:url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
-  :config
-  (defun fix-reader ()
-    "Recompile Reader Libraries"
-    (interactive)
-    (let ((default-directory "~/.config/emacs/elpa/reader/"))
-      (shell-command "make clean all"))))
-
 (use-package appine
   :ensure t
   :vc ( :url "git@github.com:chaoswork/appine.git")

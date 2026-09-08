@@ -7,7 +7,7 @@ description: Configure or debug this user's Emacs when editing init.el, elpa pac
 
 ## Where things actually live
 - **Emacs binary**: installed via the homebrew formula
-  `emacs-plus-app@next` (d12frosted/homebrew-emacs-plus tap). The app bundle
+  `emacs-plus-app` (d12frosted/homebrew-emacs-plus tap). The app bundle
   lives at `/Users/leaf/Applications/Emacs.app`; on PATH it's just `emacs`
   (via `/opt/homebrew/bin/emacs` → the bundle's `Contents/MacOS/bin/emacs`).
   **Script with `emacs`, not the full path.**

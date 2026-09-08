@@ -9,8 +9,8 @@ virtual_workspace_animations = true
 sliver_width = 1
 
 [swipe.gesture]
-fingers_count = 4
-vertical = false
+fingers_count = 3
+vertical = true
 
 [bindings]
 window_focus_north = "alt - p"
@@ -39,14 +39,22 @@ right = 10
 
 [decorations.inactive.dim]
 opacity = -0.1
-opacity_night = -0.2
+opacity_night = -0.1
 
 [windows]
 
 [windows.all]
 title = ".*"
-vertical_padding = 10
+vertical_padding = 20
 horizontal_padding = 10
+
+[windows.colors]
+title = "^Colors$"
+floating = true
+
+[windows.fonts]
+title = "^Fonts$"
+floating = true
 
 [window.facetime]
 title = ".*"

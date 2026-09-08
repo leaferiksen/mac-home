@@ -114,7 +114,13 @@
   ;; (mac-control-modifier 'meta)
   ;; (mac-right-control-modifier 'control)
   (mac-option-modifier 'none)
-  :config (set-fontset-font t '(?􀀀 . ?􏿽) "SF Pro Display")
+  :config
+  ;; Nerd Font Core Icons: Unicode Plane 0 (BMP)
+  (set-fontset-font t '(#xE000 . #xF8FF) "Symbols Nerd Font")
+  ;; Nerd Fonts Material Design Icons: Unicode Plane 15 (PUA-A)
+  (set-fontset-font t '(#xF0001 . #xF1AF0) "Symbols Nerd Font")
+  ;; SF Symbols: Unicode Plane 16 (PUA-B)
+  (set-fontset-font t '(#x100000 . #x10FFFD) "SF Pro Display")
   ;; Transpose unwanted s- bindings to project, bookmark, and treesit navigation
   (define-key key-translation-map (kbd "s-g") (kbd "M-g"))
   (define-key key-translation-map (kbd "s-o") (kbd "C-x p"))
@@ -161,7 +167,7 @@
   ;; (modus-themes-mode-line '(accented borderless padded))
   (modus-themes-mixed-fonts t)
   :init
-  (set-face-attribute 'default nil :family "Maple Mono NF CN" :height 140)
+  (set-face-attribute 'default nil :family "Maple Mono CN" :height 140)
   (set-face-attribute 'fixed-pitch nil :inherit 'default)
   (set-face-attribute 'variable-pitch nil :family "Atkinson Hyperlegible Next" :height 180)
   (defun auto-theme (appearance)
@@ -333,7 +339,7 @@
 
 (require 'package)
 
-(add-to-list 'package-archives '("melpa-snapshots" . "https://snapshots.melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 (use-package agent-shell
   :ensure t
@@ -479,7 +485,10 @@
   :hook
   (markdown-ts-mode . eglot-ensure)
   (markdown-ts-mode . variable-pitch-mode)
-  :bind (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today))
+  :bind
+  ("<tab>" . markdown-ts-demote)
+  ("<backtab>" . markdown-ts-promote)
+  (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today) ("z" . markdown-zip-backup))
   :custom (markdown-ts-inline-images t)
   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
   (eglot-workspace-configuration '(:harper-ls (:dialect "American" :linters (:LongSentences :json-false :AvoidCurses :json-false))))
@@ -513,7 +522,25 @@
   (defun markdown-h2-today ()
     "Insert an atx level 2 heading with today's date in iso format."
     (interactive)
-    (insert "## " (format-time-string "%Y-%m-%d") "\n")))
+    (insert "## " (format-time-string "%Y-%m-%d") "\n"))
+  (defun markdown-zip-backup ()
+    "Zip the Obsidian Notes folder into ~/Notes Backup/YYYY-MM-DD.zip."
+    (interactive)
+    (let* ((src     (expand-file-name
+                     "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/"))
+           (dest    (expand-file-name "~/Notes Backup/"))
+           (archive (expand-file-name (format-time-string "%Y-%m-%d.zip") dest)))
+      (unless (executable-find "zip")
+        (user-error "The 'zip' command was not found on PATH"))
+      (unless (file-directory-p src)
+        (user-error "Source folder not found: %s" src))
+      (unless (file-directory-p dest)
+        (make-directory dest t))
+      (when (file-exists-p archive)
+        (delete-file archive))
+      (unless (= 0 (call-process "zip" nil nil nil "-r" archive src))
+        (user-error "zip failed"))
+      (message "Created %s" archive))))
 
 (use-package nerd-icons-dired
   :ensure t
@@ -530,6 +557,16 @@
   :custom
   (obsidian-cli-note-extensions '("md" "tsv"))
   (obsidian-cli-rename-on-save t))
+
+(use-package reader
+  :ensure t
+  :vc (:url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
+  :config
+  (defun fix-reader ()
+    "Recompile Reader Libraries"
+    (interactive)
+    (let ((default-directory "~/.config/emacs/elpa/reader/"))
+      (shell-command "make clean all"))))
 
 (use-package spacious-padding
   :ensure t
