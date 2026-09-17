@@ -142,6 +142,17 @@ killall Finder Dock NotificationCenter
 # Spotlight Privacy #
 #####################
 defaults write com.apple.assistant.support "Search Queries Data Sharing Status" -int "2"
+########
+# Mail #
+########
+# https://useplaintext.email/
+defaults write -app Mail "SendFormat" -string "Plain"
+defaults write -app Mail "AutoReplyFormat" -bool "true"
+defaults write -app Mail "NumberOfSnippetLines" -int "0"
+# Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
+defaults write -app Mail AddressesIncludeNameOnPasteboard -bool false
+# Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
+defaults write -app Mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
 ###############
 # Hammerspoon #
 ###############
@@ -232,17 +243,6 @@ defaults write app.zen-browser.zen "DisableAppUpdate" -bool "true"
 # defaults write com.apple.WindowManager "HideDesktop" -bool "false"
 # defaults write com.apple.WindowManager "AutoHide" -bool "true"
 # defaults write com.apple.WindowManager "AutoHideDelay" -int "0"
-########
-# Mail #
-########
-# # https://useplaintext.email/
-# defaults write com.apple.mail "SendFormat" -string "Plain"
-# defaults write com.apple.mail "AutoReplyFormat" -bool "true"
-# defaults write com.apple.mail "NumberOfSnippetLines" -int "0"
-# # Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
-# defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
-# # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
-# defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
 ######################
 # GnuPG and PinEntry #
 ######################

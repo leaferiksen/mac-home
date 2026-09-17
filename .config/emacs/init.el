@@ -258,6 +258,71 @@
   (ls-lisp-use-insert-directory-program nil)
   (ls-lisp-use-localized-time-format t))
 
+(use-package markdown-ts-mode
+  :mode ("\\.md\\'" . markdown-ts-mode)
+  :hook
+  (markdown-ts-mode . eglot-ensure)
+  (markdown-ts-mode . variable-pitch-mode)
+  :bind
+  ("<tab>" . markdown-ts-demote)
+  ("<backtab>" . markdown-ts-promote)
+  (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today) ("f" . markdown-mla-frontmatter) ("z" . markdown-zip-backup))
+  :custom (markdown-ts-inline-images t)
+  ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
+  (eglot-workspace-configuration '(:harper-ls (:dialect "American" :linters (:LongSentences :json-false :AvoidCurses :json-false))))
+  :config
+  (require 'markdown-ts-mode-x)
+  (dolist (n (number-sequence 1 6))
+    (set-face-attribute (intern (format "markdown-ts-heading-%d" n)) nil :inherit (intern (format "modus-themes-heading-%d" n))))
+  ;; (advice-add
+  ;;  'markdown-ts--list-marker-width
+  ;;  :around
+  ;;  (lambda (&rest _)
+  ;;    "Always use 4-space increments for list promote/demote."
+  ;;    4))
+  (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
+  (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
+    (if (and (not (string-prefix-p "#" url)) (not (string-match-p "\\`[a-z]+:" url)) (not (string-match-p "mailto:" url)) (not (string-match-p "\\.[a-zA-Z]+" url)))
+        (funcall orig-fn beg end (concat url ".md"))
+      (funcall orig-fn beg end url)))
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio")))
+    (add-hook
+     'eglot-managed-mode-hook
+     (lambda ()
+       (when anglish-mode
+         (add-hook 'flymake-diagnostic-functions #'anglish--check-buffer nil t)
+         (flymake-start)))))
+  (defun markdown-h1-title ()
+    "Insert an atx level 1 heading with the name of the file."
+    (interactive)
+    (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
+  (defun markdown-h2-today ()
+    "Insert an atx level 2 heading with today's date in iso format."
+    (interactive)
+    (insert "## " (format-time-string "%Y-%m-%d") "\n"))
+  (defun markdown-mla-frontmatter ()
+    "Insert frontmatter template for typst MLA export"
+    (interactive)
+    (insert "---\nprofessor: \nclass: \nword-count: true\n---\n"))
+  (defun markdown-zip-backup ()
+    "Zip the Obsidian Notes folder into ~/Notes Backup/YYYY-MM-DD.zip."
+    (interactive)
+    (let* ((src (expand-file-name "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/"))
+           (dest (expand-file-name "~/Notes Backup/"))
+           (archive (expand-file-name (format-time-string "%Y-%m-%d.zip") dest)))
+      (unless (executable-find "zip")
+        (user-error "The 'zip' command was not found on PATH"))
+      (unless (file-directory-p src)
+        (user-error "Source folder not found: %s" src))
+      (unless (file-directory-p dest)
+        (make-directory dest t))
+      (when (file-exists-p archive)
+        (delete-file archive))
+      (unless (= 0 (call-process "zip" nil nil nil "-r" archive src))
+        (user-error "zip failed"))
+      (message "Created %s" archive))))
+
 (use-package open-init
   :bind ([remap customize] . open-init)
   :init
@@ -287,34 +352,35 @@
       (when msg
         (message msg (project-name project)))))
   (defun project-npm-run ()
-    "Prompt for npm script (dev, build, or start) and run it."
+    "Prompt to run an npm script listed in the project's package.json.
+
+Reads the script names from package.json's `scripts` field, prompts among
+the available names, and runs the chosen one via `project-run`."
     (interactive)
-    (let* ((script (completing-read "Npm script: " '("dev" "build" "start" "format" "lint")))
-           (label
-            (cond
-             ((string= script "dev")
-              "serve")
-             ((string= script "build")
-              "build")
-             ((string= script "format")
-              "format")
-             ((string= script "lint")
-              "lint")
-             (t
-              "start")))
-           (msg
-            (cond
-             ((string= script "dev")
-              "Serving %s...")
-             ((string= script "build")
-              "Building %s...")
-             ((string= script "format")
-              "Formatting %s...")
-             ((string= script "lint")
-              "Linting %s...")
-             (t
-              "Starting %s..."))))
-      (project-run label msg "npm" "run" script))))
+    (let* ((project (project-current t))
+           (root (project-root project))
+           (pj (expand-file-name "package.json" root)))
+      (unless (file-exists-p pj)
+        (user-error "No package.json found at %s" root))
+      (let ((names
+             (with-temp-buffer
+               (insert-file-contents pj)
+               (let ((scripts (cdr (assoc 'scripts (json-read)))))
+                 (when (listp scripts)
+                   (mapcar
+                    #'(lambda (x)
+                        (let ((k
+                               (if (consp x)
+                                   (car x)
+                                 x)))
+                          (if (symbolp k)
+                              (symbol-name k)
+                            k)))
+                    scripts))))))
+        (unless names
+          (user-error "No scripts defined in %s" pj))
+        (let ((script (completing-read (format "npm run (available: %s)" (mapconcat #'identity names ", ")) names nil t)))
+          (project-run script (format "Running npm run %s in %s" script "%s") "npm" "run" script))))))
 
 (use-package visual-wrap-prefix-mode
   :hook (prog-mode html-mode))
@@ -479,68 +545,6 @@
 (use-package markdown-indent-mode
   :ensure t
   :hook (markdown-ts-mode))
-
-(use-package markdown-ts-mode
-  :mode ("\\.md\\'" . markdown-ts-mode)
-  :hook
-  (markdown-ts-mode . eglot-ensure)
-  (markdown-ts-mode . variable-pitch-mode)
-  :bind
-  ("<tab>" . markdown-ts-demote)
-  ("<backtab>" . markdown-ts-promote)
-  (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today) ("z" . markdown-zip-backup))
-  :custom (markdown-ts-inline-images t)
-  ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
-  (eglot-workspace-configuration '(:harper-ls (:dialect "American" :linters (:LongSentences :json-false :AvoidCurses :json-false))))
-  :config
-  (require 'markdown-ts-mode-x)
-  (dolist (n (number-sequence 1 6))
-    (set-face-attribute (intern (format "markdown-ts-heading-%d" n)) nil :inherit (intern (format "modus-themes-heading-%d" n))))
-  (advice-add
-   'markdown-ts--list-marker-width
-   :around
-   (lambda (&rest _)
-     "Always use 4-space increments for list promote/demote."
-     4))
-  (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
-  (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
-    (if (and (not (string-prefix-p "#" url)) (not (string-match-p "\\`[a-z]+:" url)) (not (string-match-p "mailto:" url)) (not (string-match-p "\\.[a-zA-Z]+" url)))
-        (funcall orig-fn beg end (concat url ".md"))
-      (funcall orig-fn beg end url)))
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio")))
-    (add-hook
-     'eglot-managed-mode-hook
-     (lambda ()
-       (when anglish-mode
-         (add-hook 'flymake-diagnostic-functions #'anglish--check-buffer nil t)
-         (flymake-start)))))
-  (defun markdown-h1-title ()
-    "Insert an atx level 1 heading with the name of the file."
-    (interactive)
-    (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
-  (defun markdown-h2-today ()
-    "Insert an atx level 2 heading with today's date in iso format."
-    (interactive)
-    (insert "## " (format-time-string "%Y-%m-%d") "\n"))
-  (defun markdown-zip-backup ()
-    "Zip the Obsidian Notes folder into ~/Notes Backup/YYYY-MM-DD.zip."
-    (interactive)
-    (let* ((src     (expand-file-name
-                     "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/"))
-           (dest    (expand-file-name "~/Notes Backup/"))
-           (archive (expand-file-name (format-time-string "%Y-%m-%d.zip") dest)))
-      (unless (executable-find "zip")
-        (user-error "The 'zip' command was not found on PATH"))
-      (unless (file-directory-p src)
-        (user-error "Source folder not found: %s" src))
-      (unless (file-directory-p dest)
-        (make-directory dest t))
-      (when (file-exists-p archive)
-        (delete-file archive))
-      (unless (= 0 (call-process "zip" nil nil nil "-r" archive src))
-        (user-error "zip failed"))
-      (message "Created %s" archive))))
 
 (use-package nerd-icons-dired
   :ensure t

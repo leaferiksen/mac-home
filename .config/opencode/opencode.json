@@ -14,7 +14,6 @@
         "grep": "allow",
         "glob": "allow",
         "webfetch": "allow",
-        "question": "allow",
         "todowrite": "allow",
         "skill": "allow",
         "agent-tinyfish-ai_*": "allow",
