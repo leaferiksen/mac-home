@@ -84,7 +84,6 @@
   (define-auto-insert "\.html" "insert.html")
   (define-auto-insert "\.js" "insert.js")
   (auto-save-visited-mode 1)
-  (context-menu-mode 1)
   (delete-selection-mode 1)
   (fido-vertical-mode 1)
   (global-hl-line-mode 1)
@@ -263,23 +262,21 @@
   :hook
   (markdown-ts-mode . eglot-ensure)
   (markdown-ts-mode . variable-pitch-mode)
+  ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
+  (markdown-ts-mode
+   .
+   (lambda ()
+     (setq-local flymake-indicator-type nil)
+     (setq-local eglot-workspace-configuration '(:harper-ls (:dialect "American" :linters (:LongSentences :json-false :AvoidCurses :json-false))))))
   :bind
   ("<tab>" . markdown-ts-demote)
   ("<backtab>" . markdown-ts-promote)
-  (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today) ("f" . markdown-mla-frontmatter) ("z" . markdown-zip-backup))
+  (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today) ("f" . markdown-mla-frontmatter))
   :custom (markdown-ts-inline-images t)
-  ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
-  (eglot-workspace-configuration '(:harper-ls (:dialect "American" :linters (:LongSentences :json-false :AvoidCurses :json-false))))
   :config
   (require 'markdown-ts-mode-x)
   (dolist (n (number-sequence 1 6))
     (set-face-attribute (intern (format "markdown-ts-heading-%d" n)) nil :inherit (intern (format "modus-themes-heading-%d" n))))
-  ;; (advice-add
-  ;;  'markdown-ts--list-marker-width
-  ;;  :around
-  ;;  (lambda (&rest _)
-  ;;    "Always use 4-space increments for list promote/demote."
-  ;;    4))
   (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
   (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
     (if (and (not (string-prefix-p "#" url)) (not (string-match-p "\\`[a-z]+:" url)) (not (string-match-p "mailto:" url)) (not (string-match-p "\\.[a-zA-Z]+" url)))
@@ -304,24 +301,7 @@
   (defun markdown-mla-frontmatter ()
     "Insert frontmatter template for typst MLA export"
     (interactive)
-    (insert "---\nprofessor: \nclass: \nword-count: true\n---\n"))
-  (defun markdown-zip-backup ()
-    "Zip the Obsidian Notes folder into ~/Notes Backup/YYYY-MM-DD.zip."
-    (interactive)
-    (let* ((src (expand-file-name "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes/"))
-           (dest (expand-file-name "~/Notes Backup/"))
-           (archive (expand-file-name (format-time-string "%Y-%m-%d.zip") dest)))
-      (unless (executable-find "zip")
-        (user-error "The 'zip' command was not found on PATH"))
-      (unless (file-directory-p src)
-        (user-error "Source folder not found: %s" src))
-      (unless (file-directory-p dest)
-        (make-directory dest t))
-      (when (file-exists-p archive)
-        (delete-file archive))
-      (unless (= 0 (call-process "zip" nil nil nil "-r" archive src))
-        (user-error "zip failed"))
-      (message "Created %s" archive))))
+    (insert "---\nprofessor: \nclass: \nword-count: true\n---\n")))
 
 (use-package open-init
   :bind ([remap customize] . open-init)
@@ -554,10 +534,7 @@ the available names, and runs the chosen one via `project-run`."
   :ensure t
   :vc (:url "git@github.com:leaferiksen/obsidian-cli.el.git")
   :hook (markdown-ts-mode)
-  :bind
-  ("C-c o" . obsidian-cli-open-note)
-  ("C-c j" . obsidian-cli-open-daily-note)
-  (:map obsidian-cli-mode-map ("C-c C-b" . obsidian-cli-jump-to-backlink))
+  :bind (:prefix "C-c o" :prefix-map vault-actions ("s" . obsidian-cli-search-notes) ("d" . obsidian-cli-open-daily-note) ("z" . obsidian-cli-zip-vault) ("b" . obsidian-cli-jump-to-backlink))
   :custom
   (obsidian-cli-note-extensions '("md" "tsv"))
   (obsidian-cli-rename-on-save t))
