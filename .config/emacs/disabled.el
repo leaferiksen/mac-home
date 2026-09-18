@@ -8,6 +8,21 @@
 
 ;;; Code:
 
+(defun async-shell-command-no-window (command)
+    (interactive)
+    (let ((display-buffer-alist
+	   (list
+	    (cons "\\*Async Shell Command\\*.*"
+		  (cons #'display-buffer-no-window nil)))))
+      (async-shell-command command)))
+
+(use-package elisp-autofmt
+  :ensure t
+  :vc (:url "https://codeberg.org/ideasman42/emacs-elisp-autofmt")
+  :demand
+  :hook (emacs-lisp-mode . elisp-autofmt-mode)
+  :bind (:prefix "C-c e" :prefix-map elisp-autofmt ("b" . elisp-autofmt-buffer) ("r" . elisp-autofmt-region-dwim)))
+
 (use-package agent-shell-sidebar
   :ensure t
   :after agent-shell
