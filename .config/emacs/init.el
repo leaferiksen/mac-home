@@ -254,7 +254,7 @@
   :mode ("\\.md\\'" . markdown-ts-mode)
   :hook (markdown-ts-mode . eglot-ensure)
   (markdown-ts-mode . variable-pitch-mode)
-  :bind (:map markdown-ts-mode
+  :bind (:map markdown-ts-mode-map
 	      ("<tab>" . markdown-ts-demote)
 	      ("<backtab>" . markdown-ts-promote))
   (:prefix "C-c m" :prefix-map markdown-actions
@@ -371,41 +371,7 @@
 (use-package anglish :ensure t :vc
   (:url "git@github.com:leaferiksen/anglish.el.git"))
 
-(use-package apheleia
-  :ensure t
-  :config (cl-defun apheleia-elfmt
-	      (&key buffer scratch callback &allow-other-keys)
-	    "Format SCRATCH with `elfmt', then invoke CALLBACK.
-Indentation settings are copied from BUFFER so the result matches
-what you'd get by typing TAB there."
-	    (let ((fc (buffer-local-value 'fill-column buffer))
-		  (tabs (buffer-local-value 'indent-tabs-mode buffer))
-		  (indent-fn
-		   (buffer-local-value 'lisp-indent-function buffer))
-		  (original (with-current-buffer scratch (buffer-string))))
-	      (with-current-buffer scratch
-		(delay-mode-hooks (emacs-lisp-mode))
-		;; after the major mode, so these aren't clobbered
-		(setq-local fill-column fc indent-tabs-mode tabs lisp-indent-function indent-fn)
-		(condition-case err
-		    (let ((gc-cons-threshold most-positive-fixnum)
-			  (inhibit-message t)
-			  (message-log-max nil))
-		      (goto-char (point-max))
-		      (while (not (bobp))
-			(backward-sexp)
-			(elfmt--sexp)))
-		  ;; elfmt errors on unbalanced parens and old-style backquotes;
-		  ;; roll back so apheleia applies an empty patch instead of garbage
-		  (error
-		   (erase-buffer)
-		   (insert original)
-		   (message "elfmt: %s" (error-message-string err))))))
-	    (funcall callback))
-
-  (setf (alist-get 'elfmt apheleia-formatters) #'apheleia-elfmt)
-  (setf (alist-get 'emacs-lisp-mode apheleia-mode-alist) 'elfmt)
-  (apheleia-global-mode +1))
+(use-package apheleia :ensure t :custom (apheleia-global-mode t))
 
 (use-package clojure-mode :ensure t)
 
@@ -457,7 +423,8 @@ what you'd get by typing TAB there."
   :config (elfeed-webkit-auto-toggle-by-tag))
 
 (use-package elfmt :ensure t :vc
-  (:url "https://github.com/riscy/elfmt"))
+  (:url "https://github.com/riscy/elfmt")
+  :hook (emacs-lisp-mode . elfmt-mode))
 
 (use-package exec-path-from-shell :ensure t :if
   (memq window-system '(ns x))

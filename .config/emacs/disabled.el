@@ -8,6 +8,36 @@
 
 ;;; Code:
 
+(cl-defun apheleia-elfmt
+	      (&key buffer scratch callback &allow-other-keys)
+	    "Format SCRATCH with `elfmt', then invoke CALLBACK.
+Indentation settings are copied from BUFFER so the result matches
+what you'd get by typing TAB there."
+	    (let ((fc (buffer-local-value 'fill-column buffer))
+		  (tabs (buffer-local-value 'indent-tabs-mode buffer))
+		  (indent-fn
+		   (buffer-local-value 'lisp-indent-function buffer))
+		  (original (with-current-buffer scratch (buffer-string))))
+	      (with-current-buffer scratch
+		(delay-mode-hooks (emacs-lisp-mode))
+		;; after the major mode, so these aren't clobbered
+		(setq-local fill-column fc indent-tabs-mode tabs lisp-indent-function indent-fn)
+		(condition-case err
+		    (let ((gc-cons-threshold most-positive-fixnum)
+			  (inhibit-message t)
+			  (message-log-max nil))
+		      (goto-char (point-max))
+		      (while (not (bobp))
+			(backward-sexp)
+			(elfmt--sexp)))
+		  ;; elfmt errors on unbalanced parens and old-style backquotes;
+		  ;; roll back so apheleia applies an empty patch instead of garbage
+		  (error
+		   (erase-buffer)
+		   (insert original)
+		   (message "elfmt: %s" (error-message-string err))))))
+	    (funcall callback))
+
 (use-package reader
   :ensure t
   :vc (:url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
