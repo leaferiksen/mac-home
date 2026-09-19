@@ -8,6 +8,16 @@
 
 ;;; Code:
 
+(use-package reader
+  :ensure t
+  :vc (:url "https://codeberg.org/MonadicSheep/emacs-reader" :make "all")
+  :config (defun fix-reader
+	      ()
+	    "Recompile Reader Libraries"
+	    (interactive)
+	    (let ((default-directory "~/.config/emacs/elpa/reader/"))
+	      (shell-command "make clean all"))))
+
 (defun async-shell-command-no-window (command)
     (interactive)
     (let ((display-buffer-alist
