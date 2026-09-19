@@ -1,4 +1,4 @@
-;;; init.el --- Emacs 31 Initialization -*- lexical-binding: t; no-byte-compile: t; fill-column: 1000;-*-
+;;; init.el --- Emacs 31 Initialization -*- lexical-binding: t; no-byte-compile: t; fill-column: 100;-*-
 
 ;; Author: Leaf Eriksen <leaferiksen@gmail.com>
 
@@ -50,7 +50,8 @@
  '(dired-create-destination-dirs 'ask)
  '(dired-dwim-target t)
  '(dired-mouse-drag-files t)
- '(dired-omit-files "\\`[.][.]?\\'\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
+ '(dired-omit-files
+   "\\`[.][.]?\\'\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
  '(dired-omit-verbose nil)
  '(dired-recursive-copies 'always)
  '(disabled-command-function nil t)
@@ -72,6 +73,7 @@
  '(gc-cons-threshold 100000000)
  '(global-completion-preview-mode t)
  '(global-hl-line-mode t)
+ '(global-nerd-icons-multimodal-mode t)
  '(global-visual-line-mode t)
  '(google-translate-output-destination '(echo-area))
  '(google-translate-show-phonetic t)
@@ -109,11 +111,16 @@
  '(ns-function-modifier 'hyper)
  '(obsidian-cli-note-extensions '("md" "tsv"))
  '(obsidian-cli-rename-on-save t)
- '(package-selected-packages '(agent-shell anglish apheleia clojure-mode csv-mode dwim-shell-command elfeed elfeed-org elfeed-webkit elfmt exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode nerd-icons-dired obsidian-cli osx-dictionary spacious-padding swift-mode typo typst-ts-mode writegood-mode))
+ '(package-selected-packages
+   '(agent-shell anglish apheleia clojure-mode csv-mode dwim-shell-command elfeed elfeed-org
+		 elfeed-webkit elfmt exec-path-from-shell ghostel google-translate hackernews
+		 lorem-ipsum markdown-indent-mode nerd-icons-multimodal obsidian-cli osx-dictionary
+		 spacious-padding swift-mode typo typst-ts-mode writegood-mode))
  '(package-vc-allow-build-commands t)
  '(package-vc-register-as-project nil)
  '(package-vc-selected-packages
-   '((obsidian-cli :url "git@github.com:leaferiksen/obsidian-cli.el.git")
+   '((nerd-icons-multimodal :vc-backend Git :url "https://github.com/abougouffa/nerd-icons-multimodal")
+     (obsidian-cli :url "git@github.com:leaferiksen/obsidian-cli.el.git")
      (elfmt :url "https://github.com/riscy/elfmt")
      (anglish :url "git@github.com:leaferiksen/anglish.el.git")))
  '(project-mode-line t)
@@ -152,11 +159,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Maple Mono CN" :height 140))))
- '(fixed-pitch ((t (:inherit default :family "Monospace"))))
+ '(fixed-pitch ((t (:inherit default))))
  '(variable-pitch ((t (:height 180 :family "Atkinson Hyperlegible Next")))))
 
 (setenv "GIT_EDITOR" "emacsclient")
-(defun open-init () "Visit `user-init-file'." (interactive) (find-file user-init-file))
 (defun almost-maximize-frame ()
   "Borderless maximise with margins for tiling."
   (interactive)
@@ -179,6 +185,18 @@
     (if (use-region-p)
 	(fill-region (region-beginning) (region-end) nil)
       (fill-paragraph nil))))
+(defun project-npm-run ()
+  "Run an npm script from this project's package.json."
+  (interactive)
+  (let* ((default-directory (project-root (project-current t)))
+	 (scripts
+	  (with-temp-buffer
+	    (unless (file-exists-p "package.json")
+	      (user-error "No package.json in %s" default-directory))
+	    (insert-file-contents "package.json")
+	    (mapcar #'car (alist-get 'scripts (json-parse-buffer :object-type 'alist)))))
+	 (script (completing-read "npm run: " scripts nil t)))
+    (compile (format "npm run %s" script))))
 (add-to-list 'editorconfig-indentation-alist '(js-json-mode js-indent-level))
 (add-to-list 'imagemagick-enabled-types 'JXL)
 (define-auto-insert "\\.html\\'" "insert.html")
@@ -187,9 +205,11 @@
 (use-package emacs
   :hook ((emacs-startup . server-start)
 	 (emacs-startup . almost-maximize-frame))
-  :bind (([remap customize] . open-init)
-	 ("C-c y" . yt-dlp-download)
-	 (:map completion-preview-active-mode ("M-]" . completion-preview-next-candidate) ("M-[" . completion-preview-prev-candidate))))
+  :bind (("C-c y" . yt-dlp-download)
+	 (:map project-prefix-map ("s" . project-ghostel) ("n" . project-npm-run))
+	 (:map completion-preview-active-mode
+	       ("M-]" . completion-preview-next-candidate)
+	       ("M-[" . completion-preview-prev-candidate))))
 
 (when (eq window-system 'ns)
   ;; Nerd Font Core Icons: Unicode Plane 0 (BMP)
@@ -208,7 +228,9 @@
     "Mount a .dmg file at point, copy its .app to ~/Applications/, then eject and optionally delete .dmg."
     (interactive)
     (if-let* ((dmg (dired-get-filename))
-	      (mount-output (shell-command-to-string (format "yes | hdiutil attach -nobrowse %s" (shell-quote-argument dmg))))
+	      (mount-output
+	       (shell-command-to-string
+		(format "yes | hdiutil attach -nobrowse %s" (shell-quote-argument dmg))))
 	      ((string-match "/Volumes/[^\t\n]+" mount-output))
 	      (volume (string-trim-right (match-string 0 mount-output)))
 	      (app (car (file-expand-wildcards (concat volume "/*.app")))))
@@ -216,7 +238,9 @@
 	  (make-directory "~/Applications/" t)
 	  (shell-command (format "cp -R %s ~/Applications/" (shell-quote-argument app)))
 	  (shell-command (format "hdiutil detach %s" (shell-quote-argument volume)))
-	  (when (y-or-n-p (format "Installed %s to ~/Applications/ — trash the DMG?" (file-name-nondirectory app)))
+	  (when (y-or-n-p
+		 (format "Installed %s to ~/Applications/ — trash the DMG?"
+			 (file-name-nondirectory app)))
 	    (shell-command (format "trash %s" (shell-quote-argument dmg)))
 	    (revert-buffer)))
       (message "Installation failed: could not mount DMG or find .app bundle")))
@@ -224,6 +248,17 @@
     "Load theme matching system APPEARANCE."
     (mapc #'disable-theme custom-enabled-themes)
     (load-theme (if (eq appearance 'dark) 'modus-vivendi-tinted 'modus-operandi-tinted) t))
+  ;; https://danielde.dev/blog/emacs-for-swift-development
+  (defun xcode--do (&rest verbs)
+    (dolist (v verbs)
+      (ns-do-applescript
+       (format "tell application \"Xcode\" to if (count of workspace documents) > 0 then %s (active workspace document)" v))))
+  (defun xcode-build () "Build the active workspace." (interactive) (xcode--do "build"))
+  (defun xcode-run () "Stop and run the active workspace." (interactive) (xcode--do "stop" "run"))
+  (defun xcode-test ()
+    "Stop and test the active workspace."
+    (interactive)
+    (xcode--do "stop" "test"))
 
   (use-package term/ns-win
     :hook (ns-system-appearance-change-functions . auto-theme)
@@ -238,34 +273,21 @@
     ("H-f" . toggle-frame-fullscreen))
 
   (use-package osx-dictionary :bind ("C-c d" . osx-dictionary-search-word-at-point))
-  (defun my/osx-dictionary-quit (&optional kill)
-    "Quit the dictionary window; with a prefix arg KILL the buffer instead of burying it."
-    (interactive "P")
-    (let ((prev osx-dictionary-previous-window-configuration))
-      (if kill (kill-buffer) (bury-buffer))
-      (when (window-configuration-p prev) (set-window-configuration prev) (setq osx-dictionary-previous-window-configuration nil))))
 
   (use-package swift-mode
     ;; Swift ts-modes are reliant on unfinished tree sitters
     :mode "\\.swift\\'"
     :hook (swift-mode . eglot-ensure)
     :bind (:prefix "C-c x" :prefix-map xcode ("b" . xcode-build) ("r" . xcode-run) ("t" . xcode-test))
-    :config ((with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp"))))
-	     ;; https://danielde.dev/blog/emacs-for-swift-development
-	     (defun xcode--do (&rest verbs)
-	       (dolist (v verbs)
-		 (ns-do-applescript (format "tell application \"Xcode\" to if (count of workspace documents) > 0 then %s (active workspace document)" v))))
-	     (defun xcode-build () "Build the active workspace." (interactive) (xcode--do "build"))
-	     (defun xcode-run () "Stop and run the active workspace." (interactive) (xcode--do "stop" "run"))
-	     (defun xcode-test () "Stop and test the active workspace." (interactive) (xcode--do "stop" "test"))))
+    :config (with-eval-after-load 'eglot
+	      (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp")))))
 
   (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
 
 (use-package dired
   ;; Requires ls-lisp for directory sorting
   :hook ((dired-mode . dired-omit-mode)
-	 (dired-mode . dired-hide-details-mode)
-	 (dired-mode . nerd-icons-dired))
+	 (dired-mode . dired-hide-details-mode))
   :config (require 'ls-lisp))
 
 (use-package eglot
@@ -291,6 +313,18 @@
   :mode ("\\.html\\'" . html-mode)
   :hook (html-mode . visual-wrap-prefix-mode))
 
+(defun markdown-h1-title ()
+  "Insert an atx level 1 heading with the name of the file."
+  (interactive)
+  (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
+(defun markdown-h2-today ()
+  "Insert a level 2 heading with today's date in iso format."
+  (interactive)
+  (insert "## " (format-time-string "%Y-%m-%d") "\n"))
+(defun markdown-mla-frontmatter ()
+  "Insert frontmatter for an MLA heading"
+  (interactive)
+  (insert "---\nprofessor: \nclass: \nword-count: true\n---\n"))
 (use-package markdown-ts-mode
   :mode ("\\.md\\'" . markdown-ts-mode)
   :hook ((markdown-ts-mode . variable-pitch-mode)
@@ -298,7 +332,10 @@
 	 (markdown-ts-mode . obsidian-cli-mode)
 	 (markdown-ts-mode . typo-mode))
   :bind ((:map markdown-ts-mode-map ("<tab>" . markdown-ts-demote) ("<backtab>" . markdown-ts-promote))
-	 (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today) ("f" . markdown-mla-frontmatter)))
+	 (:prefix "C-c m" :prefix-map markdown-actions
+		  ("1" . markdown-h1-title)
+		  ("2" . markdown-h2-today)
+		  ("f" . markdown-mla-frontmatter)))
   :config ((require 'markdown-ts-mode-x)
 	   (dolist (n (number-sequence 1 6))
 	     (set-face-attribute
@@ -308,34 +345,15 @@
 	   ;; Fix extensionless wikilinks
 	   (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
 	   (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
-	     (funcall orig-fn beg end (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url) url (concat url ".md"))))
+	     (funcall orig-fn beg end
+		      (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url) url (concat url ".md"))))
 	   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
-	   (with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio"))))
-	   (defun markdown-h1-title ()
-	     "Insert an atx level 1 heading with the name of the file."
-	     (interactive)
-	     (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
-	   (defun markdown-h2-today () "Insert a level 2 heading with today's date in iso format." (interactive) (insert "## " (format-time-string "%Y-%m-%d") "\n"))
-	   (defun markdown-mla-frontmatter () "Insert frontmatter for an MLA heading" (interactive) (insert "---\nprofessor: \nclass: \nword-count: true\n---\n"))))
+	   (with-eval-after-load 'eglot
+	     (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio"))))))
 
 (use-package prog-mode
   ;; does not cover languages that inherit from sgml
   :hook (prog-mode . visual-wrap-prefix-mode))
-
-(use-package project
-  :bind (:map project-prefix-map ("s" . project-ghostel) ("n" . project-npm-run))
-  :config (defun project-npm-run
-	      ()
-	    "Run an npm script from this project's package.json."
-	    (interactive)
-	    (let* ((default-directory (project-root (project-current t)))
-		   (scripts
-		    (with-temp-buffer
-		      (unless (file-exists-p "package.json") (user-error "No package.json in %s" default-directory))
-		      (insert-file-contents "package.json")
-		      (mapcar #'car (alist-get 'scripts (json-parse-buffer :object-type 'alist)))))
-		   (script (completing-read "npm run: " scripts nil t)))
-	      (compile (format "npm run %s" script)))))
 
 (use-package agent-shell :hook
   (agent-shell-mode . variable-pitch-mode)
@@ -388,12 +406,20 @@ what you'd get by typing TAB there."
 	       ("e" . dwim-shell-commands-macos-open-with)
 	       ("i" . dwim-file-mediainfo)
 	       ("x" . dwim-export-to)))
-  :config ((with-eval-after-load 'dwim-shell-commands (add-to-list 'dwim-shell-commands-git-clone-dirs "~/Git"))
-	   (defun dwim-file-mediainfo () "Run mediainfo on the current buffer's file or marked dired files." (interactive) (dwim-shell-command-on-marked-files "MediaInfo" "mediainfo '<<f>>'" :utils "mediainfo"))
+  :config ((with-eval-after-load 'dwim-shell-commands
+	     (add-to-list 'dwim-shell-commands-git-clone-dirs "~/Git"))
+	   (defun dwim-file-mediainfo ()
+	     "Run mediainfo on the current buffer's file or marked dired files."
+	     (interactive)
+	     (dwim-shell-command-on-marked-files "MediaInfo" "mediainfo '<<f>>'" :utils "mediainfo"))
 	   (defun dwim-file-to-pdf (&optional mla)
 	     "Convert file to PDF via pandoc and typst; with prefix arg, use the MLA template."
 	     (interactive "P")
-	     (dwim-shell-command-on-marked-files "Converting to pdf" (format "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=%s" (expand-file-name (if mla "mla-template.typ" "resume.typ") "~/.config/typst/"))))))
+	     (dwim-shell-command-on-marked-files "Converting to pdf"
+						 (format "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=%s"
+							 (expand-file-name
+							  (if mla "mla-template.typ" "resume.typ")
+							  "~/.config/typst/"))))))
 
 (use-package elfeed
   :bind (("C-c f" . elfeed)
@@ -413,7 +439,9 @@ what you'd get by typing TAB there."
 	    (let ((default-directory (project-root (project-current t))))
 	      (ghostel))))
 
-(use-package google-translate :bind ("C-c t" . google-translate-smooth-translate) ("C-c T" . google-translate-at-point))
+(use-package google-translate :bind
+  ("C-c t" . google-translate-smooth-translate)
+  ("C-c T" . google-translate-at-point))
 
 (use-package hackernews :defer t :bind ("C-c h" . hackernews))
 
@@ -424,7 +452,9 @@ what you'd get by typing TAB there."
 		 ("z" . obsidian-cli-zip-vault)
 		 ("b" . obsidian-cli-jump-to-backlink)))
 
-(use-package typst-ts-mode :mode "\\.typ\\'" :config (add-to-list 'treesit-language-source-alist '(typst "https://github.com/uben0/tree-sitter-typst")))
+(use-package typst-ts-mode :mode "\\.typ\\'" :config
+  (add-to-list 'treesit-language-source-alist
+	       '(typst "https://github.com/uben0/tree-sitter-typst")))
 
 (use-package writegood-mode :bind ("C-c g" . writegood-mode))
 
