@@ -9,8 +9,8 @@
 
 ;; `use-package' :key sort order
 ;; what to install (:ensure :vc)
-;; when to load what (:demand :mode :commands :hook)
 ;; if to load or not (:if :after)
+;; when to load what (:demand :mode :commands :hook)
 ;; what to keys to bind (:bind :prefix :map)
 ;; what variables to set (:custom-face :custom)
 ;; what functions to run when (:init :config)
@@ -19,10 +19,13 @@
 
 ;; Internal features and hooks
 
+(setopt use-package-always-ensure nil)
+
 (use-package emacs
   :hook (emacs-startup . server-start)
   (emacs-startup . almost-maximize-frame)
   :bind ([remap customize] . open-init)
+  ("C-c y" . yt-dlp-download)
   :custom (auto-insert-directory "~/.config/emacs/templates/")
   (auto-insert-mode t)
   (auto-insert-query nil)
@@ -91,13 +94,27 @@
      (selected-frame)
      (- (display-pixel-width) 85)
      nil t))
+  (defun yt-dlp-download ()
+    "Download the URL in the clipboard with yt-dlp."
+    (interactive)
+    (let* ((url
+	    (or (current-kill 0) (user-error "Nothing in clipboard")))
+	   (video (y-or-n-p "Video? "))
+	   (flags
+	    (concat
+	     (if video (and (y-or-n-p "Subs? ") "--write-subs") "-x")
+	     (and video
+		  (y-or-n-p "Backwards-compatible (h264)? ")
+		  " -S vcodec:h264"))))
+      (async-shell-command
+       (format "yt-dlp %s %s" flags (shell-quote-argument url)))))
   (defun unfill ()
     "Unfill the current region if active, or the current paragraph."
     (interactive)
     (let ((fill-column (point-max)))
       (if (use-region-p)
-          (fill-region (region-beginning) (region-end) nil)
-        (fill-paragraph nil))))
+	  (fill-region (region-beginning) (region-end) nil)
+	(fill-paragraph nil))))
   (add-to-list 'imagemagick-enabled-types 'JXL)
   (define-auto-insert "\\.html\\'" "insert.html")
   (define-auto-insert "\\.js\\'" "insert.js"))
@@ -190,7 +207,7 @@
      t)))
 
 (use-package completion-preview
-  :hook (prog-mode html-mode)
+  :hook (prog-mode html-mode agent-shell-mode)
   :bind (:map completion-preview-active-mode
 	      ("M-]" . completion-preview-next-candidate)
 	      ("M-[" . completion-preview-prev-candidate))
@@ -223,9 +240,8 @@
 
 (use-package eglot
   :demand :hook
-  (html-mode . eglot-ensure)
-  (css-ts-mode . eglot-ensure)
-  (js-ts-mode . eglot-ensure)
+  ((html-mode css-ts-mode js-ts-mode markdown-ts-mode)
+   . eglot-ensure)
   :bind (:prefix "C-c a" :prefix-map eglot-actions
 		 ("r" . eglot-rename)
 		 ("a" . eglot-code-actions)
@@ -252,8 +268,6 @@
 
 (use-package markdown-ts-mode
   :mode ("\\.md\\'" . markdown-ts-mode)
-  :hook (markdown-ts-mode . eglot-ensure)
-  (markdown-ts-mode . variable-pitch-mode)
   :bind (:map markdown-ts-mode-map
 	      ("<tab>" . markdown-ts-demote)
 	      ("<backtab>" . markdown-ts-promote))
@@ -272,7 +286,7 @@
   (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
   (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
     (funcall orig-fn beg end
-             (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url)
+	     (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url)
 		 url
 	       (concat url ".md"))))
   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
@@ -297,91 +311,65 @@
 
 (use-package project
   :bind (:map project-prefix-map
-	      ("s" . project-gterm)
+	      ("s" . project-ghostel)
 	      ("n" . project-npm-run))
   :custom (project-mode-line t)
   (project-vc-extra-root-markers '("project"))
-  :config (defun project-gterm
+  :config (defun project-ghostel
 	      ()
-	    "Open gterm in project's root directory."
+	    "Open ghostel in project's root directory."
 	    (interactive)
 	    (let ((default-directory (project-root (project-current t))))
-	      (gterm)))
+	      (ghostel)))
   (defun project-npm-run ()
     "Run an npm script from this project's package.json."
     (interactive)
     (let* ((default-directory (project-root (project-current t)))
 	   (scripts
 	    (with-temp-buffer
-              (unless (file-exists-p "package.json")
+	      (unless (file-exists-p "package.json")
 		(user-error "No package.json in %s" default-directory))
-              (insert-file-contents "package.json")
-              (mapcar #'car
+	      (insert-file-contents "package.json")
+	      (mapcar #'car
 		      (alist-get 'scripts
 				 (json-parse-buffer :object-type 'alist)))))
 	   (script (completing-read "npm run: " scripts nil t)))
       (compile (format "npm run %s" script)))))
+
+(use-package variable-pitch-mode :hook
+  (markdown-ts-mode agent-shell-mode))
 
 (use-package visual-wrap-prefix-mode :hook (prog-mode html-mode))
 
 (use-package xwidget :bind
   (:map xwidget-webkit-mode-map ("u" . xwidget-webkit-browse-url)))
 
-(use-package yt-dlp
-  :bind ("C-c y" . yt-dlp-download)
-  :init (defun yt-dlp-download
-	    ()
-	  "Download the URL in the clipboard with yt-dlp."
-	  (interactive)
-	  (let* ((url
-		  (or (current-kill 0) (user-error "Nothing in clipboard")))
-		 (video (y-or-n-p "Video? "))
-		 (flags
-		  (concat
-		   (if video (and (y-or-n-p "Subs? ") "--write-subs") "-x")
-		   (and video
-			(y-or-n-p "Backwards-compatible (h264)? ")
-			" -S vcodec:h264"))))
-	    (async-shell-command
-	     (format "yt-dlp %s %s" flags (shell-quote-argument url))))))
-
 ;;; External packages
 
 (require 'package)
-
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/")
 	     t)
+(setopt use-package-always-ensure t)
 
 (use-package agent-shell
-  :ensure t
-  :bind (:map project-prefix-map ("a" . agent-shell))
-  :hook (agent-shell-mode . completion-preview-mode)
-  (agent-shell-mode . variable-pitch-mode)
   :bind ("C-c c" . agent-shell-new-temp-shell)
+  (:map project-prefix-map ("a" . agent-shell))
   :custom (agent-shell-preferred-agent-config 'opencode))
 
-(use-package agent-shell-macext
-  :vc (:url "https://github.com/cxa/agent-shell-macext")
-  :hook (agent-shell-mode . agent-shell-macext-setup)
-  :custom (agent-shell-macext-file-copy-policy 'auto)
-  (agent-shell-macext-notifications t)
-  (agent-shell-macext-notify-current-buffer nil))
-
-(use-package anglish :ensure t :vc
+(use-package anglish :vc
   (:url "git@github.com:leaferiksen/anglish.el.git"))
 
-(use-package apheleia :ensure t :custom (apheleia-global-mode t))
+(use-package apheleia :custom (apheleia-global-mode t))
 
-(use-package clojure-mode :ensure t)
+(use-package clojure-mode)
 
-(use-package csv-mode :ensure t :hook
+(use-package csv-mode :hook
   (csv-mode . csv-align-mode)
   :custom (csv-align-padding 2)
   (csv-align-max-width 72))
 
 (use-package dwim-shell-command
-  :ensure t
   :demand :bind
   ("s-i" . dwim-file-mediainfo)
   ([remap shell-command] . dwim-shell-command)
@@ -405,35 +393,33 @@
     (dwim-shell-command-on-marked-files
      "Converting to pdf"
      (format "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=%s"
-             (expand-file-name
+	     (expand-file-name
 	      (if mla "mla-template.typ" "resume.typ")
 	      "~/.config/typst/")))))
 
-(use-package elfeed :ensure t :after elfeed-org :bind
+(use-package elfeed :after elfeed-org :bind
   ("C-c f" . elfeed)
   :custom (elfeed-search-filter "@6months"))
 
-(use-package elfeed-org :ensure t :config (elfeed-org))
+(use-package elfeed-org :config (elfeed-org))
 
 (use-package elfeed-webkit
-  :ensure t
   :demand ;; !
   :bind (:map elfeed-show-mode-map ("w" . elfeed-webkit-toggle))
   :custom (elfeed-webkit-auto-enable-tags '(webkit comics))
   :config (elfeed-webkit-auto-toggle-by-tag))
 
-(use-package elfmt :ensure t :vc
+(use-package elfmt :vc
   (:url "https://github.com/riscy/elfmt")
   :hook (emacs-lisp-mode . elfmt-mode))
 
-(use-package exec-path-from-shell :ensure t :if
+(use-package exec-path-from-shell :if
   (memq window-system '(ns x))
   :config (exec-path-from-shell-initialize))
 
-(use-package ghostel :ensure t :bind ("C-c s" . ghostel))
+(use-package ghostel :bind ("C-c s" . ghostel))
 
 (use-package google-translate
-  :ensure t
   :bind ("C-c t" . google-translate-smooth-translate)
   ("C-c T" . google-translate-at-point)
   :custom (google-translate-output-destination '(echo-area))
@@ -442,8 +428,13 @@
    '(("ja" . "en")
      ("en" . "ja"))))
 
+(use-package hackernews :defer t :bind ("C-c h" . hackernews))
+
+(use-package nov
+  :mode ("\\.epub\\'" . nov-mode)
+  :custom (nov-text-width t))
+
 (use-package osx-dictionary
-  :ensure t
   :bind ("C-c d" . osx-dictionary-search-word-at-point)
   (:map osx-dictionary-mode-map ("q" . my/osx-dictionary-quit))
   :config (defun my/osx-dictionary-quit
@@ -456,14 +447,15 @@
 		(set-window-configuration prev)
 		(setq osx-dictionary-previous-window-configuration nil)))))
 
-(use-package lorem-ipsum :ensure t)
+(use-package lorem-ipsum)
 
-(use-package markdown-indent-mode :ensure t :hook (markdown-ts-mode))
+(use-package markdown-indent-mode :hook (markdown-ts-mode))
 
-(use-package nerd-icons-dired :ensure t :hook dired-mode)
+(use-package mines)
+
+(use-package nerd-icons-dired :hook dired-mode)
 
 (use-package obsidian-cli
-  :ensure t
   :vc (:url "git@github.com:leaferiksen/obsidian-cli.el.git")
   :hook (markdown-ts-mode)
   :bind (:prefix "C-c o" :prefix-map obsidian-cli-actions
@@ -474,11 +466,9 @@
   :custom (obsidian-cli-note-extensions '("md" "tsv"))
   (obsidian-cli-rename-on-save t))
 
-(use-package spacious-padding :ensure t :config
-  (spacious-padding-mode))
+(use-package spacious-padding :config (spacious-padding-mode))
 
 (use-package swift-mode
-  :ensure t
   :if (memq window-system '(ns))
   :mode "\\.swift\\'"
   :hook (swift-mode . eglot-ensure)
@@ -498,7 +488,7 @@ set d to active workspace document
 %s
 end if
 end tell"
-             (mapconcat (lambda (v) (concat v " d")) verbs "\n"))))
+	     (mapconcat (lambda (v) (concat v " d")) verbs "\n"))))
   (defun xcode-build ()
     "Build the active workspace."
     (interactive)
@@ -512,20 +502,20 @@ end tell"
     (interactive)
     (xcode--do "stop" "test")))
 
-(use-package typo :ensure t :hook text-mode)
+(use-package typo :hook text-mode)
 
-(use-package typst-ts-mode :ensure t :vc
+(use-package typst-ts-mode :vc
   (:url "https://codeberg.org/meow_king/typst-ts-mode")
   :mode "\\.typ\\'" :config
   (add-to-list 'treesit-language-source-alist
 	       '(typst "https://github.com/uben0/tree-sitter-typst")))
 
-(use-package visual-fill-column :ensure t :hook
+(use-package visual-fill-column :hook
   (org-mode markdown-ts-mode)
   :custom (visual-fill-column-center-text t)
   (visual-fill-column-width 90))
 
-(use-package writegood-mode :ensure t :vc
+(use-package writegood-mode :vc
   (:url "https://github.com/bnbeckwith/writegood-mode")
   :bind ("C-c g" . writegood-mode))
 

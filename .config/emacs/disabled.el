@@ -8,35 +8,42 @@
 
 ;;; Code:
 
+(use-package agent-shell-macext
+  :vc (:url "https://github.com/cxa/agent-shell-macext")
+  :hook (agent-shell-mode . agent-shell-macext-setup)
+  :custom (agent-shell-macext-file-copy-policy 'auto)
+  (agent-shell-macext-notifications t)
+  (agent-shell-macext-notify-current-buffer nil))
+
 (cl-defun apheleia-elfmt
-	      (&key buffer scratch callback &allow-other-keys)
-	    "Format SCRATCH with `elfmt', then invoke CALLBACK.
+    (&key buffer scratch callback &allow-other-keys)
+  "Format SCRATCH with `elfmt', then invoke CALLBACK.
 Indentation settings are copied from BUFFER so the result matches
 what you'd get by typing TAB there."
-	    (let ((fc (buffer-local-value 'fill-column buffer))
-		  (tabs (buffer-local-value 'indent-tabs-mode buffer))
-		  (indent-fn
-		   (buffer-local-value 'lisp-indent-function buffer))
-		  (original (with-current-buffer scratch (buffer-string))))
-	      (with-current-buffer scratch
-		(delay-mode-hooks (emacs-lisp-mode))
-		;; after the major mode, so these aren't clobbered
-		(setq-local fill-column fc indent-tabs-mode tabs lisp-indent-function indent-fn)
-		(condition-case err
-		    (let ((gc-cons-threshold most-positive-fixnum)
-			  (inhibit-message t)
-			  (message-log-max nil))
-		      (goto-char (point-max))
-		      (while (not (bobp))
-			(backward-sexp)
-			(elfmt--sexp)))
-		  ;; elfmt errors on unbalanced parens and old-style backquotes;
-		  ;; roll back so apheleia applies an empty patch instead of garbage
-		  (error
-		   (erase-buffer)
-		   (insert original)
-		   (message "elfmt: %s" (error-message-string err))))))
-	    (funcall callback))
+  (let ((fc (buffer-local-value 'fill-column buffer))
+	(tabs (buffer-local-value 'indent-tabs-mode buffer))
+	(indent-fn
+	 (buffer-local-value 'lisp-indent-function buffer))
+	(original (with-current-buffer scratch (buffer-string))))
+    (with-current-buffer scratch
+      (delay-mode-hooks (emacs-lisp-mode))
+      ;; after the major mode, so these aren't clobbered
+      (setq-local fill-column fc indent-tabs-mode tabs lisp-indent-function indent-fn)
+      (condition-case err
+	  (let ((gc-cons-threshold most-positive-fixnum)
+		(inhibit-message t)
+		(message-log-max nil))
+	    (goto-char (point-max))
+	    (while (not (bobp))
+	      (backward-sexp)
+	      (elfmt--sexp)))
+	;; elfmt errors on unbalanced parens and old-style backquotes;
+	;; roll back so apheleia applies an empty patch instead of garbage
+	(error
+	 (erase-buffer)
+	 (insert original)
+	 (message "elfmt: %s" (error-message-string err))))))
+  (funcall callback))
 
 (use-package reader
   :ensure t
@@ -47,21 +54,6 @@ what you'd get by typing TAB there."
 	    (interactive)
 	    (let ((default-directory "~/.config/emacs/elpa/reader/"))
 	      (shell-command "make clean all"))))
-
-(defun async-shell-command-no-window (command)
-    (interactive)
-    (let ((display-buffer-alist
-	   (list
-	    (cons "\\*Async Shell Command\\*.*"
-		  (cons #'display-buffer-no-window nil)))))
-      (async-shell-command command)))
-
-(use-package elisp-autofmt
-  :ensure t
-  :vc (:url "https://codeberg.org/ideasman42/emacs-elisp-autofmt")
-  :demand
-  :hook (emacs-lisp-mode . elisp-autofmt-mode)
-  :bind (:prefix "C-c e" :prefix-map elisp-autofmt ("b" . elisp-autofmt-buffer) ("r" . elisp-autofmt-region-dwim)))
 
 (use-package agent-shell-sidebar
   :ensure t
@@ -75,11 +67,11 @@ what you'd get by typing TAB there."
     (define-key project-prefix-map (kbd "a") #'agent-shell-sidebar-toggle)))
 
 (defun project-npx-serve ()
-    "Clear clipboard, npx serve the project's root directory, call clipboard watcher."
-    (interactive)
-    (gui-set-selection 'CLIPBOARD "")
-    (project-run "serve" "Serving %s..." "npx" "serve")
-    (watch-clipboard-xwidget-webkit-browse-url))
+  "Clear clipboard, npx serve the project's root directory, call clipboard watcher."
+  (interactive)
+  (gui-set-selection 'CLIPBOARD "")
+  (project-run "serve" "Serving %s..." "npx" "serve")
+  (watch-clipboard-xwidget-webkit-browse-url))
 (defun watch-clipboard-xwidget-webkit-browse-url ()
   "Watch for clipboard data and open in Xwidgets."
   (if-let* ((current-clip (gui-get-selection 'CLIPBOARD 'STRING)) ;; * may break
@@ -90,7 +82,6 @@ what you'd get by typing TAB there."
         (message "Clipboard update detected! Opened %s in Xwidgets" current-clip))
     (run-at-time "0.5 sec" nil #'watch-clipboard-xwidget-webkit-browse-url)))
 
-(setq package-vc-allow-build-commands t)
 (add-to-list 'default-frame-alist '(undecorated . t))
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
@@ -104,47 +95,44 @@ what you'd get by typing TAB there."
 ("M-v" . yank)
 ("M-o" . execute-extended-command)
 
-    (:map markdown-ts-mode-map ("s-<return>" . markdown-follow-any-link))
-    (defun markdown-follow-any-link ()
-      (interactive)
-      (cond
-       ((thing-at-point-looking-at "\\[\\[\\([^]]+\\)\\]\\]")
-	(when-let* ((path (match-string 1))) ;; * might fail
-          (find-file
-           (if (file-name-extension path)
-               path
-             (concat path ".md")))))
-       ((thing-at-point-looking-at "\\[\\([^]]+\\)\\](\\([^)]+\\))")
-	(browse-url (match-string 2)))
-       (t
-	(message "No link found at point."))))
-    (defun markdown--bounds ()
-      (if (use-region-p)
-          (cons (region-beginning) (region-end))
-	(bounds-of-thing-at-point 'word)))
-    :bind (:prefix "C-c m" :prefix-map markdown-actions ("m" . markdown-more-emphasis) ("l" . markdown-less-emphasis))
-    (defun markdown-more-emphasis ()
-      (interactive)
-      (when-let* ((bounds (markdown--bounds))
-                  (beg (car bounds))
-                  (end (cdr bounds)))
-	(save-excursion
-          (goto-char end)
-          (insert "*")
-          (goto-char beg)
-          (insert "*"))))
-    (defun markdown-less-emphasis ()
-      (interactive)
-      (when-let* ((bounds (markdown--bounds))
-                  (beg (car bounds))
-                  (end (cdr bounds)))
-	(save-excursion
-          (when (and (equal "*" (buffer-substring-no-properties (- beg 1) beg)) (equal "*" (buffer-substring-no-properties end (+ end 1))))
-            (delete-region end (+ end 1))
-            (delete-region (- beg 1) beg)))))
-
-(use-package mines
-  :ensure t)
+(:map markdown-ts-mode-map ("s-<return>" . markdown-follow-any-link))
+(defun markdown-follow-any-link ()
+  (interactive)
+  (cond
+   ((thing-at-point-looking-at "\\[\\[\\([^]]+\\)\\]\\]")
+    (when-let* ((path (match-string 1))) ;; * might fail
+      (find-file
+       (if (file-name-extension path)
+           path
+         (concat path ".md")))))
+   ((thing-at-point-looking-at "\\[\\([^]]+\\)\\](\\([^)]+\\))")
+    (browse-url (match-string 2)))
+   (t
+    (message "No link found at point."))))
+(defun markdown--bounds ()
+  (if (use-region-p)
+      (cons (region-beginning) (region-end))
+    (bounds-of-thing-at-point 'word)))
+:bind (:prefix "C-c m" :prefix-map markdown-actions ("m" . markdown-more-emphasis) ("l" . markdown-less-emphasis))
+(defun markdown-more-emphasis ()
+  (interactive)
+  (when-let* ((bounds (markdown--bounds))
+              (beg (car bounds))
+              (end (cdr bounds)))
+    (save-excursion
+      (goto-char end)
+      (insert "*")
+      (goto-char beg)
+      (insert "*"))))
+(defun markdown-less-emphasis ()
+  (interactive)
+  (when-let* ((bounds (markdown--bounds))
+              (beg (car bounds))
+              (end (cdr bounds)))
+    (save-excursion
+      (when (and (equal "*" (buffer-substring-no-properties (- beg 1) beg)) (equal "*" (buffer-substring-no-properties end (+ end 1))))
+        (delete-region end (+ end 1))
+        (delete-region (- beg 1) beg)))))
 
 (advice-add 'completing-read :around
             (lambda (orig prompt &rest args)
@@ -166,12 +154,12 @@ what you'd get by typing TAB there."
 (set-face-attribute 'hl-line nil :background "controlAccentColor")
 (emacs-startup . remap-all-ts-modes)
 (defun remap-all-ts-modes ()
-    "Remap all available tree-sitter modes to their standard counterparts."
-    (interactive)
-    (dolist (ts-mode (apropos-internal "-ts-mode$" #'commandp))
-      (when-let ((old-mode (intern-soft (concat (string-remove-suffix "-ts-mode" (symbol-name ts-mode)) "-mode")))
-                 ((fboundp old-mode)))
-        (add-to-list 'major-mode-remap-alist (cons old-mode ts-mode)))))
+  "Remap all available tree-sitter modes to their standard counterparts."
+  (interactive)
+  (dolist (ts-mode (apropos-internal "-ts-mode$" #'commandp))
+    (when-let ((old-mode (intern-soft (concat (string-remove-suffix "-ts-mode" (symbol-name ts-mode)) "-mode")))
+               ((fboundp old-mode)))
+      (add-to-list 'major-mode-remap-alist (cons old-mode ts-mode)))))
 
 (use-package swift-ts-mode
   :ensure t
@@ -187,224 +175,11 @@ what you'd get by typing TAB there."
     (add-to-list 'apheleia-mode-alist '(swift-ts-mode . swift-format))
     (add-to-list 'apheleia-formatters '(swift-format "xcrun" "swift-format" (buffer-file-name)))))
 
-(use-package appine
-  :ensure t
-  :vc ( :url "git@github.com:chaoswork/appine.git")
-  :if
-  (memq window-system '(ns))
-  :bind
-  ( :prefix "C-c m"
-    :prefix-map macos-views
-    ("a" . appine)
-    ("k" . appine-kill)
-    ("u" . appine-open-url)
-    ("o" . appine-open-file)
-    ("e" . open-with-appine)
-    ("r" . appine-rss))
-  :custom
-  (appine-rss-path "~/.config/emacs/elfeed.org")
-  :init
-  (defun open-with-appine ()
-    "Load the current file or file under cursor in Dired into Appine."
-    (interactive)
-    (if-let ((file (if (derived-mode-p 'dired-mode)
-		       (dired-get-file-for-visit)
-		     (buffer-file-name)))
-             ((file-exists-p file)))
-	(appine-open-file file)
-      (message "No file found to open with Appine")))
-  (defun watch-clipboard-appine-open-url ()
-    "Watch for clipboard data and open in Appine."
-    (if-let ((current-clip (gui-get-selection 'CLIPBOARD 'STRING))
-             ((not (string-empty-p current-clip))))
-        (progn (appine-open-url current-clip)
-	       (message "Clipboard update detected! Opened %s in Appine" current-clip))
-      (run-at-time "0.5 sec" nil #'watch-clipboard-appine-open-url)))) 
-
-(use-package gterm
-  :ensure t
-  :defer t
-  :vc ( :url "https://github.com/rwc9u/emacs-libgterm" :branch "main")
-  :custom
-  (gterm-always-compile-module t)
-  :bind
-  ("C-c s" . gterm))
-
-(use-package lua-mode
-  :ensure t :defer t
-  :hook
-  (lua-mode . eglot-ensure))
-
-(use-package magit
-  :ensure t :defer t)
-
-(use-package hackernews
-  :ensure t :defer t
-  :bind
-  ("C-c h" . hackernews))
-
-(defun get-apw-password (domain)
-  "Fetch the password for DOMAIN using the apw tool."
-  ;; Usage: (get-apw-password "example.com")
-  (let* ((json-str (shell-command-to-string (format "apw pw get %s" domain)))
-         (data (json-parse-string json-str :object-type 'alist))
-         (results (alist-get 'results data)))
-    (when (> (length results) 0)
-      (alist-get 'password (elt results 0)))))
-
-:bind
-( :map dired-mode-map
-  ("f" . dired-finder-path))
-:config
-(defun dired-finder-path ()
-  "Open Dired in the frontmost Finder window path, if available."
-  (interactive)
-  (let ((path (ns-do-applescript "tell application \"Finder\" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)")))
-    (if path (dired (string-trim path))
-      (message "No Finder window found."))))
-
-(use-package music-control
-  :defer t
-  :load-path "elpa/music-control/"
-  :config
-  (music-control-mode 1))
-
-(use-package sidetabs
-  :vc (:url "https://gist.github.com/rougier/23f723b039873cd5c2e9eb6862dbc31e"
-	    :rev :newest)
-  :config
-  (sidetabs-mode 1))
-
-
 (use-package auth-source
   :custom (auth-sources "~/.authinfo"))
 
 (use-package epg-config
   :custom (epg-pinentry-mode 'loopback))
-
-(use-package mastodon
-  :ensure t
-  ;; :hook ((mastodon-mode . visual-fill-column-mode)
-  ;; 	 (mastodon-toot-mode . visual-fill-column-mode))
-  :custom
-  (mastodon-instance-url "https://mastodon.social")
-  (mastodon-active-user "leaferiksen")
-  ;; (mastodon-auth-use-auth-source nil)
-  ;; (mastodon-tl--display-media-p nil)
-  ;; (mastodon-tl--highlight-current-toot t)
-  )
-
-(use-package treesit
-  :config
-  (defun treesit-bulk-install ()
-    "Install everything currently in treesit-language-source-alist."
-    (interactive)
-    (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist)))
-  ;; Source: https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
-  ;; bash/html/toml/yaml/md-ts-modes all handle their own sources
-  (setq treesit-language-source-alist
-	'((cmake "https://github.com/uyha/tree-sitter-cmake")
-	  (css "https://github.com/tree-sitter/tree-sitter-css")
-	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-	  (go "https://github.com/tree-sitter/tree-sitter-go")
-	  (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-	  (json "https://github.com/tree-sitter/tree-sitter-json")
-	  (make "https://github.com/alemuller/tree-sitter-make")
-	  (python "https://github.com/tree-sitter/tree-sitter-python")
-	  (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-	  (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))))
-
-(use-package treesit-langs
-  :ensure t
-  :vc ( :url "https://github.com/kiennq/treesit-langs"))
-
-(use-package markdown-ts-mode
-  :mode
-  ("\\.md\\'" . markdown-ts-mode)
-  :hook
-  (markdown-mode . (lambda () (font-lock-add-keywords nil '(("\\[\\[\\([^]]+\\)\\]\\]" 0 'link t)))))
-  (markdown-mode . orgtbl-mode)
-  :config
-  (require 'org-table)
-  (defun markdown-table-fix (&rest _args)
-    (when (and (buffer-file-name) (string-match-p "\\.md$" (buffer-file-name)))
-      (save-excursion
-	(let ((end (org-table-end)))
-          (goto-char (org-table-begin))
-          (while (search-forward "+" end t)
-            (replace-match "|"))))))
-  (advice-add 'org-table-align :after #'markdown-table-fix))
-
-(use-package markdown-mode
-  :ensure t
-  :mode
-  ("README\\.md\\'" . gfm-mode)
-  :hook
-  ;; (markdown-mode . variable-pitch-mode)
-  (markdown-mode . visual-fill-column-mode)
-  :custom-face
-  (markdown-list-face ((t ( :family "Atkinson Hyperlegible Mono"))))
-  :custom
-  (markdown-asymmetric-header t)
-  (markdown-enable-wiki-links t)
-  (markdown-fontify-code-blocks-natively t)
-  (markdown-hide-urls t)
-  (markdown-link-space-sub-char " ")
-  (markdown-special-ctrl-a/e t)
-  (markdown-unordered-list-item-prefix "- ")
-  (markdown-wiki-link-retain-case t)
-  :config
-  ;; Open wikilinks with explicit file extensions without also adding .md extension
-  (advice-add 'markdown-convert-wiki-link-to-filename :around
-	      (lambda (orig-fn name)
-		"Convert NAME to filename. If NAME has explicit extension, use it directly."
-		(if (file-name-extension name) (replace-regexp-in-string "[[:space:]\n]" markdown-link-space-sub-char name) (funcall orig-fn name))))
-  ;; Files opened via wikilinks use their correct major mode instead of markdown-mode
-  (advice-add 'markdown-follow-wiki-link :override
-	      (lambda (name &optional other)
-		"Follow the wiki link NAME, respecting buffer's major mode."
-		(unless buffer-file-name (user-error "Must be visiting a file"))
-		(when other (other-window 1))
-		(let ((default-directory (file-name-directory buffer-file-name))) (find-file (markdown-convert-wiki-link-to-filename name)))))
-  :bind
-  ("C-c d" . daily-note)
-  ( :map markdown-mode-map
-    ("C-c SPC 1" . h1-title)
-    ("C-c SPC 2" . h2-today)
-    ("C-c SPC p" . export-selection-to-mla-pdf)))
-
-(use-package swift-development
-  :ensure t :defer t
-  :vc
-  ( :url "https://github.com/konrad1977/swift-development")
-  :config
-  ;; (require 'swift-lsp)
-  ;; (add-to-list 'eglot-server-programs '(swift-ts-mode . swift-lsp-eglot-server-contact))
-  ;; Load the main package
-  (require 'swift-development)
-  (require 'xcode-project)
-  (require 'xcode-build-config)
-  ;; Optional modules
-  ;; (require 'ios-simulator)
-  ;; (require 'ios-device)
-  ;; (require 'swift-refactor)
-  ;; (require 'localizeable-mode)
-  )
-
-(use-package periphery
-  :vc ( :url "https://github.com/konrad1977/periphery" :rev :newest)
-  :custom
-  ;; Adjust severity badge background darkness (0-100, higher = darker)
-  (periphery-background-darkness 85)
-  ;; Use theme colors instead of default Catppuccin colors
-  (periphery-use-theme-colors t)
-  ;; Trim message prefixes for cleaner display
-  (periphery-trim-message-prefix t)
-  ;; Enable debug mode if needed
-  (periphery-debug nil)
-  :config
-  ;; Optional: Clear color cache when switching themes
-  (add-hook 'after-load-theme-hook #'periphery--clear-color-cache))
 
 (use-package devil
   :ensure t
@@ -433,33 +208,12 @@ what you'd get by typing TAB there."
 				    (". b" ". f" ". a" ". e") (", p" ", n" ", b" ", f" ", a" ", e")
 				    (", . p" ", . n" ", . b" ", . f" ", . a" ", . e" ", . u" ", . d" ", . t")
 				    (". , p" ". , n" ". , b" ". , f" ". , a" ". , e" ". , u" ". , d" ". , t")))))
-(use-package nov
-  :mode ("\\.epub\\'" . nov-mode)
-  :custom (nov-text-width t))
-(use-package tab-line
-  :custom ((global-tab-line-mode t)
-	   (tab-line-new-button-show nil)
-	   (tab-line-close-button-show nil))
-  :custom-face
-  (tab-bar ((t (:inherit mode-line))))
-  :bind (("C-<tab>" . tab-line-switch-to-next-tab)
-	 ("C-M-<tab>" . tab-line-switch-to-prev-tab)))
-(use-package files
-  :custom (insert-directory-program "gls"))
-(defun arc-open-parent-folder-and-quit () "Open the parent folder of the current arc-mode buffer and quit the arc-mode window."
-       (interactive)
-       (let ((parent-dir (expand-file-name default-directory)))
-	 (quit-window)
-	 (dired parent-dir)))
-(use-package fixed-pitch
-  :custom (fixed-pitch-dont-change-cursor t)
-  :hook ((archive-mode diff-mode elfeed-search-mode html-mode prog-mode vc-dir-mode) . fixed-pitch-mode))
+
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font) charset
 		    (font-spec :family "Hiragino Mincho ProN")))
-;;;;;;;;;;;;;;;
-;; Mode-line ;;
-;;;;;;;;;;;;;;;
+
+;; Mode-line
 (mode-line ((t (:inherit 'variable-pitch))))
 (defvar my/font "New York"
   "Main font")
@@ -473,52 +227,13 @@ what you'd get by typing TAB there."
     (set-fontset-font (frame-parameter nil 'font) charset
 		      (font-spec :family my/font-ja))))
 (my/use-font)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Terminal Interface Emacs ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Hide the menu bar when it can't integrate with the global bar
-(when (not (display-graphic-p))
-  (menu-bar-mode -1))
-(setq frame-background-mode 'dark)
-;; (debug-on-variable-change 'frame-background-mode)
-(mapc 'frame-set-background-mode (frame-list))
-(use-package kkp
-  :ensure t
-  :config
-  ;; (setq kkp-alt-modifier 'alt) ;; use this if you want to map the Alt keyboard modifier to Alt in Emacs (and not to Meta)
-  (global-kkp-mode +1))
-;; Equivalent bindings
-("C-u" . previous-line) ("C-e" . next-line) ("C-n" . backward-char) ;; ("C-i" . forward-char)
-("C-p" . nil) ("C-b" . nil) ("C-f" . nil) ;; ("C-n" . nil)
-("C-l" . beginning-of-visual-line) ("C-y" . end-of-visual-line)
-("C-a" . nil) ; ("C-e" . nil)
-("C-j" . scroll-up-command) ;; ("C-m" . scroll-down-command)
-("C-v" . nil) ("M-v" . nil)
-("M-n" . backward-word) ("M-i" . forward-word)
-("M-b" . nil) ("M-f" . nil)
-("C-'" . delete-forward-char) ("C-o" . delete-backward-char) ("M-'" . kill-word) ("M-o" . backward-kill-word)
-(massmapper :url "https://github.com/meedstrom/massmapper")
-(use-package massmapper
-  :config (massmapper-conserve-ret-and-tab)
-  :custom (massmapper-Cm-Ci-override '(("C-i" . forward-char)
-				       ("C-m" . scroll-down-command))))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(split-height-threshold 0)
-(split-width-threshold nil)
-(set-frame-position (selected-frame) 0 0)
-(set-frame-size (selected-frame) 1465 845 t)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(keymap-global-set "M-<home>" 'completion-preview-prev-candidate)
-(keymap-global-set "M-<end>" 'completion-preview-next-candidate)
-("C-p" . nil) ("C-n" . nil) ("C-f" . nil) ("M-f" . nil) ("C-b" . nil) ("M-b" . nil) ("C-M-p" . nil) ("C-M-n" . nil) ("C-M-f" . nil) ("C-M-b" . nil) ("C-d" . nil) ("M-d" . nil) ("C-w" . nil) ("M-w" . nil) ("C-v" . nil) ("M-v" . nil) ("C-M-v" . nil) ("C-M-S-v" . nil)
-([escape] . keyboard-quit) (:map esc-map ([escape] . keyboard-quit)) (:map ctl-x-map ([escape] . keyboard-quit)) (:map help-map ([escape] . keyboard-quit)) (:map goto-map ([escape] . keyboard-quit)) (:map minibuffer-mode-map ([escape] . minibuffer-keyboard-quit)) (:map devil-mode-map ([escape] . keyboard-quit))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; macOS keybinds
 (keymap-global-set "C-<up>" 'beginning-of-buffer)
 (keymap-global-set "C-<down>" 'end-of-buffer)
 (keymap-global-set "C-<left>" 'move-beginning-of-line)
 (keymap-global-set "C-<right>" 'move-end-of-line)
-;; macOS keybinds
-(keymap-global-set "C-," 'customize)
+
 (keymap-global-set "C-w" 'kill-current-buffer)
 (keymap-global-set "C-o" 'find-file)
 (keymap-global-set "C-a" 'mark-whole-buffer)
@@ -529,120 +244,5 @@ what you'd get by typing TAB there."
 (keymap-global-set "C-S-f" 'isearch-backward)
 (keymap-global-set "C-M-f" 'isearch-forward-regexp)
 (keymap-global-set "C-M-S-f" 'isearch-backward-regexp)
-
-;; Navigation and Selection mode
-;; https://github.com/mrkkrp/modalka
-(use-package modalka
-  :init
-  (setq-default
-   modalka-cursor-type 'box)
-  (modalka-global-mode 1)
-  (add-to-list 'modalka-excluded-modes 'dired-mode)
-  (add-to-list 'modalka-excluded-modes 'vc-git-log-edit-mode)
-  (add-to-list 'modalka-excluded-modes 'term-mode)
-  (add-to-list 'modalka-excluded-modes 'eshell-mode)
-  (add-to-list 'modalka-excluded-modes 'elfeed-show-mode)
-  :config
-  (define-key modalka-mode-map (kbd "SPC") 'set-mark-command)
-  ;; Symbols
-  (modalka-define-kbd "`" "nil")
-  (modalka-define-kbd "~" "nil")
-  (modalka-define-kbd "!" "M-!")
-  (modalka-define-kbd "@" "nil")
-  (modalka-define-kbd "#" "nil")
-  (modalka-define-kbd "%" "M-%")
-  (modalka-define-kbd "$" "M-$")
-  (modalka-define-kbd "^" "nil")
-  (modalka-define-kbd "&" "M-&")
-  (modalka-define-kbd "*" "nil")
-  (modalka-define-kbd "(" "nil")
-  (modalka-define-kbd ")" "nil")
-  (modalka-define-kbd "-" "nil")
-  (modalka-define-kbd "_" "nil")
-  (modalka-define-kbd "=" "nil")
-  (modalka-define-kbd "+" "nil")
-  (modalka-define-kbd ";" "M-;")
-  (modalka-define-kbd ":" "M-:")
-  (modalka-define-kbd "[" "nil")
-  (modalka-define-kbd "]" "nil")
-  (modalka-define-kbd "{" "nil")
-  (modalka-define-kbd "}" "nil")
-  (modalka-define-kbd "\\" "nil")
-  (modalka-define-kbd "|" "M-|")
-  (modalka-define-kbd "," "nil")
-  (modalka-define-kbd "." "nil")
-  (modalka-define-kbd "/" "nil")
-  (modalka-define-kbd "?" "nil")
-  (modalka-define-kbd "<" "nil")
-  (modalka-define-kbd ">" "nil")
-  ;; Numbers
-  (modalka-define-kbd "0" "C-0")
-  (modalka-define-kbd "1" "C-1")
-  (modalka-define-kbd "2" "C-2")
-  (modalka-define-kbd "3" "C-3")
-  (modalka-define-kbd "4" "C-4")
-  (modalka-define-kbd "5" "C-5")
-  (modalka-define-kbd "6" "C-6")
-  (modalka-define-kbd "7" "C-7")
-  (modalka-define-kbd "8" "C-8")
-  (modalka-define-kbd "9" "C-9")
-  ;; Letters
-  (modalka-define-kbd "a" "C-a")
-  (modalka-define-kbd "b" "C-b")
-  (define-key modalka-mode-map "c"
-	      `(lambda () "Simulates the `C-c' key-press" (interactive)
-		 (setq prefix-arg current-prefix-arg)
-		 (setq unread-command-events (listify-key-sequence (read-kbd-macro "C-c"))))) ; C-c prefix
-  (modalka-define-kbd "d" "C-d")
-  (modalka-define-kbd "e" "C-e")
-  (modalka-define-kbd "f" "C-f")
-  (define-key modalka-mode-map "g" goto-map)
-  (define-key modalka-mode-map "h" help-map)
-  (modalka-define-kbd "i" "C-i")
-  (modalka-define-kbd "j" "C-j")
-  (modalka-define-kbd "k" "C-k")
-  (modalka-define-kbd "l" "C-l")
-  (modalka-define-kbd "m" "C-m")
-  (modalka-define-kbd "n" "C-n")
-  (modalka-define-kbd "o" "C-o")
-  (modalka-define-kbd "p" "C-p")
-  (modalka-define-kbd "q" "C-q")
-  (modalka-define-kbd "r" "C-r")
-  (modalka-define-kbd "s" "C-s")
-  (modalka-define-kbd "t" "C-t")
-  (modalka-define-kbd "u" "C-u")
-  (modalka-define-kbd "v" "C-v")
-  (modalka-define-kbd "w" "C-w")
-  (define-key modalka-mode-map "x" ctl-x-map)
-  (modalka-define-kbd "y" "C-y")
-  (modalka-define-kbd "z" "M-z")
-  (modalka-define-kbd "A" "M-a")
-  (modalka-define-kbd "B" "C-M-b")
-  (modalka-define-kbd "C" "M-c")
-  (modalka-define-kbd "D" "M-d")
-  (modalka-define-kbd "E" "M-e")
-  (modalka-define-kbd "F" "C-M-f")
-  (define-key modalka-mode-map "G" goto-map)
-  (modalka-define-kbd "H" "M-h")
-  (modalka-define-kbd "I" "M-i")
-  (modalka-define-kbd "J" "M-j")
-  (modalka-define-kbd "K" "M-k")
-  (modalka-define-kbd "L" "M-l")
-  (modalka-define-kbd "M" "M-m")
-  (modalka-define-kbd "N" "C-M-n")
-  (modalka-define-kbd "O" "M-o")
-  (modalka-define-kbd "P" "C-M-p")
-  (modalka-define-kbd "Q" "M-q")
-  (modalka-define-kbd "R" "M-r")
-  (modalka-define-kbd "S" "M-s")
-  (modalka-define-kbd "T" "M-t")
-  (modalka-define-kbd "U" "M-u")
-  (modalka-define-kbd "V" "M-v")
-  (modalka-define-kbd "W" "M-w")
-  (define-key modalka-mode-map "X" 'execute-extended-command)
-  (modalka-define-kbd "Y" "M-y")
-  (modalka-define-kbd "Z" "M-z")
-  :bind
-  (("<f13>" . modalka-mode)))
 
 ;;; disabled.el ends here
