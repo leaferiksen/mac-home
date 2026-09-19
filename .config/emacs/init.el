@@ -1,4 +1,4 @@
-;;; init.el --- Emacs 31 Initialization -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; init.el --- Emacs 31 Initialization -*- lexical-binding: t; no-byte-compile: t; fill-column: 10000;-*-
 
 ;; Author: Leaf Eriksen <leaferiksen@gmail.com>
 
@@ -19,25 +19,52 @@
 
 ;; Internal features and hooks
 
-(setopt use-package-always-ensure nil)
+(require 'package)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages '(agent-shell anglish apheleia clojure-mode csv-mode dwim-shell-command elfeed elfeed-org elfeed-webkit elfmt exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode nerd-icons-dired nov obsidian-cli osx-dictionary spacious-padding swift-mode typo typst-ts-mode visual-fill-column writegood-mode))
+ '(package-vc-selected-packages
+   '((obsidian-cli :url "git@github.com:leaferiksen/obsidian-cli.el.git")
+     (elfmt :url "https://github.com/riscy/elfmt")
+     (anglish :url "git@github.com:leaferiksen/anglish.el.git"))))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Maple Mono CN" :height 140))))
+ '(fixed-pitch ((t (:inherit default :family "Monospace"))))
+ '(variable-pitch ((t (:height 180 :family "Atkinson Hyperlegible Next")))))
 
 (use-package emacs
   :hook (emacs-startup . server-start)
   (emacs-startup . almost-maximize-frame)
   :bind ([remap customize] . open-init)
   ("C-c y" . yt-dlp-download)
-  :custom (auto-insert-directory "~/.config/emacs/templates/")
+  (:map completion-preview-active-mode ("M-]" . completion-preview-next-candidate) ("M-[" . completion-preview-prev-candidate))
+  :custom (apheleia-global-mode t)
+  (auto-insert-directory "~/.config/emacs/templates/")
   (auto-insert-mode t)
   (auto-insert-query nil)
   (auto-save-default nil)
   (auto-save-visited-mode t)
   (backward-delete-char-untabify-method nil)
   (column-number-mode t)
+  (completion-auto-help nil)
+  (completion-eager-update t)
+  (completion-eager-display nil)
+  (completion-ignore-case t)
+  (completions-sort 'historical)
   (cursor-type 'bar)
-  (custom-file null-device)
   (delete-selection-mode t)
   (disabled-command-function nil)
   (display-line-numbers-width-start 3)
+  (editorconfig-mode t)
   (eldoc-echo-area-prefer-doc-buffer t)
   (eldoc-echo-area-use-multiline-p t)
   (eldoc-help-at-pt t)
@@ -46,6 +73,7 @@
   (find-file-visit-truename t)
   (frame-resize-pixelwise t)
   (gc-cons-threshold 100000000)
+  (global-completion-preview-mode t)
   (global-hl-line-mode t)
   (global-visual-line-mode t)
   (ibuffer-human-readable-size t)
@@ -64,6 +92,7 @@
   (sentence-end-double-space nil)
   (shr-max-image-proportion 0.6)
   (shr-width 80)
+  (spacious-padding-mode t)
   (speedbar-window-default-width 30)
   (speedbar-window-max-width 20)
   (tool-bar-mode nil)
@@ -82,32 +111,22 @@
   (word-wrap-by-category t)
   (display-line-numbers-type 'relative)
   :config (setenv "GIT_EDITOR" "emacsclient")
-  (defun open-init ()
-    "Visit `user-init-file'."
-    (interactive)
-    (find-file user-init-file))
+  (defun open-init () "Visit `user-init-file'." (interactive) (find-file user-init-file))
   (defun almost-maximize-frame ()
     "Borderless maximise with margins for tiling."
     (interactive)
     ;; (add-to-list 'default-frame-alist '(undecorated-round . t))
-    (set-frame-width
-     (selected-frame)
-     (- (display-pixel-width) 85)
-     nil t))
+    (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
   (defun yt-dlp-download ()
     "Download the URL in the clipboard with yt-dlp."
     (interactive)
-    (let* ((url
-	    (or (current-kill 0) (user-error "Nothing in clipboard")))
+    (let* ((url (or (current-kill 0) (user-error "Nothing in clipboard")))
 	   (video (y-or-n-p "Video? "))
 	   (flags
 	    (concat
 	     (if video (and (y-or-n-p "Subs? ") "--write-subs") "-x")
-	     (and video
-		  (y-or-n-p "Backwards-compatible (h264)? ")
-		  " -S vcodec:h264"))))
-      (async-shell-command
-       (format "yt-dlp %s %s" flags (shell-quote-argument url)))))
+	     (and video (y-or-n-p "Backwards-compatible (h264)? ") " -S vcodec:h264"))))
+      (async-shell-command (format "yt-dlp %s %s" flags (shell-quote-argument url)))))
   (defun unfill ()
     "Unfill the current region if active, or the current paragraph."
     (interactive)
@@ -115,6 +134,7 @@
       (if (use-region-p)
 	  (fill-region (region-beginning) (region-end) nil)
 	(fill-paragraph nil))))
+  (add-to-list 'editorconfig-indentation-alist '(js-json-mode js-indent-level))
   (add-to-list 'imagemagick-enabled-types 'JXL)
   (define-auto-insert "\\.html\\'" "insert.html")
   (define-auto-insert "\\.js\\'" "insert.js"))
@@ -154,34 +174,22 @@
   (keymap-set key-translation-map "s-g" "M-g")
   (keymap-set key-translation-map "s-o" "C-x p")
   (keymap-set key-translation-map "s-r" "C-x r")
-  (dolist (key
-	   '("a" "b" "d" "e" "f" "k" "l" "n" "p" "t" "u" "y" "<backspace>"))
-    (keymap-set key-translation-map
-		(concat "s-" key)
-		(concat "C-M-" key)))
+  (dolist (key '("a" "b" "d" "e" "f" "k" "l" "n" "p" "t" "u" "y" "<backspace>"))
+    (keymap-set key-translation-map (concat "s-" key) (concat "C-M-" key)))
   (defun dired-install-dmg ()
     "Mount a .dmg file at point, copy its .app to ~/Applications/, then eject and optionally delete .dmg."
     (interactive)
     (if-let* ((dmg (dired-get-filename))
-	      (mount-output
-	       (shell-command-to-string
-		(format "yes | hdiutil attach -nobrowse %s"
-			(shell-quote-argument dmg))))
+	      (mount-output (shell-command-to-string (format "yes | hdiutil attach -nobrowse %s" (shell-quote-argument dmg))))
 	      ((string-match "/Volumes/[^\t\n]+" mount-output))
 	      (volume (string-trim-right (match-string 0 mount-output)))
 	      (app (car (file-expand-wildcards (concat volume "/*.app")))))
 	(progn
 	  (make-directory "~/Applications/" t)
-	  (shell-command
-	   (format "cp -R %s ~/Applications/"
-		   (shell-quote-argument app)))
-	  (shell-command
-	   (format "hdiutil detach %s" (shell-quote-argument volume)))
-	  (when (y-or-n-p
-		 (format "Installed %s to ~/Applications/ — trash the DMG?"
-			 (file-name-nondirectory app)))
-	    (shell-command
-	     (format "trash %s" (shell-quote-argument dmg)))
+	  (shell-command (format "cp -R %s ~/Applications/" (shell-quote-argument app)))
+	  (shell-command (format "hdiutil detach %s" (shell-quote-argument volume)))
+	  (when (y-or-n-p (format "Installed %s to ~/Applications/ — trash the DMG?" (file-name-nondirectory app)))
+	    (shell-command (format "trash %s" (shell-quote-argument dmg)))
 	    (revert-buffer)))
       (message "Installation failed: could not mount DMG or find .app bundle"))))
 
@@ -191,31 +199,15 @@
 	   '((underline-link unspecified)
 	     (underline-link-visited unspecified)
 	     (underline-link-symbolic unspecified)))
-  ;; (modus-themes-headings '((t . (rainbow))))
+  (modus-themes-headings '((t . (rainbow))))
   (modus-themes-italic-constructs t)
-  ;; (modus-themes-mode-line '(accented borderless padded))
+  (modus-themes-mode-line '(accented borderless padded))
   (modus-themes-mixed-fonts t)
-  :init (set-face-attribute 'default nil :family "Maple Mono CN" :height 140)
-  (set-face-attribute 'fixed-pitch nil :inherit 'default)
-  (set-face-attribute 'variable-pitch nil :family "Atkinson Hyperlegible Next" :height 180)
-  (defun auto-theme (appearance)
-    "Load theme matching system APPEARANCE."
-    (mapc #'disable-theme custom-enabled-themes)
-    (load-theme
-     (if (eq appearance 'dark)
-	 'modus-vivendi-tinted 'modus-operandi-tinted)
-     t)))
-
-(use-package completion-preview
-  :hook (prog-mode html-mode agent-shell-mode)
-  :bind (:map completion-preview-active-mode
-	      ("M-]" . completion-preview-next-candidate)
-	      ("M-[" . completion-preview-prev-candidate))
-  :custom (completion-auto-help nil)
-  (completion-eager-update t)
-  (completion-eager-display nil) ;Disable duplicate menu
-  (completion-ignore-case t)
-  (completions-sort 'historical))
+  :init (defun auto-theme
+	    (appearance)
+	  "Load theme matching system APPEARANCE."
+	  (mapc #'disable-theme custom-enabled-themes)
+	  (load-theme (if (eq appearance 'dark) 'modus-vivendi-tinted 'modus-operandi-tinted) t)))
 
 (use-package dired
   :hook (dired-mode . dired-omit-mode)
@@ -232,11 +224,6 @@
   (ls-lisp-use-insert-directory-program nil)
   (ls-lisp-use-localized-time-format t)
   :config (require 'ls-lisp))
-
-(use-package editorconfig :init
-  (editorconfig-mode 1)
-  :config (add-to-list 'editorconfig-indentation-alist
-		       '(js-json-mode js-indent-level)))
 
 (use-package eglot
   :demand :hook
@@ -255,12 +242,8 @@
 
 (use-package flymake
   :hook (emacs-lisp-mode . flymake-avoid-scratch)
-  :bind (:map flymake-mode-map
-	      ("M-n" . flymake-goto-next-error)
-	      ("M-p" . flymake-goto-prev-error))
-  :config (defun flymake-avoid-scratch
-	      ()
-	    (when (buffer-file-name) (flymake-mode 1))))
+  :bind (:map flymake-mode-map ("M-n" . flymake-goto-next-error) ("M-p" . flymake-goto-prev-error))
+  :config (defun flymake-avoid-scratch () (when (buffer-file-name) (flymake-mode 1))))
 
 (use-package html-mode
   ;; mhtml-mode causes issues with apheleia
@@ -268,13 +251,8 @@
 
 (use-package markdown-ts-mode
   :mode ("\\.md\\'" . markdown-ts-mode)
-  :bind (:map markdown-ts-mode-map
-	      ("<tab>" . markdown-ts-demote)
-	      ("<backtab>" . markdown-ts-promote))
-  (:prefix "C-c m" :prefix-map markdown-actions
-	   ("1" . markdown-h1-title)
-	   ("2" . markdown-h2-today)
-	   ("f" . markdown-mla-frontmatter))
+  :bind (:map markdown-ts-mode-map ("<tab>" . markdown-ts-demote) ("<backtab>" . markdown-ts-promote))
+  (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today) ("f" . markdown-mla-frontmatter))
   :custom (markdown-ts-inline-images t)
   :config (require 'markdown-ts-mode-x)
   (dolist (n (number-sequence 1 6))
@@ -285,34 +263,18 @@
   ;; Fix extensionless wikilinks
   (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
   (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
-    (funcall orig-fn beg end
-	     (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url)
-		 url
-	       (concat url ".md"))))
+    (funcall orig-fn beg end (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url) url (concat url ".md"))))
   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-		 '(markdown-ts-mode . ("harper-ls" "--stdio"))))
+  (with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio"))))
   (defun markdown-h1-title ()
     "Insert an atx level 1 heading with the name of the file."
     (interactive)
-    (insert "# "
-	    (file-name-nondirectory
-	     (file-name-sans-extension (buffer-file-name)))
-	    "\n"))
-  (defun markdown-h2-today ()
-    "Insert an atx level 2 heading with today's date in iso format."
-    (interactive)
-    (insert "## " (format-time-string "%Y-%m-%d") "\n"))
-  (defun markdown-mla-frontmatter ()
-    "Insert frontmatter template for typst MLA export"
-    (interactive)
-    (insert "---\nprofessor: \nclass: \nword-count: true\n---\n")))
+    (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
+  (defun markdown-h2-today () "Insert an atx level 2 heading with today's date in iso format." (interactive) (insert "## " (format-time-string "%Y-%m-%d") "\n"))
+  (defun markdown-mla-frontmatter () "Insert frontmatter template for typst MLA export" (interactive) (insert "---\nprofessor: \nclass: \nword-count: true\n---\n")))
 
 (use-package project
-  :bind (:map project-prefix-map
-	      ("s" . project-ghostel)
-	      ("n" . project-npm-run))
+  :bind (:map project-prefix-map ("s" . project-ghostel) ("n" . project-npm-run))
   :custom (project-mode-line t)
   (project-vc-extra-root-markers '("project"))
   :config (defun project-ghostel
@@ -327,47 +289,60 @@
     (let* ((default-directory (project-root (project-current t)))
 	   (scripts
 	    (with-temp-buffer
-	      (unless (file-exists-p "package.json")
-		(user-error "No package.json in %s" default-directory))
+	      (unless (file-exists-p "package.json") (user-error "No package.json in %s" default-directory))
 	      (insert-file-contents "package.json")
-	      (mapcar #'car
-		      (alist-get 'scripts
-				 (json-parse-buffer :object-type 'alist)))))
+	      (mapcar #'car (alist-get 'scripts (json-parse-buffer :object-type 'alist)))))
 	   (script (completing-read "npm run: " scripts nil t)))
       (compile (format "npm run %s" script)))))
 
-(use-package variable-pitch-mode :hook
-  (markdown-ts-mode agent-shell-mode))
+(use-package variable-pitch-mode :hook (markdown-ts-mode agent-shell-mode))
 
 (use-package visual-wrap-prefix-mode :hook (prog-mode html-mode))
 
-(use-package xwidget :bind
-  (:map xwidget-webkit-mode-map ("u" . xwidget-webkit-browse-url)))
-
 ;;; External packages
 
-(require 'package)
-(add-to-list 'package-archives
-	     '("melpa" . "https://melpa.org/packages/")
-	     t)
-(setopt use-package-always-ensure t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 (use-package agent-shell
   :bind ("C-c c" . agent-shell-new-temp-shell)
   (:map project-prefix-map ("a" . agent-shell))
   :custom (agent-shell-preferred-agent-config 'opencode))
 
-(use-package anglish :vc
-  (:url "git@github.com:leaferiksen/anglish.el.git"))
+(require 'elfmt)
+(require 'apheleia)
 
-(use-package apheleia :custom (apheleia-global-mode t))
+(cl-defun apheleia-elfmt (&key buffer scratch callback &allow-other-keys)
+  "Format SCRATCH with `elfmt', then invoke CALLBACK.
+Indentation settings are copied from BUFFER so the result matches
+what you'd get by typing TAB there."
+  (let ((fc (buffer-local-value 'fill-column buffer))
+	(tabs (buffer-local-value 'indent-tabs-mode buffer))
+	(indent-fn (buffer-local-value 'lisp-indent-function buffer))
+	(original (with-current-buffer scratch (buffer-string))))
+    (with-current-buffer scratch
+      (delay-mode-hooks (emacs-lisp-mode))
+      ;; after the major mode, so these aren't clobbered
+      (setq-local fill-column fc indent-tabs-mode tabs lisp-indent-function indent-fn)
+      (condition-case err
+          (let ((gc-cons-threshold most-positive-fixnum)
+		(inhibit-message t)
+		(message-log-max nil))
+            (goto-char (point-max))
+            (while (not (bobp))
+              (backward-sexp)
+              (elfmt--sexp)))
+        ;; elfmt errors on unbalanced parens and old-style backquotes;
+        ;; roll back so apheleia applies an empty patch instead of garbage
+        (error
+         (erase-buffer)
+         (insert original)
+         (message "elfmt: %s" (error-message-string err))))))
+  (funcall callback))
 
-(use-package clojure-mode)
+(setf (alist-get 'elfmt apheleia-formatters) #'apheleia-elfmt)
+(setf (alist-get 'emacs-lisp-mode apheleia-mode-alist) 'elfmt)
 
-(use-package csv-mode :hook
-  (csv-mode . csv-align-mode)
-  :custom (csv-align-padding 2)
-  (csv-align-max-width 72))
+(use-package csv-mode :hook (csv-mode . csv-align-mode) :custom (csv-align-padding 2) (csv-align-max-width 72))
 
 (use-package dwim-shell-command
   :demand :bind
@@ -381,41 +356,25 @@
 	("e" . dwim-shell-commands-macos-open-with)
 	("i" . dwim-file-mediainfo)
 	("x" . dwim-export-to))
-  :config (with-eval-after-load 'dwim-shell-commands
-	    (add-to-list 'dwim-shell-commands-git-clone-dirs "~/Git"))
-  (defun dwim-file-mediainfo ()
-    "Run mediainfo on the current buffer's file or marked dired files."
-    (interactive)
-    (dwim-shell-command-on-marked-files "MediaInfo" "mediainfo '<<f>>'" :utils "mediainfo"))
+  :config (with-eval-after-load 'dwim-shell-commands (add-to-list 'dwim-shell-commands-git-clone-dirs "~/Git"))
+  (defun dwim-file-mediainfo () "Run mediainfo on the current buffer's file or marked dired files." (interactive) (dwim-shell-command-on-marked-files "MediaInfo" "mediainfo '<<f>>'" :utils "mediainfo"))
   (defun dwim-file-to-pdf (&optional mla)
     "Convert file to PDF via pandoc and typst; with prefix arg, use the MLA template."
     (interactive "P")
-    (dwim-shell-command-on-marked-files
-     "Converting to pdf"
-     (format "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=%s"
-	     (expand-file-name
-	      (if mla "mla-template.typ" "resume.typ")
-	      "~/.config/typst/")))))
+    (dwim-shell-command-on-marked-files "Converting to pdf" (format "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=%s" (expand-file-name (if mla "mla-template.typ" "resume.typ") "~/.config/typst/")))))
 
-(use-package elfeed :after elfeed-org :bind
-  ("C-c f" . elfeed)
-  :custom (elfeed-search-filter "@6months"))
+(use-package elfeed
+  :bind (("C-c f" . elfeed)
+	 :map elfeed-show-mode-map
+	 ("w" . elfeed-webkit-toggle))
+  :custom (elfeed-search-filter "@6months")
+  (elfeed-webkit-auto-enable-tags '(webkit comics))
+  :config (require 'elfeed-org)
+  (elfeed-org)
+  (require 'elfeed-webkit)
+  (elfeed-webkit-auto-toggle-by-tag))
 
-(use-package elfeed-org :config (elfeed-org))
-
-(use-package elfeed-webkit
-  :demand ;; !
-  :bind (:map elfeed-show-mode-map ("w" . elfeed-webkit-toggle))
-  :custom (elfeed-webkit-auto-enable-tags '(webkit comics))
-  :config (elfeed-webkit-auto-toggle-by-tag))
-
-(use-package elfmt :vc
-  (:url "https://github.com/riscy/elfmt")
-  :hook (emacs-lisp-mode . elfmt-mode))
-
-(use-package exec-path-from-shell :if
-  (memq window-system '(ns x))
-  :config (exec-path-from-shell-initialize))
+(use-package exec-path-from-shell :if (memq window-system '(ns x)) :config (exec-path-from-shell-initialize))
 
 (use-package ghostel :bind ("C-c s" . ghostel))
 
@@ -424,15 +383,11 @@
   ("C-c T" . google-translate-at-point)
   :custom (google-translate-output-destination '(echo-area))
   (google-translate-show-phonetic t)
-  (google-translate-translation-directions-alist
-   '(("ja" . "en")
-     ("en" . "ja"))))
+  (google-translate-translation-directions-alist '(("ja" . "en") ("en" . "ja"))))
 
 (use-package hackernews :defer t :bind ("C-c h" . hackernews))
 
-(use-package nov
-  :mode ("\\.epub\\'" . nov-mode)
-  :custom (nov-text-width t))
+(use-package nov :mode "\\.epub\\'" :custom (nov-text-width t))
 
 (use-package osx-dictionary
   :bind ("C-c d" . osx-dictionary-search-word-at-point)
@@ -443,15 +398,11 @@
 	    (interactive "P")
 	    (let ((prev osx-dictionary-previous-window-configuration))
 	      (if kill (kill-buffer) (bury-buffer))
-	      (when (window-configuration-p prev)
-		(set-window-configuration prev)
-		(setq osx-dictionary-previous-window-configuration nil)))))
+	      (when (window-configuration-p prev) (set-window-configuration prev) (setq osx-dictionary-previous-window-configuration nil)))))
 
 (use-package lorem-ipsum)
 
 (use-package markdown-indent-mode :hook (markdown-ts-mode))
-
-(use-package mines)
 
 (use-package nerd-icons-dired :hook dired-mode)
 
@@ -466,58 +417,27 @@
   :custom (obsidian-cli-note-extensions '("md" "tsv"))
   (obsidian-cli-rename-on-save t))
 
-(use-package spacious-padding :config (spacious-padding-mode))
-
 (use-package swift-mode
   :if (memq window-system '(ns))
   :mode "\\.swift\\'"
   :hook (swift-mode . eglot-ensure)
-  :bind (:prefix "C-c x" :prefix-map xcode
-		 ("b" . xcode-build)
-		 ("r" . xcode-run)
-		 ("t" . xcode-test))
-  :config (with-eval-after-load 'eglot
-	    (add-to-list 'eglot-server-programs
-			 '(swift-mode . ("xcrun" "sourcekit-lsp"))))
+  :bind (:prefix "C-c x" :prefix-map xcode ("b" . xcode-build) ("r" . xcode-run) ("t" . xcode-test))
+  :config (with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp"))))
   ;; https://danielde.dev/blog/emacs-for-swift-development
   (defun xcode--do (&rest verbs)
-    (ns-do-applescript
-     (format "tell application \"Xcode\"
-if (count of workspace documents) > 0 then
-set d to active workspace document
-%s
-end if
-end tell"
-	     (mapconcat (lambda (v) (concat v " d")) verbs "\n"))))
-  (defun xcode-build ()
-    "Build the active workspace."
-    (interactive)
-    (xcode--do "build"))
-  (defun xcode-run ()
-    "Stop and run the active workspace."
-    (interactive)
-    (xcode--do "stop" "run"))
-  (defun xcode-test ()
-    "Stop and test the active workspace."
-    (interactive)
-    (xcode--do "stop" "test")))
+    (dolist (v verbs)
+      (ns-do-applescript (format "tell application \"Xcode\" to if (count of workspace documents) > 0 then %s (active workspace document)" v))))
+  (defun xcode-build () "Build the active workspace." (interactive) (xcode--do "build"))
+  (defun xcode-run () "Stop and run the active workspace." (interactive) (xcode--do "stop" "run"))
+  (defun xcode-test () "Stop and test the active workspace." (interactive) (xcode--do "stop" "test")))
 
 (use-package typo :hook text-mode)
 
-(use-package typst-ts-mode :vc
-  (:url "https://codeberg.org/meow_king/typst-ts-mode")
-  :mode "\\.typ\\'" :config
-  (add-to-list 'treesit-language-source-alist
-	       '(typst "https://github.com/uben0/tree-sitter-typst")))
+(use-package typst-ts-mode :vc (:url "https://codeberg.org/meow_king/typst-ts-mode") :mode "\\.typ\\'" :config (add-to-list 'treesit-language-source-alist '(typst "https://github.com/uben0/tree-sitter-typst")))
 
-(use-package visual-fill-column :hook
-  (org-mode markdown-ts-mode)
-  :custom (visual-fill-column-center-text t)
-  (visual-fill-column-width 90))
+(use-package visual-fill-column :hook (org-mode markdown-ts-mode) :custom (visual-fill-column-center-text t) (visual-fill-column-width 90))
 
-(use-package writegood-mode :vc
-  (:url "https://github.com/bnbeckwith/writegood-mode")
-  :bind ("C-c g" . writegood-mode))
+(use-package writegood-mode :vc (:url "https://github.com/bnbeckwith/writegood-mode") :bind ("C-c g" . writegood-mode))
 
 (provide 'init)
 ;;; init.el ends here
