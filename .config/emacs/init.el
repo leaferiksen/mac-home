@@ -152,9 +152,7 @@
 
 (setenv "GIT_EDITOR" "emacsclient")
 
-(with-eval-after-load 'speedbar
-  ;; Register the extensions and recompile speedbar's file match regex
-  (speedbar-add-supported-extension ".md"))
+(with-eval-after-load 'speedbar (speedbar-add-localized-speedbar-support))
 
 (defun almost-maximize-frame ()
   "Borderless maximise with margins for tiling."
@@ -219,9 +217,9 @@
                      menu)))))))
 
 (use-package emacs :hook
-  ((emacs-startup . server-start)
-   ;; (emacs-startup . almost-maximize-frame)
-   )
+  ((after-init . almost-maximize-frame)
+   (emacs-startup . server-start)
+   (emacs-startup . speedbar))
   :bind (("C-c s" . speedbar)
 	 ("C-c y" . yt-dlp-download)
 	 (:map project-prefix-map ("s" . ghostel-project) ("n" . project-npm-run))
