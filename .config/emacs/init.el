@@ -8,7 +8,6 @@
 ;; secondarily by alphabet.
 
 ;; `use-package' :key sort order
-;; what to install (:ensure :vc)
 ;; if to load or not (:if :after)
 ;; when to load what (:demand :mode :commands :hook)
 ;; what to keys to bind (:bind :prefix :map)
@@ -93,10 +92,16 @@
    '((underline-link unspecified)
      (underline-link-visited unspecified)
      (underline-link-symbolic unspecified)))
- '(modus-themes-headings '((t rainbow)))
+ '(modus-themes-headings
+   '((1 2.0)
+     (2 1.7)
+     (3 1.4)
+     (4 1.2)
+     (5 1.1)
+     (6 1.0)
+     (t bold)))
  '(modus-themes-italic-constructs t)
  '(modus-themes-mixed-fonts t)
- '(modus-themes-mode-line '(accented borderless padded))
  '(mouse-wheel-scroll-amount
    '(1
      ((shift)
@@ -112,14 +117,16 @@
  '(obsidian-cli-note-extensions '("md" "tsv"))
  '(obsidian-cli-rename-on-save t)
  '(package-selected-packages
-   '(agent-shell anglish apheleia clojure-mode csv-mode dwim-shell-command elfeed elfeed-org
+   '(agent-shell anglish apheleia betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org
 		 elfeed-webkit elfmt exec-path-from-shell ghostel google-translate hackernews
 		 lorem-ipsum markdown-indent-mode nerd-icons-multimodal obsidian-cli osx-dictionary
 		 spacious-padding swift-mode typo typst-ts-mode writegood-mode))
  '(package-vc-allow-build-commands t)
  '(package-vc-register-as-project nil)
  '(package-vc-selected-packages
-   '((nerd-icons-multimodal :vc-backend Git :url "https://github.com/abougouffa/nerd-icons-multimodal")
+   '((betweenle :vc-backend Git :url "https://github.com/vikram-mandyam/betweenle.el")
+     (nerd-icons-multimodal :vc-backend Git :url
+			    "https://github.com/abougouffa/nerd-icons-multimodal")
      (obsidian-cli :url "git@github.com:leaferiksen/obsidian-cli.el.git")
      (elfmt :url "https://github.com/riscy/elfmt")
      (anglish :url "git@github.com:leaferiksen/anglish.el.git")))
@@ -159,15 +166,21 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Maple Mono CN" :height 140))))
+ '(bold ((t (:weight bold :family "Maple Mono CN"))))
  '(fixed-pitch ((t (:inherit default))))
+ '(italic ((t (:slant italic :family "Maple Mono CN"))))
+ '(tabulated-list-fake-header
+   ((t (:overline t :underline t :weight bold :family "Maple Mono CN"))))
  '(variable-pitch ((t (:height 180 :family "Atkinson Hyperlegible Next")))))
 
 (setenv "GIT_EDITOR" "emacsclient")
+
 (defun almost-maximize-frame ()
   "Borderless maximise with margins for tiling."
   (interactive)
   ;; (add-to-list 'default-frame-alist '(undecorated-round . t))
   (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
+
 (defun yt-dlp-download ()
   "Download the URL in the clipboard with yt-dlp."
   (interactive)
@@ -178,6 +191,7 @@
 	   (if video (and (y-or-n-p "Subs? ") "--write-subs") "-x")
 	   (and video (y-or-n-p "Backwards-compatible (h264)? ") " -S vcodec:h264"))))
     (async-shell-command (format "yt-dlp %s %s" flags (shell-quote-argument url)))))
+
 (defun unfill ()
   "Unfill the current region if active, or the current paragraph."
   (interactive)
@@ -185,6 +199,7 @@
     (if (use-region-p)
 	(fill-region (region-beginning) (region-end) nil)
       (fill-paragraph nil))))
+
 (defun project-npm-run ()
   "Run an npm script from this project's package.json."
   (interactive)
@@ -197,10 +212,29 @@
 	    (mapcar #'car (alist-get 'scripts (json-parse-buffer :object-type 'alist)))))
 	 (script (completing-read "npm run: " scripts nil t)))
     (compile (format "npm run %s" script))))
+
 (add-to-list 'editorconfig-indentation-alist '(js-json-mode js-indent-level))
+
 (add-to-list 'imagemagick-enabled-types 'JXL)
+
 (define-auto-insert "\\.html\\'" "insert.html")
+
 (define-auto-insert "\\.js\\'" "insert.js")
+
+;; Hide menu-bar entries that are not from the global keymap
+(let ((map (make-sparse-keymap)))
+  (add-to-list 'emulation-mode-map-alists `((t . ,map)))
+  (add-hook 'menu-bar-update-hook
+            (lambda ()
+              (setcdr map nil)
+              (dolist (m (remq map (current-active-maps)))
+                (let ((menu (lookup-key m [menu-bar])))
+                  (when (keymapp menu)
+                    (map-keymap
+                     (lambda (key _)
+                       (unless (memq key '(file edit options buffer tools help-menu))
+                         (define-key map (vector 'menu-bar key) 'undefined)))
+                     menu)))))))
 
 (use-package emacs
   :hook ((emacs-startup . server-start)
@@ -336,20 +370,20 @@
 		  ("1" . markdown-h1-title)
 		  ("2" . markdown-h2-today)
 		  ("f" . markdown-mla-frontmatter)))
-  :config ((require 'markdown-ts-mode-x)
-	   (dolist (n (number-sequence 1 6))
-	     (set-face-attribute
-	      (intern (format "markdown-ts-heading-%d" n))
-	      nil :inherit
-	      (intern (format "modus-themes-heading-%d" n))))
-	   ;; Fix extensionless wikilinks
-	   (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
-	   (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
-	     (funcall orig-fn beg end
-		      (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url) url (concat url ".md"))))
-	   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
-	   (with-eval-after-load 'eglot
-	     (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio"))))))
+  :config ;; Match modus headings
+  (dolist (n (number-sequence 1 6))
+    (set-face-attribute
+     (intern (format "markdown-ts-heading-%d" n))
+     nil :inherit
+     (intern (format "modus-themes-heading-%d" n))))
+  ;; Fix extensionless wikilinks
+  (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
+  (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
+    (funcall orig-fn beg end
+	     (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url) url (concat url ".md"))))
+  ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio")))))
 
 (use-package prog-mode
   ;; does not cover languages that inherit from sgml
