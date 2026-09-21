@@ -102,7 +102,7 @@
  '(obsidian-cli-note-extensions '("md" "tsv"))
  '(obsidian-cli-rename-on-save t)
  '(package-selected-packages
-   '(agent-shell anglish apheleia betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org elfeed-webkit elfmt exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode nerd-icons-multimodal obsidian-cli osx-dictionary spacious-padding swift-mode typo typst-ts-mode writegood-mode))
+   '(agent-shell anglish apheleia betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org elfeed-webkit elfmt exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode nerd-icons-multimodal obsidian-cli osx-dictionary spacious-padding swift-mode typo typst-ts-mode visual-fill-column writegood-mode))
  '(package-vc-allow-build-commands t)
  '(package-vc-register-as-project nil)
  '(package-vc-selected-packages
@@ -133,7 +133,6 @@
  '(vc-allow-rewriting-published-history t)
  '(vc-auto-revert-mode t)
  '(vc-dir-auto-hide-up-to-date 'revert)
- '(visual-fill-column-center-text t)
  '(visual-fill-column-width 90)
  '(which-key-mode t)
  '(word-wrap-by-category t))
@@ -343,6 +342,7 @@
 (use-package markdown-ts-mode
   :mode ("\\.md\\'" . markdown-ts-mode)
   :hook ((markdown-ts-mode . variable-pitch-mode)
+	 (markdown-ts-mode . visual-fill-column-mode)
 	 (markdown-ts-mode . markdown-indent-mode)
 	 (markdown-ts-mode . obsidian-cli-mode)
 	 (markdown-ts-mode . typo-mode))
