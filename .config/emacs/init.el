@@ -49,8 +49,7 @@
  '(dired-create-destination-dirs 'ask)
  '(dired-dwim-target t)
  '(dired-mouse-drag-files t)
- '(dired-omit-files
-   "\\`[.][.]?\\'\\|\\._\\|\\.DS_Store\\|\\.CFUserTextEncoding\\|\\.DocumentRevisions-V100\\|\\.Spotlight-V100\\|\\.TemporaryItems\\|\\.fseventsd")
+ '(dired-omit-files "^\\(\\.\\.?$\\|\\.DS_Store$\\|\\.localized$\\)")
  '(dired-omit-verbose nil)
  '(dired-recursive-copies 'always)
  '(disabled-command-function nil t)
@@ -71,7 +70,6 @@
  '(frame-resize-pixelwise t)
  '(gc-cons-threshold 100000000)
  '(global-completion-preview-mode t)
- '(global-hl-line-mode t)
  '(global-nerd-icons-multimodal-mode t)
  '(global-visual-line-mode t)
  '(google-translate-output-destination '(echo-area))
@@ -120,7 +118,9 @@
  '(shr-max-image-proportion 0.6)
  '(shr-width 80)
  '(spacious-padding-mode t)
+ '(speedbar-directory-unshown-regexp "^\\(\\.\\.?$\\|\\.DS_Store$\\|\\.localized$\\)")
  '(speedbar-prefer-window t)
+ '(speedbar-show-unknown-files t)
  '(speedbar-use-images nil)
  '(speedbar-window-default-width 40)
  '(tool-bar-mode nil)
@@ -145,20 +145,39 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Maple Mono CN" :height 140))))
  '(bold ((t (:weight bold :family "Maple Mono CN"))))
- '(fixed-pitch ((t (:inherit default :height 180))))
+ '(fixed-pitch ((t (:inherit default))))
  '(italic ((t (:slant italic :family "Maple Mono CN"))))
  '(tabulated-list-fake-header ((t (:overline t :underline t :weight bold :family "Maple Mono CN"))))
  '(variable-pitch ((t (:height 180 :family "Atkinson Hyperlegible Next")))))
 
 (setenv "GIT_EDITOR" "emacsclient")
 
-(with-eval-after-load 'speedbar (speedbar-add-localized-speedbar-support))
-
 (defun almost-maximize-frame ()
   "Borderless maximise with margins for tiling."
   (interactive)
   ;; (add-to-list 'default-frame-alist '(undecorated-round . t))
   (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
+
+(defun unfill ()
+  "Unfill the current region if active, or the current paragraph."
+  (interactive)
+  (let ((fill-column (point-max)))
+    (if (use-region-p)
+	(fill-region (region-beginning) (region-end) nil)
+      (fill-paragraph nil))))
+
+(defun speedbar-refresh-on-non-file-buffers (&optional _)
+  "Refresh Speedbar when switching to a non-file buffer."
+  (when-let* (((not (active-minibuffer-window)))
+	      ((not (minibufferp)))
+	      ((not buffer-file-name))
+	      ((not (string-prefix-p " " (buffer-name))))
+	      ((not (derived-mode-p 'speedbar-mode)))
+	      (is-open
+	       (or
+		(and (boundp 'speedbar-window) (window-live-p speedbar-window))
+		(and (boundp 'speedbar-frame) (frame-live-p speedbar-frame)))))
+    (let ((inhibit-message t)) (speedbar-refresh))))
 
 (defun yt-dlp-download ()
   "Download the URL in the clipboard with yt-dlp."
@@ -170,14 +189,6 @@
 	   (if video (and (y-or-n-p "Subs? ") "--write-subs") "-x")
 	   (and video (y-or-n-p "Backwards-compatible (h264)? ") " -S vcodec:h264"))))
     (async-shell-command (format "yt-dlp %s %s" flags (shell-quote-argument url)))))
-
-(defun unfill ()
-  "Unfill the current region if active, or the current paragraph."
-  (interactive)
-  (let ((fill-column (point-max)))
-    (if (use-region-p)
-	(fill-region (region-beginning) (region-end) nil)
-      (fill-paragraph nil))))
 
 (defun project-npm-run ()
   "Run an npm script from this project's package.json."
@@ -219,7 +230,8 @@
 (use-package emacs :hook
   ((after-init . almost-maximize-frame)
    (emacs-startup . server-start)
-   (emacs-startup . speedbar))
+   (emacs-startup . speedbar)
+   (window-buffer-change-functions . speedbar-refresh-on-non-file-buffers))
   :bind (("C-c s" . speedbar)
 	 ("C-c y" . yt-dlp-download)
 	 (:map project-prefix-map ("s" . ghostel-project) ("n" . project-npm-run))
@@ -413,10 +425,7 @@ and `custom-set-faces' forms, which Custom formats itself."
   :bind (("C-c f" . elfeed)
 	 :map elfeed-show-mode-map
 	 ("w" . elfeed-webkit-toggle))
-  :config ((require 'elfeed-org)
-	   (elfeed-org)
-	   (require 'elfeed-webkit)
-	   (elfeed-webkit-auto-toggle-by-tag)))
+  :config (elfeed-org))
 
 (use-package google-translate :bind ("C-c t" . google-translate-smooth-translate) ("C-c T" . google-translate-at-point))
 

@@ -8,7 +8,6 @@
 *** https://thesecretknots.com/feed/
 *** https://todon.eu/@PinkWug.rss
 *** https://www.berkeleymews.com/feed/
-*** https://www.davidrevoy.com/feed/en/rss
 *** https://www.penny-arcade.com/feed
 *** https://www.smbc-comics.com/comic/rss
 ** Design :design:
@@ -49,7 +48,6 @@
 *** https://daverupert.com/atom.xml
 *** https://fritzgrabo.com/posts/rss.xml
 *** https://hypercritical.co/feeds/main
-*** https://indi.ca/rss/
 *** https://ladybird.org/posts.rss
 *** https://ryanleetaylor.com/rss.xml
 *** https://thanosapollo.org/index.xml
@@ -58,4 +56,3 @@
 *** https://wokescientist.substack.com/feed
 *** https://www.jessesquires.com/feed.xml
 *** https://www.tinylogger.com/90koil/rss
-*** https://www.wordsbywes.ink/feed.xml
