@@ -40,10 +40,10 @@
  '(completion-eager-update t)
  '(completion-ignore-case t t)
  '(completions-sort 'historical)
+ '(context-menu-mode t)
  '(csv-align-max-width 72)
  '(csv-align-padding 3)
  '(cursor-type 'bar)
- '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(dired-clean-confirm-killing-deleted-buffers nil)
  '(dired-create-destination-dirs 'ask)
@@ -70,6 +70,7 @@
  '(frame-resize-pixelwise t)
  '(gc-cons-threshold 100000000)
  '(global-completion-preview-mode t)
+ '(global-hl-line-mode t)
  '(global-nerd-icons-multimodal-mode t)
  '(global-visual-line-mode t)
  '(google-translate-output-destination '(echo-area))
@@ -90,8 +91,7 @@
  '(markdown-ts-inline-images t)
  '(mode-line-collapse-minor-modes '(not flymake-mode))
  '(modus-themes-common-palette-overrides
-   '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified)))
- '(modus-themes-headings '((1 1.5) (2 1.4) (3 1.3) (4 1.2) (5 1.1) (6 1.0) (t bold)))
+   '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified) (fg-heading-0 fg-main) (fg-heading-1 fg-main) (fg-heading-2 fg-main) (fg-heading-3 fg-main) (fg-heading-4 fg-main) (fg-heading-5 fg-main) (fg-heading-6 fg-main) (fg-heading-7 fg-main) (fg-heading-8 fg-main)))
  '(modus-themes-italic-constructs t)
  '(modus-themes-mixed-fonts t)
  '(mouse-wheel-scroll-amount
@@ -144,11 +144,13 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Maple Mono CN" :height 140))))
- '(bold ((t (:weight bold :family "Maple Mono CN"))))
  '(fixed-pitch ((t (:inherit default))))
- '(italic ((t (:slant italic :family "Maple Mono CN"))))
- '(tabulated-list-fake-header ((t (:overline t :underline t :weight bold :family "Maple Mono CN"))))
+ '(markdown-indent-mode-hide-hash ((t (:inherit shadow))))
  '(variable-pitch ((t (:height 180 :family "Atkinson Hyperlegible Next")))))
+
+ ;; '(bold ((t (:weight bold :family "Maple Mono CN"))))
+ ;; '(italic ((t (:slant italic :family "Maple Mono CN"))))
+ ;; '(tabulated-list-fake-header ((t (:overline t :underline t :weight bold :family "Maple Mono CN"))))
 
 (setenv "GIT_EDITOR" "emacsclient")
 
@@ -351,8 +353,7 @@
     (set-face-attribute
      (intern (format "markdown-ts-heading-%d" n))
      nil :inherit
-     (intern (format "modus-themes-heading-%d" n))))
-  ;; Fix extensionless wikilinks
+     (intern (format "modus-themes-heading-%d" n)))) ;; Fix extensionless wikilinks
   (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
   (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
     (funcall orig-fn beg end (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url) url (concat url ".md"))))

@@ -19,9 +19,6 @@ export ic="/Users/leaf/Library/Mobile Documents/com~apple~CloudDocs/"
 export sf="/Users/leaf/Documents/College/"
 export sd="/Volumes/Leafs Media"
 
-# Protection
-alias rm='trash'
-
 # My fun tools
 alias q='qlmanage -p'
 alias ani-cli='ani-cli -q 1080'
@@ -31,13 +28,9 @@ alias upbrew='brew update && brew upgrade --greedy'
 alias upskills='npx -y skills update --global'
 alias upnode='npx -y npm-check-updates --cooldown 7d -u && npm install'
 alias fixnode='brew unlink node && brew link --overwrite node'
-getid() {osascript -e "id of app \"$1\""}
 
 # My BSD utils
 alias myip='ifconfig | grep "inet "'
 alias ctar='tar -czvf'
 alias xtar='tar -xzvf'
 alias ttar='tar -tzvf'
-alias diff='diff --color=always'
-alias l='ls -a --color=auto'
-alias ll='ls -al --color=auto'

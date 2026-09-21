@@ -1,0 +1,13 @@
+{
+  "trustedformulae": [
+    "anomalyco/tap/opencode",
+    "karinushka/paneru/paneru",
+    "yqrashawn/goku/goku"
+  ],
+  "trustedtaps": [
+    "d12frosted/emacs-plus"
+  ],
+  "trustedcasks": [
+    "darrylmorley/whatcable/whatcable"
+  ]
+}
