@@ -7,9 +7,12 @@ Flymake
 Ignatian
 Indigeneity
 Noopur
+Obispo
 OnCourt
 PrivateVault
 Randa
+SFC
+SLO
 Sabiha
 USF
 UXUI

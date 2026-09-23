@@ -91,22 +91,24 @@
  '(markdown-ts-inline-images t)
  '(mode-line-collapse-minor-modes '(not flymake-mode))
  '(modus-themes-common-palette-overrides
-   '((underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified) (fg-heading-0 fg-main) (fg-heading-1 fg-main) (fg-heading-2 fg-main) (fg-heading-3 fg-main) (fg-heading-4 fg-main) (fg-heading-5 fg-main) (fg-heading-6 fg-main) (fg-heading-7 fg-main) (fg-heading-8 fg-main)))
+   '((fringe unspecified) (border bg-inactive) (border-mode-line-active unspecified) (border-mode-line-inactive unspecified) (underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified) (fg-heading-0 fg-main) (fg-heading-1 fg-main) (fg-heading-2 fg-main) (fg-heading-3 fg-main) (fg-heading-4 fg-main) (fg-heading-5 fg-main) (fg-heading-6 fg-main) (fg-heading-7 fg-main) (fg-heading-8 fg-main)))
  '(modus-themes-italic-constructs t)
  '(modus-themes-mixed-fonts t)
  '(mouse-wheel-scroll-amount
    '(1 ((shift) . hscroll) ((meta)) ((control) . 1) ((control meta) . 1)))
+ '(nerd-icons-speedbar-mode t)
  '(nov-text-width t)
  '(ns-alternate-modifier 'none)
  '(ns-function-modifier 'hyper)
  '(obsidian-cli-note-extensions '("md" "tsv"))
  '(obsidian-cli-rename-on-save t)
  '(package-selected-packages
-   '(agent-shell anglish apheleia betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org elfeed-webkit elfmt exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode nerd-icons-multimodal obsidian-cli osx-dictionary spacious-padding swift-mode typo typst-ts-mode visual-fill-column writegood-mode))
+   '(agent-shell anglish apheleia betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org elfeed-webkit elfmt exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode nerd-icons-multimodal nerd-icons-speedbar obsidian-cli osx-dictionary swift-mode typo typst-ts-mode visual-fill-column writegood-mode))
  '(package-vc-allow-build-commands t)
  '(package-vc-register-as-project nil)
  '(package-vc-selected-packages
-   '((betweenle :vc-backend Git :url "https://github.com/vikram-mandyam/betweenle.el") (nerd-icons-multimodal :vc-backend Git :url "https://github.com/abougouffa/nerd-icons-multimodal") (obsidian-cli :url "git@github.com:leaferiksen/obsidian-cli.el.git") (elfmt :url "https://github.com/riscy/elfmt") (anglish :url "git@github.com:leaferiksen/anglish.el.git")))
+   '((nerd-icons-speedbar :vc-backend Git :url "https://github.com/Akane-6730/nerd-icons-speedbar") (betweenle :vc-backend Git :url "https://github.com/vikram-mandyam/betweenle.el") (nerd-icons-multimodal :vc-backend Git :url "https://github.com/abougouffa/nerd-icons-multimodal") (obsidian-cli :url "git@github.com:leaferiksen/obsidian-cli.el.git") (elfmt :url "https://github.com/riscy/elfmt") (anglish :url "git@github.com:leaferiksen/anglish.el.git")))
+ '(pop-up-windows nil)
  '(project-mode-line t)
  '(project-vc-extra-root-markers '("project"))
  '(read-buffer-completion-ignore-case t)
@@ -117,12 +119,10 @@
  '(sentence-end-double-space nil)
  '(shr-max-image-proportion 0.6)
  '(shr-width 80)
- '(spacious-padding-mode t)
  '(speedbar-directory-unshown-regexp "^\\(\\.\\.?$\\|\\.DS_Store$\\|\\.localized$\\)")
+ '(speedbar-initial-expansion-list-name "quick buffers" t)
  '(speedbar-prefer-window t)
  '(speedbar-show-unknown-files t)
- '(speedbar-use-images nil)
- '(speedbar-window-default-width 40)
  '(tool-bar-mode nil)
  '(treesit-auto-install-grammar 'always)
  '(treesit-enabled-modes t)
@@ -135,6 +135,7 @@
  '(vc-dir-auto-hide-up-to-date 'revert)
  '(visual-fill-column-width 90)
  '(which-key-mode t)
+ '(window-divider-mode t)
  '(word-wrap-by-category t))
 
 (custom-set-faces
@@ -146,10 +147,6 @@
  '(fixed-pitch ((t (:inherit default))))
  '(markdown-indent-mode-hide-hash ((t (:inherit shadow))))
  '(variable-pitch ((t (:height 180 :family "Atkinson Hyperlegible Next")))))
-
- ;; '(bold ((t (:weight bold :family "Maple Mono CN"))))
- ;; '(italic ((t (:slant italic :family "Maple Mono CN"))))
- ;; '(tabulated-list-fake-header ((t (:overline t :underline t :weight bold :family "Maple Mono CN"))))
 
 (setenv "GIT_EDITOR" "emacsclient")
 
@@ -166,19 +163,6 @@
     (if (use-region-p)
 	(fill-region (region-beginning) (region-end) nil)
       (fill-paragraph nil))))
-
-(defun speedbar-refresh-on-non-file-buffers (&optional _)
-  "Refresh Speedbar when switching to a non-file buffer."
-  (when-let* (((not (active-minibuffer-window)))
-	      ((not (minibufferp)))
-	      ((not buffer-file-name))
-	      ((not (string-prefix-p " " (buffer-name))))
-	      ((not (derived-mode-p 'speedbar-mode)))
-	      (is-open
-	       (or
-		(and (boundp 'speedbar-window) (window-live-p speedbar-window))
-		(and (boundp 'speedbar-frame) (frame-live-p speedbar-frame)))))
-    (let ((inhibit-message t)) (speedbar-refresh))))
 
 (defun yt-dlp-download ()
   "Download the URL in the clipboard with yt-dlp."
@@ -202,6 +186,16 @@
 	    (mapcar #'car (alist-get 'scripts (json-parse-buffer :object-type 'alist)))))
 	 (script (completing-read "npm run: " scripts nil t)))
     (compile (format "npm run %s" script))))
+
+;; Force speedbar width after everything has loaded
+(with-eval-after-load 'speedbar (setq speedbar--window-width 40))
+
+;; frame/window spacing (core Emacs, replaces spacious-padding)
+(add-to-list 'default-frame-alist '(internal-border-width . 15))
+(add-to-list 'default-frame-alist '(right-divider-width . 1))
+(add-to-list 'default-frame-alist '(bottom-divider-width . 1))
+(add-to-list 'default-frame-alist '(left-fringe . 10))
+(add-to-list 'default-frame-alist '(right-fringe . 10))
 
 (add-to-list 'editorconfig-indentation-alist '(js-json-mode js-indent-level))
 

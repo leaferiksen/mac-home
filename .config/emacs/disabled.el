@@ -8,6 +8,19 @@
 
 ;;; Code:
 
+(defun speedbar-refresh-on-non-file-buffers (&optional _)
+  "Refresh Speedbar when switching to a non-file buffer."
+  (when-let* (((not (active-minibuffer-window)))
+	      ((not (minibufferp)))
+	      ((not buffer-file-name))
+	      ((not (string-prefix-p " " (buffer-name))))
+	      ((not (derived-mode-p 'speedbar-mode)))
+	      (is-open
+	       (or
+		(and (boundp 'speedbar-window) (window-live-p speedbar-window))
+		(and (boundp 'speedbar-frame) (frame-live-p speedbar-frame)))))
+    (let ((inhibit-message t)) (speedbar-refresh))))
+
 (use-package agent-shell-macext
   :vc (:url "https://github.com/cxa/agent-shell-macext")
   :hook (agent-shell-mode . agent-shell-macext-setup)
