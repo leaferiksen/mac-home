@@ -55,6 +55,7 @@
  '(disabled-command-function nil t)
  '(display-line-numbers-type 'relative)
  '(display-line-numbers-width-start 3)
+ '(dwim-shell-commands-git-clone-dirs '("~/Git"))
  '(editorconfig-mode t)
  '(eglot-autoshutdown t)
  '(eglot-code-action-indications '(mode-line))
@@ -63,7 +64,7 @@
  '(eldoc-echo-area-use-multiline-p t)
  '(eldoc-help-at-pt t)
  '(electric-pair-mode t)
- '(elfeed-search-filter "@6months")
+ '(elfeed-search-filter "@6-months")
  '(elfeed-webkit-auto-enable-tags '(webkit comics))
  '(fido-vertical-mode t)
  '(find-file-visit-truename t)
@@ -96,14 +97,13 @@
  '(modus-themes-mixed-fonts t)
  '(mouse-wheel-scroll-amount
    '(1 ((shift) . hscroll) ((meta)) ((control) . 1) ((control meta) . 1)))
- '(nerd-icons-speedbar-mode t)
  '(nov-text-width t)
  '(ns-alternate-modifier 'none)
  '(ns-function-modifier 'hyper)
  '(obsidian-cli-note-extensions '("md" "tsv"))
  '(obsidian-cli-rename-on-save t)
  '(package-selected-packages
-   '(agent-shell anglish apheleia betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org elfeed-webkit elfmt exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode nerd-icons-multimodal nerd-icons-speedbar obsidian-cli osx-dictionary swift-mode typo typst-ts-mode visual-fill-column writegood-mode))
+   '(agent-shell anglish apheleia betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org elfmt exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode nerd-icons-multimodal nerd-icons-speedbar obsidian-cli osx-dictionary swift-mode typo typst-ts-mode visual-fill-column writegood-mode))
  '(package-vc-allow-build-commands t)
  '(package-vc-register-as-project nil)
  '(package-vc-selected-packages
@@ -123,6 +123,7 @@
  '(speedbar-initial-expansion-list-name "quick buffers" t)
  '(speedbar-prefer-window t)
  '(speedbar-show-unknown-files t)
+ '(speedbar-window-default-width 40)
  '(tool-bar-mode nil)
  '(treesit-auto-install-grammar 'always)
  '(treesit-enabled-modes t)
@@ -165,15 +166,30 @@
       (fill-paragraph nil))))
 
 (defun yt-dlp-download ()
-  "Download the URL in the clipboard with yt-dlp."
+  "Download the URL in the clipboard with yt-dlp, then jump to it in Dired."
   (interactive)
   (let* ((url (or (current-kill 0) (user-error "Nothing in clipboard")))
 	 (video (y-or-n-p "Video? "))
 	 (flags
-	  (concat
-	   (if video (and (y-or-n-p "Subs? ") "--write-subs") "-x")
-	   (and video (y-or-n-p "Backwards-compatible (h264)? ") " -S vcodec:h264"))))
-    (async-shell-command (format "yt-dlp %s %s" flags (shell-quote-argument url)))))
+          (concat
+           (if video (and (y-or-n-p "Subs? ") "--write-subs") "-x")
+           (and video (y-or-n-p "Backwards-compatible (h264)? ") " -S vcodec:h264")))
+	 (command (format "yt-dlp --quiet %s %s --print after_move:filepath" flags (shell-quote-argument url))))
+    (make-process
+     :name "yt-dlp-download"
+     :buffer (generate-new-buffer " *yt-dlp-output*")
+     :command (list shell-file-name shell-command-switch command)
+     :sentinel (lambda
+		 (proc _event)
+		 (when-let* (((eq (process-status proc) 'exit))
+			     (buf (process-buffer proc)))
+		   (if (/= (process-exit-status proc) 0)
+		       (progn (message "yt-dlp failed") (display-buffer buf))
+		     (if-let* ((filepath (string-trim (with-current-buffer buf (buffer-string))))
+			       ((file-exists-p filepath)))
+			 (progn (kill-buffer buf) (dired-jump nil filepath))
+		       (message "yt-dlp: unexpected output: %s" filepath))))))
+    (message "yt-dlp: downloading…")))
 
 (defun project-npm-run ()
   "Run an npm script from this project's package.json."
@@ -186,9 +202,6 @@
 	    (mapcar #'car (alist-get 'scripts (json-parse-buffer :object-type 'alist)))))
 	 (script (completing-read "npm run: " scripts nil t)))
     (compile (format "npm run %s" script))))
-
-;; Force speedbar width after everything has loaded
-(with-eval-after-load 'speedbar (setq speedbar--window-width 40))
 
 ;; frame/window spacing (core Emacs, replaces spacious-padding)
 (add-to-list 'default-frame-alist '(internal-border-width . 15))
@@ -226,7 +239,7 @@
   ((after-init . almost-maximize-frame)
    (emacs-startup . server-start)
    (emacs-startup . speedbar)
-   (window-buffer-change-functions . speedbar-refresh-on-non-file-buffers))
+   (emacs-startup . nerd-icons-speedbar-mode))
   :bind (("C-c s" . speedbar)
 	 ("C-c y" . yt-dlp-download)
 	 (:map project-prefix-map ("s" . ghostel-project) ("n" . project-npm-run))
@@ -399,22 +412,29 @@ and `custom-set-faces' forms, which Custom formats itself."
 (use-package csv-mode :hook (csv-mode . csv-align-mode))
 
 (use-package dwim-shell-command
-  :bind (("s-i" . dwim-file-mediainfo)
-	 ([remap shell-command] . dwim-shell-command)
-	 ("C-c p" . dwim-file-to-pdf)
-	 (:map dired-mode-map
-	       ([remap dired-do-async-shell-command] . dwim-shell-command)
-	       ([remap dired-do-shell-command] . dwim-shell-command)
-	       ([remap dired-smart-shell-command] . dwim-shell-command)
-	       ("e" . dwim-shell-commands-macos-open-with)
-	       ("i" . dwim-file-mediainfo)
-	       ("x" . dwim-export-to)))
-  :config ((with-eval-after-load 'dwim-shell-commands (add-to-list 'dwim-shell-commands-git-clone-dirs "~/Git"))
-	   (defun dwim-file-mediainfo () "Run mediainfo on the current buffer's file or marked dired files." (interactive) (dwim-shell-command-on-marked-files "MediaInfo" "mediainfo '<<f>>'" :utils "mediainfo"))
-	   (defun dwim-file-to-pdf (&optional mla)
-	     "Convert file to PDF via pandoc and typst; with prefix arg, use the MLA template."
-	     (interactive "P")
-	     (dwim-shell-command-on-marked-files "Converting to pdf" (format "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst --template=%s" (expand-file-name (if mla "mla-template.typ" "resume.typ") "~/.config/typst/"))))))
+  :demand :bind
+  (("s-i" . dwim-file-mediainfo)
+   ([remap shell-command] . dwim-shell-command)
+   ("C-c p" . dwim-file-to-pdf)
+   (:map dired-mode-map
+	 ([remap dired-do-async-shell-command] . dwim-shell-command)
+	 ([remap dired-do-shell-command] . dwim-shell-command)
+	 ([remap dired-smart-shell-command] . dwim-shell-command)
+	 ("e" . dwim-shell-commands-macos-open-with)
+	 ("i" . dwim-file-mediainfo)))
+  :config ;; personal functions
+  (defun dwim-file-mediainfo () "Run mediainfo on the current buffer's file or marked dired files." (interactive) (dwim-shell-command-on-marked-files "MediaInfo" "mediainfo '<<f>>'" :utils "mediainfo"))
+  (defun dwim-file-to-pdf ()
+    "Convert marked files to PDF via pandoc and typst.
+Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
+    (interactive)
+    (let* ((choice (read-char-choice "Template: [m]LA, [r]esume, [d]efault? " '(?m ?r ?d)))
+           (template-flag
+            (pcase choice
+              (?m (format " --template=%s" (expand-file-name "mla-template.typ" "~/.config/typst/")))
+              (?r (format " --template=%s" (expand-file-name "resume.typ" "~/.config/typst/")))
+              (?d ""))))
+      (dwim-shell-command-on-marked-files "Converting to pdf" (format "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst%s" template-flag) :silent-success t))))
 
 (use-package elfeed
   :bind (("C-c f" . elfeed)

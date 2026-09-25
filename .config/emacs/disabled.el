@@ -8,6 +8,7 @@
 
 ;;; Code:
 
+(window-buffer-change-functions . speedbar-refresh-on-non-file-buffers)
 (defun speedbar-refresh-on-non-file-buffers (&optional _)
   "Refresh Speedbar when switching to a non-file buffer."
   (when-let* (((not (active-minibuffer-window)))
