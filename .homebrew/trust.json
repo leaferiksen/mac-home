@@ -1,7 +1,6 @@
 {
   "trustedformulae": [
     "anomalyco/tap/opencode",
-    "karinushka/paneru/paneru",
     "yqrashawn/goku/goku"
   ],
   "trustedtaps": [
