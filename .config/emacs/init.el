@@ -1,34 +1,39 @@
-;;; init.el --- Emacs 31 Initialization -*- lexical-binding: t; no-byte-compile: t; fill-column: 1000;-*-
+;;; init.el --- Emacs 31 Initialization -*- lexical-binding: t; no-byte-compile: t; fill-column: 120;-*-
 
 ;; Author: Leaf Eriksen <leaferiksen@gmail.com>
 
 ;;; Commentary:
 
+;; No `use-package'. Per package, in this order:
+;;   1. loading declarations (auto-mode-alist, add-hook)
+;;   2. keybindings (keymap-set / keymap-global-set / defvar-keymap)
+;;   3. config, wrapped in `with-eval-after-load' unless the package is
+;;      already guaranteed to be loaded at that point (built-ins that
+;;      load at startup, or packages just `require'd above the config).
+;;
 ;; Top level functions are sorted primarily by priority,
 ;; secondarily by alphabet.
 
-;; `use-package' :key sort order
-;; if to load or not (:if :after)
-;; when to load what (:demand :mode :commands :hook)
-;; what to keys to bind (:bind :prefix :map)
-;; what variables to set (:custom-face :custom)
-;; what functions to run when (:init :config)
-
 ;;; Code:
 
-;; Internal features and hooks
-
+;; package.el
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
+;; environment
 (setenv "GIT_EDITOR" "emacsclient")
 
+;; emacs
+(add-to-list 'default-frame-alist '(internal-border-width . 15))
+(add-to-list 'default-frame-alist '(right-divider-width . 1))
+(add-to-list 'default-frame-alist '(bottom-divider-width . 1))
+(add-to-list 'default-frame-alist '(left-fringe . 10))
+(add-to-list 'default-frame-alist '(right-fringe . 10))
 (defun almost-maximize-frame ()
   "Borderless maximise with margins for tiling."
   (interactive)
   ;; (add-to-list 'default-frame-alist '(undecorated-round . t))
   (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
-
 (defun unfill ()
   "Unfill the current region if active, or the current paragraph."
   (interactive)
@@ -36,7 +41,134 @@
     (if (use-region-p)
 	(fill-region (region-beginning) (region-end) nil)
       (fill-paragraph nil))))
+(add-hook 'after-init-hook #'almost-maximize-frame)
+(add-hook 'emacs-startup-hook #'server-start)
+(add-hook 'emacs-startup-hook #'speedbar)
+(add-hook 'emacs-startup-hook #'nerd-icons-speedbar-mode)
+(keymap-global-set "C-c s" #'speedbar)
+(windmove-default-keybindings 'super)
+;; Hide menu-bar entries that are not from the global keymap
+(let ((map (make-sparse-keymap)))
+  (add-to-list 'emulation-mode-map-alists `((t . ,map)))
+  (add-hook 'menu-bar-update-hook
+            (lambda ()
+              (setcdr map nil)
+              (dolist (m (remq map (current-active-maps)))
+                (let ((menu (lookup-key m [menu-bar])))
+                  (when (keymapp menu)
+                    (map-keymap
+                     (lambda (key _)
+                       (unless (memq key '(file edit options buffer tools help-menu))
+                         (define-key map (vector 'menu-bar key) 'undefined)))
+                     menu)))))))
 
+;; auto-insert
+(define-auto-insert "\\.html\\'" "insert.html")
+(define-auto-insert "\\.js\\'" "insert.js")
+
+;; completion-preview-mode (built-in; keymap only exists once loaded)
+(with-eval-after-load 'completion-preview
+  (keymap-set completion-preview-active-mode-map "M-]" #'completion-preview-next-candidate)
+  (keymap-set completion-preview-active-mode-map "M-[" #'completion-preview-prev-candidate))
+
+;; editorconfig
+(with-eval-after-load 'editorconfig (add-to-list 'editorconfig-indentation-alist '(js-json-mode js-indent-level)))
+
+;; image-mode
+(add-to-list 'imagemagick-enabled-types 'JXL)
+
+;; ns (macOS)
+(when (eq window-system 'ns)
+  ;; fonts
+  ;; Nerd Font Core Icons: Unicode Plane 0 (BMP)
+  (set-fontset-font t '(#xE000 . #xF8FF) "Symbols Nerd Font")
+  ;; Nerd Fonts Material Design Icons: Unicode Plane 15 (PUA-A)
+  (set-fontset-font t '(#xF0001 . #xF1AF0) "Symbols Nerd Font")
+  ;; SF Symbols: Unicode Plane 16 (PUA-B)
+  (set-fontset-font t '(#x100000 . #x10FFFD) "SF Pro Display")
+
+  ;; key-translation-map
+  ;; Transpose unwanted s- bindings to project, bookmark, and treesit navigation
+  (keymap-set key-translation-map "s-g" "M-g")
+  (keymap-set key-translation-map "s-o" "C-x p")
+  (keymap-set key-translation-map "s-r" "C-x r")
+  (dolist (key '("a" "b" "d" "e" "f" "k" "l" "n" "p" "t" "u" "y" "<backspace>"))
+    (keymap-set key-translation-map (concat "s-" key) (concat "C-M-" key)))
+
+  ;; dired (ns)
+  (defun dired-install-dmg ()
+    "Mount a .dmg file at point, copy its .app to ~/Applications/, then eject and optionally delete .dmg."
+    (interactive)
+    (if-let* ((dmg (dired-get-filename))
+	      (mount-output
+	       (shell-command-to-string (format "yes | hdiutil attach -nobrowse %s" (shell-quote-argument dmg))))
+	      ((string-match "/Volumes/[^\t\n]+" mount-output))
+	      (volume (string-trim-right (match-string 0 mount-output)))
+	      (app (car (file-expand-wildcards (concat volume "/*.app")))))
+	(progn
+	  (make-directory "~/Applications/" t)
+	  (shell-command (format "cp -R %s ~/Applications/" (shell-quote-argument app)))
+	  (shell-command (format "hdiutil detach %s" (shell-quote-argument volume)))
+	  (when (y-or-n-p (format "Installed %s to ~/Applications/ — trash the DMG?" (file-name-nondirectory app)))
+	    (shell-command (format "trash %s" (shell-quote-argument dmg)))
+	    (revert-buffer)))
+      (message "Installation failed: could not mount DMG or find .app bundle")))
+
+  ;; xcode
+  ;; https://danielde.dev/blog/emacs-for-swift-development
+  (defun xcode--do (&rest verbs)
+    (dolist (v verbs)
+      (ns-do-applescript
+       (format "tell application \"Xcode\" to if (count of workspace documents) > 0 then %s (active workspace document)" v))))
+  (defun xcode-build () "Build the active workspace." (interactive) (xcode--do "build"))
+  (defun xcode-run () "Stop and run the active workspace." (interactive) (xcode--do "stop" "run"))
+  (defun xcode-test () "Stop and test the active workspace." (interactive) (xcode--do "stop" "test"))
+
+  (defun auto-theme (appearance)
+    "Load theme matching system APPEARANCE."
+    (mapc #'disable-theme custom-enabled-themes)
+    (load-theme (if (eq appearance 'dark) 'modus-vivendi-tinted 'modus-operandi-tinted) t))
+  ;; term/ns-win (loaded by the NS port during startup, before init.el runs)
+  (add-hook 'ns-system-appearance-change-functions #'auto-theme)
+  (keymap-global-set "s-z" #'undo-only)
+  (keymap-global-set "s-Z" #'undo-redo)
+  (keymap-global-set "s-w" #'kill-current-buffer)
+  (keymap-global-set "C-M-y" #'yank-pop)
+  ;; enable standard macOS emoji binding
+  (keymap-global-set "H-e" #'ns-do-show-character-palette)
+  (keymap-global-set "H-f" #'toggle-frame-fullscreen)
+
+  ;; osx-dictionary
+  (keymap-global-set "C-c d" #'osx-dictionary-search-word-at-point)
+
+  ;; swift-mode
+  ;; Swift ts-modes are reliant on unfinished tree sitters
+  (add-to-list 'auto-mode-alist '("\\.swift\\'" . swift-mode))
+  (add-hook 'swift-mode-hook #'eglot-ensure)
+  (defvar-keymap xcode-prefix-map "b" #'xcode-build "r" #'xcode-run "t" #'xcode-test)
+  (keymap-set global-map "C-c x" xcode-prefix-map)
+  (with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp"))))
+
+  ;; exec-path-from-shell (no deferring hook/bind/mode, so load it now)
+  (require 'exec-path-from-shell)
+  (exec-path-from-shell-initialize))
+
+;; project
+(defun project-npm-run ()
+  "Run an npm script from this project's package.json."
+  (interactive)
+  (let* ((default-directory (project-root (project-current t)))
+	 (scripts
+	  (with-temp-buffer
+	    (unless (file-exists-p "package.json") (user-error "No package.json in %s" default-directory))
+	    (insert-file-contents "package.json")
+	    (mapcar #'car (alist-get 'scripts (json-parse-buffer :object-type 'alist)))))
+	 (script (completing-read "npm run: " scripts nil t)))
+    (compile (format "npm run %s" script))))
+(keymap-set project-prefix-map "s" #'ghostel-project)
+(keymap-set project-prefix-map "n" #'project-npm-run)
+
+;; yt-dlp
 (defun yt-dlp-download ()
   "Download the URL in the clipboard with yt-dlp, then jump to it in Dired."
   (interactive)
@@ -62,197 +194,19 @@
 			 (progn (kill-buffer buf) (dired-jump nil filepath))
 		       (message "yt-dlp: unexpected output: %s" filepath))))))
     (message "yt-dlp: downloading…")))
+(keymap-global-set "C-c y" #'yt-dlp-download)
 
-(defun project-npm-run ()
-  "Run an npm script from this project's package.json."
-  (interactive)
-  (let* ((default-directory (project-root (project-current t)))
-	 (scripts
-	  (with-temp-buffer
-	    (unless (file-exists-p "package.json") (user-error "No package.json in %s" default-directory))
-	    (insert-file-contents "package.json")
-	    (mapcar #'car (alist-get 'scripts (json-parse-buffer :object-type 'alist)))))
-	 (script (completing-read "npm run: " scripts nil t)))
-    (compile (format "npm run %s" script))))
+;; agent-shell
+(add-hook 'agent-shell-mode-hook #'variable-pitch-mode)
+(keymap-global-set "C-c c" #'agent-shell-new-temp-shell)
+(keymap-set project-prefix-map "a" #'agent-shell)
 
-;; frame/window spacing (core Emacs, replaces spacious-padding)
-(add-to-list 'default-frame-alist '(internal-border-width . 15))
-(add-to-list 'default-frame-alist '(right-divider-width . 1))
-(add-to-list 'default-frame-alist '(bottom-divider-width . 1))
-(add-to-list 'default-frame-alist '(left-fringe . 10))
-(add-to-list 'default-frame-alist '(right-fringe . 10))
-
-(with-eval-after-load 'editorconfig (add-to-list 'editorconfig-indentation-alist '(js-json-mode js-indent-level)))
-
-(add-to-list 'imagemagick-enabled-types 'JXL)
-
-(define-auto-insert "\\.html\\'" "insert.html")
-
-(define-auto-insert "\\.js\\'" "insert.js")
-
-(windmove-default-keybindings 'super)
-
-;; Hide menu-bar entries that are not from the global keymap
-(let ((map (make-sparse-keymap)))
-  (add-to-list 'emulation-mode-map-alists `((t . ,map)))
-  (add-hook 'menu-bar-update-hook
-            (lambda ()
-              (setcdr map nil)
-              (dolist (m (remq map (current-active-maps)))
-                (let ((menu (lookup-key m [menu-bar])))
-                  (when (keymapp menu)
-                    (map-keymap
-                     (lambda (key _)
-                       (unless (memq key '(file edit options buffer tools help-menu))
-                         (define-key map (vector 'menu-bar key) 'undefined)))
-                     menu)))))))
-
-(use-package emacs :hook
-  ((after-init . almost-maximize-frame)
-   (emacs-startup . server-start)
-   (emacs-startup . speedbar)
-   (emacs-startup . nerd-icons-speedbar-mode))
-  :bind (("C-c s" . speedbar)
-	 ("C-c y" . yt-dlp-download)
-	 (:map project-prefix-map ("s" . ghostel-project) ("n" . project-npm-run))))
-
-(use-package completion-preview-mode :bind (:map completion-preview-active-mode-map ("M-]" . completion-preview-next-candidate) ("M-[" . completion-preview-prev-candidate)))
-
-(when (eq window-system 'ns)
-  ;; Nerd Font Core Icons: Unicode Plane 0 (BMP)
-  (set-fontset-font t '(#xE000 . #xF8FF) "Symbols Nerd Font")
-  ;; Nerd Fonts Material Design Icons: Unicode Plane 15 (PUA-A)
-  (set-fontset-font t '(#xF0001 . #xF1AF0) "Symbols Nerd Font")
-  ;; SF Symbols: Unicode Plane 16 (PUA-B)
-  (set-fontset-font t '(#x100000 . #x10FFFD) "SF Pro Display")
-  ;; Transpose unwanted s- bindings to project, bookmark, and treesit navigation
-  (keymap-set key-translation-map "s-g" "M-g")
-  (keymap-set key-translation-map "s-o" "C-x p")
-  (keymap-set key-translation-map "s-r" "C-x r")
-  (dolist (key '("a" "b" "d" "e" "f" "k" "l" "n" "p" "t" "u" "y" "<backspace>"))
-    (keymap-set key-translation-map (concat "s-" key) (concat "C-M-" key)))
-  (defun dired-install-dmg ()
-    "Mount a .dmg file at point, copy its .app to ~/Applications/, then eject and optionally delete .dmg."
-    (interactive)
-    (if-let* ((dmg (dired-get-filename))
-	      (mount-output (shell-command-to-string (format "yes | hdiutil attach -nobrowse %s" (shell-quote-argument dmg))))
-	      ((string-match "/Volumes/[^\t\n]+" mount-output))
-	      (volume (string-trim-right (match-string 0 mount-output)))
-	      (app (car (file-expand-wildcards (concat volume "/*.app")))))
-	(progn
-	  (make-directory "~/Applications/" t)
-	  (shell-command (format "cp -R %s ~/Applications/" (shell-quote-argument app)))
-	  (shell-command (format "hdiutil detach %s" (shell-quote-argument volume)))
-	  (when (y-or-n-p (format "Installed %s to ~/Applications/ — trash the DMG?" (file-name-nondirectory app)))
-	    (shell-command (format "trash %s" (shell-quote-argument dmg)))
-	    (revert-buffer)))
-      (message "Installation failed: could not mount DMG or find .app bundle")))
-  (defun auto-theme (appearance)
-    "Load theme matching system APPEARANCE."
-    (mapc #'disable-theme custom-enabled-themes)
-    (load-theme (if (eq appearance 'dark) 'modus-vivendi-tinted 'modus-operandi-tinted) t))
-  ;; https://danielde.dev/blog/emacs-for-swift-development
-  (defun xcode--do (&rest verbs)
-    (dolist (v verbs)
-      (ns-do-applescript (format "tell application \"Xcode\" to if (count of workspace documents) > 0 then %s (active workspace document)" v))))
-  (defun xcode-build () "Build the active workspace." (interactive) (xcode--do "build"))
-  (defun xcode-run () "Stop and run the active workspace." (interactive) (xcode--do "stop" "run"))
-  (defun xcode-test () "Stop and test the active workspace." (interactive) (xcode--do "stop" "test"))
-
-  (use-package term/ns-win
-    :hook (ns-system-appearance-change-functions . auto-theme)
-    :bind ;; modernize undo and remove s-Z to s-z translation map
-    ("s-z" . undo-only)
-    ("s-Z" . nil)
-    ("s-Z" . undo-redo)
-    ("s-w" . kill-current-buffer)
-    ("C-M-y" . yank-pop)
-    ;; enable standard macOS emoji binding
-    ("H-e" . ns-do-show-character-palette)
-    ("H-f" . toggle-frame-fullscreen))
-
-  (use-package osx-dictionary :bind ("C-c d" . osx-dictionary-search-word-at-point))
-
-  (use-package swift-mode
-    ;; Swift ts-modes are reliant on unfinished tree sitters
-    :mode "\\.swift\\'"
-    :hook (swift-mode . eglot-ensure)
-    :bind (:prefix "C-c x" :prefix-map xcode ("b" . xcode-build) ("r" . xcode-run) ("t" . xcode-test))
-    :config (with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp")))))
-
-  (use-package exec-path-from-shell :config (exec-path-from-shell-initialize)))
-
-(use-package dired
-  ;; Requires ls-lisp for directory sorting
-  :hook ((dired-mode . dired-omit-mode)
-	 (dired-mode . dired-hide-details-mode))
-  :config (require 'ls-lisp))
-
-(use-package eglot
-  ;; Flymake is called by eglot automatically
-  ;; No :demand: loading eglot during init calls `char-displayable-p' before the
-  ;; frame's fonts are ready, which crashes Emacs 31 (SIGBUS in font_style_to_value)
-  ;; about half the time on macOS.
-  :hook ((html-mode css-ts-mode js-ts-mode markdown-ts-mode)
-	 . eglot-ensure)
-  :bind (:prefix "C-c a" :prefix-map eglot-actions
-		 ("r" . eglot-rename)
-		 ("a" . eglot-code-actions)
-		 ("o" . eglot-code-action-organize-imports)
-		 ("d" . eldoc)
-		 ("f" . eglot-format))
-  (:map eglot-mode-map ("H-<mouse-1>" . eglot-code-actions-at-mouse)))
-
-(use-package flymake
-  :hook (emacs-lisp-mode . flymake-avoid-scratch)
-  :bind (:map flymake-mode-map ("M-n" . flymake-goto-next-error) ("M-p" . flymake-goto-prev-error))
-  :config (defun flymake-avoid-scratch () (when (buffer-file-name) (flymake-mode 1))))
-
-(use-package html-mode
-  ;; mhtml-mode causes issues with apheleia
-  :mode ("\\.html\\'" . html-mode)
-  :hook (html-mode . visual-wrap-prefix-mode))
-
-(defun markdown-h1-title ()
-  "Insert an atx level 1 heading with the name of the file."
-  (interactive)
-  (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
-(defun markdown-h2-today () "Insert a level 2 heading with today's date in iso format." (interactive) (insert "## " (format-time-string "%Y-%m-%d") "\n"))
-(defun markdown-mla-frontmatter () "Insert frontmatter for an MLA heading." (interactive) (insert "---\nprofessor: \nclass: \nword-count: true\n---\n"))
-(use-package markdown-ts-mode
-  :mode ("\\.md\\'" . markdown-ts-mode)
-  :hook ((markdown-ts-mode . variable-pitch-mode)
-	 (markdown-ts-mode . visual-fill-column-mode)
-	 (markdown-ts-mode . markdown-indent-mode)
-	 (markdown-ts-mode . obsidian-cli-mode)
-	 (markdown-ts-mode . typo-mode))
-  :bind ((:map markdown-ts-mode-map ("<tab>" . markdown-ts-demote) ("<backtab>" . markdown-ts-promote))
-	 (:prefix "C-c m" :prefix-map markdown-actions ("1" . markdown-h1-title) ("2" . markdown-h2-today) ("f" . markdown-mla-frontmatter)))
-  :config ;; Match modus headings
-  (dolist (n (number-sequence 1 6))
-    (set-face-attribute
-     (intern (format "markdown-ts-heading-%d" n))
-     nil :inherit
-     (intern (format "modus-themes-heading-%d" n)))) ;; Fix extensionless wikilinks
-  (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
-  (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
-    (funcall orig-fn beg end (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url) url (concat url ".md"))))
-  ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
-  (with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio")))))
-
-(use-package prog-mode
-  ;; does not cover languages that inherit from sgml
-  :hook (prog-mode . visual-wrap-prefix-mode))
-
-(use-package agent-shell :hook
-  (agent-shell-mode . variable-pitch-mode)
-  :bind ("C-c c" . agent-shell-new-temp-shell)
-  (:map project-prefix-map ("a" . agent-shell)))
-
-;; Sidestep elfmt's `erase-buffer', avoid touching custom-set-*, and make it compatible with buffer-local `fill-column'
+;; apheleia / elfmt
 (require 'elfmt)
 (require 'apheleia)
-(defconst apheleia-elfmt-skip-forms-re (rx bol "(custom-set-" (or "variables" "faces") symbol-end) "Top-level forms elfmt should leave untouched.
+(defconst apheleia-elfmt-skip-forms-re
+  (rx bol "(custom-set-" (or "variables" "faces") symbol-end)
+  "Top-level forms elfmt should leave untouched.
 Custom owns the formatting of these and will rewrite them anyway.")
 (cl-defun apheleia-elfmt (&key buffer scratch callback &allow-other-keys)
   "Format SCRATCH with `elfmt', then invoke CALLBACK.
@@ -282,53 +236,129 @@ and `custom-set-faces' forms, which Custom formats itself."
 (setf (alist-get 'elfmt apheleia-formatters) #'apheleia-elfmt)
 (setf (alist-get 'emacs-lisp-mode apheleia-mode-alist) 'elfmt)
 
-(use-package csv-mode :hook (csv-mode . csv-align-mode))
+;; csv-mode
+(add-hook 'csv-mode-hook #'csv-align-mode)
 
-(use-package dwim-shell-command
-  :demand :bind
-  (("s-i" . dwim-file-mediainfo)
-   ([remap shell-command] . dwim-shell-command)
-   ("C-c p" . dwim-file-to-pdf)
-   (:map dired-mode-map
-	 ([remap dired-do-async-shell-command] . dwim-shell-command)
-	 ([remap dired-do-shell-command] . dwim-shell-command)
-	 ([remap dired-smart-shell-command] . dwim-shell-command)
-	 ("e" . dwim-shell-commands-macos-open-with)
-	 ("i" . dwim-file-mediainfo)))
-  :config ;; personal functions
-  (defun dwim-file-mediainfo () "Run mediainfo on the current buffer's file or marked dired files." (interactive) (dwim-shell-command-on-marked-files "MediaInfo" "mediainfo '<<f>>'" :utils "mediainfo"))
-  (defun dwim-file-to-pdf ()
-    "Convert marked files to PDF via pandoc and typst.
+;; dired
+;; Requires ls-lisp for directory sorting
+(add-hook 'dired-mode-hook #'dired-omit-mode)
+(add-hook 'dired-mode-hook #'dired-hide-details-mode)
+(with-eval-after-load 'dired (require 'ls-lisp))
+
+;; dwim-shell-command (demanded: loaded eagerly)
+(require 'dwim-shell-command)
+(defun dwim-file-mediainfo ()
+  "Run mediainfo on the current buffer's file or marked Dired files."
+  (interactive)
+  (dwim-shell-command-on-marked-files "MediaInfo" "mediainfo '<<f>>'" :utils "mediainfo"))
+(defun dwim-file-to-pdf ()
+  "Convert marked files to PDF via pandoc and typst.
 Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
-    (interactive)
-    (let* ((choice (read-char-choice "Template: [m]LA, [r]esume, [d]efault? " '(?m ?r ?d)))
-           (template-flag
-            (pcase choice
-              (?m (format " --template=%s" (expand-file-name "mla-template.typ" "~/.config/typst/")))
-              (?r (format " --template=%s" (expand-file-name "resume.typ" "~/.config/typst/")))
-              (?d ""))))
-      (dwim-shell-command-on-marked-files "Converting to pdf" (format "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst%s" template-flag) :silent-success t))))
+  (interactive)
+  (let* ((choice (read-char-choice "Template: [m]LA, [r]esume, [d]efault? " '(?m ?r ?d)))
+	 (template-flag
+          (pcase choice
+            (?m (format " --template=%s" (expand-file-name "mla-template.typ" "~/.config/typst/")))
+            (?r (format " --template=%s" (expand-file-name "resume.typ" "~/.config/typst/")))
+            (?d ""))))
+    (dwim-shell-command-on-marked-files "Converting to pdf"
+					(format "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst%s" template-flag)
+					:silent-success t)))
+(keymap-global-set "s-i" #'dwim-file-mediainfo)
+(keymap-set global-map "<remap> <shell-command>" #'dwim-shell-command)
+(keymap-global-set "C-c p" #'dwim-file-to-pdf)
+(with-eval-after-load 'dired
+  (keymap-set dired-mode-map "<remap> <dired-do-async-shell-command>" #'dwim-shell-command)
+  (keymap-set dired-mode-map "<remap> <dired-do-shell-command>" #'dwim-shell-command)
+  (keymap-set dired-mode-map "<remap> <dired-smart-shell-command>" #'dwim-shell-command)
+  (keymap-set dired-mode-map "e" #'dwim-shell-commands-macos-open-with)
+  (keymap-set dired-mode-map "i" #'dwim-file-mediainfo))
 
-(use-package elfeed
-  :bind (("C-c f" . elfeed)
-	 :map elfeed-show-mode-map
-	 ("w" . elfeed-webkit-toggle))
-  :config (elfeed-org))
+;; eglot
+;; Flymake is called by eglot automatically
+;; No eager `require': loading eglot during init calls `char-displayable-p' before the
+;; frame's fonts are ready, which crashes Emacs 31 (SIGBUS in font_style_to_value)
+;; about half the time on macOS.
+(dolist (hook '(html-mode-hook css-ts-mode-hook js-ts-mode-hook markdown-ts-mode-hook)) (add-hook hook #'eglot-ensure))
+(defvar-keymap eglot-actions-prefix-map "r" #'eglot-rename "a" #'eglot-code-actions "o" #'eglot-code-action-organize-imports "d" #'eldoc "f" #'eglot-format)
+(keymap-global-set "C-c a" eglot-actions-prefix-map)
+(with-eval-after-load 'eglot (keymap-set eglot-mode-map "H-<mouse-1>" #'eglot-code-actions-at-mouse))
 
-(use-package google-translate :bind ("C-c t" . google-translate-smooth-translate) ("C-c T" . google-translate-at-point))
+;; elfeed
+(keymap-global-set "C-c f" #'elfeed)
+(with-eval-after-load 'elfeed (keymap-set elfeed-show-mode-map "w" #'elfeed-webkit-toggle) (elfeed-org))
 
-(use-package hackernews :defer t :bind ("C-c h" . hackernews))
+;; flymake
+(dolist (hook '(emacs-lisp-mode-hook)) (add-hook hook #'flymake-mode))
+(with-eval-after-load 'flymake
+  (keymap-set flymake-mode-map "M-n" #'flymake-goto-next-error)
+  (keymap-set flymake-mode-map "M-p" #'flymake-goto-prev-error))
 
-(use-package obsidian-cli
-  :bind (:prefix "C-c o" :prefix-map obsidian-cli-actions
-		 ("s" . obsidian-cli-search-notes)
-		 ("d" . obsidian-cli-open-daily-note)
-		 ("z" . obsidian-cli-zip-vault)
-		 ("b" . obsidian-cli-jump-to-backlink)))
+;; google-translate
+(keymap-global-set "C-c t" #'google-translate-smooth-translate)
+(keymap-global-set "C-c T" #'google-translate-at-point)
 
-(use-package typst-ts-mode :mode "\\.typ\\'" :config (add-to-list 'treesit-language-source-alist '(typst "https://github.com/uben0/tree-sitter-typst")))
+;; hackernews
+(keymap-global-set "C-c h" #'hackernews)
 
-(use-package writegood-mode :bind ("C-c g" . writegood-mode))
+;; html-mode
+;; mhtml-mode causes issues with apheleia
+(add-to-list 'auto-mode-alist '("\\.html\\'" . html-ts-mode))
+(add-hook 'html-mode-hook #'visual-wrap-prefix-mode)
+
+;; markdown-ts-mode
+(defun markdown-h1-title ()
+  "Insert an atx level 1 heading with the name of the file."
+  (interactive)
+  (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
+(defun markdown-h2-today ()
+  "Insert a level 2 heading with today's date in iso format."
+  (interactive)
+  (insert "## " (format-time-string "%Y-%m-%d") "\n"))
+(defun markdown-mla-frontmatter ()
+  "Insert frontmatter for an MLA heading."
+  (interactive)
+  (insert "---\nprofessor: \nclass: \nword-count: true\n---\n"))
+(defun markdown-ts-make-link-button-advice (orig-fn beg end url)
+  "Treat extensionless wiki links as markdown files."
+  (funcall orig-fn beg end (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url) url (concat url ".md"))))
+;; Built into Emacs 31, but still experimental and not yet self-autoloading,
+;; so it has to be pulled in explicitly before it can go in auto-mode-alist.
+(require 'markdown-ts-mode)
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-ts-mode))
+(dolist (hook '(variable-pitch-mode visual-fill-column-mode markdown-indent-mode obsidian-cli-mode typo-mode))
+  (add-hook 'markdown-ts-mode-hook hook))
+(defvar-keymap markdown-actions-prefix-map "1" #'markdown-h1-title "2" #'markdown-h2-today "f" #'markdown-mla-frontmatter)
+(keymap-global-set "C-c m" markdown-actions-prefix-map)
+(with-eval-after-load 'markdown-ts-mode
+  (keymap-set markdown-ts-mode-map "<tab>" #'markdown-ts-demote)
+  (keymap-set markdown-ts-mode-map "<backtab>" #'markdown-ts-promote)
+  ;; Match modus headings
+  (dolist (n (number-sequence 1 6))
+    (set-face-attribute
+     (intern (format "markdown-ts-heading-%d" n))
+     nil :inherit
+     (intern (format "modus-themes-heading-%d" n))))
+  ;; Fix extensionless wikilinks
+  (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
+  ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
+  (with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio")))))
+
+;; obsidian-cli
+(defvar-keymap obsidian-cli-actions-prefix-map "s" #'obsidian-cli-search-notes "d" #'obsidian-cli-open-daily-note "z" #'obsidian-cli-zip-vault "b" #'obsidian-cli-jump-to-backlink)
+(keymap-global-set "C-c o" obsidian-cli-actions-prefix-map)
+
+;; prog-mode
+;; does not cover languages that inherit from sgml
+(add-hook 'prog-mode-hook #'visual-wrap-prefix-mode)
+
+;; typst-ts-mode
+(add-to-list 'auto-mode-alist '("\\.typ\\'" . typst-ts-mode))
+(with-eval-after-load 'typst-ts-mode
+  (add-to-list 'treesit-language-source-alist '(typst "https://github.com/uben0/tree-sitter-typst")))
+
+;; writegood-mode
+(keymap-global-set "C-c g" #'writegood-mode)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -436,7 +466,6 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(tool-bar-mode nil)
  '(treesit-auto-install-grammar 'always)
  '(treesit-enabled-modes t)
- '(use-package-vc-prefer-newest t)
  '(use-short-answers t)
  '(user-full-name "Leaf Eriksen")
  '(user-mail-address "leaferiksen@gmail.com")

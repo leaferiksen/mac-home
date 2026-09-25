@@ -8,6 +8,10 @@
 
 ;;; Code:
 
+(defun flymake-avoid-scratch () (when (buffer-file-name) (flymake-mode 1)))
+(add-hook 'emacs-lisp-mode-hook #'flymake-avoid-scratch)
+
+
 (window-buffer-change-functions . speedbar-refresh-on-non-file-buffers)
 (defun speedbar-refresh-on-non-file-buffers (&optional _)
   "Refresh Speedbar when switching to a non-file buffer."
