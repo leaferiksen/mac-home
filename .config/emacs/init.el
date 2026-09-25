@@ -43,9 +43,6 @@
       (fill-paragraph nil))))
 (add-hook 'after-init-hook #'almost-maximize-frame)
 (add-hook 'emacs-startup-hook #'server-start)
-(add-hook 'emacs-startup-hook #'speedbar)
-(add-hook 'emacs-startup-hook #'nerd-icons-speedbar-mode)
-(keymap-global-set "C-c s" #'speedbar)
 (windmove-default-keybindings 'super)
 ;; Hide menu-bar entries that are not from the global keymap
 (let ((map (make-sparse-keymap)))
@@ -61,6 +58,33 @@
                        (unless (memq key '(file edit options buffer tools help-menu))
                          (define-key map (vector 'menu-bar key) 'undefined)))
                      menu)))))))
+
+;; speedbar
+(add-hook 'emacs-startup-hook #'speedbar)
+(add-hook 'emacs-startup-hook #'nerd-icons-speedbar-mode)
+(defun speedbar-window-width-threshold ()
+  "Frame width, in columns, below which `speedbar-window' is hidden.
+Always three times the current `speedbar-window-default-width'."
+  (* 3 speedbar-window-default-width))
+(defun my-speedbar-auto-toggle (frame)
+  "Show or hide `speedbar-window' on FRAME based on its width.
+`speedbar-window' is pinned at `speedbar-window-default-width'."
+  (and-let*
+      (((frame-live-p frame))
+       ((< (frame-width frame) (speedbar-window-width-threshold)))
+       ((window-live-p speedbar--window)))
+    (speedbar-window-mode -1))
+  (and-let*
+      (((frame-live-p frame))
+       ((>= (frame-width frame) (speedbar-window-width-threshold)))
+       ((not (window-live-p speedbar--window))))
+    (setq speedbar--window-width speedbar-window-default-width)
+    (speedbar-window-mode 1))
+  (when-let* (((window-live-p speedbar--window))
+	      (delta (- speedbar-window-default-width (window-width speedbar--window)))
+	      ((not (zerop delta))))
+    (ignore-errors (window-resize speedbar--window delta t))))
+(add-hook 'window-size-change-functions #'my-speedbar-auto-toggle)
 
 ;; auto-insert
 (define-auto-insert "\\.html\\'" "insert.html")
@@ -462,7 +486,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(speedbar-initial-expansion-list-name "quick buffers" t)
  '(speedbar-prefer-window t)
  '(speedbar-show-unknown-files t)
- '(speedbar-window-default-width 40)
+ '(speedbar-window-default-width 30)
  '(tool-bar-mode nil)
  '(treesit-auto-install-grammar 'always)
  '(treesit-enabled-modes t)
