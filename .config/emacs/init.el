@@ -4,12 +4,12 @@
 
 ;;; Commentary:
 
-;; No `use-package'. Per package, in this order:
-;;   1. loading declarations (auto-mode-alist, add-hook)
-;;   2. keybindings (keymap-set / keymap-global-set / defvar-keymap)
-;;   3. config, wrapped in `with-eval-after-load' unless the package is
-;;      already guaranteed to be loaded at that point (built-ins that
-;;      load at startup, or packages just `require'd above the config).
+;; Per package, in this order:
+;; 1. loading declarations (auto-mode-alist, add-hook)
+;; 2. keybindings (keymap-set / keymap-global-set / defvar-keymap)
+;; 3. config, wrapped in `with-eval-after-load' unless the package is
+;;    already guaranteed to be loaded at that point (built-ins that
+;;    load at startup, or packages just `require'd above the config).
 ;;
 ;; Top level functions are sorted primarily by priority,
 ;; secondarily by alphabet.
@@ -24,15 +24,15 @@
 (setenv "GIT_EDITOR" "emacsclient")
 
 ;; emacs
-(add-to-list 'default-frame-alist '(internal-border-width . 15))
+(add-to-list 'default-frame-alist '(internal-border-width . 10))
 (add-to-list 'default-frame-alist '(right-divider-width . 1))
 (add-to-list 'default-frame-alist '(bottom-divider-width . 1))
-(add-to-list 'default-frame-alist '(left-fringe . 10))
-(add-to-list 'default-frame-alist '(right-fringe . 10))
+(add-to-list 'default-frame-alist '(left-fringe . 5))
+(add-to-list 'default-frame-alist '(right-fringe . 5))
 (defun almost-maximize-frame ()
   "Borderless maximise with margins for tiling."
   (interactive)
-  ;; (add-to-list 'default-frame-alist '(undecorated-round . t))
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
 (defun unfill ()
   "Unfill the current region if active, or the current paragraph."
@@ -44,6 +44,7 @@
 (add-hook 'after-init-hook #'almost-maximize-frame)
 (add-hook 'emacs-startup-hook #'server-start)
 (windmove-default-keybindings 'super)
+(setcdr visual-line-mode-map nil)
 ;; Hide menu-bar entries that are not from the global keymap
 (let ((map (make-sparse-keymap)))
   (add-to-list 'emulation-mode-map-alists `((t . ,map)))
@@ -59,41 +60,14 @@
                          (define-key map (vector 'menu-bar key) 'undefined)))
                      menu)))))))
 
-;; speedbar
-(add-hook 'emacs-startup-hook #'speedbar)
-(add-hook 'emacs-startup-hook #'nerd-icons-speedbar-mode)
-(defun speedbar-window-width-threshold ()
-  "Frame width, in columns, below which `speedbar-window' is hidden.
-Always three times the current `speedbar-window-default-width'."
-  (* 3 speedbar-window-default-width))
-(defun my-speedbar-auto-toggle (frame)
-  "Show or hide `speedbar-window' on FRAME based on its width.
-`speedbar-window' is pinned at `speedbar-window-default-width'."
-  (and-let*
-      (((frame-live-p frame))
-       ((< (frame-width frame) (speedbar-window-width-threshold)))
-       ((window-live-p speedbar--window)))
-    (speedbar-window-mode -1))
-  (and-let*
-      (((frame-live-p frame))
-       ((>= (frame-width frame) (speedbar-window-width-threshold)))
-       ((not (window-live-p speedbar--window))))
-    (setq speedbar--window-width speedbar-window-default-width)
-    (speedbar-window-mode 1))
-  (when-let* (((window-live-p speedbar--window))
-	      (delta (- speedbar-window-default-width (window-width speedbar--window)))
-	      ((not (zerop delta))))
-    (ignore-errors (window-resize speedbar--window delta t))))
-(add-hook 'window-size-change-functions #'my-speedbar-auto-toggle)
-
 ;; auto-insert
 (define-auto-insert "\\.html\\'" "insert.html")
 (define-auto-insert "\\.js\\'" "insert.js")
 
 ;; completion-preview-mode (built-in; keymap only exists once loaded)
 (with-eval-after-load 'completion-preview
-  (keymap-set completion-preview-active-mode-map "M-]" #'completion-preview-next-candidate)
-  (keymap-set completion-preview-active-mode-map "M-[" #'completion-preview-prev-candidate))
+  (keymap-set completion-preview-active-mode-map "<tab>" #'completion-preview-next-candidate)
+  (keymap-set completion-preview-active-mode-map "<backtab>" #'completion-preview-prev-candidate))
 
 ;; editorconfig
 (with-eval-after-load 'editorconfig (add-to-list 'editorconfig-indentation-alist '(js-json-mode js-indent-level)))
@@ -191,6 +165,33 @@ Always three times the current `speedbar-window-default-width'."
     (compile (format "npm run %s" script))))
 (keymap-set project-prefix-map "s" #'ghostel-project)
 (keymap-set project-prefix-map "n" #'project-npm-run)
+
+;; speedbar
+(defun speedbar-window-width-threshold ()
+  "Frame width, in columns, below which `speedbar-window' is hidden.
+Always three times the current `speedbar-window-default-width'."
+  (* 3 speedbar-window-default-width))
+(defun speedbar-auto-toggle (frame)
+  "Show or hide `speedbar-window' on FRAME based on its width.
+`speedbar-window' is pinned at `speedbar-window-default-width'."
+  (and-let*
+      (((frame-live-p frame))
+       ((< (frame-width frame) (speedbar-window-width-threshold)))
+       ((window-live-p speedbar--window)))
+    (speedbar-window-mode -1))
+  (and-let*
+      (((frame-live-p frame))
+       ((>= (frame-width frame) (speedbar-window-width-threshold)))
+       ((not (window-live-p speedbar--window))))
+    (setq speedbar--window-width speedbar-window-default-width)
+    (speedbar-window-mode 1))
+  (when-let* (((window-live-p speedbar--window))
+	      (delta (- speedbar-window-default-width (window-width speedbar--window)))
+	      ((not (zerop delta))))
+    (ignore-errors (window-resize speedbar--window delta t))))
+(add-hook 'window-size-change-functions #'speedbar-auto-toggle)
+(add-hook 'emacs-startup-hook #'speedbar)
+(add-hook 'emacs-startup-hook #'nerd-icons-speedbar-mode)
 
 ;; yt-dlp
 (defun yt-dlp-download ()
@@ -313,7 +314,8 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 (with-eval-after-load 'elfeed (keymap-set elfeed-show-mode-map "w" #'elfeed-webkit-toggle) (elfeed-org))
 
 ;; flymake
-(dolist (hook '(emacs-lisp-mode-hook)) (add-hook hook #'flymake-mode))
+;; (dolist (hook '(emacs-lisp-mode-hook)) (add-hook hook #'flymake-mode))
+(add-hook 'emacs-lisp-mode-hook #'flymake-mode)
 (with-eval-after-load 'flymake
   (keymap-set flymake-mode-map "M-n" #'flymake-goto-next-error)
   (keymap-set flymake-mode-map "M-p" #'flymake-goto-prev-error))
@@ -329,6 +331,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 ;; mhtml-mode causes issues with apheleia
 (add-to-list 'auto-mode-alist '("\\.html\\'" . html-ts-mode))
 (add-hook 'html-mode-hook #'visual-wrap-prefix-mode)
+(add-hook 'html-mode-hook #'completion-preview-mode)
 
 ;; markdown-ts-mode
 (defun markdown-h1-title ()
@@ -368,6 +371,11 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
   (with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio")))))
 
+;; nov
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+(dolist (hook '(variable-pitch-mode visual-fill-column-mode)) (add-hook 'nov-mode-hook hook))
+(keymap-global-set "C-c s" #'read-aloud-buf)
+
 ;; obsidian-cli
 (defvar-keymap obsidian-cli-actions-prefix-map "s" #'obsidian-cli-search-notes "d" #'obsidian-cli-open-daily-note "z" #'obsidian-cli-zip-vault "b" #'obsidian-cli-jump-to-backlink)
 (keymap-global-set "C-c o" obsidian-cli-actions-prefix-map)
@@ -375,6 +383,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 ;; prog-mode
 ;; does not cover languages that inherit from sgml
 (add-hook 'prog-mode-hook #'visual-wrap-prefix-mode)
+(add-hook 'prog-mode-hook #'completion-preview-mode)
 
 ;; typst-ts-mode
 (add-to-list 'auto-mode-alist '("\\.typ\\'" . typst-ts-mode))
@@ -425,15 +434,14 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(eglot-code-action-indicator "*")
  '(eldoc-echo-area-prefer-doc-buffer t)
  '(eldoc-echo-area-use-multiline-p t)
- '(eldoc-help-at-pt t)
  '(electric-pair-mode t)
  '(elfeed-search-filter "@6-months")
  '(elfeed-webkit-auto-enable-tags '(webkit comics))
  '(fido-vertical-mode t)
  '(find-file-visit-truename t)
+ '(flymake-fringe-indicator-position nil)
  '(frame-resize-pixelwise t)
  '(gc-cons-threshold 100000000)
- '(global-completion-preview-mode t)
  '(global-hl-line-mode t)
  '(global-nerd-icons-multimodal-mode t)
  '(global-visual-line-mode t)
@@ -455,7 +463,11 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(markdown-ts-inline-images t)
  '(mode-line-collapse-minor-modes '(not flymake-mode))
  '(modus-themes-common-palette-overrides
-   '((fringe unspecified) (border bg-inactive) (border-mode-line-active unspecified) (border-mode-line-inactive unspecified) (underline-link unspecified) (underline-link-visited unspecified) (underline-link-symbolic unspecified) (fg-heading-0 fg-main) (fg-heading-1 fg-main) (fg-heading-2 fg-main) (fg-heading-3 fg-main) (fg-heading-4 fg-main) (fg-heading-5 fg-main) (fg-heading-6 fg-main) (fg-heading-7 fg-main) (fg-heading-8 fg-main)))
+   '((fringe unspecified) (border bg-inactive) (border-mode-line-active unspecified)
+     (border-mode-line-inactive unspecified) (underline-link unspecified) (underline-link-visited unspecified)
+     (underline-link-symbolic unspecified) (fg-heading-0 fg-main) (fg-heading-1 fg-main) (fg-heading-2 fg-main)
+     (fg-heading-3 fg-main) (fg-heading-4 fg-main) (fg-heading-5 fg-main) (fg-heading-6 fg-main) (fg-heading-7 fg-main)
+     (fg-heading-8 fg-main)))
  '(modus-themes-italic-constructs t)
  '(modus-themes-mixed-fonts t)
  '(mouse-wheel-scroll-amount
@@ -466,14 +478,22 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(obsidian-cli-note-extensions '("md" "tsv"))
  '(obsidian-cli-rename-on-save t)
  '(package-selected-packages
-   '(agent-shell anglish apheleia betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org elfmt exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode nerd-icons-multimodal nerd-icons-speedbar obsidian-cli osx-dictionary swift-mode typo typst-ts-mode visual-fill-column writegood-mode))
+   '(agent-shell anglish apheleia betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org elfmt
+		 exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode
+		 nerd-icons-multimodal nerd-icons-speedbar nov obsidian-cli osx-dictionary read-aloud swift-mode typo
+		 typst-ts-mode visual-fill-column writegood-mode))
  '(package-vc-allow-build-commands t)
  '(package-vc-register-as-project nil)
  '(package-vc-selected-packages
-   '((nerd-icons-speedbar :vc-backend Git :url "https://github.com/Akane-6730/nerd-icons-speedbar") (betweenle :vc-backend Git :url "https://github.com/vikram-mandyam/betweenle.el") (nerd-icons-multimodal :vc-backend Git :url "https://github.com/abougouffa/nerd-icons-multimodal") (obsidian-cli :url "git@github.com:leaferiksen/obsidian-cli.el.git") (elfmt :url "https://github.com/riscy/elfmt") (anglish :url "git@github.com:leaferiksen/anglish.el.git")))
+   '((nerd-icons-speedbar :vc-backend Git :url "https://github.com/Akane-6730/nerd-icons-speedbar")
+     (betweenle :vc-backend Git :url "https://github.com/vikram-mandyam/betweenle.el")
+     (nerd-icons-multimodal :vc-backend Git :url "https://github.com/abougouffa/nerd-icons-multimodal")
+     (obsidian-cli :url "git@github.com:leaferiksen/obsidian-cli.el.git") (elfmt :url "https://github.com/riscy/elfmt")
+     (anglish :url "git@github.com:leaferiksen/anglish.el.git")))
  '(pop-up-windows nil)
  '(project-mode-line t)
  '(project-vc-extra-root-markers '("project"))
+ '(read-aloud-engine "say" t)
  '(read-buffer-completion-ignore-case t)
  '(read-process-output-max (* 1024 1024) t)
  '(repeat-mode t)
@@ -509,6 +529,8 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(default ((t (:family "Maple Mono CN" :height 140))))
  '(fixed-pitch ((t (:inherit default))))
  '(markdown-indent-mode-hide-hash ((t (:inherit shadow))))
+ '(mode-line-active ((t (:box (:line-width 5 :style flat-button)))))
+ '(mode-line-inactive ((t (:box (:line-width 5 :style flat-button)))))
  '(variable-pitch ((t (:height 180 :family "Atkinson Hyperlegible Next")))))
 
 (provide 'init)

@@ -11,7 +11,6 @@
 (defun flymake-avoid-scratch () (when (buffer-file-name) (flymake-mode 1)))
 (add-hook 'emacs-lisp-mode-hook #'flymake-avoid-scratch)
 
-
 (window-buffer-change-functions . speedbar-refresh-on-non-file-buffers)
 (defun speedbar-refresh-on-non-file-buffers (&optional _)
   "Refresh Speedbar when switching to a non-file buffer."
@@ -25,43 +24,6 @@
 		(and (boundp 'speedbar-window) (window-live-p speedbar-window))
 		(and (boundp 'speedbar-frame) (frame-live-p speedbar-frame)))))
     (let ((inhibit-message t)) (speedbar-refresh))))
-
-(use-package agent-shell-macext
-  :vc (:url "https://github.com/cxa/agent-shell-macext")
-  :hook (agent-shell-mode . agent-shell-macext-setup)
-  :custom (agent-shell-macext-file-copy-policy 'auto)
-  (agent-shell-macext-notifications t)
-  (agent-shell-macext-notify-current-buffer nil))
-
-(cl-defun apheleia-elfmt
-    (&key buffer scratch callback &allow-other-keys)
-  "Format SCRATCH with `elfmt', then invoke CALLBACK.
-Indentation settings are copied from BUFFER so the result matches
-what you'd get by typing TAB there."
-  (let ((fc (buffer-local-value 'fill-column buffer))
-	(tabs (buffer-local-value 'indent-tabs-mode buffer))
-	(indent-fn
-	 (buffer-local-value 'lisp-indent-function buffer))
-	(original (with-current-buffer scratch (buffer-string))))
-    (with-current-buffer scratch
-      (delay-mode-hooks (emacs-lisp-mode))
-      ;; after the major mode, so these aren't clobbered
-      (setq-local fill-column fc indent-tabs-mode tabs lisp-indent-function indent-fn)
-      (condition-case err
-	  (let ((gc-cons-threshold most-positive-fixnum)
-		(inhibit-message t)
-		(message-log-max nil))
-	    (goto-char (point-max))
-	    (while (not (bobp))
-	      (backward-sexp)
-	      (elfmt--sexp)))
-	;; elfmt errors on unbalanced parens and old-style backquotes;
-	;; roll back so apheleia applies an empty patch instead of garbage
-	(error
-	 (erase-buffer)
-	 (insert original)
-	 (message "elfmt: %s" (error-message-string err))))))
-  (funcall callback))
 
 (use-package reader
   :ensure t
