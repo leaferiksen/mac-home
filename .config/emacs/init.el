@@ -63,6 +63,7 @@
 ;; auto-insert
 (define-auto-insert "\\.html\\'" "insert.html")
 (define-auto-insert "\\.js\\'" "insert.js")
+(define-auto-insert "\\.ino\\'" "insert.ino")
 
 ;; completion-preview-mode (built-in; keymap only exists once loaded)
 (with-eval-after-load 'completion-preview
@@ -261,6 +262,13 @@ and `custom-set-faces' forms, which Custom formats itself."
 (setf (alist-get 'elfmt apheleia-formatters) #'apheleia-elfmt)
 (setf (alist-get 'emacs-lisp-mode apheleia-mode-alist) 'elfmt)
 
+;; arduino
+;; Associate .ino files with c++-mode
+(add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
+;; Run arduino-cli-mode whenever c++-mode loads
+(add-hook 'c++-ts-mode-hook #'arduino-cli-mode)
+(setq arduino-cli-default-fqbn "arduino:avr:uno" arduino-cli-default-port "/dev/cu.usbmodem2101")
+
 ;; csv-mode
 (add-hook 'csv-mode-hook #'csv-align-mode)
 
@@ -441,7 +449,6 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(find-file-visit-truename t)
  '(flymake-fringe-indicator-position nil)
  '(frame-resize-pixelwise t)
- '(gc-cons-threshold 100000000)
  '(global-hl-line-mode t)
  '(global-nerd-icons-multimodal-mode t)
  '(global-visual-line-mode t)
@@ -478,8 +485,8 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(obsidian-cli-note-extensions '("md" "tsv"))
  '(obsidian-cli-rename-on-save t)
  '(package-selected-packages
-   '(agent-shell anglish apheleia betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org elfmt
-		 exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode
+   '(agent-shell anglish apheleia arduino-cli-mode betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org
+		 elfmt exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode
 		 nerd-icons-multimodal nerd-icons-speedbar nov obsidian-cli osx-dictionary read-aloud swift-mode typo
 		 typst-ts-mode visual-fill-column writegood-mode))
  '(package-vc-allow-build-commands t)
@@ -531,6 +538,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(markdown-indent-mode-hide-hash ((t (:inherit shadow))))
  '(mode-line-active ((t (:box (:line-width 5 :style flat-button)))))
  '(mode-line-inactive ((t (:box (:line-width 5 :style flat-button)))))
+ '(speedbar-separator-face ((t (:box (:line-width 5 :style flat-button)))))
  '(variable-pitch ((t (:height 180 :family "Atkinson Hyperlegible Next")))))
 
 (provide 'init)
