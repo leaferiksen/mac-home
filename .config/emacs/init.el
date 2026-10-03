@@ -67,8 +67,8 @@
 
 ;; completion-preview-mode (built-in; keymap only exists once loaded)
 (with-eval-after-load 'completion-preview
-  (keymap-set completion-preview-active-mode-map "<tab>" #'completion-preview-next-candidate)
-  (keymap-set completion-preview-active-mode-map "<backtab>" #'completion-preview-prev-candidate))
+  (keymap-set completion-preview-active-mode-map "C-n" #'completion-preview-next-candidate)
+  (keymap-set completion-preview-active-mode-map "C-p" #'completion-preview-prev-candidate))
 
 ;; editorconfig
 (with-eval-after-load 'editorconfig (add-to-list 'editorconfig-indentation-alist '(js-json-mode js-indent-level)))
@@ -228,39 +228,41 @@ Always three times the current `speedbar-window-default-width'."
 (keymap-set project-prefix-map "a" #'agent-shell)
 
 ;; apheleia / elfmt
-(require 'elfmt)
-(require 'apheleia)
-(defconst apheleia-elfmt-skip-forms-re
-  (rx bol "(custom-set-" (or "variables" "faces") symbol-end)
-  "Top-level forms elfmt should leave untouched.
+(with-eval-after-load 'apheleia-mode
+  (defconst apheleia-elfmt-skip-forms-re
+    (rx bol "(custom-set-" (or "variables" "faces") symbol-end)
+    "Top-level forms elfmt should leave untouched.
 Custom owns the formatting of these and will rewrite them anyway.")
-(cl-defun apheleia-elfmt (&key buffer scratch callback &allow-other-keys)
-  "Format SCRATCH with `elfmt', then invoke CALLBACK.
+  (cl-defun apheleia-elfmt (&key buffer scratch callback &allow-other-keys)
+    "Format SCRATCH with `elfmt', then invoke CALLBACK.
 Indentation settings are copied from BUFFER so the result matches
 what you'd get by typing TAB there. Skips `custom-set-variables'
 and `custom-set-faces' forms, which Custom formats itself."
-  (let ((fc (buffer-local-value 'fill-column buffer))
-	(tabs (buffer-local-value 'indent-tabs-mode buffer))
-	(indent-fn (buffer-local-value 'lisp-indent-function buffer))
-	(original (with-current-buffer scratch (buffer-string))))
-    (with-current-buffer scratch
-      (delay-mode-hooks (emacs-lisp-mode))
-      (setq-local fill-column fc indent-tabs-mode tabs lisp-indent-function indent-fn)
-      (condition-case err
-          (let ((gc-cons-threshold most-positive-fixnum)
-		(inhibit-message t)
-		(message-log-max nil))
-            (goto-char (point-max))
-            (while (not (bobp))
-              (backward-sexp)
-              (unless (looking-at-p apheleia-elfmt-skip-forms-re) (elfmt--sexp))))
-        (error
-         (erase-buffer)
-         (insert original)
-         (message "elfmt: %s" (error-message-string err))))))
-  (funcall callback))
-(setf (alist-get 'elfmt apheleia-formatters) #'apheleia-elfmt)
-(setf (alist-get 'emacs-lisp-mode apheleia-mode-alist) 'elfmt)
+    (let ((fc (buffer-local-value 'fill-column buffer))
+	  (tabs (buffer-local-value 'indent-tabs-mode buffer))
+	  (indent-fn (buffer-local-value 'lisp-indent-function buffer))
+	  (original (with-current-buffer scratch (buffer-string))))
+      (with-current-buffer scratch
+	(delay-mode-hooks (emacs-lisp-mode))
+	(setq-local fill-column fc indent-tabs-mode tabs lisp-indent-function indent-fn)
+	(condition-case err
+            (let ((gc-cons-threshold most-positive-fixnum)
+		  (inhibit-message t)
+		  (message-log-max nil))
+              (goto-char (point-max))
+              (while (not (bobp))
+		(backward-sexp)
+		(unless (looking-at-p apheleia-elfmt-skip-forms-re) (elfmt--sexp))))
+          (error
+           (erase-buffer)
+           (insert original)
+           (message "elfmt: %s" (error-message-string err))))))
+    (funcall callback))
+  (setf
+   (alist-get 'elfmt apheleia-formatters)
+   #'apheleia-elfmt
+   (alist-get 'emacs-lisp-mode apheleia-mode-alist)
+   'elfmt))
 
 ;; arduino
 ;; Associate .ino files with c++-mode
@@ -268,6 +270,25 @@ and `custom-set-faces' forms, which Custom formats itself."
 ;; Run arduino-cli-mode whenever c++-mode loads
 (add-hook 'c++-ts-mode-hook #'arduino-cli-mode)
 (setq arduino-cli-default-fqbn "arduino:avr:uno" arduino-cli-default-port "/dev/cu.usbmodem2101")
+(defun arduino-cli-serial-monitor ()
+  "Open a serial monitor for the default board inside an `ansi-term` buffer."
+  (interactive)
+  (let ((buf (format "*arduino-monitor:%s*" arduino-cli-default-port)))
+    (if (get-buffer buf)
+        (switch-to-buffer buf)
+      (let ((term-buf (make-term buf "arduino-cli" nil "monitor"
+                                 "-p" arduino-cli-default-port
+                                 "-b" arduino-cli-default-fqbn)))
+        (with-current-buffer term-buf
+          (term-mode)
+          (term-char-mode))
+        (switch-to-buffer term-buf)))))
+(defun arduino-cli-add-serial-monitor-menu ()
+  "Add Serial Monitor command directly into the Arduino-CLI menu bar item."
+  (easy-menu-add-item arduino-cli-mode-map
+                      '("menu-bar" "Arduino-CLI")
+                      ["Serial Monitor" arduino-cli-serial-monitor]))
+(add-hook 'arduino-cli-mode-hook #'arduino-cli-add-serial-monitor-menu)
 
 ;; csv-mode
 (add-hook 'csv-mode-hook #'csv-align-mode)
@@ -341,7 +362,8 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 (add-hook 'html-mode-hook #'visual-wrap-prefix-mode)
 (add-hook 'html-mode-hook #'completion-preview-mode)
 
-;; markdown-ts-mode
+;; markdown-ts-mode is still experimental and not yet self-autoloading,
+;; so it has to be pulled in explicitly before it can go in auto-mode-alist.
 (defun markdown-h1-title ()
   "Insert an atx level 1 heading with the name of the file."
   (interactive)
@@ -357,8 +379,6 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 (defun markdown-ts-make-link-button-advice (orig-fn beg end url)
   "Treat extensionless wiki links as markdown files."
   (funcall orig-fn beg end (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url) url (concat url ".md"))))
-;; Built into Emacs 31, but still experimental and not yet self-autoloading,
-;; so it has to be pulled in explicitly before it can go in auto-mode-alist.
 (require 'markdown-ts-mode)
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-ts-mode))
 (dolist (hook '(variable-pitch-mode visual-fill-column-mode markdown-indent-mode obsidian-cli-mode typo-mode))
@@ -419,6 +439,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(completion-eager-display nil)
  '(completion-eager-update t)
  '(completion-ignore-case t t)
+ '(completions-format 'one-column)
  '(completions-sort 'historical)
  '(context-menu-mode t)
  '(csv-align-max-width 72)
@@ -480,7 +501,6 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(mouse-wheel-scroll-amount
    '(1 ((shift) . hscroll) ((meta)) ((control) . 1) ((control meta) . 1)))
  '(nov-text-width t)
- '(ns-alternate-modifier 'none)
  '(ns-function-modifier 'hyper)
  '(obsidian-cli-note-extensions '("md" "tsv"))
  '(obsidian-cli-rename-on-save t)

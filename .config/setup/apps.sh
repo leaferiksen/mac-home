@@ -9,7 +9,7 @@ brew install --formula anomalyco/tap/opencode atool cmatrix ffmpeg harper imagem
 paneru install && paneru start
 
 # general apps
-brew install --cask anki calibre darrylmorley/whatcable/whatcable finetune font-atkinson-hyperlegible-next font-maple-mono-cn font-symbols-only-nerd-font homerow iina knockknock modrinth mos@beta neodisk open-design osu soulver superwhisper syncthing transmission virtualbuddy zotero
+brew install --cask anki calibre darrylmorley/whatcable/whatcable finetune font-atkinson-hyperlegible-next font-maple-mono-cn font-symbols-only-nerd-font homerow iina knockknock modrinth mos@beta neodisk open-design osu reminders-menubar soulver superwhisper syncthing transmission virtualbuddy zotero
 brew pin font-atkinson-hyperlegible-next
 
 # web development
