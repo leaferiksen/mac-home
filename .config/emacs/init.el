@@ -1,18 +1,8 @@
-;;; init.el --- Emacs 31 Initialization -*- lexical-binding: t; no-byte-compile: t; fill-column: 120;-*-
+;;; init.el --- Emacs 31 Initialization -*- lexical-binding: t; no-byte-compile: t; fill-column: 100;-*-
 
 ;; Author: Leaf Eriksen <leaferiksen@gmail.com>
 
 ;;; Commentary:
-
-;; Per package, in this order:
-;; 1. loading declarations (auto-mode-alist, add-hook)
-;; 2. keybindings (keymap-set / keymap-global-set / defvar-keymap)
-;; 3. config, wrapped in `with-eval-after-load' unless the package is
-;;    already guaranteed to be loaded at that point (built-ins that
-;;    load at startup, or packages just `require'd above the config).
-;;
-;; Top level functions are sorted primarily by priority,
-;; secondarily by alphabet.
 
 ;;; Code:
 
@@ -67,8 +57,8 @@
 
 ;; completion-preview-mode (built-in; keymap only exists once loaded)
 (with-eval-after-load 'completion-preview
-  (keymap-set completion-preview-active-mode-map "C-n" #'completion-preview-next-candidate)
-  (keymap-set completion-preview-active-mode-map "C-p" #'completion-preview-prev-candidate))
+  (keymap-set completion-preview-active-mode-map "s-[" #'completion-preview-next-candidate)
+  (keymap-set completion-preview-active-mode-map "s-]" #'completion-preview-prev-candidate))
 
 ;; editorconfig
 (with-eval-after-load 'editorconfig (add-to-list 'editorconfig-indentation-alist '(js-json-mode js-indent-level)))
@@ -94,7 +84,6 @@
   (dolist (key '("a" "b" "d" "e" "f" "k" "l" "n" "p" "t" "u" "y" "<backspace>"))
     (keymap-set key-translation-map (concat "s-" key) (concat "C-M-" key)))
 
-  ;; dired (ns)
   (defun dired-install-dmg ()
     "Mount a .dmg file at point, copy its .app to ~/Applications/, then eject and optionally delete .dmg."
     (interactive)
@@ -144,7 +133,8 @@
   ;; Swift ts-modes are reliant on unfinished tree sitters
   (add-to-list 'auto-mode-alist '("\\.swift\\'" . swift-mode))
   (add-hook 'swift-mode-hook #'eglot-ensure)
-  (defvar-keymap xcode-prefix-map "b" #'xcode-build "r" #'xcode-run "t" #'xcode-test)
+  (defvar-keymap xcode-prefix-map
+    "b" #'xcode-build "r" #'xcode-run "t" #'xcode-test)
   (keymap-set global-map "C-c x" xcode-prefix-map)
   (with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(swift-mode . ("xcrun" "sourcekit-lsp"))))
 
@@ -190,9 +180,8 @@ Always three times the current `speedbar-window-default-width'."
 	      (delta (- speedbar-window-default-width (window-width speedbar--window)))
 	      ((not (zerop delta))))
     (ignore-errors (window-resize speedbar--window delta t))))
-(add-hook 'window-size-change-functions #'speedbar-auto-toggle)
-(add-hook 'emacs-startup-hook #'speedbar)
-(add-hook 'emacs-startup-hook #'nerd-icons-speedbar-mode)
+
+(dolist (fn '(speedbar nerd-icons-speedbar-mode)) (add-hook 'emacs-startup-hook fn))
 
 ;; yt-dlp
 (defun yt-dlp-download ()
@@ -265,11 +254,6 @@ and `custom-set-faces' forms, which Custom formats itself."
    'elfmt))
 
 ;; arduino
-;; Associate .ino files with c++-mode
-(add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
-;; Run arduino-cli-mode whenever c++-mode loads
-(add-hook 'c++-ts-mode-hook #'arduino-cli-mode)
-(setq arduino-cli-default-fqbn "arduino:avr:uno" arduino-cli-default-port "/dev/cu.usbmodem2101")
 (defun arduino-cli-serial-monitor ()
   "Open a serial monitor for the default board inside an `ansi-term` buffer."
   (interactive)
@@ -283,20 +267,27 @@ and `custom-set-faces' forms, which Custom formats itself."
           (term-mode)
           (term-char-mode))
         (switch-to-buffer term-buf)))))
+
 (defun arduino-cli-add-serial-monitor-menu ()
   "Add Serial Monitor command directly into the Arduino-CLI menu bar item."
   (easy-menu-add-item arduino-cli-mode-map
                       '("menu-bar" "Arduino-CLI")
                       ["Serial Monitor" arduino-cli-serial-monitor]))
+
+;; Associate .ino files with c++-mode
+(add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
+;; Run arduino-cli-mode whenever c++-mode loads
+(add-hook 'c++-ts-mode-hook #'arduino-cli-mode)
 (add-hook 'arduino-cli-mode-hook #'arduino-cli-add-serial-monitor-menu)
+
+(setq arduino-cli-default-fqbn "arduino:avr:uno" arduino-cli-default-port "/dev/cu.usbmodem2101")
 
 ;; csv-mode
 (add-hook 'csv-mode-hook #'csv-align-mode)
 
 ;; dired
 ;; Requires ls-lisp for directory sorting
-(add-hook 'dired-mode-hook #'dired-omit-mode)
-(add-hook 'dired-mode-hook #'dired-hide-details-mode)
+(dolist (fn '(dired-omit-mode dired-hide-details-mode)) (add-hook 'dired-mode-hook fn))
 (with-eval-after-load 'dired (require 'ls-lisp))
 
 ;; dwim-shell-command (demanded: loaded eagerly)
@@ -334,9 +325,10 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 ;; frame's fonts are ready, which crashes Emacs 31 (SIGBUS in font_style_to_value)
 ;; about half the time on macOS.
 (dolist (hook '(html-mode-hook css-ts-mode-hook js-ts-mode-hook markdown-ts-mode-hook)) (add-hook hook #'eglot-ensure))
-(defvar-keymap eglot-actions-prefix-map "r" #'eglot-rename "a" #'eglot-code-actions "o" #'eglot-code-action-organize-imports "d" #'eldoc "f" #'eglot-format)
+(defvar-keymap eglot-actions-prefix-map
+  "r" #'eglot-rename "a" #'eglot-code-actions "o" #'eglot-code-action-organize-imports "d" #'eldoc "f" #'eglot-format)
 (keymap-global-set "C-c a" eglot-actions-prefix-map)
-(with-eval-after-load 'eglot (keymap-set eglot-mode-map "H-<mouse-1>" #'eglot-code-actions-at-mouse))
+(with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio"))))
 
 ;; elfeed
 (keymap-global-set "C-c f" #'elfeed)
@@ -359,11 +351,9 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 ;; html-mode
 ;; mhtml-mode causes issues with apheleia
 (add-to-list 'auto-mode-alist '("\\.html\\'" . html-ts-mode))
-(add-hook 'html-mode-hook #'visual-wrap-prefix-mode)
-(add-hook 'html-mode-hook #'completion-preview-mode)
+(dolist (fn '(visual-wrap-prefix-mode completion-preview-mode)) (add-hook 'html-mode-hook fn))
 
-;; markdown-ts-mode is still experimental and not yet self-autoloading,
-;; so it has to be pulled in explicitly before it can go in auto-mode-alist.
+;; markdown-ts-mode
 (defun markdown-h1-title ()
   "Insert an atx level 1 heading with the name of the file."
   (interactive)
@@ -376,66 +366,55 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
   "Insert frontmatter for an MLA heading."
   (interactive)
   (insert "---\nprofessor: \nclass: \nword-count: true\n---\n"))
-(defun markdown-ts-make-link-button-advice (orig-fn beg end url)
-  "Treat extensionless wiki links as markdown files."
-  (funcall orig-fn beg end (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url) url (concat url ".md"))))
-(require 'markdown-ts-mode)
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-ts-mode))
-(dolist (hook '(variable-pitch-mode visual-fill-column-mode markdown-indent-mode obsidian-cli-mode))
-  (add-hook 'markdown-ts-mode-hook hook))
-(defvar-keymap markdown-actions-prefix-map "1" #'markdown-h1-title "2" #'markdown-h2-today "f" #'markdown-mla-frontmatter)
-(keymap-global-set "C-c m" markdown-actions-prefix-map)
-(with-eval-after-load 'markdown-ts-mode
-  (keymap-set markdown-ts-mode-map "<tab>" #'markdown-ts-demote)
-  (keymap-set markdown-ts-mode-map "<backtab>" #'markdown-ts-promote)
-  ;; Match modus headings
-  (dolist (n (number-sequence 1 6))
-    (set-face-attribute
-     (intern (format "markdown-ts-heading-%d" n))
-     nil :inherit
-     (intern (format "modus-themes-heading-%d" n))))
-  ;; Fix extensionless wikilinks
-  (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
-  ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
-  (with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio")))))
 (defun my/macos-text-qol-hook ()
   "Post-self-insert hook to recreate macOS text features."
   (when-let* ((char (char-before)))
     (cond
-     ;; 1. Double space to period and a space
      ((and-let* ((_ (eq char ?\s))
                  (_ (eq (char-before (1- (point))) ?\s))
                  (prev (char-before (- (point) 2))))
-        ;; `?w` checks if prev is a word constituent (no regex allocation needed)
-        (eq (char-syntax prev) ?w)) 
+        (eq (char-syntax prev) ?w))
       (delete-char -2)
       (insert ". "))
-
-     ;; 2. Capitalize standalone 'i'
      ((and-let* ((_ (not (eq (char-syntax char) ?w)))
                  (_ (> (point) 2)))
-        ;; `looking-back` sets the match data...
         (looking-back "\\bi\\b\\(.\\)" (max (point-min) (- (point) 3))))
-      ;; ...so we can just replace group 1 (the punctuation/space we just typed)
       (replace-match "I\\1"))
-
-     ;; 3. Capitalize first letter of every sentence
      ((and-let* ((_ (string-match-p "[[:lower:]]" (string char))))
         (looking-back "\\(?:\\`\\|[.!?]\\)[ \n\t]+." (max (point-min) (- (point) 10))))
-      ;; Instead of replacing, just upcase the single character before the cursor
       (upcase-region (1- (point)) (point))))))
-
 (define-minor-mode macos-text-qol-mode
   "Minor mode to enable macOS-style text auto-corrections."
   :init-value nil
   :lighter " MacQoL"
   (if macos-text-qol-mode
-      ;; 't' at the end makes this hook strictly buffer-local
       (add-hook 'post-self-insert-hook #'my/macos-text-qol-hook nil t)
     (remove-hook 'post-self-insert-hook #'my/macos-text-qol-hook t)))
 
-;; Attach it specifically to markdown-ts-mode
-(add-hook 'markdown-ts-mode-hook #'macos-text-qol-mode)
+(autoload 'markdown-ts-mode "markdown-ts-mode" "Major mode for Markdown using tree-sitter." t)
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-ts-mode))
+
+(defvar-keymap markdown-actions-prefix-map
+  "1" #'markdown-h1-title "2" #'markdown-h2-today "f" #'markdown-mla-frontmatter)
+(keymap-global-set "C-c m" markdown-actions-prefix-map)
+
+(dolist (hook '(variable-pitch-mode visual-fill-column-mode markdown-indent-mode obsidian-cli-mode macos-text-qol-mode))
+  (add-hook 'markdown-ts-mode-hook hook))
+
+(with-eval-after-load 'markdown-ts-mode
+  (keymap-set markdown-ts-mode-map "<tab>" #'markdown-ts-demote)
+  (keymap-set markdown-ts-mode-map "<backtab>" #'markdown-ts-promote)
+  (dolist (n (number-sequence 1 6))
+    (set-face-attribute
+     (intern (format "markdown-ts-heading-%d" n))
+     nil :inherit
+     (intern (format "modus-themes-heading-%d" n))))
+  (advice-add 'markdown-ts--make-link-button :around
+              (lambda (orig-fn beg end url)
+		(funcall orig-fn beg end
+			 (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url)
+                             url
+                           (concat url ".md"))))))
 
 ;; nov
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
@@ -443,13 +422,13 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 (keymap-global-set "C-c s" #'read-aloud-buf)
 
 ;; obsidian-cli
-(defvar-keymap obsidian-cli-actions-prefix-map "s" #'obsidian-cli-search-notes "d" #'obsidian-cli-open-daily-note "z" #'obsidian-cli-zip-vault "b" #'obsidian-cli-jump-to-backlink)
+(defvar-keymap obsidian-cli-actions-prefix-map
+  "s" #'obsidian-cli-search-notes "d" #'obsidian-cli-open-daily-note "z" #'obsidian-cli-zip-vault "b" #'obsidian-cli-jump-to-backlink)
 (keymap-global-set "C-c o" obsidian-cli-actions-prefix-map)
 
 ;; prog-mode
 ;; does not cover languages that inherit from sgml
-(add-hook 'prog-mode-hook #'visual-wrap-prefix-mode)
-(add-hook 'prog-mode-hook #'completion-preview-mode)
+(dolist (fn '(visual-wrap-prefix-mode completion-preview-mode)) (add-hook 'prog-mode-hook fn))
 
 ;; typst-ts-mode
 (add-to-list 'auto-mode-alist '("\\.typ\\'" . typst-ts-mode))
