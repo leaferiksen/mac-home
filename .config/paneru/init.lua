@@ -14,19 +14,20 @@ paneru.setup({
 	["window swap east"]   = "cmd + ctrl + alt - f",
 
 	-- Virtual Workspaces Focus (Arrow Keys)
-	["window virtualfocus north"] = "cmd + ctrl + alt - leftarrow",  -- Navigate to previous/upper workspace
-	["window virtualfocus south"] = "cmd + ctrl + alt - rightarrow", -- Navigate to next/lower workspace
+	["window virtualfocus north"] = "cmd + ctrl + alt - leftarrow",
+	["window virtualfocus south"] = "cmd + ctrl + alt - rightarrow",
 
 	-- Virtual Workspace Movement (Arrow Keys)
-	["window virtualmove north"]  = "cmd + ctrl + alt - uparrow",    -- Move window to previous/upper workspace
-	["window virtualmove south"]  = "cmd + ctrl + alt - downarrow",  -- Move window to next/lower workspace
+	["window virtualmove north"]  = "cmd + ctrl + alt - uparrow",
+	["window virtualmove south"]  = "cmd + ctrl + alt - downarrow",
 
 	-- Stacking & Layout Controls
-	["window stack"]   = "cmd + ctrl + alt - s",
-	["window unstack"] = "cmd + ctrl + alt - r",
+	["window stack"]   = "cmd + ctrl + alt - x",
+	["window unstack"] = "cmd + ctrl + alt - z",
 
 	-- Resizing & Positioning
-	["window grow"]             = "cmd + ctrl + alt - g",
+	["window resize"]           = "cmd + ctrl + alt - r",
+	["window shrink"]           = "cmd + ctrl + alt - s",
 	["window center"]           = "cmd + ctrl + alt - c",
 	["window togglefloatlayer"] = "cmd + ctrl + alt - t",
     },

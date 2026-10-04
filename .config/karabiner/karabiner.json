@@ -22,6 +22,20 @@
           "type" : "basic"
         } ]
       }, {
+        "description" : "Use Mic Key for Superwhisper",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "f",
+            "modifiers" : {
+              "mandatory" : [ "fn" ]
+            }
+          },
+          "to" : [ {
+            "shell_command" : "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
         "description" : "Colemak Extra Wide for emacs",
         "manipulators" : [ {
           "from" : {
@@ -377,6 +391,17 @@
           "type" : "basic"
         }, {
           "from" : {
+            "key_code" : "return_or_enter",
+            "modifiers" : {
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "right_control"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
             "key_code" : "m",
             "modifiers" : {
               "optional" : [ "any" ]
@@ -432,29 +457,6 @@
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "return_or_enter",
-            "modifiers" : {
-              "optional" : [ "left_command", "left_control", "left_shift", "right_command", "right_control", "right_shift", "fn", "caps_lock" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "quote"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
-            "key_code" : "return_or_enter",
-            "modifiers" : {
-              "mandatory" : [ "left_option" ],
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "semicolon"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
             "key_code" : "t",
             "modifiers" : {
               "optional" : [ "any" ]
@@ -483,7 +485,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "vk_none"
+            "key_code" : "quote"
           } ],
           "type" : "basic"
         }, {
@@ -494,7 +496,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "vk_none"
+            "key_code" : "semicolon"
           } ],
           "type" : "basic"
         }, {
@@ -520,20 +522,6 @@
           } ],
           "type" : "basic"
         }, {
-          "to_if_alone" : [ {
-            "key_code" : "spacebar"
-          } ],
-          "from" : {
-            "key_code" : "spacebar",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "left_shift"
-          } ],
-          "type" : "basic"
-        }, {
           "from" : {
             "key_code" : "right_command",
             "modifiers" : {
@@ -541,7 +529,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "right_control"
+            "key_code" : "left_shift"
           } ],
           "type" : "basic"
         }, {

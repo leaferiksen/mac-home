@@ -1,6 +1,7 @@
-{:alone 250 
- :applications {:emacs ["^org\\.gnu\\.Emacs$"]}
+{:applications {:emacs ["^org\\.gnu\\.Emacs$"]}
  :main [{:des "Toggle dark mode with 􀆪D"
+ 	 :rules [[:!Ff "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
+	{:des "Use Mic Key for Superwhisper"
  	 :rules [[:!Ff "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
 	{:des "Colemak Extra Wide for emacs"
 	 :rules [;; global emacs
@@ -12,17 +13,14 @@
 		 [:##left_shift :z]  [:##z :x]  [:##x :c]  [:##c :v]  [:##v :b]
 		 ;; right hand
 		 [:##u :j]  [:##i :l]      [:##o :u]           [:##p :y]
-		 [:##j :h]  [:##k :n]      [:##l :e]           [:##semicolon :i]   [:##quote :o]
+		 [:##j :h]  [:##k :n]      [:##l :e]           [:##semicolon :i]   [:##quote :o]            [:##return_or_enter :right_control]
 		 [:##m :k]  [:##comma :m]  [:##period :comma]  [:##slash :period]  [:##right_shift :slash]
-		 ;; quote and semicolon on one key
-		 [:#CTSFQWRPreturn_or_enter :quote]  [:!O##return_or_enter :semicolon]
 		 ;; center
 		 [:##t :vk_none]  [:##y :vk_none]
-		 [:##g :vk_none]  [:##h :vk_none]
+		 [:##g :quote]    [:##h :semicolon]
 		 [:##b :vk_none]  [:##n :vk_none]
-		 [:##spacebar :left_shift nil {:alone :spacebar}]
-		 ;; control and meh on right thumb
-		 [:##right_command :right_control]  [:##right_option :!QWright_option]]}]}
+		 ;; meh and control on right thumb
+		 [:##right_command :left_shift]  [:##right_option :!QWright_option]]}]}
 
 ;; the rule [:!Ca :!T1] means from command a to control 1
 ;; :!Ca is keycode :a and prefix a with !C

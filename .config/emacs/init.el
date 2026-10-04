@@ -381,7 +381,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
   (funcall orig-fn beg end (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url) url (concat url ".md"))))
 (require 'markdown-ts-mode)
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-ts-mode))
-(dolist (hook '(variable-pitch-mode visual-fill-column-mode markdown-indent-mode obsidian-cli-mode typo-mode))
+(dolist (hook '(variable-pitch-mode visual-fill-column-mode markdown-indent-mode obsidian-cli-mode))
   (add-hook 'markdown-ts-mode-hook hook))
 (defvar-keymap markdown-actions-prefix-map "1" #'markdown-h1-title "2" #'markdown-h2-today "f" #'markdown-mla-frontmatter)
 (keymap-global-set "C-c m" markdown-actions-prefix-map)
@@ -398,6 +398,44 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
   (advice-add 'markdown-ts--make-link-button :around #'markdown-ts-make-link-button-advice)
   ;; https://writewithharper.com/docs/integrations/emacs#Optional-Configuration
   (with-eval-after-load 'eglot (add-to-list 'eglot-server-programs '(markdown-ts-mode . ("harper-ls" "--stdio")))))
+(defun my/macos-text-qol-hook ()
+  "Post-self-insert hook to recreate macOS text features."
+  (when-let* ((char (char-before)))
+    (cond
+     ;; 1. Double space to period and a space
+     ((and-let* ((_ (eq char ?\s))
+                 (_ (eq (char-before (1- (point))) ?\s))
+                 (prev (char-before (- (point) 2))))
+        ;; `?w` checks if prev is a word constituent (no regex allocation needed)
+        (eq (char-syntax prev) ?w)) 
+      (delete-char -2)
+      (insert ". "))
+
+     ;; 2. Capitalize standalone 'i'
+     ((and-let* ((_ (not (eq (char-syntax char) ?w)))
+                 (_ (> (point) 2)))
+        ;; `looking-back` sets the match data...
+        (looking-back "\\bi\\b\\(.\\)" (max (point-min) (- (point) 3))))
+      ;; ...so we can just replace group 1 (the punctuation/space we just typed)
+      (replace-match "I\\1"))
+
+     ;; 3. Capitalize first letter of every sentence
+     ((and-let* ((_ (string-match-p "[[:lower:]]" (string char))))
+        (looking-back "\\(?:\\`\\|[.!?]\\)[ \n\t]+." (max (point-min) (- (point) 10))))
+      ;; Instead of replacing, just upcase the single character before the cursor
+      (upcase-region (1- (point)) (point))))))
+
+(define-minor-mode macos-text-qol-mode
+  "Minor mode to enable macOS-style text auto-corrections."
+  :init-value nil
+  :lighter " MacQoL"
+  (if macos-text-qol-mode
+      ;; 't' at the end makes this hook strictly buffer-local
+      (add-hook 'post-self-insert-hook #'my/macos-text-qol-hook nil t)
+    (remove-hook 'post-self-insert-hook #'my/macos-text-qol-hook t)))
+
+;; Attach it specifically to markdown-ts-mode
+(add-hook 'markdown-ts-mode-hook #'macos-text-qol-mode)
 
 ;; nov
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
@@ -507,7 +545,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(package-selected-packages
    '(agent-shell anglish apheleia arduino-cli-mode betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org
 		 elfmt exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode
-		 nerd-icons-multimodal nerd-icons-speedbar nov obsidian-cli osx-dictionary read-aloud swift-mode typo
+		 nerd-icons-multimodal nerd-icons-speedbar nov obsidian-cli osx-dictionary read-aloud swift-mode
 		 typst-ts-mode visual-fill-column writegood-mode))
  '(package-vc-allow-build-commands t)
  '(package-vc-register-as-project nil)

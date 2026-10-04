@@ -15,6 +15,7 @@ SFC
 SII
 SLO
 Sabiha
+Seattleites
 USF
 UXUI
 Wahbe
