@@ -2,7 +2,7 @@
 
 brew tap d12frosted/emacs-plus
 brew trust d12frosted/emacs-plus
-brew install emacs-plus-app
+brew install emacs-plus
 
 # general cli
 brew install --formula anomalyco/tap/opencode atool cmatrix ffmpeg harper imagemagick media-info mole mupdf ollama pandoc paneru pngpaste tealdeer typst yqrashawn/goku/goku xbzig zsh-autosuggestions zsh-syntax-highlighting

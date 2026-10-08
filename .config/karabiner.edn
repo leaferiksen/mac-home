@@ -1,12 +1,13 @@
 {:applications {:emacs ["^org\\.gnu\\.Emacs$"]}
  :main [{:des "Toggle dark mode with 􀆪D"
  	 :rules [[:!Ff "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
-	{:des "Use Mic Key for Superwhisper"
- 	 :rules [[:!Ff "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
 	{:des "Colemak Extra Wide for emacs"
 	 :rules [;; global emacs
 		 [:!TT##comma :return_or_enter]  [:!TT##semicolon :tab]
-		 [:!T##3 :up_arrow :!emacs]  [:!T##o :down_arrow :!emacs]  [:!T##2 :right_arrow :!emacs]  [:!T##f :left_arrow :!emacs]
+		 [:!TT##e :up_arrow    [:!emacs :!rcmd-held]]
+		 [:!TT##k :down_arrow  [:!emacs :!rcmd-held]]
+		 [:!TT##w :right_arrow [:!emacs :!rcmd-held]]
+		 [:!TT##v :left_arrow  [:!emacs :!rcmd-held]]
 		 ;; left hand
 		 [:##tab :q]         [:##q :w]  [:##w :f]  [:##e :p]  [:##r :g]
 		 [:##caps_lock :a]   [:##a :r]  [:##s :s]  [:##d :t]  [:##f :d]
@@ -16,11 +17,11 @@
 		 [:##j :h]  [:##k :n]      [:##l :e]           [:##semicolon :i]   [:##quote :o]            [:##return_or_enter :right_control]
 		 [:##m :k]  [:##comma :m]  [:##period :comma]  [:##slash :period]  [:##right_shift :slash]
 		 ;; center
-		 [:##t :vk_none]  [:##y :vk_none]
-		 [:##g :quote]    [:##h :semicolon]
-		 [:##b :vk_none]  [:##n :vk_none]
+		 [:##t :vk_none]    [:##y :vk_none]
+		 [:##g :semicolon]  [:##h :quote]
+		 [:##b :vk_none]    [:##n :vk_none]
 		 ;; meh and control on right thumb
-		 [:##right_command :left_shift]  [:##right_option :!QWright_option]]}]}
+		 [:##right_command [["rcmd-held" 1] :!QWright_option] nil {:afterup ["rcmd-held" 0]}]  [:##right_option :right_shift]]}]}
 
 ;; the rule [:!Ca :!T1] means from command a to control 1
 ;; :!Ca is keycode :a and prefix a with !C

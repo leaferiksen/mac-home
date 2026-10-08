@@ -14,15 +14,12 @@
 (setenv "GIT_EDITOR" "emacsclient")
 
 ;; emacs
-(add-to-list 'default-frame-alist '(internal-border-width . 10))
+(add-to-list 'default-frame-alist '(internal-border-width . 20))
 (add-to-list 'default-frame-alist '(right-divider-width . 1))
 (add-to-list 'default-frame-alist '(bottom-divider-width . 1))
-(add-to-list 'default-frame-alist '(left-fringe . 5))
-(add-to-list 'default-frame-alist '(right-fringe . 5))
 (defun almost-maximize-frame ()
   "Borderless maximise with margins for tiling."
   (interactive)
-  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
 (defun unfill ()
   "Unfill the current region if active, or the current paragraph."
@@ -54,6 +51,11 @@
 (define-auto-insert "\\.html\\'" "insert.html")
 (define-auto-insert "\\.js\\'" "insert.js")
 (define-auto-insert "\\.ino\\'" "insert.ino")
+(defun my/auto-insert-markdown-header ()
+  "Insert a level-one heading matching the file name into new Markdown files."
+  (when-let ((path (buffer-file-name)))
+    (insert "# " (file-name-base path) "\n\n")))
+(define-auto-insert '("\\.md\\'" . "Markdown Header") #'my/auto-insert-markdown-header)
 
 ;; completion-preview-mode (built-in; keymap only exists once loaded)
 (with-eval-after-load 'completion-preview
@@ -68,6 +70,32 @@
 
 ;; ns (macOS)
 (when (eq window-system 'ns)
+  
+  (add-to-list 'default-frame-alist '(undecorated-round . t))
+  
+  ;; liquid glass
+  (require 'lr-macos-glass)
+  (setq salih/glass-style 'macos-glass-regular
+	salih/alpha-background 0.2
+	salih/ns-background-blur 0
+	salih/ns-alpha-glyphs-min-alpha 1 ; make the mode-line usable
+	salih/ns-glass-material 'regular
+	salih/ns-glass-tint-opacity 0.5 ; 10x for legibility
+	salih/ns-glass-saturation 1.9
+	salih/ns-glass-inactive-opacity 0.05
+	salih/ns-glass-corner-radius 2
+	salih/ns-transparent-titlebar t)
+  
+  (defun auto-theme (appearance)
+    "Load theme matching system APPEARANCE."
+    (mapc #'disable-theme custom-enabled-themes)
+    (load-theme (if (eq appearance 'dark) 'modus-vivendi-tinted 'modus-operandi-tinted) t)
+    ;; workaround for liquid glass breaking :box
+    (set-frame-parameter nil 'ns-alpha-elements
+			 '(ns-alpha-default ns-alpha-fringe ns-alpha-stipple ns-alpha-glyphs)))
+  ;; term/ns-win (loaded by the NS port during startup, before init.el runs)
+  (add-hook 'ns-system-appearance-change-functions #'auto-theme)
+  
   ;; fonts
   ;; Nerd Font Core Icons: Unicode Plane 0 (BMP)
   (set-fontset-font t '(#xE000 . #xF8FF) "Symbols Nerd Font")
@@ -112,12 +140,6 @@
   (defun xcode-run () "Stop and run the active workspace." (interactive) (xcode--do "stop" "run"))
   (defun xcode-test () "Stop and test the active workspace." (interactive) (xcode--do "stop" "test"))
 
-  (defun auto-theme (appearance)
-    "Load theme matching system APPEARANCE."
-    (mapc #'disable-theme custom-enabled-themes)
-    (load-theme (if (eq appearance 'dark) 'modus-vivendi-tinted 'modus-operandi-tinted) t))
-  ;; term/ns-win (loaded by the NS port during startup, before init.el runs)
-  (add-hook 'ns-system-appearance-change-functions #'auto-theme)
   (keymap-global-set "s-z" #'undo-only)
   (keymap-global-set "s-Z" #'undo-redo)
   (keymap-global-set "s-w" #'kill-current-buffer)
@@ -157,6 +179,13 @@
 (keymap-set project-prefix-map "s" #'ghostel-project)
 (keymap-set project-prefix-map "n" #'project-npm-run)
 
+(defun my/project-try-plain-dir (dir)
+  "Return project root for DIR if 'project' marker file exists, ignoring VC."
+  (let ((root (locate-dominating-file dir "project")))
+    (when root
+      (cons 'transient root))))
+(add-hook 'project-find-functions #'my/project-try-plain-dir)
+
 ;; speedbar
 (defun speedbar-window-width-threshold ()
   "Frame width, in columns, below which `speedbar-window' is hidden.
@@ -180,7 +209,7 @@ Always three times the current `speedbar-window-default-width'."
 	      (delta (- speedbar-window-default-width (window-width speedbar--window)))
 	      ((not (zerop delta))))
     (ignore-errors (window-resize speedbar--window delta t))))
-
+(add-hook 'window-size-change-functions #'speedbar-auto-toggle)
 (dolist (fn '(speedbar nerd-icons-speedbar-mode)) (add-hook 'emacs-startup-hook fn))
 
 ;; yt-dlp
@@ -301,14 +330,16 @@ and `custom-set-faces' forms, which Custom formats itself."
 Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
   (interactive)
   (let* ((choice (read-char-choice "Template: [m]LA, [r]esume, [d]efault? " '(?m ?r ?d)))
-	 (template-flag
-          (pcase choice
-            (?m (format " --template=%s" (expand-file-name "mla-template.typ" "~/.config/typst/")))
-            (?r (format " --template=%s" (expand-file-name "resume.typ" "~/.config/typst/")))
-            (?d ""))))
-    (dwim-shell-command-on-marked-files "Converting to pdf"
-					(format "pandoc '<<f>>' -o '<<fne>>.pdf' --pdf-engine=typst%s" template-flag)
-					:silent-success t)))
+         (templates '((?m . "mla-template.typ") (?r . "resume.typ")))
+         (template-flag
+          (if-let* ((file (alist-get choice templates))
+		    (path (expand-file-name file "~/.config/typst/")))
+              (format " --template=%s" (shell-quote-argument path))
+            "")))
+    (dwim-shell-command-on-marked-files
+     "Converting to pdf"
+     (format "pandoc '<<f>>' -o '<<fne>>.pdf' --extract-media=images --pdf-engine=typst%s" template-flag)
+     :silent-success t)))
 (keymap-global-set "s-i" #'dwim-file-mediainfo)
 (keymap-set global-map "<remap> <shell-command>" #'dwim-shell-command)
 (keymap-global-set "C-c p" #'dwim-file-to-pdf)
@@ -370,19 +401,30 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
   "Post-self-insert hook to recreate macOS text features."
   (when-let* ((char (char-before)))
     (cond
+     ;; Double space after a word -> ". "
      ((and-let* ((_ (eq char ?\s))
                  (_ (eq (char-before (1- (point))) ?\s))
                  (prev (char-before (- (point) 2))))
         (eq (char-syntax prev) ?w))
       (delete-char -2)
       (insert ". "))
+     ;; Standalone "i" -> "I"
      ((and-let* ((_ (not (eq (char-syntax char) ?w)))
                  (_ (> (point) 2)))
         (looking-back "\\bi\\b\\(.\\)" (max (point-min) (- (point) 3))))
       (replace-match "I\\1"))
+     ;; Auto-capitalize at buffer start, after sentence end, or after a blank line
      ((and-let* ((_ (string-match-p "[[:lower:]]" (string char))))
-        (looking-back "\\(?:\\`\\|[.!?]\\)[ \n\t]+." (max (point-min) (- (point) 10))))
+        (looking-back
+         (concat "\\(?:"
+                 "\\`[ \t\n]*"          ; start of buffer
+                 "\\|[.!?][ \t\n]+"     ; end of sentence
+                 "\\|\n[ \t]*\n[ \t]*"  ; blank line (new paragraph)
+                 "\\)"
+                 ".")
+         (max (point-min) (- (point) 20))))
       (upcase-region (1- (point)) (point))))))
+
 (define-minor-mode macos-text-qol-mode
   "Minor mode to enable macOS-style text auto-corrections."
   :init-value nil
@@ -420,11 +462,6 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 (dolist (hook '(variable-pitch-mode visual-fill-column-mode)) (add-hook 'nov-mode-hook hook))
 (keymap-global-set "C-c s" #'read-aloud-buf)
-
-;; obsidian-cli
-(defvar-keymap obsidian-cli-actions-prefix-map
-  "s" #'obsidian-cli-search-notes "d" #'obsidian-cli-open-daily-note "z" #'obsidian-cli-zip-vault "b" #'obsidian-cli-jump-to-backlink)
-(keymap-global-set "C-c o" obsidian-cli-actions-prefix-map)
 
 ;; prog-mode
 ;; does not cover languages that inherit from sgml
@@ -509,9 +546,10 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(mode-line-collapse-minor-modes '(not flymake-mode))
  '(modus-themes-common-palette-overrides
    '((fringe unspecified) (border bg-inactive) (border-mode-line-active unspecified)
-     (border-mode-line-inactive unspecified) (underline-link unspecified) (underline-link-visited unspecified)
-     (underline-link-symbolic unspecified) (fg-heading-0 fg-main) (fg-heading-1 fg-main) (fg-heading-2 fg-main)
-     (fg-heading-3 fg-main) (fg-heading-4 fg-main) (fg-heading-5 fg-main) (fg-heading-6 fg-main) (fg-heading-7 fg-main)
+     (border-mode-line-inactive unspecified) (underline-link unspecified)
+     (underline-link-visited unspecified) (underline-link-symbolic unspecified)
+     (fg-heading-0 fg-main) (fg-heading-1 fg-main) (fg-heading-2 fg-main) (fg-heading-3 fg-main)
+     (fg-heading-4 fg-main) (fg-heading-5 fg-main) (fg-heading-6 fg-main) (fg-heading-7 fg-main)
      (fg-heading-8 fg-main)))
  '(modus-themes-italic-constructs t)
  '(modus-themes-mixed-fonts t)
@@ -522,17 +560,20 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(obsidian-cli-note-extensions '("md" "tsv"))
  '(obsidian-cli-rename-on-save t)
  '(package-selected-packages
-   '(agent-shell anglish apheleia arduino-cli-mode betweenle clojure-mode csv-mode dwim-shell-command elfeed elfeed-org
-		 elfmt exec-path-from-shell ghostel google-translate hackernews lorem-ipsum markdown-indent-mode
-		 nerd-icons-multimodal nerd-icons-speedbar nov obsidian-cli osx-dictionary read-aloud swift-mode
-		 typst-ts-mode visual-fill-column writegood-mode))
+   '(agent-shell anglish apheleia arduino-cli-mode betweenle clojure-mode csv-mode dwim-shell-command
+		 elfeed elfeed-org elfmt exec-path-from-shell ghostel google-translate hackernews
+		 lorem-ipsum markdown-indent-mode nerd-icons-multimodal nerd-icons-speedbar nov
+		 obsidian-cli osx-dictionary read-aloud swift-mode typst-ts-mode visual-fill-column
+		 writegood-mode))
  '(package-vc-allow-build-commands t)
  '(package-vc-register-as-project nil)
  '(package-vc-selected-packages
    '((nerd-icons-speedbar :vc-backend Git :url "https://github.com/Akane-6730/nerd-icons-speedbar")
      (betweenle :vc-backend Git :url "https://github.com/vikram-mandyam/betweenle.el")
-     (nerd-icons-multimodal :vc-backend Git :url "https://github.com/abougouffa/nerd-icons-multimodal")
-     (obsidian-cli :url "git@github.com:leaferiksen/obsidian-cli.el.git") (elfmt :url "https://github.com/riscy/elfmt")
+     (nerd-icons-multimodal :vc-backend Git :url
+			    "https://github.com/abougouffa/nerd-icons-multimodal")
+     (obsidian-cli :url "git@github.com:leaferiksen/obsidian-cli.el.git")
+     (elfmt :url "https://github.com/riscy/elfmt")
      (anglish :url "git@github.com:leaferiksen/anglish.el.git")))
  '(pop-up-windows nil)
  '(project-mode-line t)
@@ -562,6 +603,8 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(vc-dir-auto-hide-up-to-date 'revert)
  '(visual-fill-column-width 90)
  '(which-key-mode t)
+ '(window-divider-default-bottom-width 4)
+ '(window-divider-default-right-width 4)
  '(window-divider-mode t)
  '(word-wrap-by-category t))
 

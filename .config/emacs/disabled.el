@@ -66,7 +66,6 @@
         (message "Clipboard update detected! Opened %s in Xwidgets" current-clip))
     (run-at-time "0.5 sec" nil #'watch-clipboard-xwidget-webkit-browse-url)))
 
-(add-to-list 'default-frame-alist '(undecorated . t))
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Maximize with no frame
 

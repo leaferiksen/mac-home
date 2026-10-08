@@ -1,4 +1,9 @@
 {
+  "machine_specific" : {
+    "krbn-b0ea361e-a3d3-4536-a96f-33330f7488c0" : {
+      "external_editor_path" : "/Users/leaf/Applications/Emacs.app"
+    }
+  },
   "profiles" : [ {
     "complex_modifications" : {
       "parameters" : {
@@ -9,20 +14,6 @@
       },
       "rules" : [ {
         "description" : "Toggle dark mode with 􀆪D",
-        "manipulators" : [ {
-          "from" : {
-            "key_code" : "f",
-            "modifiers" : {
-              "mandatory" : [ "fn" ]
-            }
-          },
-          "to" : [ {
-            "shell_command" : "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"
-          } ],
-          "type" : "basic"
-        } ]
-      }, {
-        "description" : "Use Mic Key for Superwhisper",
         "manipulators" : [ {
           "from" : {
             "key_code" : "f",
@@ -63,9 +54,9 @@
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "3",
+            "key_code" : "e",
             "modifiers" : {
-              "mandatory" : [ "left_control" ],
+              "mandatory" : [ "control" ],
               "optional" : [ "any" ]
             }
           },
@@ -75,13 +66,17 @@
           "conditions" : [ {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "^org\\.gnu\\.Emacs$" ]
+          }, {
+            "name" : "rcmd-held",
+            "value" : 1,
+            "type" : "variable_unless"
           } ],
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "o",
+            "key_code" : "k",
             "modifiers" : {
-              "mandatory" : [ "left_control" ],
+              "mandatory" : [ "control" ],
               "optional" : [ "any" ]
             }
           },
@@ -91,13 +86,17 @@
           "conditions" : [ {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "^org\\.gnu\\.Emacs$" ]
+          }, {
+            "name" : "rcmd-held",
+            "value" : 1,
+            "type" : "variable_unless"
           } ],
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "2",
+            "key_code" : "w",
             "modifiers" : {
-              "mandatory" : [ "left_control" ],
+              "mandatory" : [ "control" ],
               "optional" : [ "any" ]
             }
           },
@@ -107,13 +106,17 @@
           "conditions" : [ {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "^org\\.gnu\\.Emacs$" ]
+          }, {
+            "name" : "rcmd-held",
+            "value" : 1,
+            "type" : "variable_unless"
           } ],
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "f",
+            "key_code" : "v",
             "modifiers" : {
-              "mandatory" : [ "left_control" ],
+              "mandatory" : [ "control" ],
               "optional" : [ "any" ]
             }
           },
@@ -123,6 +126,10 @@
           "conditions" : [ {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "^org\\.gnu\\.Emacs$" ]
+          }, {
+            "name" : "rcmd-held",
+            "value" : 1,
+            "type" : "variable_unless"
           } ],
           "type" : "basic"
         }, {
@@ -485,7 +492,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "quote"
+            "key_code" : "semicolon"
           } ],
           "type" : "basic"
         }, {
@@ -496,7 +503,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "semicolon"
+            "key_code" : "quote"
           } ],
           "type" : "basic"
         }, {
@@ -522,6 +529,12 @@
           } ],
           "type" : "basic"
         }, {
+          "to_after_key_up" : [ {
+            "set_variable" : {
+              "name" : "rcmd-held",
+              "value" : 0
+            }
+          } ],
           "from" : {
             "key_code" : "right_command",
             "modifiers" : {
@@ -529,7 +542,13 @@
             }
           },
           "to" : [ {
-            "key_code" : "left_shift"
+            "set_variable" : {
+              "name" : "rcmd-held",
+              "value" : 1
+            }
+          }, {
+            "key_code" : "right_option",
+            "modifiers" : [ "right_command", "right_control" ]
           } ],
           "type" : "basic"
         }, {
@@ -540,8 +559,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "right_option",
-            "modifiers" : [ "right_command", "right_control" ]
+            "key_code" : "right_shift"
           } ],
           "type" : "basic"
         } ]
