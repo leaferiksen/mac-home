@@ -56,6 +56,7 @@
   (when-let ((path (buffer-file-name)))
     (insert "# " (file-name-base path) "\n\n")))
 (define-auto-insert '("\\.md\\'" . "Markdown Header") #'auto-insert-markdown-header)
+(keymap-global-set "s-;" #'comment-box)
 
 ;; completion-preview-mode (built-in; keymap only exists once loaded)
 (with-eval-after-load 'completion-preview
@@ -179,13 +180,6 @@
 (keymap-set project-prefix-map "s" #'ghostel-project)
 (keymap-set project-prefix-map "n" #'project-npm-run)
 
-(defun project-try-plain-dir (dir)
-  "Return project root for DIR if 'project' marker file exists, ignoring VC."
-  (let ((root (locate-dominating-file dir "project")))
-    (when root
-      (cons 'transient root))))
-(add-hook 'project-find-functions #'project-try-plain-dir)
-
 ;; speedbar
 (defun speedbar-window-width-threshold ()
   "Frame width, in columns, below which `speedbar-window' is hidden.
@@ -303,13 +297,41 @@ and `custom-set-faces' forms, which Custom formats itself."
                       '("menu-bar" "Arduino-CLI")
                       ["Serial Monitor" arduino-cli-serial-monitor]))
 
-;; Associate .ino files with c++-mode
-(add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode))
-;; Run arduino-cli-mode whenever c++-mode loads
-(add-hook 'c++-ts-mode-hook #'arduino-cli-mode)
 (add-hook 'arduino-cli-mode-hook #'arduino-cli-add-serial-monitor-menu)
 
-(setq arduino-cli-default-fqbn "arduino:avr:uno" arduino-cli-default-port "/dev/cu.usbmodem2101")
+(define-derived-mode arduino-ino-mode c++-ts-mode "Arduino"
+  "Major mode for editing Arduino .ino files."
+  (arduino-cli-mode 1))
+
+(add-to-list 'auto-mode-alist '("\\.ino\\'" . arduino-ino-mode))
+(add-hook 'arduino-ino-mode-hook #'eglot-ensure)
+
+(setq arduino-cli-default-fqbn "arduino:avr:uno"
+      arduino-cli-default-port "/dev/cu.usbmodem2101")
+
+;; Wrap all Eglot class definitions inside with-eval-after-load
+(with-eval-after-load 'eglot
+  (defclass eglot-arduino-server (eglot-lsp-server) ())
+
+  (cl-defmethod eglot-client-capabilities ((_server eglot-arduino-server))
+    (let ((caps (cl-call-next-method)))
+      (plist-put caps :workspace (plist-put (plist-get caps :workspace) :semanticTokens nil))))
+
+  (add-to-list 'eglot-server-programs
+               `((arduino-mode arduino-ino-mode c++-mode)
+                 . (eglot-arduino-server
+                    "arduino-language-server"
+                    "-clangd" "clangd"
+                    "-cli" "arduino-cli"
+                    "-cli-config" "/Users/leaf/Library/Arduino15/arduino-cli.yaml"
+                    "-fqbn" "arduino:avr:uno"))))
+
+(defun my/project-try-arduino-sketch (dir)
+  "Return closest parent directory of DIR containing a .ino file as project root."
+  (when-let ((root (locate-dominating-file dir (lambda (d) (directory-files d nil "\\.ino$")))))
+    (cons 'transient root)))
+
+(add-hook 'project-find-functions #'my/project-try-arduino-sketch -10)
 
 ;; csv-mode
 (add-hook 'csv-mode-hook #'csv-align-mode)
@@ -577,7 +599,6 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
      (anglish :url "git@github.com:leaferiksen/anglish.el.git")))
  '(pop-up-windows nil)
  '(project-mode-line t)
- '(project-vc-extra-root-markers '("project"))
  '(read-aloud-engine "say" t)
  '(read-buffer-completion-ignore-case t)
  '(read-process-output-max (* 1024 1024) t)

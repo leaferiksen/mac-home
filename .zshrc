@@ -10,7 +10,7 @@ export SHELL_SESSIONS_DISABLE=1
 export OLLAMA_HOST="100.112.227.27:11434"
 export OLLAMA_NO_CLOUD=1
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications"
-export PATH=$HOME/.docker/bin:/opt/homebrew/sbin:/opt/homebrew/bin:$PATH
+export PATH=$HOME/.local/bin:/opt/homebrew/sbin:/opt/homebrew/bin:$PATH
 eval "$(brew shellenv)"
 . "$HOME/.cargo/env"
 
