@@ -51,11 +51,11 @@
 (define-auto-insert "\\.html\\'" "insert.html")
 (define-auto-insert "\\.js\\'" "insert.js")
 (define-auto-insert "\\.ino\\'" "insert.ino")
-(defun my/auto-insert-markdown-header ()
+(defun auto-insert-markdown-header ()
   "Insert a level-one heading matching the file name into new Markdown files."
   (when-let ((path (buffer-file-name)))
     (insert "# " (file-name-base path) "\n\n")))
-(define-auto-insert '("\\.md\\'" . "Markdown Header") #'my/auto-insert-markdown-header)
+(define-auto-insert '("\\.md\\'" . "Markdown Header") #'auto-insert-markdown-header)
 
 ;; completion-preview-mode (built-in; keymap only exists once loaded)
 (with-eval-after-load 'completion-preview
@@ -179,12 +179,12 @@
 (keymap-set project-prefix-map "s" #'ghostel-project)
 (keymap-set project-prefix-map "n" #'project-npm-run)
 
-(defun my/project-try-plain-dir (dir)
+(defun project-try-plain-dir (dir)
   "Return project root for DIR if 'project' marker file exists, ignoring VC."
   (let ((root (locate-dominating-file dir "project")))
     (when root
       (cons 'transient root))))
-(add-hook 'project-find-functions #'my/project-try-plain-dir)
+(add-hook 'project-find-functions #'project-try-plain-dir)
 
 ;; speedbar
 (defun speedbar-window-width-threshold ()
@@ -397,7 +397,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
   "Insert frontmatter for an MLA heading."
   (interactive)
   (insert "---\nprofessor: \nclass: \nword-count: true\n---\n"))
-(defun my/macos-text-qol-hook ()
+(defun macos-text-qol-hook ()
   "Post-self-insert hook to recreate macOS text features."
   (when-let* ((char (char-before)))
     (cond
@@ -430,8 +430,8 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
   :init-value nil
   :lighter " MacQoL"
   (if macos-text-qol-mode
-      (add-hook 'post-self-insert-hook #'my/macos-text-qol-hook nil t)
-    (remove-hook 'post-self-insert-hook #'my/macos-text-qol-hook t)))
+      (add-hook 'post-self-insert-hook #'macos-text-qol-hook nil t)
+    (remove-hook 'post-self-insert-hook #'macos-text-qol-hook t)))
 
 (autoload 'markdown-ts-mode "markdown-ts-mode" "Major mode for Markdown using tree-sitter." t)
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-ts-mode))

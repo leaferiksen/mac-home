@@ -31,6 +31,31 @@
       "id" : "C1F19472-E334-4D29-91BB-CABCA48DC7EA",
       "original" : "leaf",
       "with" : "Leaf"
+    },
+    {
+      "id" : "B114708D-E89D-428A-8891-206AF5B39170",
+      "original" : "didn't",
+      "with" : "did not"
+    },
+    {
+      "id" : "449FE941-93DD-4107-9047-91F11DDF3A33",
+      "original" : "wouldn't",
+      "with" : "would not"
+    },
+    {
+      "id" : "029B5D3A-2F00-41A3-ADC4-74842FAD7864",
+      "original" : "couldn't",
+      "with" : "could not"
+    },
+    {
+      "id" : "60E9DB17-CF0C-4DE9-B3B2-8B58230D83D0",
+      "original" : "I'm",
+      "with" : "I am"
+    },
+    {
+      "id" : "055D4C60-9B30-4944-9E57-20777A14F732",
+      "original" : "I'll",
+      "with" : "I will"
     }
   ],
   "vocabulary" : [
