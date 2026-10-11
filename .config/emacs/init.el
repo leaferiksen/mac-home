@@ -20,7 +20,7 @@
 (defun almost-maximize-frame ()
   "Borderless maximise with margins for tiling."
   (interactive)
-  (set-frame-width (selected-frame) (- (display-pixel-width) 85) nil t))
+  (set-frame-width (selected-frame) (- (display-pixel-width) 100) nil t))
 (defun unfill ()
   "Unfill the current region if active, or the current paragraph."
   (interactive)
@@ -31,6 +31,8 @@
 (add-hook 'after-init-hook #'almost-maximize-frame)
 (add-hook 'emacs-startup-hook #'server-start)
 (windmove-default-keybindings 'super)
+(add-hook 'text-mode-hook #'visual-line-mode)
+(add-hook 'prog-mode-hook #'visual-line-mode)
 (setcdr visual-line-mode-map nil)
 ;; Hide menu-bar entries that are not from the global keymap
 (let ((map (make-sparse-keymap)))
@@ -331,7 +333,9 @@ and `custom-set-faces' forms, which Custom formats itself."
   (when-let ((root (locate-dominating-file dir (lambda (d) (directory-files d nil "\\.ino$")))))
     (cons 'transient root)))
 
-(add-hook 'project-find-functions #'my/project-try-arduino-sketch -10)
+(add-hook 'arduino-ino-mode-hook
+          (lambda ()
+            (add-hook 'project-find-functions #'my/project-try-arduino-sketch -10 t)))
 
 ;; csv-mode
 (add-hook 'csv-mode-hook #'csv-align-mode)
@@ -385,7 +389,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 
 ;; elfeed
 (keymap-global-set "C-c f" #'elfeed)
-(with-eval-after-load 'elfeed (keymap-set elfeed-show-mode-map "w" #'elfeed-webkit-toggle) (elfeed-org))
+(with-eval-after-load 'elfeed (elfeed-org))
 
 ;; flymake
 ;; (dolist (hook '(emacs-lisp-mode-hook)) (add-hook hook #'flymake-mode))
@@ -540,15 +544,13 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(eldoc-echo-area-prefer-doc-buffer t)
  '(eldoc-echo-area-use-multiline-p t)
  '(electric-pair-mode t)
- '(elfeed-search-filter "@6-months")
- '(elfeed-webkit-auto-enable-tags '(webkit comics))
+ '(elfeed-search-date-format '("" -1 :left))
  '(fido-vertical-mode t)
  '(find-file-visit-truename t)
  '(flymake-fringe-indicator-position nil)
  '(frame-resize-pixelwise t)
  '(global-hl-line-mode t)
  '(global-nerd-icons-multimodal-mode t)
- '(global-visual-line-mode t)
  '(google-translate-output-destination '(echo-area))
  '(google-translate-show-phonetic t)
  '(google-translate-translation-directions-alist '(("ja" . "en") ("en" . "ja")))
@@ -609,10 +611,10 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(shr-max-image-proportion 0.6)
  '(shr-width 80)
  '(speedbar-directory-unshown-regexp "^\\(\\.\\.?$\\|\\.DS_Store$\\|\\.localized$\\)")
- '(speedbar-initial-expansion-list-name "quick buffers" t)
+ '(speedbar-initial-expansion-list-name "files" t)
  '(speedbar-prefer-window t)
  '(speedbar-show-unknown-files t)
- '(speedbar-window-default-width 30)
+ '(speedbar-window-default-width 20)
  '(tool-bar-mode nil)
  '(treesit-auto-install-grammar 'always)
  '(treesit-enabled-modes t)

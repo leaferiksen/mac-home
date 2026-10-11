@@ -1,6 +1,9 @@
 {:applications {:emacs ["^org\\.gnu\\.Emacs$"]}
- :main [{:des "Toggle dark mode with 􀆪D"
- 	 :rules [[:!Ff "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
+ :main [{:des "Adjust keyboard brightness with ⌘f1 and ⌘f2"
+	 :rules [ [:!CC##f1 :illumination_decrement][:!CC##f2 :illumination_increment]]}
+	{:des "Toggle dark mode with ⌘f6 or 􀆪D"
+ 	 :rules [[:!CCf6 "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]
+		 [:!Ff "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
 	{:des "Colemak Extra Wide for emacs"
 	 :rules [;; global emacs
 		 [:!TT##comma :return_or_enter]  [:!TT##semicolon :tab]

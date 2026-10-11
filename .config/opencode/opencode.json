@@ -1,59 +1,36 @@
 {
     "$schema": "https://opencode.ai/config.json",
-    "command": {
-        "question": {
-            "template": "Avoid headers/bold for short answers and prefer prose over bullet lists unless enumerating something.",
-            "description": "Question answering etiquette",
-            "agent": "plan"
-        }
-    },
     "model": "ollama/qwen3.8:27b-mtp-large",
-    "permission": {
-        "*": "ask",
-        "read": "allow",
-        "grep": "allow",
-        "glob": "allow",
-        "webfetch": "allow",
-        "todowrite": "allow",
-        "skill": "allow",
-        "agent-tinyfish-ai_*": "allow",
-        "sosumi_*": "allow"
-    },
-    "disabled_providers": ["opencode"],
-    "provider": {
+    "permissions": [
+        { "action": "*", "resource": "*", "effect": "ask" },
+        { "action": "read", "resource": "*", "effect": "allow" },
+        { "action": "grep", "resource": "*", "effect": "allow" },
+        { "action": "glob", "resource": "*", "effect": "allow" },
+        { "action": "webfetch", "resource": "*", "effect": "allow" },
+        { "action": "todowrite", "resource": "*", "effect": "allow" },
+        { "action": "skill", "resource": "*", "effect": "allow" },
+        { "action": "agent-tinyfish-ai_*", "resource": "*", "effect": "allow" },
+        { "action": "sosumi_*", "resource": "*", "effect": "allow" }
+    ],
+    "experimental": { "policies": [ { "action": "provider.use", "resource": "opencode", "effect": "deny" } ] },
+    "providers": {
         "ollama": {
-            "npm": "@ai-sdk/openai-compatible",
             "name": "Tailnet",
-            "options": {
-                "baseURL": "http://100.112.227.27:11434/v1"
-            },
+            "package": "aisdk:@ai-sdk/openai-compatible",
+            "settings": { "baseURL": "http://100.112.227.27:11434/v1" },
             "models": {
                 "qwen3.8:27b-mtp-large": {
                     "name": "Qwen 3.8",
-                    "limit": {
-                        "context": 65536,
-                        "output": 32000
-                    }
+                    "limit": { "context": 65536, "output": 32000 }
                 }
             }
         }
     },
     "mcp": {
-        "agent-tinyfish-ai": {
-            "type": "remote",
-            "url": "https://agent.tinyfish.ai/mcp",
-            "enabled": true
-        },
-        "sosumi": {
-            "type": "remote",
-            "url": "https://sosumi.ai/mcp",
-            "enabled": true
-        },
-        "safari-mcp": {
-            "type": "local",
-            "command": ["/usr/bin/safaridriver", "--mcp"],
-            "enabled": true
+        "servers": {
+            "agent-tinyfish-ai": { "type": "remote", "url": "https://agent.tinyfish.ai/mcp", "disabled": false },
+            "sosumi": { "type": "remote", "url": "https://sosumi.ai/mcp", "disabled": false },
+            "safari-mcp": { "type": "local", "command": ["/usr/bin/safaridriver", "--mcp"], "disabled": false }
         }
-    },
-    "plugin": ["opencode-bash-guard-plugin"]
+    }
 }
