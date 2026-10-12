@@ -17,8 +17,9 @@
 		 [:##left_shift :z]  [:##z :x]  [:##x :c]  [:##c :v]  [:##v :b]
 		 ;; right hand
 		 [:##u :j]  [:##i :l]      [:##o :u]           [:##p :y]
-		 [:##j :h]  [:##k :n]      [:##l :e]           [:##semicolon :i]   [:##quote :o]            [:##return_or_enter :right_control]
+		 [:##j :h]  [:##k :n]      [:##l :e]           [:##semicolon :i]   [:##quote :o]
 		 [:##m :k]  [:##comma :m]  [:##period :comma]  [:##slash :period]  [:##right_shift :slash]
+		 [:##return_or_enter :right_control nil {:alone :escape}]
 		 ;; center
 		 [:##t :vk_none]    [:##y :vk_none]
 		 [:##g :semicolon]  [:##h :quote]

@@ -49,6 +49,60 @@
                          (define-key map (vector 'menu-bar key) 'undefined)))
                      menu)))))))
 
+(defvar-keymap my-control-nav-repeat-map
+  :doc "Control navigation repeat map."
+  :repeat t
+  "p" #'previous-line
+  "n" #'next-line
+  "f" #'forward-char
+  "b" #'backward-char
+  "a" #'move-beginning-of-line
+  "e" #'move-end-of-line
+  "v" #'scroll-up-command
+  "l" #'recenter-top-bottom)
+
+(defvar-keymap my-meta-nav-repeat-map
+  :doc "Meta navigation repeat map."
+  :repeat t
+  "p" #'backward-paragraph
+  "n" #'forward-paragraph
+  "f" #'forward-word
+  "b" #'backward-word
+  "a" #'backward-sentence
+  "e" #'forward-sentence
+  "v" #'scroll-down-command
+  "<" #'beginning-of-buffer
+  ">" #'end-of-buffer)
+
+(defvar-keymap my-sexp-nav-repeat-map
+  :doc "SEXP and list navigation repeat map."
+  :repeat t
+  "f" #'forward-sexp
+  "b" #'backward-sexp
+  "n" #'forward-list
+  "p" #'backward-list
+  "d" #'down-list
+  "u" #'backward-up-list
+  "a" #'beginning-of-defun
+  "e" #'end-of-defun
+  "k" #'kill-sexp
+  "t" #'transpose-sexps
+  "SPC" #'mark-sexp)
+
+(defvar-keymap my-window-repeat-map
+  :doc "Window management repeat map."
+  :repeat t
+  "o" #'other-window
+  "f" #'other-frame
+  "0" #'delete-window
+  "1" #'delete-other-windows
+  "2" #'split-window-below
+  "3" #'split-window-right
+  "+" #'enlarge-window
+  "-" #'shrink-window
+  "}" #'enlarge-window-horizontally
+  "{" #'shrink-window-horizontally)
+
 ;; auto-insert
 (define-auto-insert "\\.html\\'" "insert.html")
 (define-auto-insert "\\.js\\'" "insert.js")
@@ -58,7 +112,9 @@
   (when-let ((path (buffer-file-name)))
     (insert "# " (file-name-base path) "\n\n")))
 (define-auto-insert '("\\.md\\'" . "Markdown Header") #'auto-insert-markdown-header)
-(keymap-global-set "s-;" #'comment-box)
+(keymap-global-set "C-;" #'comment-box)
+(keymap-global-set "M-p" #'backward-paragraph)
+(keymap-global-set "M-n" #'forward-paragraph)
 
 ;; completion-preview-mode (built-in; keymap only exists once loaded)
 (with-eval-after-load 'completion-preview
@@ -106,14 +162,6 @@
   (set-fontset-font t '(#xF0001 . #xF1AF0) "Symbols Nerd Font")
   ;; SF Symbols: Unicode Plane 16 (PUA-B)
   (set-fontset-font t '(#x100000 . #x10FFFD) "SF Pro Display")
-
-  ;; key-translation-map
-  ;; Transpose unwanted s- bindings to project, bookmark, and treesit navigation
-  (keymap-set key-translation-map "s-g" "M-g")
-  (keymap-set key-translation-map "s-o" "C-x p")
-  (keymap-set key-translation-map "s-r" "C-x r")
-  (dolist (key '("a" "b" "d" "e" "f" "k" "l" "n" "p" "t" "u" "y" "<backspace>"))
-    (keymap-set key-translation-map (concat "s-" key) (concat "C-M-" key)))
 
   (defun dired-install-dmg ()
     "Mount a .dmg file at point, copy its .app to ~/Applications/, then eject and optionally delete .dmg."
@@ -395,8 +443,8 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 ;; (dolist (hook '(emacs-lisp-mode-hook)) (add-hook hook #'flymake-mode))
 (add-hook 'emacs-lisp-mode-hook #'flymake-mode)
 (with-eval-after-load 'flymake
-  (keymap-set flymake-mode-map "M-n" #'flymake-goto-next-error)
-  (keymap-set flymake-mode-map "M-p" #'flymake-goto-prev-error))
+  (keymap-set flymake-mode-map "C-c C-n" #'flymake-goto-next-error)
+  (keymap-set flymake-mode-map "C-c C-p" #'flymake-goto-prev-error))
 
 ;; google-translate
 (keymap-global-set "C-c t" #'google-translate-smooth-translate)
@@ -545,6 +593,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(eldoc-echo-area-use-multiline-p t)
  '(electric-pair-mode t)
  '(elfeed-search-date-format '("" -1 :left))
+ '(fast-but-imprecise-scrolling t)
  '(fido-vertical-mode t)
  '(find-file-visit-truename t)
  '(flymake-fringe-indicator-position nil)
@@ -580,6 +629,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(mouse-wheel-scroll-amount
    '(1 ((shift) . hscroll) ((meta)) ((control) . 1) ((control meta) . 1)))
  '(nov-text-width t)
+ '(ns-alternate-modifier 'none)
  '(ns-function-modifier 'hyper)
  '(obsidian-cli-note-extensions '("md" "tsv"))
  '(obsidian-cli-rename-on-save t)
@@ -614,7 +664,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(speedbar-initial-expansion-list-name "files" t)
  '(speedbar-prefer-window t)
  '(speedbar-show-unknown-files t)
- '(speedbar-window-default-width 20)
+ '(speedbar-window-default-width 25)
  '(tool-bar-mode nil)
  '(treesit-auto-install-grammar 'always)
  '(treesit-enabled-modes t)
