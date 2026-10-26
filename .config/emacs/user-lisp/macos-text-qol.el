@@ -1,4 +1,4 @@
-;;; macos-text-qol-mode.el --- macOS-style text auto-corrections  -*- lexical-binding: t; -*-
+;;; macos-text-qol.el --- macOS-style text auto-corrections  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2026  Leaf Eriksen
 
@@ -75,5 +75,4 @@
                  #'macos-text-qol--post-self-insert t)))
 
 (provide 'macos-text-qol-mode)
-;;; macos-text-qol-mode.el ends here
-
+;;; macos-text-qol.el ends here

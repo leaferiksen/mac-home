@@ -1,11 +1,10 @@
-;;; markdown-ts-csv-align-mode.el --- Column-align csv code blocks in markdown-ts-mode  -*- lexical-binding: t; -*-
+;;; markdown-ts-csv-align.el --- Column-align csv code blocks in markdown-ts-mode  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2026  Leaf Eriksen
 
 ;; Author: Leaf Eriksen <leaferiksen@gmail.com>
 ;; Keywords: text
 ;; Package-Requires: ((emacs "31.1") (csv-mode "1.27"))
-;; URL: https://github.com/leaferiksen/markdown-ts-csv-align-mode.el
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -41,7 +40,6 @@
 ;; face `markdown-ts-csv-align-padding', which inherits `fixed-pitch'.
 
 ;;; Code:
-
 
 (require 'csv-mode)
 (require 'treesit)
@@ -143,5 +141,5 @@ vanish along with its text."
     (markdown-ts-csv-align--clear)))
 
 (provide 'markdown-ts-csv-align-mode)
-;;; markdown-ts-csv-align-mode.el ends here
+;;; markdown-ts-csv-align.el ends here
 
