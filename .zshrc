@@ -26,7 +26,7 @@ alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
 alias fixapp='xattr -dr com.apple.quarantine'
 alias update='brew update && brew upgrade --greedy && npm update -g'
 alias upskills='npx -y skills update --global'
-alias upnode='npx -y npm-check-updates --cooldown 7d -u && npm install'
+alias upnode='npx -y npm-check-updates --cooldown 7d -u && npm install -g npm@latest && npm install'
 alias fixnode='brew unlink node && brew link --overwrite node'
 
 # My BSD utils

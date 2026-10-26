@@ -49,8 +49,13 @@
                          (define-key map (vector 'menu-bar key) 'undefined)))
                      menu)))))))
 
-(defvar-keymap my-control-nav-repeat-map
-  :doc "Control navigation repeat map."
+(defvar-keymap my-icomplete-repeat-map
+  :repeat t
+  "p" #'icomplete-backward-completions
+  "n" #'icomplete-forward-completions
+  "m" #'icomplete-fido-ret)
+
+(defvar-keymap my-text-navigation-repeat-map
   :repeat t
   "p" #'previous-line
   "n" #'next-line
@@ -61,8 +66,7 @@
   "v" #'scroll-up-command
   "l" #'recenter-top-bottom)
 
-(defvar-keymap my-meta-nav-repeat-map
-  :doc "Meta navigation repeat map."
+(defvar-keymap my-grammar-navigation-repeat-map
   :repeat t
   "p" #'backward-paragraph
   "n" #'forward-paragraph
@@ -70,12 +74,14 @@
   "b" #'backward-word
   "a" #'backward-sentence
   "e" #'forward-sentence
+  "c" #'capitalize-word
+  "u" #'upcase-word
+  "l" #'downcase-word
   "v" #'scroll-down-command
   "<" #'beginning-of-buffer
   ">" #'end-of-buffer)
 
-(defvar-keymap my-sexp-nav-repeat-map
-  :doc "SEXP and list navigation repeat map."
+(defvar-keymap my-lisp-navigation-repeat-map
   :repeat t
   "f" #'forward-sexp
   "b" #'backward-sexp
@@ -89,17 +95,13 @@
   "t" #'transpose-sexps
   "SPC" #'mark-sexp)
 
-(defvar-keymap my-window-repeat-map
-  :doc "Window management repeat map."
+(defvar-keymap my-window-layout-edit-repeat-map
   :repeat t
   "o" #'other-window
-  "f" #'other-frame
   "0" #'delete-window
   "1" #'delete-other-windows
   "2" #'split-window-below
   "3" #'split-window-right
-  "+" #'enlarge-window
-  "-" #'shrink-window
   "}" #'enlarge-window-horizontally
   "{" #'shrink-window-horizontally)
 
@@ -234,7 +236,7 @@
 (defun speedbar-window-width-threshold ()
   "Frame width, in columns, below which `speedbar-window' is hidden.
 Always three times the current `speedbar-window-default-width'."
-  (* 3 speedbar-window-default-width))
+  (* 4 speedbar-window-default-width))
 (defun speedbar-auto-toggle (frame)
   "Show or hide `speedbar-window' on FRAME based on its width.
 `speedbar-window' is pinned at `speedbar-window-default-width'."
@@ -285,7 +287,7 @@ Always three times the current `speedbar-window-default-width'."
 (keymap-global-set "C-c y" #'yt-dlp-download)
 
 ;; agent-shell
-(add-hook 'agent-shell-mode-hook #'variable-pitch-mode)
+(dolist (fn '(variable-pitch-mode rainbow-mode)) (add-hook 'agent-shell-mode-hook fn))
 (keymap-global-set "C-c c" #'agent-shell-new-temp-shell)
 (keymap-set project-prefix-map "a" #'agent-shell)
 
@@ -359,7 +361,6 @@ and `custom-set-faces' forms, which Custom formats itself."
 (setq arduino-cli-default-fqbn "arduino:avr:uno"
       arduino-cli-default-port "/dev/cu.usbmodem2101")
 
-;; Wrap all Eglot class definitions inside with-eval-after-load
 (with-eval-after-load 'eglot
   (defclass eglot-arduino-server (eglot-lsp-server) ())
 
@@ -440,11 +441,14 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 (with-eval-after-load 'elfeed (elfeed-org))
 
 ;; flymake
-;; (dolist (hook '(emacs-lisp-mode-hook)) (add-hook hook #'flymake-mode))
 (add-hook 'emacs-lisp-mode-hook #'flymake-mode)
-(with-eval-after-load 'flymake
-  (keymap-set flymake-mode-map "C-c C-n" #'flymake-goto-next-error)
-  (keymap-set flymake-mode-map "C-c C-p" #'flymake-goto-prev-error))
+(keymap-set goto-map "f" #'flymake-goto-next-error)
+(keymap-set goto-map "b" #'flymake-goto-prev-error)
+(defvar-keymap my-flymake-repeat-map
+  :doc "Keymap to repeat Flymake error navigation."
+  :repeat t
+  "f" #'flymake-goto-next-error
+  "b" #'flymake-goto-prev-error)
 
 ;; google-translate
 (keymap-global-set "C-c t" #'google-translate-smooth-translate)
@@ -462,76 +466,52 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 (defun markdown-h1-title ()
   "Insert an atx level 1 heading with the name of the file."
   (interactive)
-  (insert "# " (file-name-nondirectory (file-name-sans-extension (buffer-file-name))) "\n"))
+  (insert "# " (file-name-base (buffer-file-name)) "\n"))
+
 (defun markdown-h2-today ()
   "Insert a level 2 heading with today's date in iso format."
   (interactive)
-  (insert "## " (format-time-string "%Y-%m-%d") "\n"))
+  (insert "## " (format-time-string "%F") "\n"))
+
 (defun markdown-mla-frontmatter ()
   "Insert frontmatter for an MLA heading."
   (interactive)
   (insert "---\nprofessor: \nclass: \nword-count: true\n---\n"))
-(defun macos-text-qol-hook ()
-  "Post-self-insert hook to recreate macOS text features."
-  (when-let* ((char (char-before)))
-    (cond
-     ;; Double space after a word -> ". "
-     ((and-let* ((_ (eq char ?\s))
-                 (_ (eq (char-before (1- (point))) ?\s))
-                 (prev (char-before (- (point) 2))))
-        (eq (char-syntax prev) ?w))
-      (delete-char -2)
-      (insert ". "))
-     ;; Standalone "i" -> "I"
-     ((and-let* ((_ (not (eq (char-syntax char) ?w)))
-                 (_ (> (point) 2)))
-        (looking-back "\\bi\\b\\(.\\)" (max (point-min) (- (point) 3))))
-      (replace-match "I\\1"))
-     ;; Auto-capitalize at buffer start, after sentence end, or after a blank line
-     ((and-let* ((_ (string-match-p "[[:lower:]]" (string char))))
-        (looking-back
-         (concat "\\(?:"
-                 "\\`[ \t\n]*"          ; start of buffer
-                 "\\|[.!?][ \t\n]+"     ; end of sentence
-                 "\\|\n[ \t]*\n[ \t]*"  ; blank line (new paragraph)
-                 "\\)"
-                 ".")
-         (max (point-min) (- (point) 20))))
-      (upcase-region (1- (point)) (point))))))
 
-(define-minor-mode macos-text-qol-mode
-  "Minor mode to enable macOS-style text auto-corrections."
-  :init-value nil
-  :lighter " MacQoL"
-  (if macos-text-qol-mode
-      (add-hook 'post-self-insert-hook #'macos-text-qol-hook nil t)
-    (remove-hook 'post-self-insert-hook #'macos-text-qol-hook t)))
+(defun markdown-link-wrap-hook ()
+  "Allow `visual-line-mode' to soft-wrap directly between ] and ( in Markdown."
+  (set-category-table (copy-category-table))
+  (modify-category-entry ?\] ?|))
+
+(defvar-keymap markdown-actions-prefix-map
+  "1" #'markdown-h1-title "2" #'markdown-h2-today "f" #'markdown-mla-frontmatter)
 
 (autoload 'markdown-ts-mode "markdown-ts-mode" "Major mode for Markdown using tree-sitter." t)
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-ts-mode))
 
-(defvar-keymap markdown-actions-prefix-map
-  "1" #'markdown-h1-title "2" #'markdown-h2-today "f" #'markdown-mla-frontmatter)
-(keymap-global-set "C-c m" markdown-actions-prefix-map)
-
-(dolist (hook '(variable-pitch-mode visual-fill-column-mode markdown-indent-mode obsidian-cli-mode macos-text-qol-mode))
-  (add-hook 'markdown-ts-mode-hook hook))
+(dolist (fn '(variable-pitch-mode
+              visual-fill-column-mode
+              markdown-indent-mode
+              obsidian-cli-mode
+              macos-text-qol-mode
+              markdown-ts-csv-align-mode
+              markdown-link-wrap-hook))
+  (add-hook 'markdown-ts-mode-hook fn))
 
 (with-eval-after-load 'markdown-ts-mode
+  (keymap-set markdown-ts-mode-map "C-c m" markdown-actions-prefix-map)
   (keymap-set markdown-ts-mode-map "<tab>" #'markdown-ts-demote)
   (keymap-set markdown-ts-mode-map "<backtab>" #'markdown-ts-promote)
-  (dolist (n (number-sequence 1 6))
-    (set-face-attribute
-     (intern (format "markdown-ts-heading-%d" n))
-     nil :inherit
-     (intern (format "modus-themes-heading-%d" n))))
+  (dotimes (i 6)
+    (set-face-attribute (intern (format "markdown-ts-heading-%d" (1+ i))) nil
+                        :inherit (intern (format "modus-themes-heading-%d" (1+ i)))))
+  ;; Links without a scheme, anchor, or extension point to other markdown files.
   (advice-add 'markdown-ts--make-link-button :around
               (lambda (orig-fn beg end url)
-		(funcall orig-fn beg end
-			 (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url)
+                (funcall orig-fn beg end
+                         (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url)
                              url
                            (concat url ".md"))))))
-
 ;; nov
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 (dolist (hook '(variable-pitch-mode visual-fill-column-mode)) (add-hook 'nov-mode-hook hook))
@@ -637,8 +617,8 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
    '(agent-shell anglish apheleia arduino-cli-mode betweenle clojure-mode csv-mode dwim-shell-command
 		 elfeed elfeed-org elfmt exec-path-from-shell ghostel google-translate hackernews
 		 lorem-ipsum markdown-indent-mode nerd-icons-multimodal nerd-icons-speedbar nov
-		 obsidian-cli osx-dictionary read-aloud swift-mode typst-ts-mode visual-fill-column
-		 writegood-mode))
+		 obsidian-cli osx-dictionary rainbow-mode read-aloud swift-mode typst-ts-mode
+		 visual-fill-column writegood-mode))
  '(package-vc-allow-build-commands t)
  '(package-vc-register-as-project nil)
  '(package-vc-selected-packages
@@ -654,6 +634,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(read-aloud-engine "say" t)
  '(read-buffer-completion-ignore-case t)
  '(read-process-output-max (* 1024 1024) t)
+ '(repeat-exit-key "SPC")
  '(repeat-mode t)
  '(ring-bell-function 'ignore)
  '(scroll-bar-mode nil)
@@ -687,8 +668,9 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Maple Mono CN" :height 140))))
- '(fixed-pitch ((t (:inherit default))))
+ '(fixed-pitch ((t (:family "Maple Mono CN" :height 140))))
  '(markdown-indent-mode-hide-hash ((t (:inherit shadow))))
+ '(markdown-ts-in-code-block ((t (:inherit fixed-pitch))))
  '(mode-line-active ((t (:box (:line-width 5 :style flat-button)))))
  '(mode-line-inactive ((t (:box (:line-width 5 :style flat-button)))))
  '(speedbar-separator-face ((t (:box (:line-width 5 :style flat-button)))))

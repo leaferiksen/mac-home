@@ -6,7 +6,7 @@
 		 [:!Ff "osascript -e 'tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode'"]]}
 	{:des "Colemak Extra Wide for emacs"
 	 :rules [;; global emacs
-		 [:!TT##comma :return_or_enter]  [:!TT##semicolon :tab]
+		 [:!TT##comma :return_or_enter]  [:!TT##semicolon :tab]  [:!TT##j :delete_or_backspace [:!rcmd-held]]
 		 [:!TT##e :up_arrow    [:!emacs :!rcmd-held]]
 		 [:!TT##k :down_arrow  [:!emacs :!rcmd-held]]
 		 [:!TT##w :right_arrow [:!emacs :!rcmd-held]]
@@ -19,13 +19,15 @@
 		 [:##u :j]  [:##i :l]      [:##o :u]           [:##p :y]
 		 [:##j :h]  [:##k :n]      [:##l :e]           [:##semicolon :i]   [:##quote :o]
 		 [:##m :k]  [:##comma :m]  [:##period :comma]  [:##slash :period]  [:##right_shift :slash]
-		 [:##return_or_enter :right_control nil {:alone :escape}]
+		 [:##return_or_enter :right_control]
 		 ;; center
 		 [:##t :vk_none]    [:##y :vk_none]
 		 [:##g :semicolon]  [:##h :quote]
 		 [:##b :vk_none]    [:##n :vk_none]
 		 ;; meh and control on right thumb
 		 [:##right_command [["rcmd-held" 1] :!QWright_option] nil {:afterup ["rcmd-held" 0]}]  [:##right_option :right_shift]]}]}
+
+;;  nil {:alone :escape}
 
 ;; the rule [:!Ca :!T1] means from command a to control 1
 ;; :!Ca is keycode :a and prefix a with !C
