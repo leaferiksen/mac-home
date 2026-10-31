@@ -6,7 +6,8 @@
     "emb-v1",
     "canary-1b-v2_474MB",
     "s1-vocab-v2-160MB",
-    "large"
+    "large",
+    "nemotron3-fast32-fp16-v1"
   ],
   "modeKeys" : [
     "voice to text"

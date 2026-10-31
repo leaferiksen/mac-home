@@ -6,6 +6,8 @@
 
 ;;; Code:
 
+(global-set-key (kbd "C-c m") #'applemusic-menu)
+
 ;; package.el
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -21,13 +23,14 @@
   "Borderless maximise with margins for tiling."
   (interactive)
   (set-frame-width (selected-frame) (- (display-pixel-width) 100) nil t))
-(defun unfill ()
-  "Unfill the current region if active, or the current paragraph."
-  (interactive)
-  (let ((fill-column (point-max)))
+(defun my/fill-or-unfill (&optional arg)
+  "Fill the current region or paragraph. With ARG, unfill it."
+  (interactive "P")
+  (let ((fill-column (if arg (point-max) fill-column)))
     (if (use-region-p)
-	(fill-region (region-beginning) (region-end) nil)
-      (fill-paragraph nil))))
+        (fill-region (region-beginning) (region-end))
+      (fill-paragraph))))
+(global-set-key [remap fill-paragraph] #'my/fill-or-unfill)
 (add-hook 'after-init-hook #'almost-maximize-frame)
 (add-hook 'emacs-startup-hook #'server-start)
 (windmove-default-keybindings 'super)
@@ -499,7 +502,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
   (add-hook 'markdown-ts-mode-hook fn))
 
 (with-eval-after-load 'markdown-ts-mode
-  (keymap-set markdown-ts-mode-map "C-c m" markdown-actions-prefix-map)
+  (keymap-set markdown-ts-mode-map "C-c C-m" markdown-actions-prefix-map)
   (keymap-set markdown-ts-mode-map "<tab>" #'markdown-ts-demote)
   (keymap-set markdown-ts-mode-map "<backtab>" #'markdown-ts-promote)
   (dotimes (i 6)
@@ -614,11 +617,11 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(obsidian-cli-note-extensions '("md" "tsv"))
  '(obsidian-cli-rename-on-save t)
  '(package-selected-packages
-   '(agent-shell anglish apheleia arduino-cli-mode betweenle clojure-mode csv-mode dwim-shell-command
-		 elfeed elfeed-org elfmt exec-path-from-shell ghostel google-translate hackernews
-		 lorem-ipsum markdown-indent-mode nerd-icons-multimodal nerd-icons-speedbar nov
-		 obsidian-cli osx-dictionary rainbow-mode read-aloud swift-mode typst-ts-mode
-		 visual-fill-column writegood-mode))
+   '(agent-shell anglish apheleia arduino-cli-mode betweenle clojure-mode consult csv-mode
+		 dwim-shell-command elfeed elfeed-org elfmt exec-path-from-shell ghostel
+		 google-translate hackernews lorem-ipsum markdown-indent-mode nerd-icons-multimodal
+		 nerd-icons-speedbar nov obsidian-cli osx-dictionary rainbow-mode read-aloud
+		 swift-mode typst-ts-mode visual-fill-column writegood-mode))
  '(package-vc-allow-build-commands t)
  '(package-vc-register-as-project nil)
  '(package-vc-selected-packages

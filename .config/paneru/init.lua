@@ -43,6 +43,7 @@ paneru.setup({
 	all = { title = ".*", vertical_padding = 20, horizontal_padding = 10 },
 	colors = { title = "^Colors$", floating = true },
 	fonts = { title = "^Fonts$", floating = true },
+	messages = { title = ".*", bundle_id = "com.apple.MobileSMS", floating = true },
 	facetime = { title = ".*", bundle_id = "com.apple.Facetime", floating = true },
 	devicehub = { title = ".*", bundle_id = "com.apple.dt.Devices", floating = true },
 	iina = { title = ".*", bundle_id = "com.colliderli.iina", floating = true },
