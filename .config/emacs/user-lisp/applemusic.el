@@ -30,6 +30,8 @@
 ;;   (require 'applemusic)
 ;;   (global-set-key (kbd "C-c m") #'applemusic-menu)
 ;;
+;; AirPlay needs the `am airplay' command (see the accompanying CLI patch).
+;;
 ;; Design: all AppleScript lives in the CLI.  This file only runs `am',
 ;; shows its output, and offers menus.  Anything the CLI prints in a
 ;; format we need to understand is parsed in exactly two places:
@@ -111,17 +113,42 @@ Only lines of the form \"N. Name\" are kept, so the CLI's header line and
 
 ;;;; Menus
 
+(defun applemusic--menu-label (key label)
+  "Return LABEL with KEY bracketed in place, e.g. \"[t]oggle\" or \"air[p]lay\".
+If KEY does not occur in LABEL, fall back to \"[K] LABEL\"."
+  (if-let* ((pos (seq-position label key)))
+      (concat (substring label 0 pos)
+              (format "[%c]" key)
+              (substring label (1+ pos)))
+    (format "[%c] %s" key label)))
+
+(defun applemusic--menu-help (title entries)
+  "Show a help window describing each of ENTRIES, titled TITLE.
+Descriptions are the first line of each command's docstring."
+  (with-help-window (format "*%s Help*" title)
+    (princ (format "%s menu\n\n" title))
+    (dolist (e entries)
+      (let* ((cmd (nth 2 e))
+             (doc (and (symbolp cmd) (documentation cmd t))))
+        (princ (format "  %c  %-10s %s\n" (nth 0 e) (nth 1 e)
+                       (if doc (car (split-string doc "\n")) "")))))))
+
 (defun applemusic--menu (title entries)
   "Show a one-key menu named TITLE and run the chosen entry.
 ENTRIES is a list of (KEY LABEL COMMAND).  COMMAND is called
-interactively if it is a command, otherwise with no arguments."
-  (let ((prompt (format "%s: %s  [q] quit "
-                        title
-                        (mapconcat (lambda (e) (format "[%c] %s" (nth 0 e) (nth 1 e)))
-                                   entries "  "))))
-    (and-let* ((key (read-char-choice prompt (cons ?q (mapcar #'car entries))))
-               ((not (eq key ?q)))
-               (action (nth 2 (assq key entries))))
+interactively if it is a command, otherwise with no arguments.
+Pressing ? describes each entry; \\[keyboard-quit] leaves the menu."
+  (let* ((prompt (format "%s: %s  [?] help "
+                         title
+                         (mapconcat (lambda (e)
+                                      (applemusic--menu-label (nth 0 e) (nth 1 e)))
+                                    entries "  ")))
+         (keys (cons ?? (mapcar #'car entries)))
+         (key (read-char-choice prompt keys)))
+    (while (eq key ??)
+      (applemusic--menu-help title entries)
+      (setq key (read-char-choice prompt keys)))
+    (and-let* ((action (nth 2 (assq key entries))))
       (if (commandp action)
           (call-interactively action)
         (funcall action)))))
@@ -148,10 +175,9 @@ interactively if it is a command, otherwise with no arguments."
   "Show the current volume, then set a new one with a single key.
 Keys 1-9 set the volume to 10-90 percent, and 0 sets it to 100."
   (interactive)
-  (let ((prompt (format "Volume is %s.  Set to: [1-9] = 10-90, [0] = 100, [q] quit "
+  (let ((prompt (format "Volume is %s.  Set to: [1-9] = 10-90, [0] = 100 "
                         (or (applemusic--current-volume) "unknown"))))
-    (and-let* ((key (read-char-choice prompt (append "0123456789q" nil)))
-               ((not (eq key ?q))))
+    (let ((key (read-char-choice prompt (append "0123456789" nil))))
       (applemusic--say "vol" (number-to-string
                               (if (eq key ?0) 100 (* 10 (- key ?0))))))))
 
@@ -192,14 +218,45 @@ Keys 1-9 set the volume to 10-90 percent, and 0 sets it to 100."
       (applemusic--say "album" choice)
     (message "No album selected")))
 
-(defun applemusic-search (query)
-  "Search the library for QUERY, choose a result, and play it."
+(defun applemusic-song (query)
+  "Search the library for QUERY, choose a song, and play it."
   (interactive "sSearch: ")
   (if-let* (((not (string-empty-p query)))
             (choice (applemusic--pick (format "Songs matching %s: " query)
                                       (applemusic--list "search" query))))
       (applemusic--say "song" choice)
     (message "Nothing selected")))
+
+;;;; AirPlay
+
+(defun applemusic--airplay-table (devices active)
+  "Return a completion table over DEVICES, marking those in ACTIVE with a check."
+  (lambda (string pred action)
+    (if (eq action 'metadata)
+        `(metadata
+          (display-sort-function . identity)
+          (annotation-function
+           . ,(lambda (c) (if (member c active) "  ✓" ""))))
+      (complete-with-action action devices string pred))))
+
+(defun applemusic-airplay (device &optional only)
+  "Choose an AirPlay output and toggle it.
+Interactively, prompt for DEVICE, marking those currently receiving
+audio.  With prefix argument ONLY, play to that device alone instead,
+turning all other outputs off."
+  (interactive
+   (let* ((devices (applemusic--list "airplay"))
+          (active  (applemusic--list "airplay" "--active"))
+          (choice  (and devices
+                        (completing-read
+                         (if current-prefix-arg "AirPlay (only): " "AirPlay (toggle): ")
+                         (applemusic--airplay-table devices active) nil t))))
+     (unless (and choice (not (string-empty-p choice)))
+       (user-error "No AirPlay device selected"))
+     (list choice current-prefix-arg)))
+  (if only
+      (applemusic--say "airplay" device "--only")
+    (applemusic--say "airplay" device)))
 
 ;;;; Main menu
 
@@ -212,8 +269,9 @@ Keys 1-9 set the volume to 10-90 percent, and 0 sets it to 100."
                       (?i "info"     applemusic-now)
                       (?l "playlist" applemusic-playlist)
                       (?a "album"    applemusic-album)
-                      (?s "search"   applemusic-search)
+                      (?s "song"     applemusic-song)
                       (?v "volume"   applemusic-volume)
+                      (?p "airplay"  applemusic-airplay)
                       (?h "shuffle"  applemusic-shuffle)
                       (?r "repeat"   applemusic-repeat))))
 

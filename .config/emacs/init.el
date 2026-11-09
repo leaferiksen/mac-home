@@ -55,8 +55,7 @@
 (defvar-keymap my-icomplete-repeat-map
   :repeat t
   "p" #'icomplete-backward-completions
-  "n" #'icomplete-forward-completions
-  "m" #'icomplete-fido-ret)
+  "n" #'icomplete-forward-completions)
 
 (defvar-keymap my-text-navigation-repeat-map
   :repeat t
@@ -206,6 +205,7 @@
 
   ;; osx-dictionary
   (keymap-global-set "C-c d" #'osx-dictionary-search-word-at-point)
+  (dolist (fn '(visual-fill-column-mode visual-wrap-prefix-mode variable-pitch-mode)) (add-hook 'osx-dictionary-mode-hook fn))
 
   ;; swift-mode
   ;; Swift ts-modes are reliant on unfinished tree sitters
@@ -515,6 +515,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
                          (if (string-match-p "\\`#\\|\\`[a-z]+:\\|\\.[a-zA-Z]+" url)
                              url
                            (concat url ".md"))))))
+
 ;; nov
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 (dolist (hook '(variable-pitch-mode visual-fill-column-mode)) (add-hook 'nov-mode-hook hook))
@@ -585,7 +586,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(global-nerd-icons-multimodal-mode t)
  '(google-translate-output-destination '(echo-area))
  '(google-translate-show-phonetic t)
- '(google-translate-translation-directions-alist '(("ja" . "en") ("en" . "ja")))
+ '(google-translate-translation-directions-alist '(("ja" . "en") ("en" . "ja")) t)
  '(ibuffer-human-readable-size t)
  '(imenu-auto-rescan t)
  '(imenu-flatten 'group)
@@ -616,11 +617,13 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(ns-function-modifier 'hyper)
  '(obsidian-cli-note-extensions '("md" "tsv"))
  '(obsidian-cli-rename-on-save t)
+ '(osx-dictionary-allowed-dictionaries
+   '("New Oxford American Dictionary" "Oxford American Writer’s Thesaurus" "Wikipedia"))
  '(package-selected-packages
    '(agent-shell anglish apheleia arduino-cli-mode betweenle clojure-mode consult csv-mode
 		 dwim-shell-command elfeed elfeed-org elfmt exec-path-from-shell ghostel
 		 google-translate hackernews lorem-ipsum markdown-indent-mode nerd-icons-multimodal
-		 nerd-icons-speedbar nov obsidian-cli osx-dictionary rainbow-mode read-aloud
+		 nerd-icons-speedbar nov obsidian-cli osx-dictionary rainbow-mode read-aloud remoto
 		 swift-mode typst-ts-mode visual-fill-column writegood-mode))
  '(package-vc-allow-build-commands t)
  '(package-vc-register-as-project nil)

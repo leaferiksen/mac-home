@@ -1,6 +1,6 @@
  # README.md
 
-## Initial user setup
+## Initial User Setup
 
 - Accessibility → Vision →
   - Zoom: **☑ Turn on Zoom**
@@ -9,13 +9,7 @@
 - Screen Time: **↖ Set Up Later**
 - Siri: **☒ Enable Ask Siri**
 
-### For virtual machines only
-
-```bash
-defaults write com.apple.dock "persistent-apps" -array && killall Dock && spctl --global-disable && softwareupdate --install-rosetta --agree-to-license
-```
-
-## Sync home with this repo
+## Sync Home with This Repo
 
 open Terminal as user `leaf` and run
 
@@ -33,10 +27,12 @@ if ssh isn't properly configured with the keychain, try the following before try
 ssh-add --apple-use-keychain ~/.ssh/id_ed25519 &> /dev/null
 ```
 
-To install Homebrew
-
 ``` bash
 su admin
+```
+
+``` bash
+sudo spctl --master-disable
 ```
 
 ``` bash
@@ -62,52 +58,18 @@ Spotlight → Full Disk Access → remove Terminal
 
 -Download [Karabiner Elements](https://karabiner-elements.pqrs.org/) manually.
 
-## Set these by hand
-
-### Night Shift options
-
-- Schedule **▼ Sunrise to Sunset**
+## Set These by Hand
 
 ### Spotlight
 
-- Results from Apps → **☒ Mail**
-- Results from system → **☒  iPhone Apps**
-- Search Privacy… → **Bluetooth File Exchange**, **Image Playground**, **Stocks**, **Tips**, **Mail**, **Karabiner-EventViewer, Podcasts, Maps**
+- Results from system → iPhone Apps **☒**
+- Clipboard history is available in Spotlight **▼ 7 days**
+- Search Privacy… **Bluetooth File Exchange**, **Image Playground**, **Podcasts**, **Stocks**, **Tips**
 
-### Spoken Content
+### Privacy & Security
 
-- System Voice ⓘ → Voice → **↖ Matilda (Premium) 💾**
-- System Voice **▼ Matilda (Premium)**
-
-### Language input methods
-
-- \+ → **↖ Japanese - Romaji**
+-Allow applications from **▼ Anywhere**
 
 ### Keyboard Shortcuts
 
-- Mission Control: **☒ All Desktops**
-- Input Sources: **☒ Next & Previous**
-- Modifier Keys: **Caps Lock (⇪) key ▼ Escape**
-
-### Wacom Tablet
-
-- Options... → **☒ Show wireless tablet battery status in menu bar**
-
-### Wacom Center
-
-- Mapping → **☑ Show advanced options**
-- Mapping → Tablet area → Use custom area... → **11784 by 18144** (6 * screen resolution)
-- Osu! custom area → **2700 by 4320** (a fifth of the tablet resolution)
-
-## Commands to set up third party apps
-
-### Ryujinx
-
-`ln -s /Users/leaf/Documents/Games/Ryujinx\ \(Application\ Support\) /Users/leaf/Library/Application\ Support/Ryujinx`
-
-### Adobe Photoshop
-
-```
-mkdir /Users/leaf/Library/Preferences/Adobe\ Photoshop\ $(date +%Y)\ Settings/
-ln -s /Users/leaf/Documents/Drawing/Photoshop/New\ Doc\ Sizes.json /Users/leaf/Library/Preferences/Adobe\ Photoshop\ $(date +%Y)\ Settings/New\ Doc\ Sizes.json
-```
+- Modifier Keys → Caps Lock (⇪) key **▼ Escape**

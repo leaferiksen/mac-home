@@ -9,10 +9,6 @@ defaults write -g "com.apple.swipescrolldirection" -bool "false"
 # defaults write -g "AppleShowScrollBars" -string "Always"
 # disable zoom button popup
 defaults write -g "NSZoomButtonShowMenu" -bool "false"
-# disable controller launchpad
-defaults write com.apple.GameController "bluetoothPrefsMenuLongPressAction" -int "0"
-# use analogue clock
-defaults write com.apple.menuextra.clock "IsAnalog" -bool "true"
 # Expanded Save/Print Modals and file extensions
 defaults write -g "AppleShowAllExtensions" -bool "true"
 defaults write -g "NSDocumentSaveNewDocumentsToCloud" -bool "false"
@@ -41,12 +37,26 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourF
 # disable swiping between desktops
 defaults write com.apple.AppleMultitouchTrackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "TrackpadFourFingerHorizSwipeGesture" -int "0"
+# keyboard navigation
+defaults write -g "AppleKeyboardUIMode" -int "2"
+# Use scroll gesture with the Ctrl (^) modifier key to zoom
+defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
 # speed up key-repeat
 defaults write -g InitialKeyRepeat -int 15
 defaults write -g KeyRepeat -int 2
 defaults write -g "ApplePressAndHoldEnabled" -bool "false"
 # disable the Control-Command-D binding
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
+# disable input source switching (60 = previous, 61 = next)
+for id in 60 61; do
+  defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add $id '<dict><key>enabled</key><false/></dict>'
+done
+# disable "Switch to Desktop N" shortcuts (118-127 = Desktop 1-10)
+for id in 118 119 120 121 122 123 124 125 126 127; do
+  defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add $id '<dict><key>enabled</key><false/></dict>'
+done
+# apply shortcut changes without logging out (may be a no-op on newer macOS)
+/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u 2>/dev/null || true
 # disable single-click globe key action (it breaks custom actions in karabiner)
 defaults write com.apple.HIToolbox "AppleFnUsageType" -int "0"
 # disable dock, screensaver hot corner and quick notes
@@ -61,24 +71,6 @@ defaults write com.apple.dock "static-only" -bool "true"
 defaults write com.apple.dock "tilesize" -int "48"
 # don't automatically rearrange Spaces based on most recent use
 defaults write com.apple.dock "mru-spaces" -bool "false"
-# 0: No Option
-# 2: Mission Control
-# 3: Show application windows
-# 4: Desktop
-# 5: Start screen saver
-# 6: Disable screen saver
-# 7: Dashboard
-# 10: Put display to sleep
-# 11: Launchpad
-# 13: Lock Screen
-# 12: Notification Center
-defaults write com.apple.dock "wvous-br-corner" -int "1"
-# 0: No Modifier
-# 131072: Shift Key
-# 262144: Control Key
-# 524288: Option Key
-# 1048576: Command Key
-# defaults write com.apple.dock wvous-br-modifier -int "0"
 #################
 # window tiling #
 #################
@@ -104,40 +96,17 @@ defaults write com.apple.finder "ShowPathbar" -bool "true"
 defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true"
 defaults write com.apple.finder "SidebarTagsSctionDisclosedState" -bool "false"
 defaults write com.apple.finder "FXEnableExtensionsChangeWarning" -bool "false"
-# Set search scope.
-# This Mac       : `SCev`
-# Current Folder : `SCcf`
-# Previous Scope : `SCsp`
-defaults write com.apple.finder "FXDefaultSearchScope" "SCcf"
-# Set preferred view style.
-# Icon View   : `icnv`
-# List View   : `Nlsv`
-# Column View : `clmv`
-# Cover Flow  : `Flwv`
-defaults write com.apple.finder "FXPreferredViewStyle" "clmv"
-# find . -name ".DS_Store" -type f -delete
-# Set default path for new windows.
-# Computer     : `PfCm`
-# Volume       : `PfVo`
-# $HOME        : `PfHm`
-# Desktop      : `PfDe`
-# Documents    : `PfDo`
-# All My Files : `PfAF`
-# Other…       : `PfLo`
-defaults write com.apple.finder "NewWindowTarget" "PfDe"
-defaults write com.apple.finder "ShowPreviewPane" -bool "true"
-/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':com.adobe.pdf:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':com.apple.application:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.archive:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.folder:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.image:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.item:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.movie:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.text:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "add 'PreviewPaneSettings':public.html:showQuickActions bool false" /Users/leaf/Library/Preferences/com.apple.finder.plist
 defaults write com.apple.finder "CreateDesktop" -bool "false"
 # soft restart
 killall Finder Dock NotificationCenter
+##############
+# Night Shift #
+##############
+# needs `brew install smudge/smudge/nightlight` (add to apps.sh)
+if command -v nightlight >/dev/null 2>&1; then
+  # sunrise to sunset
+  nightlight schedule start
+fi
 #####################
 # Spotlight Privacy #
 #####################
@@ -193,120 +162,3 @@ defaults write com.colliderli.iina "scaleRemainingTime" -bool "true"
 defaults write com.colliderli.iina "showChapterPos" -bool "true"
 defaults write com.colliderli.iina "showRemainingTime" -bool "true"
 defaults write com.colliderli.iina "themeMaterial" -int "4"
-#########################################################
-# our lord and savior, Jesus enterprise policies Christ #
-#########################################################
-defaults write app.zen-browser.zen "EnterprisePoliciesEnabled" -bool "true"
-defaults write app.zen-browser.zen "DisableAppUpdate" -bool "true"
-#####################
-# Disabled features #
-#####################
-# accent colors
-# defaults write -g "NSTableViewDefaultSizeMode" -int "3"
-# defaults write -g "AppleIconAppearanceTheme" -string "RegularAutomatic"
-# defaults write -g "NSColorSimulateHardwareAccent" -bool "yes"
-# defaults write -g "NSColorSimulatedHardwareEnclosureNumber" -int "4"
-# defaults write com.apple.universalaccess "differentiateWithoutColor" -bool "true"
-# keyboard navigation
-# defaults write -g "AppleKeyboardUIMode" -int "2"
-# defaults write com.apple.Accessibility "ReduceMotionEnabled" -int "1"
-# defaults write -g NSScrollViewRubberbanding -int 0
-# defaults write com.apple.universalaccess "virtualKeyboardOnOff" -bool "true"
-# defaults write com.apple.universalaccess "virtualKeyboardCornerActionType" '{
-#     0 = 1;
-#     1 = 0;
-#     2 = 0;
-#     3 = 0;
-# }'
-# # Use scroll gesture with the Ctrl (^) modifier key to zoom
-# defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
-# # Keep windows when quitting an app
-# defaults write -g "NSQuitAlwaysKeepsWindows" -bool "true"
-# # Save screenshots to the Pictures/Screenshots
-# defaults write com.apple.screencapture location -string "/Users/leaf/Pictures/Screenshots"
-# # let karabiner handle media keys
-# defaults write -g "com.apple.keyboard.fnState" -bool "true"
-# # no iphone widgets
-# defaults write com.apple.chronod "remoteWidgetsEnabled" -bool "false"
-# # monocrome widgets
-# defaults write com.apple.widgets "widgetAppearance" -int "0"
-# # Universal sidebar toggle
-# defaults write -g "NSUserKeyEquivalents" '{
-# 	"Hide Sidebar" = "~^$`";
-# 	"Show Sidebar" = "~^$`";
-# 	"System Settings…" = "~^$,";
-# }'
-#################
-# Stage Manager #
-#################
-# defaults write com.apple.WindowManager "GloballyEnabled" -bool "true"
-# defaults write com.apple.WindowManager "HideDesktop" -bool "false"
-# defaults write com.apple.WindowManager "AutoHide" -bool "true"
-# defaults write com.apple.WindowManager "AutoHideDelay" -int "0"
-######################
-# GnuPG and PinEntry #
-######################
-# defaults write org.gpgtools.common "UseKeychain" -bool "true"
-###########
-# Taskbar #
-###########
-# defaults write com.fpfxtknjju.wbgcdolfev "NSStatusItem VisibleCC Item-0" -bool "false"
-# defaults write com.fpfxtknjju.wbgcdolfev "SUEnableAutomaticChecks" -bool "false"
-# defaults write com.fpfxtknjju.wbgcdolfev "size" -string "130"
-# # defaults write com.fpfxtknjju.wbgcdolfev "centerTasksAndButtons" -string "true"
-# defaults write com.fpfxtknjju.wbgcdolfev "taskViewMaxWidth" -string "300"
-# defaults write com.fpfxtknjju.wbgcdolfev "clickingFocusedTaskHidesItsApp" -string "true"
-# defaults write com.fpfxtknjju.wbgcdolfev "pinList" -string "[]"
-# defaults write com.fpfxtknjju.wbgcdolfev "scrollDownHidesForNow" -string "false"
-# defaults write com.fpfxtknjju.wbgcdolfev "showLaunchpadButton" -string "false"
-# defaults write com.fpfxtknjju.wbgcdolfev "showMenubarIcon" -string "false"
-# defaults write com.fpfxtknjju.wbgcdolfev "updatePolicy" -string "1"
-########
-# Loop #
-########
-# defaults write com.MrKai77.Loop "hideMenuBarIcon" -bool "true"
-# defaults write com.MrKai77.Loop "restoreWindowFrameOnDrag" -bool "true"
-# # defaults write com.MrKai77.Loop "windowSnapping" -bool "false"
-# defaults write com.MrKai77.Loop "enablePadding" -bool "true"
-# defaults write com.MrKai77.Loop "padding" -string "{\"bottom\":15,\"configureScreenPadding\":true,\"externalBar\":0,\"left\":15,\"right\":15,\"top\":10,\"window\":15}"
-# \"bottom\": 55
-# defaults write com.MrKai77.Loop "useSystemWindowManagerWhenAvailable" -bool "true"
-# /usr/libexec/PlistBuddy -c  "delete :trigger: array '0'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-# /usr/libexec/PlistBuddy -c "add :trigger: integer '59'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-# /usr/libexec/PlistBuddy -c "add :trigger: integer '58'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-# /usr/libexec/PlistBuddy -c "add :trigger: integer '56'" /Users/leaf/Library/Preferences/com.MrKai77.Loop.plist
-#####################
-# Lickable Menu Bar #
-#####################
-# defaults write com.ibluebox.aqua-menu-bar "style" -int "3"
-# defaults write com.ibluebox.aqua-menu-bar "lows" -bool "false"
-###################
-# SaneSideButtons #
-###################
-# defaults write com.janhuelsmann.SaneSideButtons "NSStatusItem Visible Item-0" -bool "false"
-###########
-# AlDente #
-###########
-# defaults write com.apphousekitchen.aldente-pro "showDockIcon" -bool "false"
-############
-# TopNotch #
-############
-# defaults write pl.maketheweb.TopNotch "hideMenubarIcon" -bool "false"
-#########
-# Lunar #
-#########
-# defaults write fyi.lunar.Lunar "hideMenuBarIcon" -bool "true"
-#########
-# Hazel #
-#########
-# defaults write com.noodlesoft.Hazel "ShowStatusInMenuBar" -bool "false"
-# defaults write com.noodlesoft.Hazel "TrashUninstallApps" -bool "true"
-# defaults write com.noodlesoft.Hazel "SUEnableAutomaticChecks" -bool "false"
-#########
-# Maccy #
-#########
-# defaults write org.p0deje.Maccy "showInStatusBar" -bool "false"
-# defaults write org.p0deje.Maccy "popupPosition" -string "center"
-# defaults write org.p0deje.Maccy "historySize" -int "10"
-# defaults write org.p0deje.Maccy "KeyboardShortcuts_popup" -string "{\"carbonModifiers\":768,\"carbonKeyCode\":9}"
-# defaults write org.p0deje.Maccy "ignoredApps" -array "com.apple.Passwords"
