@@ -60,6 +60,10 @@ Spotlight → Full Disk Access → remove Terminal
 
 ## Set These by Hand
 
+### Night Shift
+
+Schedule **▼ Sunrise to Sunset**
+
 ### Spotlight
 
 - Results from system → iPhone Apps **☒**

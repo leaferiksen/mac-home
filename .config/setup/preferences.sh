@@ -99,14 +99,6 @@ defaults write com.apple.finder "FXEnableExtensionsChangeWarning" -bool "false"
 defaults write com.apple.finder "CreateDesktop" -bool "false"
 # soft restart
 killall Finder Dock NotificationCenter
-##############
-# Night Shift #
-##############
-# needs `brew install smudge/smudge/nightlight` (add to apps.sh)
-if command -v nightlight >/dev/null 2>&1; then
-  # sunrise to sunset
-  nightlight schedule start
-fi
 #####################
 # Spotlight Privacy #
 #####################
