@@ -121,7 +121,6 @@ defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/i
 ###########
 # Homerow #
 ###########
-defaults write com.superultra.Homerow "check-for-updates-automatically" -bool "false"
 defaults write com.superultra.Homerow "is-scroll-shortcuts-enabled" -bool "false"
 defaults write com.superultra.Homerow "label-characters" -string "arstgmneio"
 defaults write com.superultra.Homerow "label-font-size" -float "12"
@@ -141,7 +140,6 @@ defaults write com.sindresorhus.Pure-Paste "hideMenuBarIcon" -bool "true"
 # defaults write com.colliderli.iina "initialWindowSizePosition" -string "-0+0"
 # defaults write com.colliderli.iina "useLegacyFullScreen" -bool "true"
 # defaults write com.colliderli.iina "windowBehaviorWhenPip" -int "1"
-defaults write com.colliderli.iina "SUEnableAutomaticChecks" -bool "false"
 defaults write com.colliderli.iina "alwaysFloatOnTop" -bool "true"
 defaults write com.colliderli.iina "arrowBtnAction" -int "1"
 defaults write com.colliderli.iina "currentInputConfigName" -string "mpv Default"

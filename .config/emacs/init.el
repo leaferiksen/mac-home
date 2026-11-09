@@ -136,26 +136,10 @@
   
   (add-to-list 'default-frame-alist '(undecorated-round . t))
   
-  ;; liquid glass
-  (require 'lr-macos-glass)
-  (setq salih/glass-style 'macos-glass-regular
-	salih/alpha-background 0.2
-	salih/ns-background-blur 0
-	salih/ns-alpha-glyphs-min-alpha 1 ; make the mode-line usable
-	salih/ns-glass-material 'regular
-	salih/ns-glass-tint-opacity 0.5 ; 10x for legibility
-	salih/ns-glass-saturation 1.9
-	salih/ns-glass-inactive-opacity 0.05
-	salih/ns-glass-corner-radius 2
-	salih/ns-transparent-titlebar t)
-  
   (defun auto-theme (appearance)
     "Load theme matching system APPEARANCE."
     (mapc #'disable-theme custom-enabled-themes)
-    (load-theme (if (eq appearance 'dark) 'modus-vivendi-tinted 'modus-operandi-tinted) t)
-    ;; workaround for liquid glass breaking :box
-    (set-frame-parameter nil 'ns-alpha-elements
-			 '(ns-alpha-default ns-alpha-fringe ns-alpha-stipple ns-alpha-glyphs)))
+    (load-theme (if (eq appearance 'dark) 'modus-vivendi-tinted 'modus-operandi-tinted) t))
   ;; term/ns-win (loaded by the NS port during startup, before init.el runs)
   (add-hook 'ns-system-appearance-change-functions #'auto-theme)
   
