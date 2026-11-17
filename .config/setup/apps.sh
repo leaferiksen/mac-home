@@ -1,7 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -euo pipefail
 
 # general cli
-brew install --formula anomalyco/tap/opencode-2 bun cmatrix ffmpeg gh harper imagemagick media-info mole ollama pandoc paneru pngpaste tealdeer typst yqrashawn/goku/goku yt-dlp zsh-autosuggestions zsh-syntax-highlighting
+brew install --formula anomalyco/tap/opencode-2 bun cmatrix ffmpeg gh harper imagemagick media-info mole mpv ollama pandoc paneru pngpaste tealdeer typst yqrashawn/goku/goku yt-dlp zsh-autosuggestions zsh-syntax-highlighting
 paneru install && paneru start
 
 # general apps

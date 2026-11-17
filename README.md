@@ -49,9 +49,7 @@ Spotlight → Full Disk Access → /System/Applications/Utilities/Terminal.app, 
 softwareupdate --install-rosetta --agree-to-license && \
 chmod -R +w /opt/homebrew && \
 ./.config/setup/apps.sh && \
-./.config/setup/preferences.sh && \
-./.config/setup/login.sh \
-./.config/setup/duti.sh
+./.config/setup/preferences.sh
 ```
 
 Spotlight → Full Disk Access → remove Terminal

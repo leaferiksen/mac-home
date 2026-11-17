@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -euo pipefail
 
 # disable dock, screensaver hot corner and quick notes
 defaults write com.apple.dock "autohide-delay" -float "1000"

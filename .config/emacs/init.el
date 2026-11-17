@@ -220,30 +220,36 @@
 (keymap-set project-prefix-map "n" #'project-npm-run)
 
 ;; speedbar
-(defun speedbar-window-width-threshold ()
-  "Frame width, in columns, below which `speedbar-window' is hidden.
-Always three times the current `speedbar-window-default-width'."
-  (* 4 speedbar-window-default-width))
-(defun speedbar-auto-toggle (frame)
-  "Show or hide `speedbar-window' on FRAME based on its width.
-`speedbar-window' is pinned at `speedbar-window-default-width'."
-  (and-let*
-      (((frame-live-p frame))
-       ((< (frame-width frame) (speedbar-window-width-threshold)))
-       ((window-live-p speedbar--window)))
-    (speedbar-window-mode -1))
-  (and-let*
-      (((frame-live-p frame))
-       ((>= (frame-width frame) (speedbar-window-width-threshold)))
-       ((not (window-live-p speedbar--window))))
-    (setq speedbar--window-width speedbar-window-default-width)
-    (speedbar-window-mode 1))
-  (when-let* (((window-live-p speedbar--window))
-	      (delta (- speedbar-window-default-width (window-width speedbar--window)))
-	      ((not (zerop delta))))
-    (ignore-errors (window-resize speedbar--window delta t))))
-(add-hook 'window-size-change-functions #'speedbar-auto-toggle)
-(dolist (fn '(speedbar nerd-icons-speedbar-mode)) (add-hook 'emacs-startup-hook fn))
+;; (defun speedbar-window-width-threshold ()
+;;   "Frame width, in columns, below which `speedbar-window' is hidden.
+;; Always three times the current `speedbar-window-default-width'."
+;;   (* 4 speedbar-window-default-width))
+;; (defun speedbar-auto-toggle (frame)
+;;   "Show or hide `speedbar-window' on FRAME based on its width.
+;; `speedbar-window' is pinned at `speedbar-window-default-width'."
+;;   (and-let*
+;;       (((frame-live-p frame))
+;;        ((< (frame-width frame) (speedbar-window-width-threshold)))
+;;        ((window-live-p speedbar--window)))
+;;     (speedbar-window-mode -1))
+;;   (and-let*
+;;       (((frame-live-p frame))
+;;        ((>= (frame-width frame) (speedbar-window-width-threshold)))
+;;        ((not (window-live-p speedbar--window))))
+;;     (setq speedbar--window-width speedbar-window-default-width)
+;;     (speedbar-window-mode 1))
+;;   (when-let* (((window-live-p speedbar--window))
+;; 	      (delta (- speedbar-window-default-width (window-width speedbar--window)))
+;; 	      ((not (zerop delta))))
+;;     (ignore-errors (window-resize speedbar--window delta t))))
+;; (add-hook 'window-size-change-functions #'speedbar-auto-toggle)
+;; (dolist (fn '(speedbar nerd-icons-speedbar-mode)) (add-hook 'emacs-startup-hook fn))
+
+;; ytr
+
+(with-eval-after-load 'ytr
+  (ytr-macos-use-sf-symbols))
+(keymap-global-set "C-c r" #'ytr)
 
 ;; yt-dlp
 (defun yt-dlp-download ()
@@ -343,35 +349,9 @@ and `custom-set-faces' forms, which Custom formats itself."
   (arduino-cli-mode 1))
 
 (add-to-list 'auto-mode-alist '("\\.ino\\'" . arduino-ino-mode))
-(add-hook 'arduino-ino-mode-hook #'eglot-ensure)
 
 (setq arduino-cli-default-fqbn "arduino:avr:uno"
       arduino-cli-default-port "/dev/cu.usbmodem2101")
-
-(with-eval-after-load 'eglot
-  (defclass eglot-arduino-server (eglot-lsp-server) ())
-
-  (cl-defmethod eglot-client-capabilities ((_server eglot-arduino-server))
-    (let ((caps (cl-call-next-method)))
-      (plist-put caps :workspace (plist-put (plist-get caps :workspace) :semanticTokens nil))))
-
-  (add-to-list 'eglot-server-programs
-               `((arduino-mode arduino-ino-mode c++-mode)
-                 . (eglot-arduino-server
-                    "arduino-language-server"
-                    "-clangd" "clangd"
-                    "-cli" "arduino-cli"
-                    "-cli-config" "/Users/leaf/Library/Arduino15/arduino-cli.yaml"
-                    "-fqbn" "arduino:avr:uno"))))
-
-(defun my/project-try-arduino-sketch (dir)
-  "Return closest parent directory of DIR containing a .ino file as project root."
-  (when-let ((root (locate-dominating-file dir (lambda (d) (directory-files d nil "\\.ino$")))))
-    (cons 'transient root)))
-
-(add-hook 'arduino-ino-mode-hook
-          (lambda ()
-            (add-hook 'project-find-functions #'my/project-try-arduino-sketch -10 t)))
 
 ;; csv-mode
 (add-hook 'csv-mode-hook #'csv-align-mode)
@@ -608,17 +588,19 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
 		 dwim-shell-command elfeed elfeed-org elfmt exec-path-from-shell ghostel
 		 google-translate hackernews lorem-ipsum markdown-indent-mode nerd-icons-multimodal
 		 nerd-icons-speedbar nov obsidian-cli osx-dictionary rainbow-mode read-aloud remoto
-		 swift-mode typst-ts-mode visual-fill-column writegood-mode))
+		 swift-mode typst-ts-mode visual-fill-column writegood-mode ytr))
  '(package-vc-allow-build-commands t)
  '(package-vc-register-as-project nil)
  '(package-vc-selected-packages
-   '((nerd-icons-speedbar :vc-backend Git :url "https://github.com/Akane-6730/nerd-icons-speedbar")
+   '((ytr :vc-backend Git :url "https://github.com/xenodium/ytr")
+     (nerd-icons-speedbar :vc-backend Git :url "https://github.com/Akane-6730/nerd-icons-speedbar")
      (betweenle :vc-backend Git :url "https://github.com/vikram-mandyam/betweenle.el")
      (nerd-icons-multimodal :vc-backend Git :url
 			    "https://github.com/abougouffa/nerd-icons-multimodal")
      (obsidian-cli :url "git@github.com:leaferiksen/obsidian-cli.el.git")
      (elfmt :url "https://github.com/riscy/elfmt")
      (anglish :url "git@github.com:leaferiksen/anglish.el.git")))
+ '(pixel-scroll-precision-mode t)
  '(pop-up-windows nil)
  '(project-mode-line t)
  '(read-aloud-engine "say" t)
@@ -645,7 +627,7 @@ Prompts for a template: [m]LA, [r]esume, or [d]efault (no template)."
  '(vc-allow-rewriting-published-history t)
  '(vc-auto-revert-mode t)
  '(vc-dir-auto-hide-up-to-date 'revert)
- '(visual-fill-column-width 90)
+ '(visual-fill-column-width 80)
  '(which-key-mode t)
  '(window-divider-default-bottom-width 4)
  '(window-divider-default-right-width 4)

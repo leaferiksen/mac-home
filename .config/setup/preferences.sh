@@ -1,8 +1,16 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+open "/System/Library/CoreServices/Menu Extras/Eject.menu"
+osascript -e 'tell application "System Events" to get the name of every login item'
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/LuLu.app", hidden:false}'
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Pure Paste.app", hidden:false}'
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Users/leaf/Applications/Obsidian.app", hidden:false}'
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Macarte.app", hidden:false}'
 
 osascript -e 'tell application "System Preferences" to quit'
 # set emacs as default folder handler
-# defaults write -g "NSFileViewer" -string "org.gnu.Emacs"
+defaults write -g "NSFileViewer" -string "org.gnu.Emacs"
 # fix scroll direction
 defaults write -g "com.apple.swipescrolldirection" -bool "false"
 # show scroll bars
